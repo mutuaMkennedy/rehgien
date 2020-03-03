@@ -132,7 +132,7 @@ class PropertyForSale(models.Model):
 						('SQft', 'SqFt'),
 						('SQm', 'SqM'),
 								)
-	size_units = models.CharField(max_length = 10,choices = measurement_unit_choices, default = 'Acres')
+	size_units = models.CharField(max_length = 10,choices = measurement_unit_choices, default = 'SQFt')
 	number_of_units = models.PositiveIntegerField(default = 1)
 	number_of_stories = models.PositiveIntegerField(default = 0)
 	parking_spaces = models.PositiveIntegerField(default = 1)
