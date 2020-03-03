@@ -1,0 +1,26 @@
+
+{%load static%}
+
+  <div id="search-section" class="container">
+    <div class="row">
+      <div class="col s12">
+        <ul id="switch" class="tabs">
+            <li class="tab col s3"><a href="#buy">Buy</a></li>
+            <li class="tab col s3"><a href="#rent">Rent</a></li>
+        </ul>
+      </div>
+      <div id="buy" class="col s12">
+        <form class="search-bar" action="{% url 'search:onsale_search'%}" method="get">
+            <input class="search-input" id="q" name="q" type="text" placeholder='Search by location e.g Nairobi'>
+            <button class="search-button" type="submit" name="button"> <img src="{% static 'img/searchicon.jpg'%}" alt=""></button>
+        </form>
+      </div>
+      <div id="rent" class="col s12">
+        <form class="search-bar" action="{% url 'search:rental_search'%}" method="get">
+            <input id="q" name="q" type="text" placeholder='Search by location e.g Nairobi'>
+            <button class="search-button" type="submit" name="button"><img src="{% static 'img/searchicon.jpg'%}" alt=""></button>
+        </form>
+      </div>
+    </div>
+
+  </div>

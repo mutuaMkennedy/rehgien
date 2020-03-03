@@ -1,0 +1,38 @@
+{% extends 'base1.html'%}
+{% load static %}
+{% block content %}
+
+
+  <!--calc-->
+  <div class="container">
+    <h2>Lending Institutions</h2>
+  <a href="#mortgcalc" class="btn blue modal-trigger">Equity</a>
+    <!--calculator-->
+   <!-- <div id="mortgcalc" class="modal-mortg">
+        <span onclick="document.getElementById('mortgcalc').style.display='none'" class="close" title="Close Modal">&times;</span>
+        <div class="modal-content-mortg">-->
+    <div class="modal" id="mortgcalc">
+      <div class="modal-content">
+       <h1>Calculator</h1>
+    <p><b>Loan Amount</b>: <input type="text" id="inAmount"> </p>
+    <p><b>Down Payment</b>: <input type="text" id="inDown"> </p>
+    <p><b>APR (Interest)</b>: <input type="text" id="inAPR"> </p>
+    <p><b>Period (How Long)</b>: <input type="text" id="inPeriod"> </p>
+    <p><button  id="btnCalculate" class="btn" >Calculate Payments</button></p>
+    <hr>
+    <p><b>Total Monthly payment</b>: <span id="outMonthly"></span></p>
+    <div class="modal-footer">
+       <a href="#" class="btn red modal-close">Cancel</a>
+    </div>
+   
+</div>
+</div>
+</div>
+<br>
+  <!--scripts-->
+  <script src="{% static 'https://code.jquery.com/jquery-2.1.1.min.js' %}"></script>
+  <script src="{% static 'js/calc.js' %}"></script>
+
+</body>
+</html>
+{%endblock %}

@@ -1,0 +1,8 @@
+{{object.name}}
+{{object.location_name}}
+{{object.thumb}}
+{{object.publishdate}}
+{{object.price}}
+{{object.floor_area}}
+{{object.size_units}}
+{{object.bathrooms}}

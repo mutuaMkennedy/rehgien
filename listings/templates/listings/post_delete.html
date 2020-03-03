@@ -1,0 +1,17 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block content %}
+{% if request.user.is_authenticated and request.user.email is listing_email%}
+<h5> Do you want to Delete Listing: <span>{{ listing.name }}</span></h5>
+<form class="delete_listing" action="">
+  {% csrf_token %}
+  Confirm Post Deletion!
+  <input type="submit" value="yes"/>
+  <br>
+  <a href="{% url 'listings:listing_detail' listing.id %}"> Cancel</a>
+</form>
+{% endif %}
+{% if request.user.email != listing_email %}
+<h5> You Cannot Delete This Item</h5>
+{% endif %}
+{% endblock %}

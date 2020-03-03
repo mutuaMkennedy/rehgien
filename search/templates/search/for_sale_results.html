@@ -1,0 +1,51 @@
+{% extends 'location/location-buy-base.html' %}
+{% load static %}
+{% block location_content %}
+
+<div class="container">
+  <div id="buy" class="col s12">
+    <form class="results-search-bar" action="{% url 'search:onsale_search'%}" method="get">
+        <input class="search-input" id="q" name="q" type="text" placeholder='Search by location e.g Nairobi'>
+        <!-- <button class="search-button" type="submit" name="button"> Search</button> -->
+    </form>
+  </div>
+</div>
+<!-- <div id="filter-results-cont" class="container">
+    <form class="filter-form" action="." method="GET">
+      <input type="search" name="price-input" placeholder="Price">
+      <input type="search" name="type-input" placeholder="Type">
+      <input type="search" name="baths-input" placeholder="Baths">
+      <input type="search" name="beds-input" placeholder="Beds">
+      <button type="submit" name="button">Filter</button>
+    </form>
+</div> -->
+<section>
+  <div class="rec-content">
+    <div id="rec-container" class="container">
+      <div id="all-row" class="row ">
+        {% for homes in homes_for_sale %}
+      <div id="qwerc" class="col s12 md6 l6 xl4">
+        <div id="rec-card" class="card ">
+          <div id="all-img" class="card-image">
+              <a href="{% url 'listings:onsale_detail' homes.id %}"><img src="{{homes.thumb}}" alt="nai"></a>
+            <span id="all-date" class="card-title"><p>{{homes.publishdate}}</p></span>
+
+          </div>
+          <div id="rec-content" class="card-content">
+            <ol>
+              <li class="rec-h-name">{{homes.property_name}}</li>
+              <li class="rec-h-features"> {{homes.bathrooms}} ba| {{homes.bedrooms}} bds| {{homes.floor_area}} {{homes.size_units}}</li>
+              <li class="rec-h-price">Ksh: {{homes.price}}</li>
+              <li class="rec-h-location">{{homes.location_name}}</li>
+            </ol>
+          </div>
+
+        </div>
+      </div>
+          {%endfor%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

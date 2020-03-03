@@ -1,0 +1,155 @@
+{%load static from staticfiles%}
+{%load static%}
+
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>HOMEY</title>
+
+  <!-- CSS  -->
+  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
+  <link rel="stylesheet" type="text/css" href="{%static 'css/material-icons.css'%}">
+  <link href="{%static 'css/materialize.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{%static 'css/css/all.min.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <!--<link rel="stylesheet" href="fontawesome-free-5.1.0-web/css/fontawesome.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">-->
+  <link href="{%static 'css/style.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <!-- navbar -->
+  <div class="navbar-fixed">
+  <!--<nav class="transparent z-depth-0">-->
+    <nav class="teal" role="navigation">
+    <div class="nav-wrapper">
+      <a id="logo-container" href="{% url 'listings:homepage'%}" class="brand-logo center"><img class="logo" src="{%static 'img/logo.jpg'%}"></a>
+      <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul id="nav-base1"class="left hide-on-med-and-down">
+        <li><a href="{% url 'location:onsale_listings'%}">Buy</a></li>
+        <li><a href="{% url 'location:rental_listings'%}">Rent</a></li>
+        <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
+        <li><a href="{% url 'listings:rental_listing_form' %}">Post your Rental</a></li>
+
+      </ul>
+      <ul id="nav-base2" class="right hide-on-med-and-down">
+        {% if not request.user.is_authenticated %}
+        <li><a href="{% url 'account_login' %}" class="modal-trigger"><img class="avatar" src="{% static 'icons/svgs/eye-disabled.svg' %}">LogIn</a></li>
+        <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+        <!-- <li><a href="#"><b>or</b></a></li> -->
+        <!-- <li><a href="#">Subscribe for updates</a></li> -->
+        {% else %}
+        <li><a><img class="avatar" src="{% static 'icons/svgs/eye-active.svg' %}">Logged as {{request.user}}</a></li>
+        <li><a href="{% url 'profiles:account'%}">My profile</a></li>
+        <li><a href="#id01" class="modal-trigger">Logout</a></li>
+
+        {% endif %}
+      </ul>
+
+
+      <ul id="mobile-nav" class="sidenav">
+        <li><a href="#">Home</a></li>
+        <li><a href="{% url 'location:onsale_listings' %}">Buy</a></li>
+        <li><a href="{% url 'location:rental_listings'%}">Rent</a></li>
+        <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
+        <li><a href="{% url 'listings:rental_listing_form' %}">Post your Rental</a></li>
+        {% if not request.user.is_authenticated %}
+        <li><a href="{% url 'account_login' %}" class="modal-trigger"><img class="avatar" src="{% static 'icons/svgs/eye-disabled.svg' %}">LogIn</a></li>
+        <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+        <!-- <li><a href="#"><b>or</b></a></li> -->
+        <!-- <li><a href="#">Subscribe for updates</a></li> -->
+        {% else %}
+        <li><a><img class="avatar" src="{% static 'icons/svgs/eye-active.svg' %}">Logged as {{request.user}}</a></li>
+        <li><a href="{% url 'profiles:account'%}">My profile</a></li>
+        <li><a href="#id01" class="modal-trigger">Logout</a></li>
+        {% endif %}
+
+      </ul>
+    </div>
+  </nav>
+</div>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+         <li {% if message.tag %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<!-- logout  Modal-->
+
+<div id="id01" class="modal">
+
+  <h1>{% trans "Sign Out" %}</h1>
+
+  <p>{% trans 'Are you sure you want to sign out?' %}</p>
+
+  <form method="post" action="{% url 'account_logout' %}">
+    {% csrf_token %}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
+    <button type="submit">{% trans 'Sign Out' %}</button>
+  </form>
+
+</div>
+
+
+  {%block content%}
+  {%endblock%}
+
+   <!--section follow-->
+    <footer >
+    <section id="footer" class="section section-follow black-text">
+      <div class="container">
+        <div class="row">
+          <div class="f-details center">
+            <a href="#"> Privacy Policy</a>
+            <a href="#"> Terms & Conditions</a>
+            <a href="#"> Advertise</a>
+            <a href="#"> Contact Us</a>
+            <a href="{% url 'contact:about_us'%}"> About Us</a>
+          </div>
+          <div id="footer-details" class="col s12 center">
+            <a href="#" class="black-text">
+              <i class="fab fa-facebook fa-2x"></i>
+            </a>
+            <a href="#" class="black-text">
+              <i class="fab fa-twitter fa-2x"></i>
+            </a>
+            <a href="#" class="black-text">
+              <i class="fab fa-linkedin fa-2x"></i>
+            </a>
+            <a href="#" class="black-text">
+              <i class="fab fa-instagram fa-2x"></i>
+            </a>
+          </div>
+          <p class="flow-text black-text center" id="c-year"></p>
+          <script type="text/javascript">
+            var d = new Date();
+            document.getElementById("c-year").innerHTML= 'While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright '+ d.getFullYear();
+          </script>
+        </div>
+      </div>
+    </section>
+
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/materialize.js' %}"></script>
+  <script src="{% static 'js/init.js' %}"></script>
+  <script src="{% static 'js/gall.js' %}"></script>
+  <script src="{% static 'js/mat.js' %}"></script>
+  <script src="{% static 'js/jquery.autocomplete.js' %}"></script>
+  <script src="{% static 'js/our_search_code.js' %}"></script>
+
+  <script type="text/javascript" src="{% static 'js/js/all.min.js' %}"></script>
+  </body>
+</html>

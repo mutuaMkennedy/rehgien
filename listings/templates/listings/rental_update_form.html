@@ -1,0 +1,169 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags%}
+{% load leaflet_tags %}
+{% leaflet_js plugins="forms" %}
+{% leaflet_css plugins="forms" %}
+
+<section>
+<div class="container">
+<div class="row">
+<form class="post-form" action="{% url 'listings:rental_update' listing.pk %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+<p class="center"><b>Fill the Form Below to list with us now! The Fields marked with a (*) cannot be left blank</b><p>
+<p>Provide some facts about this property.<p>
+  <div class="form-row">
+      <div class="name">
+        {{PropertyForm.property_name|as_crispy_field}}
+      </div>
+      <div class="price">
+        {{PropertyForm.price|as_crispy_field}}
+      </div>
+  </div>
+
+<div class="type">
+    {{PropertyForm.type|as_crispy_field}}
+</div>
+
+<div class="photos">
+  <p>Choose some nice pictures and a video Walkthrough of your property.<p>
+  {{ImageForm}}
+  {{VideoForm}}
+</div>
+
+<div class="virtual-tour">
+    <p>Provide a link from your virtual tour provider below. Dont have one? <a href="#">Contact US!</a></p>
+    {{PropertyForm.virtual_tour_url|as_crispy_field}}
+</div>
+
+<div class="location">
+<p>Location is an important feature to promote real estate. Tell your clients where this property is located.</p>
+        {{PropertyForm.location_name|as_crispy_field}}
+<p>Provide a point on the map for the location of this property. Zoom in for a better accuracy!</p>
+        {{PropertyForm.location|as_crispy_field}}
+</div>
+
+<div class="form-row1">
+<p>Giving more information about your property will raise chances of getting a client quickly.</p>
+  <div class="bathrooms">
+      {{PropertyForm.bathrooms|as_crispy_field}}
+  </div>
+  <div class="bedrooms">
+      {{PropertyForm.bedrooms|as_crispy_field}}
+  </div>
+  <div class="total-rooms">
+      {{PropertyForm.total_rooms|as_crispy_field}}
+  </div>
+  <div class="floor-number">
+      {{PropertyForm.floor_number|as_crispy_field}}
+  </div>
+</div>
+
+<div class="form-row2">
+  <div class="lot-size">
+    {{PropertyForm.floor_area|as_crispy_field}}
+  </div>
+  <div class="lot-size-unit">
+    {{PropertyForm.size_units|as_crispy_field}}
+  </div>
+</div>
+
+<div class="form-row3">
+  <div class="units">
+    {{PropertyForm.number_of_units|as_crispy_field}}
+  </div>
+  <div class="stories">
+    {{PropertyForm.number_of_stories|as_crispy_field}}
+  </div>
+  <div class="parking-spaces">
+      {{PropertyForm.parking_spaces|as_crispy_field}}
+  </div>
+</div>
+
+<div class="form-row4">
+    <div class="year-bullt">
+      {{PropertyForm.year_built|as_crispy_field}}
+    </div>
+    <div class="remodel-year">
+      {{PropertyForm.remodel_year|as_crispy_field}}
+    </div>
+</div>
+
+<p>Providing Additional details of your property will make it more appealing!</p>
+<div class="form-row-choices1">
+<h5>#Room Details</h5>
+  <div class="appliances">
+    {{PropertyForm.appliances|as_crispy_field}}
+  </div>
+  <div class="basement">
+    {{PropertyForm.basement|as_crispy_field}}
+  </div>
+  <div class="floor-covering">
+    {{PropertyForm.floor_covering|as_crispy_field}}
+  </div>
+  <div class="rooms">
+    {{PropertyForm.rooms|as_crispy_field}}
+  </div>
+  <div class="indoor-features">
+    {{PropertyForm.indoor_features|as_crispy_field}}
+  </div>
+</div>
+
+
+<div class="form-row-choices2">
+  <h5>#Utility Details</h5>
+  <div class="cooling-type">
+    {{PropertyForm.cooling_type|as_crispy_field}}
+  </div>
+  <div class="heating-type">
+    {{PropertyForm.heating_type|as_crispy_field}}
+  </div>
+  <div class="heating-fuel">
+    {{PropertyForm.heating_fuel|as_crispy_field}}
+  </div>
+</div>
+
+
+<div class="form-row-choices3">
+  <h5>#Building Details</h5>
+    <div class="building-amenities">
+      {{PropertyForm.building_amenities|as_crispy_field}}
+    </div>
+    <div class="exterior">
+      {{PropertyForm.exterior|as_crispy_field}}
+    </div>
+    <div class="outdoor-amenities">
+      {{PropertyForm.outdoor_amenities|as_crispy_field}}
+    </div>
+    <div class="parking">
+      {{PropertyForm.parking|as_crispy_field}}
+    </div>
+    <div class="roof">
+      {{PropertyForm.roof|as_crispy_field}}
+    </div>
+    <div class="view">
+      {{PropertyForm.view|as_crispy_field}}
+    </div>
+</div>
+
+<div class="form-row-info">
+  <p><b>Owner information:</b> This is the final section of this form, add you details and choose a thumbnail picture. this will appear in the listing section</p>
+  <div class="phone">
+    {{PropertyForm.phone|as_crispy_field}}
+  </div>
+  <div class="email">
+    {{PropertyForm.email|as_crispy_field}}
+  </div>
+  <div class="thumb">
+    {{PropertyForm.thumb|as_crispy_field}}
+  </div>
+</div>
+<p><b>By clicking create you agree that you own this property or are acting on behalf of the owner of this property as an Agent. Also you consent to our <a href="#">terms of service</a></b></p>
+<div class="submit-button">
+  <input type="submit" value="Create">
+</div>
+  </form>
+</div>
+</section>
+{% endblock %}

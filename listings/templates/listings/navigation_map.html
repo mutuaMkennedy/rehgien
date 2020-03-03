@@ -1,0 +1,656 @@
+{% extends 'location/location-buy-base.html' %}
+{% load static %}
+
+{% block location_content%}
+<style>
+
+  #map-detail {
+   position: absolute;
+   top: 70px;
+   bottom:0;
+   width:80%;
+   height:90%;
+   margin-left:10%;
+   margin-right:10%;
+  }
+
+    #menu-detail {
+    background: #EAECEE;
+    position: fixed;
+    z-index: 1;
+    top: 70px;
+    width: 50%;
+    right:10%;
+    font-family: 'Open Sans', sans-serif;
+    display:flex;
+    margin-top:0px;
+    height: 40px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+
+    }
+
+    #menu-detail a {
+    font-size: 10px;
+    color: black;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    padding: 10px;
+    text-decoration: none;
+    align-items: center;
+    height: 40px;
+    background-color:#EAECEE;
+
+    }
+
+    #menu-detail a:last-child {
+    border: none;
+    }
+
+    #menu-detail a:hover {
+    background-color:#C0C1C5;
+    color: #404040;
+    border-bottom: 1px solid blue;
+    }
+
+    #menu-detail a.active {
+    background-color: #C0C1C5;
+    color: black;
+    border-bottom: 1px solid blue;
+    }
+
+    #menu-detail a.active:hover {
+    background: #CCD1D1;
+    }
+
+    .mapboxgl-popup {
+    max-width: 400px;
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+</style>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css' type='text/css' />
+<nav id="menu-detail">
+</nav>
+<div id='map-detail'></div>
+
+<!--mapbox scripts-->
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+if (!mapboxgl.supported()) {
+  alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
+  } else {
+    var map = new mapboxgl.Map({
+        container: 'map-detail',
+        style: 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
+        minZoom: 6.2,
+        maxZoom:14,
+        center: [37.01, -1.10]
+  });
+}
+// disable map rotation using right click + drag
+map.dragRotate.disable();
+
+// disable map rotation using touch rotation gesture
+map.touchZoomRotate.disableRotation();
+
+// Adds geolocate control to the map.
+map.addControl(new mapboxgl.GeolocateControl({
+    positionOptions: {
+        enableHighAccuracy: true
+    },
+    trackUserLocation: true
+}));
+// Adds zoom and rotation controls to the map.
+map.addControl(new mapboxgl.NavigationControl());
+
+//adding driving directions
+map.addControl(new MapboxDirections({
+accessToken: mapboxgl.accessToken
+}), 'top-left');
+
+//from Here code for adding features to the map
+
+// Create a popup, but don't add it to the map yet.
+var popup = new mapboxgl.Popup({
+    closeButton: false
+});
+
+
+
+  map.on('load', function() {
+    map.addSource('property',{
+      "type": "geojson",
+      "data": "{%url 'location:for_sale_property_data'%}"
+    });
+    map.addLayer({
+    "id": "points",
+    "source": 'property',
+    "type": "circle",
+    "paint": {
+        "circle-radius": 10,
+        "circle-stroke-width": 1.5,
+        "circle-color": "#2ECC71",
+        "circle-stroke-color":"blue"
+    },
+  });
+
+  map.on('mousemove', 'points', function(e) {
+      // Change the cursor style as a UI indicator.
+      map.getCanvas().style.cursor = 'pointer';
+
+      // Populate the popup and set its coordinates based on the feature.
+      var feature = e.features[0];
+      popup.setLngLat(feature.geometry.coordinates)
+      .setHTML(
+      '<div id="popup" class="popup" style="z-index: 10;">' +
+        '<img '+ 'src=' + "http://127.0.0.1:8000/media/"+ feature.properties.thumb + '>' +"</li>"+
+        '<li>' +
+        '<ul class="list-group">' +
+        '<li class="list-group-item">' + feature.properties.name +" </li>" +
+        '<li class="list-group-item">' + feature.properties.location_name +" </li>"+
+        '<li class="list-group-item">' +"Ksh:" + feature.properties.price + " </li>" + '</ul> </div>'
+
+     )
+      .addTo(map);
+  });
+
+  map.on('mouseleave', 'points', function() {
+      map.getCanvas().style.cursor = '';
+      popup.remove();
+  });
+});
+
+
+
+//adding primary schools data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('primary_sch', image);
+      map.addSource('primary_schools',{
+        "type": "geojson",
+        "data": "{%url 'location:primary_schools_data'%}"
+        });
+        map.addLayer({
+        "id": "primary.sch",
+        "type": "symbol",
+        "source":"primary_schools",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "primary_sch",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'primary.sch', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name_of_sc;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'primary.sch', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'primary.sch', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding polytechnics schools data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('polytechnics', image);
+      map.addSource('polytechnics_schools',{
+        "type": "geojson",
+        "data": "{%url 'location:polytechnics_data'%}"
+        });
+        map.addLayer({
+        "id": "polyT",
+        "type": "symbol",
+        "source":"polytechnics_schools",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "polytechnics",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'polyT', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'polyT', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'polyT', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding private colleges data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('private_coll', image);
+      map.addSource('private_colleges',{
+        "type": "geojson",
+        "data": "{%url 'location:private_colleges_data'%}"
+        });
+        map.addLayer({
+        "id": "prv.colleges",
+        "type": "symbol",
+        "source":"private_colleges",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "private_coll",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'prv.colleges', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'prv.colleges', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'prv.colleges', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding private universities data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('private_uni', image);
+      map.addSource('private_universities',{
+        "type": "geojson",
+        "data": "{%url 'location:private_universities_data'%}"
+        });
+        map.addLayer({
+        "id": "prv.universities",
+        "type": "symbol",
+        "source":"private_universities",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "private_uni",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'prv.universities', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'prv.universities', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'prv.universities', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding public colleges data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('public_coll', image);
+      map.addSource('public_colleges',{
+        "type": "geojson",
+        "data": "{%url 'location:public_colleges_data'%}"
+        });
+        map.addLayer({
+        "id": "plc.colleges",
+        "type": "symbol",
+        "source":"public_colleges",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "public_coll",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'plc.colleges', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'plc.colleges', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'plc.colleges', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding university colleges data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('university_coll', image);
+      map.addSource('university_colleges',{
+        "type": "geojson",
+        "data": "{%url 'location:university_colleges_data'%}"
+        });
+        map.addLayer({
+        "id": "university.clg",
+        "type": "symbol",
+        "source":"university_colleges",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "university_coll",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'university.clg', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'university.clg', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'university.clg', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding secondary schools data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('secondary_sch', image);
+      map.addSource('secondary_schools',{
+        "type": "geojson",
+        "data": "{%url 'location:secondary_schools_data'%}"
+        });
+        map.addLayer({
+        "id": "secondary",
+        "type": "symbol",
+        "source":"secondary_schools",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "secondary_sch",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'secondary', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.institute;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'secondary', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'secondary', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding university data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('university', image);
+      map.addSource('universities',{
+        "type": "geojson",
+        "data": "{%url 'location:universities_data'%}"
+        });
+        map.addLayer({
+        "id": "main-universities",
+        "type": "symbol",
+        "source":"universities",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "university",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'main-universities', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'main-universities', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'main-universities', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding teachers training colleges data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('teachers_training', image);
+      map.addSource('teachers_training_coll',{
+        "type": "geojson",
+        "data": "{%url 'location:teachers_training_data'%}"
+        });
+        map.addLayer({
+        "id": "teachers.clg",
+        "type": "symbol",
+        "source":"teachers_training_coll",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "teachers_training",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'teachers.clg', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'teachers.clg', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'teachers.clg', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//turn layers on and off
+var toggleableLayerIds = [ 'primary.sch', 'secondary','polyT','prv.colleges','prv.universities', 'plc.colleges',
+                            'university.clg', 'main-universities', 'teachers.clg'
+                          ];
+
+for (var i = 0; i < toggleableLayerIds.length; i++) {
+    var id = toggleableLayerIds[i];
+
+    var link = document.createElement('a');
+      link.href = '#';
+      link.className = '';
+      link.textContent = id;
+
+    link.onclick = function (e) {
+        var clickedLayer = this.textContent;
+          e.preventDefault();
+          e.stopPropagation();
+
+        var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+        if (visibility === 'visible') {
+        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+        this.className = '';
+        } else {
+        this.className = 'active';
+        map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+        }
+    };
+
+    var layers = document.getElementById('menu-detail');
+    layers.appendChild(link);
+}
+</script>
+
+{% endblock %}

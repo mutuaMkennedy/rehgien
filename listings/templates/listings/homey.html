@@ -1,0 +1,154 @@
+{%extends 'base1.html'%}
+{%load static%}
+{%block content%}
+
+<!--banner-->
+  <section class="slider">
+    <ul class="slides">
+      <li>
+        <img class="banner-img" src="{% static 'img/banner1.jpg' %}">
+        <div class="caption align white-text center">
+          <h3>Find your dream Home</h3>
+          <!-- <h5>Quality Drives Assurance and Confidence...</h5> -->
+
+        </div>
+<i id="down-arrow" class="material-icons">keyboard_arrow_down</i>
+<i id="down-arrow2" class="material-icons">keyboard_arrow_down</i>
+      </li>
+ </ul>
+
+</section>
+<div class="s-sc">
+  {% include 'search/search_form.html'%}
+</div>
+<br>
+<h4 id="svg-title" class="center"> Want to buy or rent a house? With Homey Its simple than you think!</h4>
+<br>
+  <div id="svgCardsContainer" class="container">
+      <div  id="svgRow" class="row">
+        <div class="col s12 md6 l6 xl4">
+          <div id="svg-cards" class="card">
+            <a href="#"><img id="forSaleSvg"src="{%static 'img/houseSearching.svg'%}" alt="looking for a house?"></a>
+            <h6 class="svg-title"><b>Explore our collection of properties</b></h6>
+            <p class="svg-prg">
+              Buying or renting? we have what you want in one place.
+              All properties listed on Homey are certified to ensured credibility.
+              No more fake Agents, Agencies or Properties.
+            </p>
+          </div>
+        </div>
+        <div class="col s12 md6 l6 xl4">
+          <div id="svg-cards" class="card">
+            <a href="#"><img id="forSaleSvg"src="{%static 'img/map_1r69.svg'%}" alt="our maps"></a>
+            <h6 class="svg-title"><b>Use our maps to understand the neighbourhood</b></h6>
+            <p class="svg-prg">
+              Homey has prioritized in building maps that help you understand the neighbourhood the property resides better. We are
+              continually building to make this experience better for you.
+            </p>
+          </div>
+        </div>
+        <div class="col s12 md6 l6 xl4">
+          <div id="svg-cards" class="card">
+            <a href="#"><img id="forSaleSvg"src="{%static 'img/observe.svg'%}" alt="buy"></a>
+            <h6 class="svg-title"><b>Gather more information.</b></h6>
+            <p class="svg-prg">
+              Homey focuses on quality visual presentations. Use virtual reality to further explore a properties features
+              via an interactive video session. When you are done Contact a verfied agent.
+            </p>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+
+<!-- <h4 id="recent-title" class="center">Recent Realestate & Homes Listings</h4>
+<div class="r-bd">
+  <div id="recent-section" class="container">
+    <div class="row">
+      <div class="col s12">
+        <ul id="r-switch" class="tabs">
+            <li class="tab col s12 m6"><a href="#onSale">On sale</a></li>
+            <li class="tab col s12 m6"><a href="#forRent">Rentals</a></li>
+        </ul>
+      </div>
+      <div id="onSale" class="col s12">
+        <!--Popular For Sale listings-->
+        <!-- <section id="popular" class="section-popular">
+          <div id="rec-container" class="container">
+            <div class="row">
+              {%for houses in onsale_reversed%}
+              <div class="col s12 md6 l6 xl4">
+
+                    <div id="rec-card" class="card" name="rec-card">
+                      <div id="rec-img" class="card-image">
+                        <a href="{% url 'listings:onsale_detail' houses.id %}"><img src="{{houses.thumb.url}}" alt="nai"></a>
+                        <span id="rec-date" class="card-title"><p>{{houses.publishdate}}</p></span>
+                        <i id="rec-fav-button" class="material-icons right">favorite_border</i>
+
+                      </div>
+                      <div id="rec-content" class="card-content">
+                        <ol>
+                          <li class="rec-h-name">{{houses.property_name}}</li>
+                          <li class="rec-h-features"> {{houses.bathrooms}} ba| {{houses.bedrooms}} bds| {{houses.floor_area}} {{houses.size_units}}</li>
+                          <li class="rec-h-price">Ksh: {{houses.price}}</li>
+                          <li class="rec-h-location">{{houses.location_name}}</li>
+                        </ol>
+                      </div> -->
+                      <!-- <div class="rec-all-icons">
+                        <img class="space"src="{%static 'icons/svgs/double-king-size-bed.svg'%}">
+                        <i class="material-icons">hotel</i>
+                        <img class="bath"src="{%static 'icons/svgs/bathtub-with-opened-shower.svg'%}">
+                      </div> -->
+                    <!-- </div>
+              </div>
+            {%endfor%}
+
+          </div>
+          </div>
+        </section>
+
+      </div> -->
+      <!-- <div id="forRent" class="col s12"> -->
+        <!--Popular For Rent listings-->
+        <!-- <section id="popular" class="section-popular">
+          <div id="rec-container" class="container">
+            <div class="row">
+              {%for houses in rentals_reversed%}
+              <div class="col s12 md6 l6 xl4">
+
+                    <div id="rec-card" class="card" name="rec-card">
+                      <div id="rec-img" class="card-image">
+                        <a href="{% url 'listings:rental_detail' houses.id %}"><img src="{{houses.thumb.url}}" alt="nai"></a>
+                        <span id="rec-date" class="card-title"><p>{{houses.publishdate}}</p></span>
+                        <i id="rec-fav-button" class="material-icons right">favorite_border</i>
+
+                      </div>
+                      <div id="rec-content" class="card-content">
+                        <ol>
+                          <li class="rec-h-name">{{houses.property_name}}</li>
+                          <li class="rec-h-features"> {{houses.bathrooms}} ba| {{houses.bedrooms}} bds| {{houses.floor_area}} {{houses.size_units}}</li>
+                          <li class="rec-h-price">Ksh: {{houses.price}} p.m</li>
+                          <li class="rec-h-location">{{houses.location_name}}</li>
+                        </ol>
+                      </div> -->
+                      <!-- <div class="rec-all-icons">
+                        <img class="space"src="{%static 'icons/svgs/double-king-size-bed.svg'%}">
+                        <i class="material-icons">hotel</i>
+                        <img class="bath"src="{%static 'icons/svgs/bathtub-with-opened-shower.svg'%}">
+                      </div> -->
+                    <!-- </div>
+              </div>
+            {%endfor%}
+
+          </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+</div> -->
+<br>
+
+{%endblock%}

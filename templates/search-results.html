@@ -1,0 +1,221 @@
+{% extends 'location/location-base.html' %}
+{% load static %}
+{% block location_content %}
+<!--
+<div class="results-page">
+<div class="row">
+
+{% if  page_obj.object_list %}
+<div class="filters">
+        <dl>
+        {% if facets.fields.type %}
+        <dt>Filter by type</dt>
+        {% for type in facets.fields.type %}
+        {% if type.1 != 0 %}
+        <dd>
+        <input class="facet" id="{{type.0|cut:" "}}" type="checkbox" name="type" value="{{ type.0 }}"
+        data-toggle="toggle" /> {{ type.0 }} ({{ type.1 }})
+        </dd>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        </dl>
+        <div>
+        <input class="btn-small" type="submit" value="apply filter" onclick="return onFacetChangeApplied();" />
+        </div>
+        <dl>
+
+        {% if facets.fields.location_name %}
+        <dt>Filter by Location</dt>
+        {% for location in facets.fields.location_name %}
+        {% if location.1 != 0 %}
+        <dd>
+        <input class="facet" id="{{location.0|cut:" "}}" type="checkbox" name="location" value="{{ location.0 }}" /> {{ location.0 }} ({{ location.1 }})
+        </dd>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        </dl>
+        <div>
+        <input class="btn-small" type="submit" value="apply filter" onclick="return onFacetChangeApplied();" />
+
+        </div>
+    </div>
+{% endif %}
+	<div class="search-results">
+            <div class="row">
+                <div class=" search-head">
+                      Search results for: <label> {{query}} </label>
+               </div>
+               <div class="results-count">
+
+                   Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of total
+                    {{ page_obj.paginator.count }}
+                    results on page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+               </div>
+            </div>
+            <div>
+	    {% if  page_obj.object_list %}
+                <ol class="row">
+              {% for result in page_obj.object_list %}
+
+                <div class="aall-content">
+                  <div id="aall-container" class="container">
+                    <div id="aall-row" class="row">
+                    <div id="aqwerc" class="col s6 md">
+                      <div id="aall-card" class="card">
+                        <div id="all-img" class="card-image">
+                            <a href="{% url 'listings:onsale_detail' result.object.id%}"><img src="{{result.object.thumb.url}}" alt="nai"></a>
+                          <span id="all-date" class="card-title"><p>{{result.publishdate}}</p></span>
+                          <i id="fav-button" class="material-icons right">favorite_border</i>
+
+                        </div>
+                        <div id="all-content" class="card-content">
+                          <ol>
+                            <li class="h-name">{{result.name}} </li>
+                            <li class="h-location">{{result.location_name}}</li>
+                            <li class="h-price">Ksh: {{result.price}}</li>
+                          </ol>
+                        </div>
+                        <div class="all-icons">
+                          <img class="space"src="{%static 'icons/svgs/double-king-size-bed.svg'%}">{{result.floor_area}} {{result.size_units}} ||
+                          <i class="material-icons">hotel</i>{{result.bedrooms}}
+                          <img class="bath"src="{%static 'icons/svgs/bathtub-with-opened-shower.svg'%}">{{result.bathrooms}}
+
+                        </div>
+
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+                </ol>
+            </div>
+
+		    {% if is_paginated %}
+		      <ul class="pagination pull-right">
+		        {% if page_obj.has_previous %}
+		          <li><a href="?q={{ query }}&page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+		        {% else %}
+		          <li class="disabled"><span>&laquo;</span></li>
+		        {% endif %}
+		        {% for i in paginator.page_range %}
+		          {% if page_obj.number == i %}
+		            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+		          {% else %}
+		            <li><a href="?q={{ query }}&page={{ i }}">{{ i }}</a></li>
+		          {% endif %}
+		        {% endfor %}
+		        {% if page_obj.has_next %}
+		          <li><a href="?q={{ query }}&page={{ page_obj.next_page_number }}">&raquo;</a></li>
+		        {% else %}
+		          <li class="disabled"><span>&raquo;</span></li>
+		        {% endif %}
+		      </ul>
+		    {% endif %}
+        {% else %}
+	    <p> Sorry, no result found for the search term  <strong>{{query}} </strong></p>
+	{% endif %}
+	</div>
+</div>
+</div>
+
+
+
+<style>
+    body { margin:0; padding:0; }
+    #map {
+       position:fixed;
+       top:0;
+       bottom:0;
+       right:0;
+       width:50%;
+       height:100%;
+      }
+</style>
+<div id='map' class="hide-on-med-and-down"></div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
+    zoom: 15,
+    center: [37.01, -1.10]
+});
+
+
+map.on('load', function () {
+  map.addSource('property',{
+    "type": "geojson",
+    "data": "{%url 'location:property_data'%}"
+  });
+  map.addLayer({
+      "id": "points",
+      "type": "circle",
+      "source":"property",
+      "paint": {
+          "circle-radius": 8,
+          "circle-stroke-width": 2,
+          "circle-color": "blue",
+          "circle-stroke-color":"white"
+      },
+
+  });
+  // Create a popup, but don't add it to the map yet.
+var popup = new mapboxgl.Popup({
+    closeButton: false,
+    closeOnClick: false
+});
+
+map.on('mouseenter', 'points', function(e) {
+    // Change the cursor style as a UI indicator.
+    map.getCanvas().style.cursor = 'pointer';
+
+    var coordinates = e.features[0].geometry.coordinates.slice();
+    var name = e.features[0].properties.name;
+    var thumb = e.features[0].properties.thumb;
+    var price = e.features[0].properties.price;
+
+    // Ensure that if the map is zoomed out such that multiple
+    // copies of the feature are visible, the popup appears
+    // over the copy being pointed to.
+    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+    }
+
+    // Populate the popup and set its coordinates
+    // based on the feature found.
+    popup.setLngLat(coordinates)
+    .setHTML(
+    '<div id="popup" class="popup" style="z-index: 10;">' +
+      '<img src="thumb">'+
+      '<ul class="list-group">' +
+      '<li class="list-group-item">' + name +" </li>" +
+      '<li class="list-group-item">' + price + " </li>" + '</ul> </div>'
+    )
+        .addTo(map);
+});
+
+map.on('mouseleave', 'points', function() {
+    map.getCanvas().style.cursor = '';
+    popup.remove();
+});
+
+
+
+});
+
+// Adds geolocate control to the map.
+map.addControl(new mapboxgl.GeolocateControl({
+    positionOptions: {
+        enableHighAccuracy: true
+    },
+    trackUserLocation: true
+}));
+// Adds zoom and rotation controls to the map.
+map.addControl(new mapboxgl.NavigationControl());
+</script>
+-->
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'location/location-rent-base.html'%}
+{% load static %}
+{% block location_content %}
+<div class="container">
+  <div id="rent" class="col s12">
+    <form class="results-search-bar" action="{% url 'search:rental_search'%}" method="get">
+        <input class="search-input" id="q" name="q" type="text" placeholder='Search by location e.g Nairobi'>
+        <!-- <button class="search-button" type="submit" name="button"> Search</button> -->
+    </form>
+  </div>
+</div>
+
+<section>
+  <div class="rec-content">
+    <div id="rec-container" class="container">
+      <div id="all-row" class="row">
+        {% for homes in homes_for_rent %}
+      <div id="qwerc" class="col s12 md6 l6 xl4">
+        <div id="rec-card" class="card">
+          <div id="all-img" class="card-image">
+              <a href="{% url 'listings:rental_detail' homes.id %}"><img src="{{homes.thumb}}" alt="nai"></a>
+            <span id="all-date" class="card-title"><p>{{homes.publishdate}}</p></span>
+
+          </div>
+          <div id="rec-content" class="card-content">
+            <ol>
+              <li class="rec-h-name">{{homes.name}}</li>
+              <li class="rec-h-features"> {{homes.bathrooms}} ba| {{homes.bedrooms}} bds| {{homes.floor_area}} {{homes.size_units}}</li>
+              <li class="rec-h-price">Ksh: {{homes.price}}</li>
+              <li class="rec-h-location">{{homes.location_name}}</li>
+            </ol>
+          </div>
+
+        </div>
+      </div>
+      {%endfor%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
