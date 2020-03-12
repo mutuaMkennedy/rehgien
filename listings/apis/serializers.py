@@ -22,16 +22,16 @@ class UserSerializer(serializers.ModelSerializer):
 class PropertyForSaleImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model=PropertyForSaleImages
-        fields=['image']
+        fields=['image', 'property']
 
 class PropertyForSaleVideosSerializer(serializers.ModelSerializer):
     class Meta:
         model=PropertyForSaleVideos
-        fields=['video']
+        fields=['video', 'property']
 
 class PropertyForSaleSerializer(serializers.ModelSerializer):
-    images=PropertyForSaleImagesSerializer(many=True,read_only=True)
-    videos=PropertyForSaleVideosSerializer(many=True,read_only=True)
+    images= PropertyForSaleImagesSerializer(many=True)
+    videos=PropertyForSaleVideosSerializer(many=True)
     class Meta:
         model=PropertyForSale
         fields=[
@@ -46,6 +46,16 @@ class PropertyForSaleSerializer(serializers.ModelSerializer):
         'images','videos',
         ]
 
+    def create(self, validated_data):
+        images_data = validated_data.pop('images')
+        video_data= validated_data.pop('videos')
+        property = PropertyForSale.objects.create(**validated_data)
+        for images_data in images_data:
+            PropertyForSaleImages.objects.create(property=property, **images_data)
+        for video_data in video_data:
+            PropertyForSaleVideos.objects.create(property=property, **video_data)
+        return property
+
 class RentalImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model=RentalImages
@@ -57,8 +67,8 @@ class RentalVideosSerializer(serializers.ModelSerializer):
         fields=['video']
 
 class RentalPropertySerializer(serializers.ModelSerializer):
-    images=RentalImagesSerializer(many=True,read_only=True)
-    videos=RentalVideosSerializer(many=True,read_only=True)
+    images=RentalImagesSerializer(many=True)
+    videos=RentalVideosSerializer(many=True)
     class Meta:
         model = RentalProperty
         fields = [
@@ -72,3 +82,13 @@ class RentalPropertySerializer(serializers.ModelSerializer):
                 'roof', 'view', 'related_website', 'publishdate','phone', 'email',
                 'images','videos'
         ]
+
+    def create(self, validated_data):
+        images_data = validated_data.pop('images')
+        video_data= validated_data.pop('videos')
+        property = RentalProperty.objects.create(**validated_data)
+        for images_data in images_data:
+            RentalImages.objects.create(property=property, **images_data)
+        for video_data in video_data:
+            RentalVideos.objects.create(property=property, **video_data)
+        return property

@@ -1,8 +1,19 @@
 from django.shortcuts import render
-from listings.models import PropertyForSale, RentalProperty
+from listings.models import (
+                    PropertyForSale,
+                    RentalProperty,
+                    PropertyForSaleImages,
+                    PropertyForSaleVideos,
+                    RentalImages,
+                    RentalVideos
+                    )
 from listings.apis.serializers import (
                     PropertyForSaleSerializer,
                     RentalPropertySerializer,
+                    PropertyForSaleImagesSerializer,
+                    PropertyForSaleVideosSerializer,
+                    RentalImagesSerializer,
+                    RentalVideosSerializer,
                     UserSerializer
                     )
 from rest_framework import generics
