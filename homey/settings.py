@@ -76,6 +76,9 @@ INSTALLED_APPS = [
     'multiselectfield',
     'django_elasticsearch_dsl',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'rest_auth.registration',
     #'haystack',
     # 'tastypie',
 ]
@@ -211,6 +214,12 @@ LEAFLET_CONFIG = {
     'ATTRIBUTION_PREFIX': 'Powered by leaflet, inspired by Homey',
 
 
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 # allauth further Configs

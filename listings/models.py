@@ -160,7 +160,7 @@ class PropertyForSale(models.Model):
 	#owner Information
 	related_website = models.CharField(max_length = 100, default = None)
 	publishdate = models.DateTimeField(auto_now=False, auto_now_add=True)
-	owner = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+	owner = models.ForeignKey(User, default=None, related_name='sale_property', on_delete=models.CASCADE)
 	phone = models.CharField(max_length=13)
 	email = models.EmailField(blank=None)
 	#likes = models.ManyToManyField(User, related_name = 'likes')
@@ -178,6 +178,10 @@ class PropertyForSale(models.Model):
 		if not self.id:
 			self.thumb = self.compressImage(self.thumb)
 		super(PropertyForSale, self).save(*args, **kwargs)
+
+    # def delete(self, *args, **kwargs):
+    #     self.thumb.delete()
+    #     super().delete(*args, **kwargs)
 
 	def compressImage(self,thumb):
 		imageTemporary	=	Image.open(thumb)
@@ -271,7 +275,7 @@ class RentalProperty(models.Model):
 	#owner Information
 	related_website = models.CharField(max_length = 100, default = None)
 	publishdate = models.DateTimeField(auto_now=False, auto_now_add=True)
-	owner = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+	owner = models.ForeignKey(User, default=None, related_name='rent_property', on_delete=models.CASCADE)
 	phone = models.CharField(max_length=13)
 	email = models.EmailField(blank=None)
 

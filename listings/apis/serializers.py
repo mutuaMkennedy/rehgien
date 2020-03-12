@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 # from listings.apis.api import MyModelResource
 # from django.contrib.gis.geos import GEOSGeometry, Point
 from listings.models import (
@@ -10,6 +11,13 @@ from listings.models import (
         RentalVideos,
                 )
 
+class UserSerializer(serializers.ModelSerializer):
+    sale_property = serializers.PrimaryKeyRelatedField(many=True, queryset=PropertyForSale.objects.all())
+    rent_property = serializers.PrimaryKeyRelatedField(many=True, queryset=RentalProperty.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email','sale_property','rent_property']
 
 class PropertyForSaleImagesSerializer(serializers.ModelSerializer):
     class Meta:

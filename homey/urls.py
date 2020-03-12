@@ -44,6 +44,13 @@ urlpatterns += staticfiles_urlpatterns()
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+urlpatterns += [
+    path('apis/api-auth/', include('rest_framework.urls')),
+    url(r'^apis/rest-auth/', include('rest_auth.urls')),
+    url(r'^apis/rest-auth/', include('rest_auth.urls')),
+    url(r'^apis/rest-auth/registration/', include('rest_auth.registration.urls'))
+]
+
 sitemaps = {
         'photologue_galleries': GallerySitemap,
         'photologue_photos': PhotoSitemap,
