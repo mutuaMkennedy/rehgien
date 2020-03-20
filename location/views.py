@@ -34,24 +34,7 @@ def map_box(request):
 #Dataset querysets for spatial analysis
 
 def for_sale_property_points(request):
-	p_sale =  PropertyForSale.objects.all()
-	location_name = request.GET.get("location-input")
-	price = request.GET.get("price-input")
-	type = request.GET.get("type-input")
-	beds = request.GET.get("beds-input")
-	baths = request.GET.get("baths-input")
-	if location_name !="" and location_name is not None:
-		p_sale = p_sale.filter(location_name__icontains = location_name)
-	elif price !="" and price is not None:
-		p_sale = p_sale.filter(price__exact = price)
-	elif type !="" and type is not None:
-		p_sale = p_sale.filter(type__icontains = type)
-	elif beds !="" and beds is not None:
-		p_sale = p_sale.filter(beds__exact = beds)
-	elif baths !="" and baths is not None:
-		p_sale = p_sale.filter(baths__exact = baths)
-
-	points = serialize('geojson', p_sale, fields=(
+	points = serialize('geojson', PropertyForSale.objects.all(), fields=(
 						'property_name', 'price', 'location_name','type','thumb','location',
 						'bathrooms', 'bedrooms', 'floor_area', 'size_units', 'pk',
 						'publishdate'
