@@ -22,12 +22,12 @@ class UserSerializer(serializers.ModelSerializer):
 class PropertyForSaleImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model=PropertyForSaleImages
-        fields=['image', 'property']
+        fields=['image']
 
 class PropertyForSaleVideosSerializer(serializers.ModelSerializer):
     class Meta:
         model=PropertyForSaleVideos
-        fields=['video', 'property']
+        fields=['video']
 
 class PropertyForSaleSerializer(serializers.ModelSerializer):
     images= PropertyForSaleImagesSerializer(many=True)
