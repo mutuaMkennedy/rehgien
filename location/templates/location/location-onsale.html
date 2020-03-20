@@ -276,7 +276,7 @@ function getUniqueFeatures(array, comparatorProperty) {
       var features = map.queryRenderedFeatures({layers: ['points']});
 
       if (features) {
-        var uniqueFeatures = getUniqueFeatures(features, "location_name");
+        var uniqueFeatures = getUniqueFeatures(features, "pk");
         // Populate features for the listing overlay.
         renderListings(uniqueFeatures);
 
@@ -293,7 +293,7 @@ function getUniqueFeatures(array, comparatorProperty) {
       var features = map.queryRenderedFeatures({layers: ['points']});
 
       if (features) {
-        var uniqueFeatures = getUniqueFeatures(features, "location_name");
+        var uniqueFeatures = getUniqueFeatures(features, "pk");
         // Populate features for the listing overlay.
         renderListings(uniqueFeatures);
 

@@ -121,7 +121,7 @@ class PropertyForSale(models.Model):
 	virtual_tour_url = models.CharField(max_length = 500, default = None)
 	location_name = models.CharField(max_length= 20, default=None)
 	location = models.PointField(srid=4326, default=None)
-	thumb = models.ImageField(default=None)
+	thumb = models.ImageField(default=None, null=True)
 	bathrooms = models.PositiveIntegerField(default=1, blank = True)
 	bedrooms = models.PositiveIntegerField(default=1)
 	total_rooms = models.PositiveIntegerField(default = 1, blank = False)
@@ -202,8 +202,8 @@ class PropertyForSale(models.Model):
 		verbose_name_plural = 'PropertyForSale'
 
 class PropertyForSaleImages(models.Model):
-	property = models.ForeignKey(PropertyForSale, on_delete=models.CASCADE, related_name='images')
-	image = models.ImageField(default=None)
+	property = models.ForeignKey(PropertyForSale, on_delete=models.CASCADE, related_name='images', null=True)
+	image = models.ImageField(default=None, null=True)
 
 	def save(self, *args, **kwargs):
 		if not self.id:
@@ -223,7 +223,7 @@ class PropertyForSaleImages(models.Model):
 		verbose_name_plural = 'PropertyForSaleImages'
 
 class PropertyForSaleVideos(models.Model):
-	property = models.ForeignKey(PropertyForSale, on_delete=models.CASCADE, related_name= 'videos')
+	property = models.ForeignKey(PropertyForSale, on_delete=models.CASCADE, related_name= 'videos', null=True)
 	video = models.FileField(upload_to='videos/', null=True, validators=[validate_video_extension])
 
 	class Meta:
@@ -305,7 +305,7 @@ class RentalProperty(models.Model):
 
 
 class RentalImages(models.Model):
-	property = models.ForeignKey(RentalProperty, on_delete=models.CASCADE, related_name='images')
+	property = models.ForeignKey(RentalProperty, on_delete=models.CASCADE, related_name='images', null=True)
 	image = models.ImageField(default=None)
 
 	def save(self, *args, **kwargs):
@@ -326,7 +326,7 @@ class RentalImages(models.Model):
 		verbose_name_plural = 'RentalImages'
 
 class RentalVideos(models.Model):
-	property = models.ForeignKey(RentalProperty, on_delete=models.CASCADE, related_name= 'videos')
+	property = models.ForeignKey(RentalProperty, on_delete=models.CASCADE, related_name= 'videos', null=True)
 	video = models.FileField(upload_to='videos/', null=True)
 
 	class Meta:

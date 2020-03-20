@@ -27,8 +27,12 @@
 </div>
 
 <div class="photos">
-  <p>Choose some nice pictures and a video Walkthrough of your property.<p>
+  <p>Upload some nice pictures of your property.<p>
   {{ImageForm}}
+</div>
+
+<div class="photos">
+  <p>Choose a video Walkthrough of your property.<p>
   {{VideoForm}}
 </div>
 
@@ -154,6 +158,10 @@
   </div>
   <div class="email">
     {{PropertyForm.email|as_crispy_field}}
+  </div>
+  <p>Provide a link to a website associated with this listing where homeseekers can find more information. Can be a personal or company website. </p>
+  <div class="related_website">
+    {{PropertyForm.related_website|as_crispy_field}}
   </div>
   <div class="thumb">
     {{PropertyForm.thumb|as_crispy_field}}

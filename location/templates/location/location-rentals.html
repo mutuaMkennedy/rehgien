@@ -136,7 +136,7 @@ function renderListings(features) {
 
           var detailsLink = document.createElement('a');
           detailsLink.id= 'detailsLink';
-          detailsLink.href = "http://127.0.0.1:8000/listings/onsale/" + prop.pk;
+          detailsLink.href = "http://127.0.0.1:8000/listings/rental/" + prop.pk;
 
           var locIcon = document.createElement('img');
           locIcon.id = 'locIcon';
@@ -256,7 +256,7 @@ function getUniqueFeatures(array, comparatorProperty) {
       var features = map.queryRenderedFeatures({layers: ['points']});
 
       if (features) {
-        var uniqueFeatures = getUniqueFeatures(features, "location_name");
+        var uniqueFeatures = getUniqueFeatures(features, "pk");
         // Populate features for the listing overlay.
         renderListings(uniqueFeatures);
 
@@ -273,7 +273,7 @@ function getUniqueFeatures(array, comparatorProperty) {
       var features = map.queryRenderedFeatures({layers: ['points']});
 
       if (features) {
-        var uniqueFeatures = getUniqueFeatures(features, "location_name");
+        var uniqueFeatures = getUniqueFeatures(features, "pk");
         // Populate features for the listing overlay.
         renderListings(uniqueFeatures);
 

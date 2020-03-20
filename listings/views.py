@@ -43,8 +43,7 @@ def onsale_detail(request, listing_id):
 	listing = get_object_or_404(PropertyForSale, pk=listing_id)
 	images = listing.images.all()
 	videos = listing.videos.all()
-	category = listing.categories.all()
-	return render(request, 'listings/onsale_detail.html', {'listing': listing, 'images':images, 'videos': videos, 'category':category})
+	return render(request, 'listings/onsale_detail.html', {'listing': listing, 'images':images, 'videos': videos})
 
 def rental_detail(request, listing_id):
 	rentals = get_object_or_404(RentalProperty, pk=listing_id)
@@ -69,11 +68,11 @@ def listing_form(request):
 			instance.save()
 
 			for img in images:
-				file_instance = PropertyForSaleImages(image = img)
+				file_instance = PropertyForSaleImages(image = img, property=PropertyForSale.objects.get(id=instance.id))
 				file_instance.save()
 
 			for vid in videos:
-				file_instance2 = PropertyForSaleVideos(video = vid)
+				file_instance2 = PropertyForSaleVideos(video = vid, property=PropertyForSale.objects.get(id=instance.id))
 				file_instance2.save()
 			messages.success(request, 'Your Listing has been posted Successfully!')
 			return redirect('listings:homepage')
@@ -140,13 +139,13 @@ def rental_listing_form(request):
 			# finally save to db
 			instance.save()
 
-			for f in files:
-				file_instance = RentalImages(file = f, feed = instance)
+			for img in images:
+				file_instance = RentalImages(image = img, property=RentalProperty.objects.get(id=instance.id))
 				file_instance.save()
 
-			for v in files:
-				file_instance2 = RentalVideos(file = v, feed = instance)
-				file_instance2.save()
+			for vid in videos:
+				file_instance = RentalVideos(video = vid, property=RentalProperty.objects.get(id=instance.id))
+				file_instance.save()
 			messages.success(request, 'Your Listing has been posted Successfully!')
 			return redirect('listings:homepage')
 		else:
