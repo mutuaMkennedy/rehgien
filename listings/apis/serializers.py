@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 from django.contrib.auth.models import User
 # from listings.apis.api import MyModelResource
 # from django.contrib.gis.geos import GEOSGeometry, Point
@@ -29,9 +30,10 @@ class PropertyForSaleVideosSerializer(serializers.ModelSerializer):
         model=PropertyForSaleVideos
         fields=['video']
 
-class PropertyForSaleSerializer(serializers.ModelSerializer):
+class PropertyForSaleSerializer(WritableNestedModelSerializer):
     images= PropertyForSaleImagesSerializer(many=True)
     videos=PropertyForSaleVideosSerializer(many=True)
+    listing_type = serializers.CharField(default='For Sale', required=False)
     class Meta:
         model=PropertyForSale
         fields=[
@@ -43,18 +45,24 @@ class PropertyForSaleSerializer(serializers.ModelSerializer):
         'floor_covering', 'rooms', 'indoor_features', 'cooling_type', 'heating_type',
         'heating_fuel', 'building_amenities', 'exterior', 'outdoor_amenities', 'parking',
         'roof', 'view', 'related_website', 'publishdate', 'phone', 'email',
-        'images','videos',
+        'images','videos', 'listing_type'
         ]
 
-    def create(self, validated_data):
-        images_data = validated_data.pop('images')
-        video_data= validated_data.pop('videos')
-        property = PropertyForSale.objects.create(**validated_data)
-        for images_data in images_data:
-            PropertyForSaleImages.objects.create(property=property, **images_data)
-        for video_data in video_data:
-            PropertyForSaleVideos.objects.create(property=property, **video_data)
-        return property
+    # def create(self, validated_data):
+    #     images_data = validated_data.pop('images')
+    #     video_data= validated_data.pop('videos')
+    #     property = PropertyForSale.objects.create(**validated_data)
+    #     for images_data in images_data:
+    #         PropertyForSaleImages.objects.create(property=property, **images_data)
+    #     for video_data in video_data:
+    #         PropertyForSaleVideos.objects.create(property=property, **video_data)
+    #     return property
+
+    # def update(self, instance, validated_data):
+    #     # images_data= validated_data.pop('images')
+    #     instance.images=validated_data.get('images',instance.images)
+    #     instance.save()
+    #     return instance
 
 class RentalImagesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,6 +77,7 @@ class RentalVideosSerializer(serializers.ModelSerializer):
 class RentalPropertySerializer(serializers.ModelSerializer):
     images=RentalImagesSerializer(many=True)
     videos=RentalVideosSerializer(many=True)
+    listing_type = serializers.CharField(default='For Rent', required=False)
     class Meta:
         model = RentalProperty
         fields = [
@@ -80,7 +89,7 @@ class RentalPropertySerializer(serializers.ModelSerializer):
                 'floor_covering', 'rooms', 'indoor_features', 'cooling_type', 'heating_type',
                 'heating_fuel', 'building_amenities', 'exterior', 'outdoor_amenities', 'parking',
                 'roof', 'view', 'related_website', 'publishdate','phone', 'email',
-                'images','videos'
+                'images','videos', 'listing_type'
         ]
 
     def create(self, validated_data):

@@ -14,6 +14,7 @@ django-sortedm2m==1.5.0
 django-tastypie==0.14.3
 djangorestframework==3.10.2
 djangorestframework-simplejwt==4.4.0
+drf-writable-nested==0.5.4
 elasticsearch==6.4.0
 elasticsearch-dsl==6.4.0
 ExifRead==2.1.2
