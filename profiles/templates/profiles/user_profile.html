@@ -5,32 +5,51 @@
 <section>
   <div id="pfl-pg-cont" class="container">
         <div id="pfl-page-row" class="row">
-          <div class="col s12 md6 l6 xl4">
+          <div id='cd-wrap' class="col s12 md6 l6 xl4">
+            <div id="profile-view" class="card">
+              {% for pfl in profile_list %}
+                  {% if pfl.profile_image%}
+                  <div class="pfl-card-img center">
+                    <img src="{{ pfl.profile_image.url}}" alt="{{pfl.last_name}}">
+                  </div>
+                  {% else %}
+                  <div class="pfl-card-img center">
+                    <img src="{% static 'img/avatar.png'%}" alt="{{pfl.last_name}}">
+                  </div>
+                  {% endif %}
+                    <div class="user-details center">
+                      <div class="pfl-act-inf">
+                        <h6>{{pfl.first_name}} {{pfl.last_name}}</h6>
+                        <h6>{{pfl.email}}</h6>
+                        <h6>{{pfl.phone}}</h6>
+                        <a href="{% url 'profiles:edit_profile' pfl.pk%}"><h6>Edit profile</h6></a>
+                      </div>
+                  {%  endfor %}
+                </div>
+            </div>
             <div id="profile-view" class="card">
                 <div class="user-details">
-                  <div class="pfl-card-img">
-                    <img src="{% static 'img/avatar.png'%}" alt="avatar">
-                  </div>
                   <div class="pfl-act-inf">
-                    <h6>{{user}}</h6>
-                    <h6>Agent number</h6>
-                    <h6>Agent email</h6>
+                    <h6>Saved Listings: 2</h6><hr>
+                    <h6>Change password </h6>
+                    <h6>Email: mutuakennedy81@gmail.com</h6>
+
                   </div>
                 </div>
             </div>
-            <div  id="pfl-d-sw" class="col s12">
-              <ul id="pfl-pg-switch" class="tabs tabs-fixed-width">
-                  <li class="tab col s3"><a href="#MyListings">My listings</a></li>
-                  <li class="tab col s3"><a href="#Analytics">Analytics</a></li>
-                  <li class="tab col s3"><a href="#AdInteractions">Ad Interactions</a></li>
-                  <li class="tab col s3"><a href="#Advertise">Advertise</a></li>
-              </ul>
-            </div>
           </div>
             <div class="pfl-d col s12 md6 l6 xl4">
+              <div  id="pfl-d-sw" class="col s12">
+                <ul id="pfl-pg-switch" class="tabs tabs-fixed-width">
+                    <li class="tab col s3"><a href="#MyListings">My listings</a></li>
+                    <li class="tab col s3"><a href="#Analytics">Analytics</a></li>
+                    <li class="tab col s3"><a href="#AdInteractions">Ad Interactions</a></li>
+                    <li class="tab col s3"><a href="#Advertise">Advertise</a></li>
+                </ul>
+              </div>
               <div class="pfl-dtl">
                   <div id="MyListings" class="pfl-listings">
-                        <p class="profile-title">Listings you are selling</p>
+                        <p class="profile-title">Active for sale listings</p>
                       <div class="profile-sale">
                           <div id="pfl-sal" class="row">
                                 {% if user_sale_posts%}
@@ -54,27 +73,30 @@
                                       </div>
 
                                       <div class="card-links">
-                                        <a href="#del" class="modal-trigger"><button id="link-del" type="button" name="button"><img src="{% static 'img/delete-forever-active.svg' %}"></button></a>
-                                        <a href="#edit" class="modal-trigger"><button id="link-edit" type="button" name="button"><img src="{% static 'img/mark-upgrade.svg' %}"></button></a>
+                                        <a href="{% url 'listings:s_delete' onsale_listings.pk%}"><button id="link-del" type="button" name="button"><img src="{% static 'img/delete-forever-active.svg' %}"></button></a>
+                                        <a href="{% url 'listings:update' onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><img src="{% static 'img/mark-upgrade.svg' %}"></button></a>
 
                                       </div>
                                       </div>
                                     </div>
 
                           <!-- pop up warning-delete-->
-                          <div id="del" class="modal">
+                          <!-- <div id="del" class="modal">
                             <p>Are you sure you want to delete this item!!</p>
-                            <a href="{% url 'listings:delete' onsale_listings.pk%}"><button class="delete" type="submit" name="button"> Delete</button></a>
-                          </div>
+                            <a href="#"><button class="delete" type="submit" name="button"> Delete</button></a>
+                          </div> -->
                           <!-- pop up warning-edit-->
-                          <div id="edit" class="modal">
+                          <!-- <div id="edit" class="modal">
                             <p>Are you sure you wish to edit this listing</p>
-                            <a href="{% url 'listings:update' onsale_listings.pk%}"><button class="update" type="submit" name="button"> Edit</button></a>
-                          </div>
+                            <a href="#"><button class="update" type="submit" name="button"> Edit</button></a>
+                          </div> -->
 
                         {% endfor %}
                     {% else %}
-                      <p>You currently dont have any posts {{user}}</p>
+                    <div class="empty-list">
+                      <p>No active for sale listings for <b>{{user}}</b>. Posts you list will appear here.</p>
+                      <img src="{% static 'img/search_SVG.svg'%}" alt="No rentals">
+                    </div>
                     {% endif%}
                 </div>
                 <!-- paginator for onsale listings-->
@@ -98,7 +120,7 @@
 
 
 
-                <p class="profile-title">Listings you are renting</p>
+                <p class="profile-title">Active Rental Listings</p>
                 <div class="profile-rentals">
                     <div class="row">
                       {% if user_rental_posts%}
@@ -122,28 +144,31 @@
                               </div>
 
                               <div class="card-links">
-                                <a href="#del" class="modal-trigger"><button id="link-del" type="button" name="button"><img src="{% static 'img/delete-forever-active.svg' %}"></button></a>
-                                <a href="#edit" class="modal-trigger"><button id="link-edit" type="button" name="button"><img src="{% static 'img/mark-upgrade.svg' %}"></button></a>
+                                <a href="{% url 'listings:r_delete' rentals.pk%}"><button id="link-del" type="button" name="button"><img src="{% static 'img/delete-forever-active.svg' %}"></button></a>
+                                <a href="{% url 'listings:rental_update' rentals.pk%}"><button id="link-edit" type="button" name="button"><img src="{% static 'img/mark-upgrade.svg' %}"></button></a>
 
                               </div>
                             </div>
                       </div>
 
                       <!-- pop up warning-delete-->
-                      <div id="del" class="modal">
+                      <!-- <div id="del" class="modal">
                         <p>Are you sure you want to delete this item!!</p>
-                        <a href="{% url 'listings:delete' rentals.pk%}"><button class="delete" type="submit" name="button"> Delete</button></a>
-                      </div>
+                        <a href="#"><button class="delete" type="submit" name="button"> Delete</button></a>
+                      </div> -->
                       <!-- pop up warning-edit-->
-                      <div id="edit" class="modal">
+                      <!-- <div id="edit" class="modal">
                         <p>Are you sure you wish to edit this listing</p>
-                        <a href="{% url 'listings:rental_update' rentals.pk%}"><button class="update" type="submit" name="button"> Edit</button></a>
-                      </div>
+                        <a href="#"><button class="update" type="submit" name="button"> Edit</button></a>
+                      </div> -->
 
                       {% endfor%}
 
                       {% else %}
-                      <p><b>{{user}}</b> it seems you haven't listed any rentals yet. When you list them they will appear here</p>
+                      <div class="empty-list">
+                        <p>No active rentals for <b>{{user}}</b>. Rentals you list will appear here.</p>
+                        <img src="{% static 'img/search_SVG.svg'%}" alt="No rentals">
+                      </div>
                       {%endif%}
                     </div>
                     <!-- paginator for rentals-->
@@ -165,13 +190,22 @@
                 </div>
                   </div>
                   <div id="Analytics" class="analytics-sc">
-                    <h6><b>Coming soon</b></h6>
+                    <div class="a-content">
+                      <img src="{%static 'img/under_construction.svg'%}" alt="under_construction">
+                      <h6><b>Under Construction</b></h6>
+                    </div>
                   </div>
                   <div id="Advertise" class="advertising-sc">
-                    <h6>Coming soon!</h6>
+                    <div class="a-content">
+                      <img src="{%static 'img/under_construction.svg'%}" alt="under_construction">
+                      <h6><b>Under Construction</b></h6>
+                    </div>
                   </div>
                   <div id="AdInteractions" class="adInt-sc">
-                    <h6>Coming soon!</h6>
+                    <div class="a-content">
+                      <img src="{%static 'img/under_construction.svg'%}" alt="under_construction">
+                      <h6><b>Under Construction</b></h6>
+                    </div>
                   </div>
               </div>
             </div>

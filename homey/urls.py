@@ -35,6 +35,7 @@ urlpatterns = [
     path('search/', include('search.urls')),
     path('apis/', include('listings.apis.urls')),
     path('location-apis/', include('location.api.urls')),
+    path('apis/', include('profiles.apis.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^photologue/', include('photologue.urls', namespace='photologue')),
     #url(r'^search/', include('haystack.urls')),

@@ -87,41 +87,61 @@ def listing_form(request):
 @login_required(login_url='account_login')
 def for_sale_update(request, pk):
 	listing = get_object_or_404(PropertyForSale, pk=pk)
-	#images = get_object_or_404(PropertyForSaleImages, pk=pk)
-	#videos = get_object_or_404(PropertyForSaleVideos, pk=pk)
+	image_formset = modelformset_factory(PropertyForSaleImages, max_num=1, min_num=1, fields=('image',))
+	video_formset = modelformset_factory(PropertyForSaleVideos, max_num=1, min_num=1, fields=('video',))
 	if request.user == listing.owner:
 		if request.method=='POST':
 			PropertyForm = forms.ListingForm(request.POST, request.FILES, instance=listing)
-			ImageForm = forms.ImageForm(request.POST, request.Files, instance=listing)
-			images = request.FILES.getlist('image')#name of field
-			VideoForm = forms.VideoForm(request.POST, request.Files,instance=listing)
-			videos = request.FILES.getlist('video')#name of field
-			if PropertyForm.is_valid() and ImageForm.is_valid() and VideoForm.is_valid():
+			img_formset = image_formset(request.POST or None, request.FILES or None)
+			vid_formset = video_formset(request.POST or None, request.FILES or None)
+			if PropertyForm.is_valid() and img_formset.is_valid() and vid_formset.is_valid():
 				listing = PropertyForm.save(commit=False)
 				# Associate listing with user
 				listing.owner = request.user
 				# finally save to db
 				listing.save()
 
-				for f in files:
-					file_instance = PropertyForSaleImages(file = f, feed = listing)
-					file_instance.save()
+				i_data = PropertyForSaleImages.objects.filter(property=listing)
+				v_data = PropertyForSaleVideos.objects.filter(property=listing)
 
-				for v in files:
-					file_instance2 = PropertyForSaleVideos(file = v, feed = listing)
-					file_instance2.save()
+				for index, i in enumerate(img_formset):
+					if i.cleaned_data:
+						if i.cleaned_data['id'] is None:
+							img = PropertyForSaleImages(property=listing, image=i.cleaned_data.get('image'))
+							img.save()
+						# elif i.cleaned_data['image'] is False:
+						# 	img = PropertyForSaleImages.objects.get(id=request.POST.get('form-' + str(index) + '-id'))
+						# 	img.delete()
+						else:
+							img = PropertyForSaleImages(property=listing, image=i.cleaned_data.get('image'))
+							p = PropertyForSaleImages.objects.get(id=i_data[index].id)
+							p.image = img.image
+							p.save()
 
+				for index, v in enumerate(vid_formset):
+					if v.cleaned_data:
+						if v.cleaned_data['id'] is None:
+							vid = PropertyForSaleVideos(property=listing, video=v.cleaned_data.get('video'))
+							vid.save()
+						# elif v.cleaned_data['video'] is False:
+						# 	vid = PropertyForSaleVideos.objects.get(id=request.POST.get('form-' + str(index) + '-id'))
+						# 	vid.delete()
+						else:
+							vid = PropertyForSaleVideos(property=listing, video=v.cleaned_data.get('video'))
+							p = PropertyForSaleVideos.objects.get(id=v_data[index].id)
+							p.video = vid.video
+							p.save()
 				messages.success(request, 'Update Successull')
-				return HttpResponseRedirect(listing.get_absolute_url())
+				return redirect('profiles:account')
 			else:
 				messages.error(request, 'Ooops! Cannot Update Contact the adminstrator!!')
 		else:
 			PropertyForm = forms.ListingForm(instance=listing)
-			ImageForm = forms.ImageForm(instance=listing)
-			VideoForm = forms.VideoForm(instance=listing)
+			img_formset = image_formset(queryset = PropertyForSaleImages.objects.filter(property=listing))
+			vid_formset = video_formset(queryset = PropertyForSaleVideos.objects.filter(property=listing))
 	else:
 		raise PermissionDenied
-	return render(request, 'listings/update_form.html', {'PropertyForm':PropertyForm, 'listing':listing, 'ImageForm':ImageForm, 'VideoForm':VideoForm})
+	return render(request, 'listings/update_form.html', {'PropertyForm':PropertyForm, 'listing':listing, 'img_formset':img_formset, 'vid_formset':vid_formset})
 
 @login_required(login_url='account_login')
 def rental_listing_form(request):
@@ -160,52 +180,83 @@ def rental_listing_form(request):
 @login_required(login_url='account_login')
 def for_rent_update(request, pk):
 	listing = get_object_or_404(RentalProperty, pk=pk)
-	#images = get_object_or_404(PropertyForSaleImages, pk=pk)
-	#videos = get_object_or_404(PropertyForSaleVideos, pk=pk)
+	image_formset = modelformset_factory(RentalImages, max_num=1, min_num=1, fields=('image',))
+	video_formset = modelformset_factory(RentalVideos, max_num=1, min_num=1, fields=('video',))
 	if request.user == listing.owner:
 		if request.method=='POST':
 			PropertyForm = forms.RentalListingForm(request.POST, request.FILES, instance=listing)
-			ImageForm = forms.RentalImageForm(request.POST, request.Files, instance=listing)
-			images = request.FILES.getlist('image')#name of field
-			VideoForm = forms.RentalVideoForm(request.POST, request.Files,instance=listing)
-			videos = request.FILES.getlist('video')#name of field
-			if PropertyForm.is_valid() and ImageForm.is_valid() and VideoForm.is_valid():
+			img_formset = image_formset(request.POST or None, request.FILES or None)
+			vid_formset = video_formset(request.POST or None, request.FILES or None)
+			if PropertyForm.is_valid() and img_formset.is_valid() and vid_formset.is_valid():
 				listing = PropertyForm.save(commit=False)
 				# Associate listing with user
 				listing.owner = request.user
 				# finally save to db
 				listing.save()
 
-				for f in files:
-					file_instance = RentalImages(file = f, feed = listing)
-					file_instance.save()
+				i_data = RentalImages.objects.filter(property=listing)
+				v_data = RentalVideos.objects.filter(property=listing)
 
-				for v in files:
-					file_instance2 = RentalVideos(file = v, feed = listing)
-					file_instance2.save()
+				for index, i in enumerate(img_formset):
+					if i.cleaned_data:
+						if i.cleaned_data['id'] is None:
+							img = RentalImages(property=listing, image=i.cleaned_data.get('image'))
+							img.save()
+						# elif i.cleaned_data['image'] is False:
+						# 	img = RentalImages.objects.get(id=request.POST.get('form-' + str(index) + '-id'))
+						# 	img.delete()
+						else:
+							img = RentalImages(property=listing, image=i.cleaned_data.get('image'))
+							p = RentalImages.objects.get(id=i_data[index].id)
+							p.image = img.image
+							p.save()
 
+				for index, v in enumerate(vid_formset):
+					if v.cleaned_data:
+						if v.cleaned_data['id'] is None:
+							vid = RentalVideos(property=listing, video=v.cleaned_data.get('video'))
+							vid.save()
+						# elif v.cleaned_data['video'] is False:
+						# 	vid = RentalVideos.objects.get(id=request.POST.get('form-' + str(index) + '-id'))
+						# 	vid.delete()
+						else:
+							vid = RentalVideos(property=listing, video=v.cleaned_data.get('video'))
+							p = RentalVideos.objects.get(id=v_data[index].id)
+							p.video = vid.video
+							p.save()
 				messages.success(request, 'Update Successull')
-				return HttpResponseRedirect(listing.get_absolute_url())
+				return redirect('profiles:account')
 			else:
 				messages.error(request, 'Ooops! Cannot Update Contact the adminstrator!!')
 		else:
-			PropertyForm = forms.RentalListingForm(instance=listing)
-			ImageForm = forms.RentalImageForm(instance=listing)
-			VideoForm = forms.RentalVideoForm(instance=listing)
+			PropertyForm = forms.ListingForm(instance=listing)
+			img_formset = image_formset(queryset = RentalImages.objects.filter(property=listing))
+			vid_formset = video_formset(queryset = RentalVideos.objects.filter(property=listing))
 	else:
 		raise PermissionDenied
-	return render(request, 'listings/rental_update_form.html', {'PropertyForm':PropertyForm, 'listing':listing, 'ImageForm':ImageForm, 'VideoForm':VideoForm})
+	return render(request, 'listings/rental_update_form.html', {'PropertyForm':PropertyForm, 'listing':listing, 'img_formset':img_formset, 'vid_formset':vid_formset})
 
 @login_required(login_url='account_login')
-def delete_listing(request, pk):
+def for_sale_delete(request, pk):
 	listing = get_object_or_404(PropertyForSale, pk=pk)
 	if request.user == listing.owner:
 		listing.delete()
 		messages.success(request, 'Successfully deleted!!')
-		return redirect('listings:homepage')
+		return redirect('profiles:account')
 	else:
 		raise PermissionDenied
-		return redirect('listings:homepage')
+		return redirect('profiles:account')
+
+@login_required(login_url='account_login')
+def for_rent_delete(request, pk):
+	listing = get_object_or_404(RentalProperty, pk=pk)
+	if request.user == listing.owner:
+		listing.delete()
+		messages.success(request, 'Successfully deleted!!')
+		return redirect('profiles:account')
+	else:
+		raise PermissionDenied
+		return redirect('profiles:account')
 
 @login_required(login_url = 'account_login')
 @require_POST

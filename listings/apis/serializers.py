@@ -45,7 +45,7 @@ class PropertyForSaleSerializer(WritableNestedModelSerializer):
         'floor_covering', 'rooms', 'indoor_features', 'cooling_type', 'heating_type',
         'heating_fuel', 'building_amenities', 'exterior', 'outdoor_amenities', 'parking',
         'roof', 'view', 'related_website', 'publishdate', 'phone', 'email',
-        'images','videos', 'listing_type'
+        'images','videos', 'listing_type', 'owner'
         ]
 
     # def create(self, validated_data):
@@ -74,7 +74,7 @@ class RentalVideosSerializer(serializers.ModelSerializer):
         model=RentalVideos
         fields=['video']
 
-class RentalPropertySerializer(serializers.ModelSerializer):
+class RentalPropertySerializer(WritableNestedModelSerializer):
     images=RentalImagesSerializer(many=True)
     videos=RentalVideosSerializer(many=True)
     listing_type = serializers.CharField(default='For Rent', required=False)
@@ -89,15 +89,15 @@ class RentalPropertySerializer(serializers.ModelSerializer):
                 'floor_covering', 'rooms', 'indoor_features', 'cooling_type', 'heating_type',
                 'heating_fuel', 'building_amenities', 'exterior', 'outdoor_amenities', 'parking',
                 'roof', 'view', 'related_website', 'publishdate','phone', 'email',
-                'images','videos', 'listing_type'
+                'images','videos', 'listing_type','owner'
         ]
 
-    def create(self, validated_data):
-        images_data = validated_data.pop('images')
-        video_data= validated_data.pop('videos')
-        property = RentalProperty.objects.create(**validated_data)
-        for images_data in images_data:
-            RentalImages.objects.create(property=property, **images_data)
-        for video_data in video_data:
-            RentalVideos.objects.create(property=property, **video_data)
-        return property
+    # def create(self, validated_data):
+    #     images_data = validated_data.pop('images')
+    #     video_data= validated_data.pop('videos')
+    #     property = RentalProperty.objects.create(**validated_data)
+    #     for images_data in images_data:
+    #         RentalImages.objects.create(property=property, **images_data)
+    #     for video_data in video_data:
+    #         RentalVideos.objects.create(property=property, **video_data)
+    #     return property

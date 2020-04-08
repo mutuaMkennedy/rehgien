@@ -41,6 +41,26 @@ class UsersList(ListAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
+class UserSalePosts(ListAPIView):
+    serializer_class = PropertyForSaleSerializer
+    def get_queryset(self):
+        """
+        This view should return a list of all the for sale listings
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return PropertyForSale.objects.filter(owner=user)
+
+class UserRentalPosts(ListAPIView):
+    serializer_class = RentalPropertySerializer
+    def get_queryset(self):
+        """
+        This view should return a list of all the rental listings
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return RentalProperty.objects.filter(owner=user)
+
 #On Sale view APIS
 #listing all for sale property
 class ForSaleListApi(ListAPIView):

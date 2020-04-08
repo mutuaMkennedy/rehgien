@@ -225,6 +225,7 @@ LEAFLET_CONFIG = {
 # allauth further Configs
 ACCOUNT_AUTHENTICATION_METHOD = "username"
 ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_SIGNUP_FORM_CLASS = 'profiles.forms.profile_form'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"

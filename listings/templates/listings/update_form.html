@@ -28,8 +28,14 @@
 
 <div class="photos">
   <p>Choose some nice pictures and a video Walkthrough of your property.<p>
-  {{ImageForm}}
-  {{VideoForm}}
+{{img_formset.management_form}}
+{% for form in img_formset%}
+  {{form.as_p}}
+{%endfor%}
+{{vid_formset.management_form}}
+{% for form in vid_formset%}
+  {{form.as_p}}
+{%endfor%}
 </div>
 
 <div class="virtual-tour">
@@ -158,8 +164,15 @@
   <div class="email">
     {{PropertyForm.email|as_crispy_field}}
   </div>
+  <div class="related_website">
+    {{PropertyForm.related_website|as_crispy_field}}
+  </div>
   <div class="thumb">
     {{PropertyForm.thumb|as_crispy_field}}
+  </div>
+  <div class="description">
+    <p>Lastly <b>say something</b> about your property or add some <b>additional details</b> we might have missed.</p>
+    {{PropertyForm.description|as_crispy_field}}
   </div>
 </div>
 <p><b>By clicking create you agree that you own this property or are acting on behalf of the owner of this property as an Agent. Also you consent to our <a href="#">terms of service</a></b></p>

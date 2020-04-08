@@ -160,7 +160,7 @@ class RentalListingForm(forms.ModelForm):
 	view = forms.MultipleChoiceField(required=False, choices =VIEW_CHOICES, widget = forms.SelectMultiple())
 	class Meta:
 		model = models.RentalProperty
-		fields = ['property_name', 'type', 'price', 'virtual_tour_url','location_name', 'location', 'bathrooms', 'bedrooms', 'total_rooms',
+		fields = ['property_name', 'type', 'price', 'virtual_tour_url','location_name', 'location', 'description','bathrooms', 'bedrooms', 'total_rooms',
 					'floor_number','floor_area', 'size_units', 'number_of_units', 'number_of_stories',
 					'parking_spaces', 'year_built', 'remodel_year', 'appliances', 'basement', 'floor_covering',
 					'rooms', 'indoor_features', 'cooling_type', 'heating_type', 'heating_fuel', 'building_amenities', 'exterior',

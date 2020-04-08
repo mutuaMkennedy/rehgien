@@ -15,7 +15,9 @@ from listings.apis.views import (
                 ForRentDetailApi,
                 ForRentUpdateApi,
                 ForRentDeleteApi,
-                UsersList
+                UsersList,
+                UserSalePosts,
+                UserRentalPosts
                 )
 # from rest_framework import routers
 #
@@ -37,6 +39,8 @@ urlpatterns = [
     path('listings/for-rent/<int:pk>/delete/', ForRentDeleteApi.as_view(), name='rentals_delete_api'),
     #Users & authentication
     path('accounts/users/', UsersList.as_view(), name='users'),
+    path('accounts/user/listings/for-sale/', UserSalePosts.as_view(), name='user_sale_posts'),
+    path('accounts/user/listings/rentals/', UserRentalPosts.as_view(), name='user_rental_posts'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
