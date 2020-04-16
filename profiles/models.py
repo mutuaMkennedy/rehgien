@@ -1,24 +1,40 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.db.models.signals import post_save
 # Create your models here.
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default = None, related_name = 'profile')
-    first_name = models.CharField(max_length = 25)
-    last_name = models.CharField(max_length = 25)
-    email = models.EmailField(blank = True)
     profile_image = models.ImageField(upload_to = 'profile_images/', blank = True)
     phone = models.CharField(max_length=13, blank = True)
+    license_number = models.CharField(max_length=250, blank=True)
+    address = models.CharField(max_length=250, blank=True)
+    facebook_link = models.URLField(max_length=200, blank=True)
+    twitter_link = models.URLField(max_length=200, blank=True)
+    linkedin_link = models.URLField(max_length=200, blank=True)
+    about = models.TextField(blank=True)
+    member_since = models.DateTimeField(auto_now=False, auto_now_add=True)
+    account_type_choices = (
+    ('Agent','Agent'),
+    ('Basic', 'Basic')
+    )
+    account_type = models.CharField(max_length=10, choices=account_type_choices, default='Agent')
 
     def get_absolute_url(self):
         return reverse( 'profiles:account', kwargs={'pk':self.pk})
 
     def __str__(self):
-        return self.first_name + '-' + self.last_name + '-' + self.email + '-' + self.phone
+        return self.user.first_name + '-' + self.user.last_name + '-' + self.user.email + '-' + self.phone
 
     class Meta:
         verbose_name_plural = 'UserProfiles'
 
     def get_absolute_url(self):
         return reverse( 'profiles:account', kwargs={'pk':self.pk} )
+
+def create_profile(sender,**kwargs):
+    if kwargs['created']:
+        user_profile = UserProfile.objects.create(user=kwargs['instance'])
+
+post_save.connect(create_profile,sender=User)

@@ -134,7 +134,7 @@ function renderListings(features) {
           propFeatures.textContent = prop.bathrooms +'ba' + '| ' + prop.bedrooms + 'bds' + '| ' + prop.floor_area + ' '+ prop.size_units
 
           var image = document.createElement("img");
-          image.src = "http://127.0.0.1:8000/media/"+ prop.thumb;
+          image.src = "https://res.cloudinary.com/rehgien/"+ prop.prop_images;
           image.id = 'all-image2';
 
           var detailsLink = document.createElement('a');

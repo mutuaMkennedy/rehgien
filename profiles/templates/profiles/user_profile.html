@@ -1,50 +1,46 @@
 {% extends 'base1.html' %}
 {% load static %}
 {% block content %}
-
 <section>
   <div id="pfl-pg-cont" class="container">
         <div id="pfl-page-row" class="row">
           <div id='cd-wrap' class="col s12 md6 l6 xl4">
             <div id="profile-view" class="card">
-              {% for pfl in profile_list %}
-                  {% if pfl.profile_image%}
-                  <div class="pfl-card-img center">
-                    <img src="{{ pfl.profile_image.url}}" alt="{{pfl.last_name}}">
+                  {% if user.profile.profile_image%}
+                  <div class="pfl-card-img">
+                    <img src="{{ user.profile.profile_image.url}}" alt="{{user.last_name}}">
                   </div>
                   {% else %}
-                  <div class="pfl-card-img center">
-                    <img src="{% static 'img/avatar.png'%}" alt="{{pfl.last_name}}">
+                  <div class="pfl-card-img">
+                    <img src="{% static 'img/avatar.png'%}" alt="{user.last_name}}">
                   </div>
                   {% endif %}
-                    <div class="user-details center">
+                    <div class="user-details">
                       <div class="pfl-act-inf">
-                        <h6>{{pfl.first_name}} {{pfl.last_name}}</h6>
-                        <h6>{{pfl.email}}</h6>
-                        <h6>{{pfl.phone}}</h6>
-                        <a href="{% url 'profiles:edit_profile' pfl.pk%}"><h6>Edit profile</h6></a>
+                        <h6>{{user.first_name}} {{user.last_name}}</h6>
+                        <h6>{{user.email}}</h6>
+                        <h6>{{user.profile.phone}}</h6>
+                        <h6><a href="{% url 'profiles:edit_profile'%}"><i class="fas fa-user-edit" style="blue"></i>Edit Profile</a></h6>
                       </div>
-                  {%  endfor %}
-                </div>
+                    </div>
             </div>
             <div id="profile-view" class="card">
                 <div class="user-details">
                   <div class="pfl-act-inf">
-                    <h6>Saved Listings: 2</h6><hr>
-                    <h6>Change password </h6>
-                    <h6>Email: mutuakennedy81@gmail.com</h6>
-
+                    <h6><i class="fas fa-medal" style="color:green; font-size:20px;"></i><br>Premium {{user.profile.account_type}}</h6>
+                    <h6><a href="{% url 'account_change_password' %}">Password change</a> </h6>
                   </div>
                 </div>
             </div>
           </div>
             <div class="pfl-d col s12 md6 l6 xl4">
+              <div class="pfl-d-banner" style="background-image:url({% static 'img/ice-pattern.jpg'%});" ></div>
               <div  id="pfl-d-sw" class="col s12">
                 <ul id="pfl-pg-switch" class="tabs tabs-fixed-width">
-                    <li class="tab col s3"><a href="#MyListings">My listings</a></li>
-                    <li class="tab col s3"><a href="#Analytics">Analytics</a></li>
-                    <li class="tab col s3"><a href="#AdInteractions">Ad Interactions</a></li>
-                    <li class="tab col s3"><a href="#Advertise">Advertise</a></li>
+                    <li class="tab col s3"><a href="#MyListings"><i class="fas fa-home" style="color:#5b0088"></i></a></li>
+                    <li class="tab col s3"><a href="#Analytics"><i class="far fa-chart-bar" style="color:#5b0088"></i></a></li>
+                    <li class="tab col s3"><a href="#AdInteractions"><i class="fas fa-chart-line" style="color:#5b0088"></i></a></li>
+                    <li class="tab col s3"><a href="#Advertise"><i class="fas fa-bullhorn" style="color:#5b0088"></i></a></li>
                 </ul>
               </div>
               <div class="pfl-dtl">
@@ -95,7 +91,7 @@
                     {% else %}
                     <div class="empty-list">
                       <p>No active for sale listings for <b>{{user}}</b>. Posts you list will appear here.</p>
-                      <img src="{% static 'img/search_SVG.svg'%}" alt="No rentals">
+                      <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
                     </div>
                     {% endif%}
                 </div>
@@ -167,7 +163,7 @@
                       {% else %}
                       <div class="empty-list">
                         <p>No active rentals for <b>{{user}}</b>. Rentals you list will appear here.</p>
-                        <img src="{% static 'img/search_SVG.svg'%}" alt="No rentals">
+                        <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
                       </div>
                       {%endif%}
                     </div>

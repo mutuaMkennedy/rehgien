@@ -1,9 +1,19 @@
 {% extends 'base1.html'%}
+{% load static %}
 {% load i18n %}
 {% load account socialaccount %}
 {% block content %}
 
 <div class="container">
+<div class="row">
+  <div class="col s12 md6 l6 xl6">
+    <div class="login-svg hide-on-med-and-down">
+      <img src="{% static 'img/enter.svg'%}" alt="login">
+    </div>
+  </div>
+
+  <div class="col s12 md6 l6 xl6">
+
   <div class="loginpage">
     <h1>{% trans "Sign In" %}</h1>
 
@@ -27,22 +37,26 @@
   {% include "socialaccount/snippets/login_extra.html" %}
 
   {% else %}
-  <div class="locallogin">
-    <p>{% blocktrans %}If you have not created an account yet, then please
-    <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
-    {% endif %}
 
-    <form class="login" method="POST" action="{% url 'account_login' %}">
-      {% csrf_token %}
-      {{ form }}
-      {% if redirect_field_value %}
-      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    <div class="locallogin">
+      <p>{% blocktrans %}If you have not created an account yet, then please
+      <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
       {% endif %}
-      <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-      <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
-    </form>
+
+      <form class="login" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        {{ form }}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+        <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+      </form>
+    </div>
+
   </div>
   </div>
+</div>
 </div>
 
 {% endblock%}

@@ -1,5 +1,6 @@
 {% load static from staticfiles%}
 {% load static %}
+{% load cloudinary %}
 {% load i18n %}
 
 <!DOCTYPE html>
@@ -32,48 +33,59 @@
     <img src="{% static 'img/Pulse.gif'%}" alt="Loading..">
   </div> -->
   <!-- navbar -->
-  <div class="navbar-fixed" id="listing-navbar">
+  <div class="navbar-fixed">
   <!--<nav class="transparent z-depth-0">-->
     <nav class="teal" role="navigation">
-    <div class="nav-wrapper" >
+    <div class="nav-wrapper">
       <a id="logo-container" href="{% url 'listings:homepage'%}" class="brand-logo center"><img class="logo" src="{%static 'img/logo.png'%}"></a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-base1"class="left hide-on-med-and-down">
         <li><a href="{% url 'location:onsale_listings'%}">Buy</a></li>
         <li><a href="{% url 'location:rental_listings'%}">Rent</a></li>
-        <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
-        <li><a href="{% url 'listings:rental_listing_form' %}">Post your Rental</a></li>
+        <li><a href="{% url 'profiles:agent_list'%}">Find an Agent</a></li>
+        <li><a href="#">Request a property</a></li>
 
       </ul>
       <ul id="nav-base2" class="right hide-on-med-and-down">
         {% if not request.user.is_authenticated %}
-        <li><a href="{% url 'account_login' %}" class="modal-trigger"><img class="avatar" src="{% static 'icons/svgs/eye-disabled.svg' %}">LogIn</a></li>
+        <li><a href="{% url 'account_login' %}" class="modal-trigger"><i class="fas fa-user-alt-slash"></i> LogIn</a></li>
         <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
         <!-- <li><a href="#"><b>or</b></a></li> -->
         <!-- <li><a href="#">Subscribe for updates</a></li> -->
         {% else %}
-        <li><a><img class="avatar" src="{% static 'icons/svgs/eye-active.svg' %}">Logged as {{request.user}}</a></li>
-        <li><a href="{% url 'profiles:account'%}">My profile</a></li>
-        <li><a href="#id01" class="modal-trigger">Logout</a></li>
+        <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
+        <li><a href="{% url 'listings:rental_listing_form' %}"> Post a Rental</a></li>
+        <li><a id='ac-trigger' class="dropdown-trigger" data-target='ac-dropdown'><i class="far fa-user-circle" style="color:green;"></i>
+          {{request.user.profile.first_name|make_list|first|upper}} {{request.user.profile.last_name|make_list|first|upper}}</a>
+      </li>
 
-        {% endif %}
       </ul>
-
-
+      <div id="ac-dropdown"class="dropdown-content">
+        <div class="ac-drd-img">
+          {% if request.user.profile.profile_image%}
+          <img src="{{request.user.profile.profile_image.url}}" alt="profile.img" style="width:40px">
+          {% else %}
+          <img src="{% static 'img/avatar.png'%}" alt="avatar.png">
+          {% endif %}
+        </div>
+        <li><a href="{% url 'profiles:account'%}">My profile</a></li>
+        <li><a href="#id01" class="modal-trigger"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+      </div>
+      {% endif %}
       <ul id="mobile-nav" class="sidenav">
-        <li><a href="{% url 'listings:homepage'%}">Home</a></li>
+        <li><a href="#">Home</a></li>
         <li><a href="{% url 'location:onsale_listings' %}">Buy</a></li>
         <li><a href="{% url 'location:rental_listings'%}">Rent</a></li>
         <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
         <li><a href="{% url 'listings:rental_listing_form' %}">Post your Rental</a></li>
         {% if not request.user.is_authenticated %}
-        <li><a href="{% url 'account_login' %}" class="modal-trigger"><img class="avatar" src="{% static 'icons/svgs/eye-disabled.svg' %}">LogIn</a></li>
+        <li><a href="{% url 'account_login' %}" class="modal-trigger"><i class="fas fa-user-alt-slash"></i>LogIn</a></li>
         <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
         <!-- <li><a href="#"><b>or</b></a></li> -->
         <!-- <li><a href="#">Subscribe for updates</a></li> -->
         {% else %}
-        <li><a><img class="avatar" src="{% static 'icons/svgs/eye-active.svg' %}">Logged as {{request.user}}</a></li>
-        <li><a href="{% url 'profiles:account'%}">My profile</a></li>
+        <li><a><i class="far fa-user-circle" style="color:green;"></i> {{request.user|make_list|first|upper}}</a></li>
+        <li class="center" ><a href="{% url 'profiles:account'%}">My profile</a></li>
         <li><a href="#id01" class="modal-trigger">Logout</a></li>
         {% endif %}
 

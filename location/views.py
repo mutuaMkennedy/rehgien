@@ -37,7 +37,7 @@ def for_sale_property_points(request):
 	points = serialize('geojson', PropertyForSale.objects.all(), fields=(
 						'property_name', 'price', 'location_name','type','thumb','location',
 						'bathrooms', 'bedrooms', 'floor_area', 'size_units', 'pk',
-						'publishdate'
+						'publishdate','prop_images'
 						))
 	return HttpResponse( points, content_type='json')
 

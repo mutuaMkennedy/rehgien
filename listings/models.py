@@ -9,6 +9,10 @@ from .validators import validate_video_extension
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from cloudinary.models import CloudinaryField
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+import cloudinary
 # Create your models here.
 
 # Lists for multiple choice fields
@@ -203,7 +207,7 @@ class PropertyForSale(models.Model):
 
 class PropertyForSaleImages(models.Model):
 	property = models.ForeignKey(PropertyForSale, on_delete=models.CASCADE, related_name='images', null=True)
-	image = models.ImageField(default=None, null=True)
+	image = CloudinaryField('image', blank=True)
 
 	def save(self, *args, **kwargs):
 		if not self.id:
@@ -221,6 +225,10 @@ class PropertyForSaleImages(models.Model):
 
 	class Meta:
 		verbose_name_plural = 'PropertyForSaleImages'
+
+@receiver(pre_delete, sender=PropertyForSaleImages)
+def photo_delete(sender, instance, **kwargs):
+	cloudinary.uploader.destroy(instance.image.public_id)
 
 class PropertyForSaleVideos(models.Model):
 	property = models.ForeignKey(PropertyForSale, on_delete=models.CASCADE, related_name= 'videos', null=True)

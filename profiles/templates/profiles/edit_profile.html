@@ -3,18 +3,34 @@
 {% block content %}
 {% load crispy_forms_tags%}
 <div class="container">
+  <div class="ag-d-banner" style="background-image:url({% static 'img/ice-pattern.jpg'%});" ></div>
+</div>
+<div class="container">
   <div class="row">
-    <form class="user-pf-form" action="{% url 'profiles:edit_profile' %}" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <h5 class="center">Input your details</h5>
-      <div class="u-pf-details">
-        {{p_edit_form.as_p}}
+    <div class="col s12 md6 l6 xl6">
+        <form class="user-pf-form" action="{% url 'profiles:edit_profile' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="u-pf-details">
+            <h5>Edit your details</h5>
+            {{u_edit_form.as_p}}
+            {{p_edit_form.as_p}}
+          </div>
+          <div class="s-prof">
+            <button type="submit" name="button">Save Changes</button>
+          </div>
+        </form>
+    </div>
+    <div class="col s12 md6 l6 xl6">
+      <div class="pf-p-wrapper">
+          <div class="pf-p-svg">
+            <img src="{% static 'img/profile.svg'%}" alt="profile.svg">
+          </div>
       </div>
-      <div class="s-prof">
-        <input type="submit" value="Create">
-      </div>
-    </form>
+    </div>
   </div>
 
+</div>
+<div class="container">
+  <div class="ag-d-banner" style="background-image:url({% static 'img/ice-pattern.jpg'%});" ></div>
 </div>
 {% endblock %}
