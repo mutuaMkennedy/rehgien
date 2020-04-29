@@ -2,7 +2,7 @@ from django import forms
 from . import models
 from django.forms import ClearableFileInput
 from leaflet.forms.widgets import LeafletWidget
-from cloudinary.forms import CloudinaryJsFileField
+from cloudinary.forms import CloudinaryFileField
 #from haystack.forms import FacetedSearchForm
 
 
@@ -130,14 +130,19 @@ class ListingForm(forms.ModelForm):
 		widgets = {'location':LeafletWidget()}
 
 class ImageForm(forms.ModelForm):
-	image = CloudinaryJsFileField(attrs = { 'multiple': 1 },
-									options={'resource_type': 'image'})
 	class Meta:
 		model = models.PropertyForSaleImages
 		fields = ['image',]
-		# widgets = {
-		# 	'image': ClearableFileInput(attrs={'multiple':True})
-		# }
+		image = CloudinaryFileField(
+				label = 'Property Images',
+				options = {
+					'format':'jpg',
+					'resource_type':'image',
+				},
+				)
+		widgets = {
+			'image': ClearableFileInput(attrs={'multiple':True})
+		}
 
 class VideoForm(forms.ModelForm):
 	class Meta:

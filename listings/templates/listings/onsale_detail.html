@@ -1,35 +1,77 @@
 {% extends 'base1.html' %}
 {% load static %}
 {% block content %}
-  <!-- Container for the image gallery -->
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+      <script type="text/javascript">
+
+        $(document).ready(function(event){
+          $(document).on('click','#ajxFav', function(event){
+             event.preventDefault();
+             var pk = $(this).attr('value');
+             console.log(pk);
+             $.ajax({
+               type : 'post',
+               url : '{% url "listings:axs_favourite"%}',
+               data : {
+                  'pk':pk,
+                  'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+               },
+               dataType: 'json',
+               // success: LikePost
+               success: function(response) {
+                 $('#dtl-fav-btn').html(response['form'])
+                 console.log($('#dtl-fav-btn').html(response['form']));
+
+
+               },
+               error: function(rs,e){
+                 console.log(rs.responseText)
+               },
+             });
+          });
+        });
+      </script>
 
 <section id="d-bd">
     <div class="product-carousel container">
       <div id="ca-row" class="row">
         <div id="c-slide" class="col s12 md6 l6 xl6">
           <div id="c-slider" class="carousel carousel-slider" data-indicators="true">
-                      <h4 class="listing-title-d">{{listing.property_name}}</h4>
+            <h4 class="listing-title-d">{{listing.property_name}}</h4>
+            <div class="fa-sh-btns">
+              <div id="dtl-fav-btn">
+                  {% include 'listings/favourite-section.html'%}
+              </div>
+              <div class="share-button">
+                <a href="#"><i class="fas fa-share"></i></a>
+              </div>
+            </div>
             {%for img in images%}
             <a href="#{{img.image}}!" class="carousel-item" data-cindex='{{img.image|length}}' ><img src="{{img.image.url}}"></a>
             {%endfor%}
-            <div class="prev"><i class="material-icons small">navigate_before</i></div>
-            <div class="next"><i class="material-icons small">navigate_next</i></div>
+            <div class="prev"><i class="fas fa-chevron-circle-left fa-lg"></i></div>
+            <div class="next"><i class="fas fa-chevron-circle-right fa-lg"></i></div>
           </div>
         </div>
         <div id="contact-form1" class="container col s12 md6 l6 xl6">
           <div id="cont-c" class="col s12 m7">
               <div id="cont-card" class="card horizontal">
                 <div id="c-img" class="card-image">
+                  {%if listing.owner.profile.profile_image %}
+                  <img src="{{listing.owner.profile.profile_image.url}}" alt="{{listing.owner.first_name}}">
+                  {% else %}
                   <img src="{% static 'img/avatar.png'%}" alt="avatar.png">
+                  {% endif %}
                 </div>
                 <div class="card-stacked">
                   <div class="prof-card-content">
-                    <h6 class="green-text"><b>Agent name</b></h6>
+                    <h6 class="green-text"><b>{{listing.owner.first_name}} </b></h6>
                     <h5 class="black-text"><b>Company name</b></h5>
-                    <p>Phone number</p>
+                    <p>{{listing.phone}}</p>
                   </div>
                   <div class="verified-agent">
-                  <i  class="material-icons green-text">check_box</i>
+                  <i class="fas fa-user-check fa-lg" style="color:lime;"></i>
                   <p> Verified by Rehgien</p>
                   </div>
                 </div>
@@ -79,200 +121,285 @@
     </div>
 
 </section>
-<section id="d-bd2">
-  <div id="detail-section" class="container">
+<section>
+  <div class="container">
     <div class="row">
-      <div class="col s12">
-        <ul id="detail-switch" class="tabs">
-            <li class="tab col s3"><a href="#HomeFacts">Home Facts</a></li>
-            <li class="tab col s3"><a href="#Additional">Additional Home Facts</a></li>
-        </ul>
-      </div>
-      <div id="HomeFacts" class="col s12">
-        <section>
-          <div id="homeFacts" class="container">
-            <h6><b>Home Facts</b></h6>
-            <div id="detail-form" class="row">
-              <div class="facts-d">
-                <div class="facts1">
-                  <p><b>Type:</b> {{listing.type|lower}}</p>
-                  <p><b>Price:</b> Ksh {{listing.price}}</p>
-                  <p><b>Location:</b> {{listing.location_name}}</p>
-                </div>
-                <div class="facts2">
-                  <p><b>Year Built:</b> {{listing.year_built}}</p>
-                  <p><b>Remodel Year:</b> {{listing.remodel_year}}</p>
-                </div>
-                <div class=" facts3 center">
-                  <a href="#vid" class="modal-trigger"><button class="vid-btn" type="button" name="button"><i class="material-icons">play_circle_filled</i>Video</button></a>
-                  <a href="#vr" class="modal-trigger"><button class="vr-btn" type="button" name="button"><i class="material-icons">3d_rotation</i> Vr</button></a>
-                </div>
-              </div>
-                <div class="description-d">
-                  <h5>Home Description</h5>
-                  <p>{{listing.description}}</p>
-                </div>
-            </div>
-            <!-- pop up video-->
-            <div id="vid" class="modal">
-              {% for vids in videos %}
-              <video src="{{ vids.video.url }}" type="video/mp4" class="videos" controls="controls"/>
-
-              {% endfor %}
-            </div>
-            <!-- popup vr-->
-            <div id="vr" class="modal">
-              <iframe width="100%" height="100%" src="{{listing.virtual_tour_url}}" frameborder="0" allowfullscreen allowvr></iframe>
-            </div>
-          </div>
-        </section>
-      </div>
-      <div id="Additional" class="col s12">
-        <!--description-->
-        <section>
-          <div id="Additional" class="container">
-            <h6><b>Additional Home Facts</b></h6>
-        <div class="detail-form2">
-            <table class="details1">
-              <tr>
-                <th> </th>
-                <th><b>No.</b></th>
-                <th><b>Unit(s)</b></th>
-              </tr>
-              <tr>
-                <td><b>Bedrooms</b></td>
-                <td>{{listing.bedrooms}}</td>
-                <td>n/a</td>
-              </tr>
-              <tr>
-                <td><b>Bathrooms</b></td>
-                <td>{{listing.bathrooms}}</td>
-                <td>n/a</td>
-              </tr>
-              <tr>
-                <td><b>Floor</b></td>
-                <td>{{listing.floor_number}}</td>
-                <td>n/a</td>
-              </tr>
-              <tr>
-                <td><b>Total Rooms</b></td>
-                <td>{{listing.total_rooms}}</td>
-                <td>n/a</td>
-              </tr>
-              <tr>
-                <td><b>Floor Area</b></td>
-                <td>{{listing.floor_area}}</td>
-                <td>{{listing.size_units}}</td>
-              </tr>
-              <tr>
-                <td><b>Garage Size</b></td>
-                <td>{{listing.garage_sqm}}</td>
-                <td>Sq/M</td>
-              </tr>
-            </table>
-
+      <div class="col s12 md4 l4 xl4">
+        <div class="facts1">
+          <li class="dtl-price" >Ksh {{listing.price}}</li>
+          <li class="dtl-features"> <i class="fas fa-shower fa-lg"></i>{{listing.bathrooms}} ba | <i class="fas fa-bed fa-lg"></i> {{listing.bedrooms}} bd | <i class="fas fa-ruler-combined fa-lg"></i>{{listing.floor_area}} {{listing.size_units}}</li>
+          <li class="dtl-hometype">{{listing.type|lower}}</li>
         </div>
-
-        <div class="detail-form2">
-
-            <table class="details2">
-              <tr>
-                <th> </th>
-                <th><b>No.</b></th>
-              </tr>
-              <tr>
-                <td><b>No. of Units Available</b></td>
-                <td>{{listing.number_of_units}}</td>
-              </tr>
-              <tr>
-                <td><b>No. of Stories</b></td>
-                <td>{{listing.number_of_stories}}</td>
-              </tr>
-              <tr>
-                <td><b>Parking Spaces</b></td>
-                <td>{{listing.parking_spaces}}</td>
-              </tr>
-            </table>
-        </div>
-        <h6><b>#Room Details</b></h6>
-        <div class="detail-form2">
-            <table class="rm-details">
-              <tr>
-                <td><b>Pre-installed Appliances</b></td>
-                <td>{{listing.appliances}}</td>
-              </tr>
-              <tr>
-                <td><b>Basement</b></td>
-                <td>{{listing.basement}}</td>
-              </tr>
-              <tr>
-                <td><b>Floor Covering</b></td>
-                <td>{{listing.floor_covering}}</td>
-              </tr>
-              <tr>
-                <td><b>Rooms</b></td>
-                <td>{{listing.rooms}}</td>
-              </tr>
-              <tr>
-                <td><b>Indoor Features</b></td>
-                <td>{{listing.indoor_features}}</td>
-              </tr>
-            </table>
-        </div>
-        <h6><b>#Utility Details</b></h6>
-        <div class="detail-form2">
-            <table class="utl-details">
-              <tr>
-                <td><b>Cooling Type</b></td>
-                <td>{{listing.cooling_type}}</td>
-              </tr>
-              <tr>
-                <td><b>Heating Type</b></td>
-                <td>{{listing.heating_type}}</td>
-              </tr>
-              <tr>
-                <td><b>Heating Fuel</b></td>
-                <td>{{listing.heating_fuel}}</td>
-              </tr>
-            </table>
-        </div>
-        <h6><b>#Building Details</b></h6>
-        <div class="detail-form2">
-            <table class="bdg-details">
-              <tr>
-                <td><b>Building Amenities</b></td>
-                <td>{{listing.building_amenities}}</td>
-              </tr>
-              <tr>
-                <td><b>Exterior</b></td>
-                <td>{{listing.exterior}}</td>
-              </tr>
-              <tr>
-                <td><b>Outdoor Amenities</b></td>
-                <td>{{listing.outdoor_amenities}}</td>
-              </tr>
-              <tr>
-                <td><b>Available Parking</b></td>
-                <td>{{listing.parking}}</td>
-              </tr>
-              <tr>
-                <td><b>Roof Type</b></td>
-                <td>{{listing.roof}}</td>
-              </tr>
-              <tr>
-                <td><b>View Type</b></td>
-                <td>{{listing.view}}</td>
-              </tr>
-            </table>
-        </div>
-          </div>
-        </section>
-        <br>
       </div>
 
+    <div class="col s12 md4 l4 xl4">
+      <div class="facts2">
+        <li><b>Year Built:</b> {{listing.year_built}}</li>
+        {% if listing.remodel_year%}
+        <li><b>Remodel Year:</b> {{listing.remodel_year}}</li>
+        {% else %}
+        <li><b>Remodel Year:</b> None</li>
+        {% endif %}
+      </div>
     </div>
 
+      <div class="col s12 md4 l4 xl4">
+          <div class=" facts3">
+            <a href="#vid" class="modal-trigger"><button class="vid-btn" type="button" name="button"><i class="material-icons">play_circle_filled</i></button></a>
+            <a href="#vr" class="modal-trigger"><button class="vr-btn" type="button" name="button"><i class="material-icons">3d_rotation</i></button></a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- pop up video-->
+  <div id="vid" class="modal">
+    {% for vids in videos %}
+    <video src="{{ vids.video.url }}" type="video/mp4" class="videos" controls="controls"/>
+
+    {% endfor %}
+  </div>
+  <!-- popup vr-->
+  <div id="vr" class="modal">
+    <iframe width="100%" height="100%" src="{{listing.virtual_tour_url}}" frameborder="0" allowfullscreen allowvr></iframe>
   </div>
 </section>
 
+<section>
+  <div id="m-dtl-cont" class="container">
+    <div class="row">
+      <h4 class="dtl-location">{{listing.location_name}}</h4>
+      <div id='detail-map'>
+
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+    if (!mapboxgl.supported()) {
+      alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
+      } else {
+        var map = new mapboxgl.Map({
+            container: 'detail-map',
+            style: 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
+            minZoom: 10,
+            maxZoom:14,
+            center: [{{ listing.location.x }}, {{ listing.location.y }}]
+      });
+    }
+    // disable map rotation using right click + drag
+    map.dragRotate.disable();
+
+    // disable map rotation using touch rotation gesture
+    map.touchZoomRotate.disableRotation();
+
+    // Adds geolocate control to the map.
+    map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    }));
+
+    // Adds zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+
+    var geojson = {
+    type: 'FeatureCollection',
+    features: [
+        {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [{{ listing.location.x }}, {{ listing.location.y }}]
+        },
+        properties: {
+            title: '{{ listing.property_name }}',
+            thumb:'{{listing.thumb.url}}',
+            location_name:'{{listing.location_name}}',
+            price:'{{listing.price}}',
+        }
+        },
+    ]
+    };
+
+    map.on('load', function() {
+      map.addSource('property',{
+        "type": "geojson",
+        "data": geojson
+      });
+      map.addLayer({
+      "id": "points",
+      "source": 'property',
+      "type": "circle",
+      "paint": {
+          "circle-radius": 6,
+          "circle-stroke-width": 1.5,
+          "circle-color": "#2ECC71",
+          "circle-stroke-color":"blue"
+      },
+    });
+  })
+  </script>
+</section>
+
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="description-d">
+        <h5>Home Description</h5>
+        <p>{{listing.description}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="container">
+    <div class="row">
+        <div id="add-details" class="col s12 md3 l3 xl3">
+            <h6><b>Additional Home Facts</b></h6>
+            {% if listing.floor_number%}
+            <h5><b>Floor:</b></h5>
+            <li>{{listing.floor_number}}</li>
+            {% endif %}
+            {% if listing.total_rooms%}
+            <h5><b>Total Rooms:</b></h5>
+            <li>{{listing.total_rooms}}</li>
+            {% endif %}
+            {% if listing.garage_sqm%}
+            <h5><b>Garage Size:</b></h5>
+            <li>{{listing.garage_sqm}} SqM</li>
+            {% endif %}
+            {% if listing.number_of_units%}
+            <h5><b>Units Available:</b></h5>
+            <li>{{listing.number_of_units}}</li>
+            {% endif %}
+            {% if listing.number_of_stories%}
+            <h5><b>Storeys:</b></h5>
+            <li>{{listing.number_of_stories}}</li>
+            {% endif %}
+            {% if listing.parking_spaces%}
+            <h5><b>Parking:</b></h5>
+            <li>{{listing.parking_spaces}}</li>
+            {% endif %}
+        </div>
+        <div id="add-details" class="col s12 md3 l3 xl3">
+          <h6><b>Indoor Features</b></h6>
+          <h5><b>Pre-installed Appliances:</b></h5>
+          <li>{{listing.appliances}}</li>
+          <h5><b>Basement:</b></h5>
+          <li>{{listing.basement}}</li>
+          <h5><b>Floor Covering:</b></h5>
+          <li>{{listing.floor_covering}}</li>
+          <h5><b>Rooms:</b></h5>
+          <li>{{listing.rooms}}</li>
+          <h5><b>Indoor Features:</b> </h5>
+          <li>{{listing.indoor_features}}</li>
+        </div>
+        <div id="add-details" class="col s12 md3 l3 xl3">
+          <h6><b>Utility Details</b></h6>
+          <h5><b>Cooling Type:</b> </h5>
+          <li>{{listing.cooling_type}}</li>
+          <h5><b>Heating Type:</b></h5>
+          <li>{{listing.heating_type}}</li>
+          <h5><b>Heating Fuel:</b></h5>
+          <li>{{listing.heating_fuel}}</li>
+        </div>
+        <div id="add-details" class="col s12 md3 l3 xl3">
+          <h6><b>Building Details</b></h6>
+          <h5><b>Amenities:</b></h5>
+          <li>{{listing.building_amenities}}</li>
+          <h5><b>Exterior:</b></h5>
+          <li>{{listing.exterior}}</li>
+          <h5><b>Outdoor Amenities:</b></h5>
+          <li>{{listing.outdoor_amenities}}</li>
+          <h5><b>Available Parking:</b></h5>
+          <li>{{listing.parking}}</li>
+          <h5><b>Roof Type</b></h5>
+          <li>{{listing.roof}}</li>
+          <h5><b>View Type</b> </h5>
+          <li>{{listing.view}}</li>
+        </div>
+    </div>
+    </div>
+</section>
+
+<section>
+<div class="container">
+  <div class="row">
+    <h1 class="sld-h" >Similar Listings For You</h1>
+    <div class="sld">
+    <div id="similar-Lcard" class="card">
+      <div class="slc-img-wrapper">
+        <img src="{% static 'img/placeh.jpg'%}" alt="">
+      </div>
+      <div class="slc-f-wrapper">
+        <li>Ksh: 25,0000 </li>
+        <li>Property Name</li>
+        <li>Location</li>
+      </div>
+    </div>
+
+    <div id="similar-Lcard" class="card">
+      <div class="slc-img-wrapper">
+        <img src="{% static 'img/placeh.jpg'%}" alt="">
+      </div>
+      <div class="slc-f-wrapper">
+        <li>Ksh: 25,0000 </li>
+        <li>Bream Estate</li>
+        <li>Port land, Thika</li>
+      </div>
+    </div>
+
+    <div id="similar-Lcard" class="card">
+      <div class="slc-img-wrapper">
+        <img src="{% static 'img/placeh.jpg'%}" alt="">
+      </div>
+      <div class="slc-f-wrapper">
+        <li>Ksh: 25,0000 </li>
+        <li>Bream Estate</li>
+        <li>Port land, Thika</li>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+</section>
+
 {% endblock %}
+{% block footer %}
+<footer >
+<section id="footer" class="section section-follow black-text">
+  <div class="container">
+    <div class="row">
+      <div class="f-details center">
+        <a href="#"> Privacy Policy</a>
+        <a href="#"> Terms & Conditions</a>
+        <a href="#"> Advertise</a>
+        <a href="#"> Contact Us</a>
+        <a href="{% url 'contact:about_us'%}"> About Us</a>
+      </div>
+      <div id="footer-details" class="col s12 center">
+        <a href="#" class="black-text">
+          <i class="fab fa-facebook fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-twitter fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-linkedin fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-instagram fa-2x"></i>
+        </a>
+      </div>
+      <p class="flow-text black-text center" id="c-year"></p>
+      <script type="text/javascript">
+        var d = new Date();
+        document.getElementById("c-year").innerHTML= 'While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright '+ d.getFullYear();
+      </script>
+    </div>
+  </div>
+</section>
+
+</footer>
+{% endblock%}

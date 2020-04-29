@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block location_content%}
-
+  <script src="{% static 'js/jquery.min.js' %}"></script>
 <div class="help-text1 center hide-on-med-and-down" >
   <p>Zoom to filter results</p>
 </div>
@@ -24,6 +24,10 @@
       <div id="all-row2" class="row">
           <div id="obj" class="col s12 md6 l6 xl4">
 
+          </div>
+
+          <div id="paginator">
+            <button class='neext' type="button" name="button">Next</button>
           </div>
       </div>
       <div id="loader">
@@ -102,6 +106,8 @@ var submit_f_button = document.getElementById('submit_f_button');
 
 
 var listingEl = document.getElementById('obj');
+var paginator = document.getElementById("paginator");
+var d_address = "http://127.0.0.1:8000"
 
 function renderListings(features) {
     // Clear any existing listings
@@ -134,17 +140,24 @@ function renderListings(features) {
           propFeatures.textContent = prop.bathrooms +'ba' + '| ' + prop.bedrooms + 'bds' + '| ' + prop.floor_area + ' '+ prop.size_units
 
           var image = document.createElement("img");
-          image.src = "https://res.cloudinary.com/rehgien/"+ prop.prop_images;
+          image.src = prop.thumb;
           image.id = 'all-image2';
+
+          var fav = document.createElement("i");
+          fav.className = "fas fa-heart fa-lg";
+          fav.id = "fav-btn"
+
+          var favLink = document.createElement("a");
+          favLink.href = d_address + "/listings/on_sale/favourite/" + prop.pk;
 
           var detailsLink = document.createElement('a');
           detailsLink.id= 'detailsLink';
-          detailsLink.href = "http://127.0.0.1:8000/listings/onsale/" + prop.pk;
+          detailsLink.href = d_address + "/listings/onsale/" + prop.pk;
 
           var locIcon = document.createElement('img');
           locIcon.id = 'locIcon';
           locIcon.className = 'locIcon' + ' center hide-on-med-and-down';
-          locIcon.src = 'http://127.0.0.1:8000/static/img/ic_my_location_24px.svg';
+          locIcon.src ='/static/img/ic_my_location_24px.svg';
           locIcon.addEventListener('click',function () {
               map.flyTo({
                   center: feature.geometry.coordinates,
@@ -161,7 +174,7 @@ function renderListings(features) {
               popup.setLngLat(feature.geometry.coordinates)
               .setHTML(
               '<div id="popup" class="popup" style="z-index: 10;">' +
-                '<img '+ 'src=' + "http://127.0.0.1:8000/media/"+ feature.properties.thumb + '>' +"</li>"+
+                '<img '+ 'src=' + feature.properties.thumb + '>' +"</li>"+
                 '<li>' +
                 '<ul class="list-group">' +
                 '<li class="list-group-item">' + feature.properties.property_name +" </li>" +
@@ -178,12 +191,14 @@ function renderListings(features) {
           });
 
           listingEl.appendChild(card);
+          favLink.appendChild(fav);
           detailsLink.appendChild(image);
           detailsLink.appendChild(name);
           detailsLink.appendChild(propFeatures);
           detailsLink.appendChild(price);
           detailsLink.appendChild(location);
           card.appendChild(detailsLink);
+          card.appendChild(favLink);
           card.appendChild(locIcon);
 
 
@@ -212,7 +227,7 @@ function renderListings(features) {
           circleRight.className='circle-clipper right';
         var circle3 = document.createElement('div');
           circle3.className='circle';
-var listingEl2 = document.getElementById('loader');
+        var listingEl2 = document.getElementById('loader');
           listingEl.appendChild(wrapper);
           wrapper.appendChild(spinner);
           circleLeft.appendChild(circle1);
@@ -257,7 +272,7 @@ function getUniqueFeatures(array, comparatorProperty) {
   map.on('load', function() {
     map.addSource('property',{
       "type": "geojson",
-      "data": "{%url 'location:for_sale_property_data'%}"
+      "data": "{%url 'location:sale_property'%}"
     });
     map.addLayer({
     "id": "points",
@@ -289,6 +304,7 @@ function getUniqueFeatures(array, comparatorProperty) {
         homes = uniqueFeatures;
       }
   });
+
   map.on('render',function() {
       var features = map.queryRenderedFeatures({layers: ['points']});
 
@@ -306,6 +322,7 @@ function getUniqueFeatures(array, comparatorProperty) {
       }
   });
 
+
   map.on('mousemove', 'points', function(e) {
       // Change the cursor style as a UI indicator.
       map.getCanvas().style.cursor = 'pointer';
@@ -315,7 +332,7 @@ function getUniqueFeatures(array, comparatorProperty) {
       popup.setLngLat(feature.geometry.coordinates)
       .setHTML(
       '<div id="popup" class="popup" style="z-index: 10;">' +
-        '<img '+ 'src=' + "http://127.0.0.1:8000/media/"+ feature.properties.thumb + '>' +"</li>"+
+        '<img '+ 'src=' + feature.properties.thumb + '>' +"</li>"+
         '<li>' +
         '<ul class="list-group">' +
         '<li class="list-group-item">' + feature.properties.property_name +" </li>" +

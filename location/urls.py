@@ -8,8 +8,7 @@ app_name = 'location'
 urlpatterns = [
 	path('districts_dataset/', views.districts_dataset, name='districts_data'),
 	path('divisions_dataset/', views.divisions_dataset, name='divisions_data'),
-	path('for_sale_property_dataset/', views.for_sale_property_points, name='for_sale_property_data'),
-	path('for_rent_property_dataset/', views.for_rent_property_points, name='for_rent_property_data'),
+	path('api/sale_property/', views.SaleListApi.as_view(), name='sale_property'),
 	path('polytechnics_dataset/', views.polytechnics_dataset, name='polytechnics_data'),
 	path('private_colleges_dataset/', views.private_colleges_dataset, name='private_colleges_data'),
 	path('private_universities_dataset/', views.private_universities_dataset, name='private_universities_data'),
@@ -19,7 +18,4 @@ urlpatterns = [
 	path('universities_dataset/', views.universities_dataset, name='universities_data'),
 	path('primary_schools_dataset/', views.primary_schools_dataset, name='primary_schools_data'),
 	path('teachers_training_dataset/', views.teachers_training_dataset, name='teachers_training_data'),
-	path('buy/', views.onsale_listings, name='onsale_listings' ),
-	path('rent/', views.rental_listings, name='rental_listings' ),
-	path('mapbox/', views.onsale_listings, name='mapbox'),
 ]

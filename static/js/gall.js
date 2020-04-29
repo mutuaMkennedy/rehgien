@@ -32,8 +32,18 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-//preloader
+//slider innitialization
+// $('.slider').slider({
+//     height: 100,
+//     indicators: false,
+//     interval: 500,
+// });
 
-// window.onload=function(){
-//   document.getElementById("preloader-animation").style.display="none";
-// }
+//$('.slider').slider('pause');
+
+// $('.next').click(function() {
+//  $('.slider').slider('next');
+// });
+// $('.prev').click(function() {
+//  $('.slider').slider('prev');
+// });

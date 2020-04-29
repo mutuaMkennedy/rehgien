@@ -6,8 +6,13 @@ app_name = 'listings'
 
 urlpatterns = [
 	url(r'^$', views.homepage, name='homepage'),
-	url(r'^onsale/(?P<listing_id>[0-9]+)/$', views.onsale_detail, name='onsale_detail'),
-	url(r'^rental/(?P<listing_id>[0-9]+)/$', views.rental_detail, name='rental_detail'),
+	path('buy/', views.sale_listings_results, name='sale_listings'),
+	path('rent/', views.rental_listings_results, name='rental_listings'),
+	url(r'^onsale/(?P<pk>[0-9]+)/$', views.onsale_detail, name='onsale_detail'),
+	path('on_sale/favourite/<int:pk>/', views.onsale_favourite, name='s_favourite'),
+	path('on_sale/ajx_favourite/', views.ajxonsale_favourite, name='axs_favourite'),
+	url(r'^rental/(?P<pk>[0-9]+)/$', views.rental_detail, name='rental_detail'),
+	path('rental/favourite/<int:pk>/', views.rental_favourite, name='r_favourite'),
 	path('on_sale/<int:pk>/edit/', views.for_sale_update, name='update'),
 	path('rental/<int:pk>/edit/', views.for_rent_update, name='rental_update'),
 	path('on_sale/<int:pk>/delete/', views.for_sale_delete, name='s_delete'),

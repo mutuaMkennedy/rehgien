@@ -4,10 +4,14 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
 from . models import (
 				PropertyForSale, PropertyForSaleImages,
 				PropertyForSaleVideos, RentalProperty,RentalImages, RentalVideos,
 				)
+from profiles.models import UserProfile
 from . import forms
 from . import models
 from django.contrib.auth.decorators import login_required
@@ -15,7 +19,9 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_POST
 from django.views import generic
+from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.template.loader import render_to_string
 from .forms import (
 			ImageForm, VideoForm,
 			RentalImageForm, RentalVideoForm,
@@ -24,6 +30,7 @@ try:
 	from django.utils import simplejson as simplejson
 except ImportError:
 	import json
+from django.core.paginator import Paginator
 #from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 #from haystack.query import SearchQuerySet
 # Create your views here.
@@ -39,17 +46,99 @@ def homepage(request):
 	rentals_reversed = reversed(rentals_recent)
 	return render(request, 'listings/homey.html', {'onsale_reversed': onsale_reversed, 'rentals_reversed': rentals_reversed})
 
-def onsale_detail(request, listing_id):
-	listing = get_object_or_404(PropertyForSale, pk=listing_id)
+def sale_listings_results(request):
+	listings = PropertyForSale.objects.all()
+	loc_input_q = request.GET.get('location_input')
+	if loc_input_q !="" and loc_input_q is not None:
+		loc_icontains = loc_input_q.split(',')
+		listings = listings.filter(location_name__icontains = loc_icontains[0])
+		location_address = loc_input_q
+	else:
+		listings = listings.filter(location_name__icontains= 'Nairobi')
+		location_address = 'Nairobi,Kenya'
+	listings_count = listings.count()
+	paginator = Paginator(listings, 3)
+	page = request.GET.get('page')
+	listings = paginator.get_page(page)
+	return render(request, 'listings/for-sale-listings.html', {'listings':listings, 'listings_count':listings_count,
+			"location_address":location_address})
+
+def rental_listings_results(request):
+	listings = RentalProperty.objects.all()
+	loc_input_q = request.GET.get('location_input')
+	if loc_input_q !="" and loc_input_q is not None:
+		loc_icontains = loc_input_q.split(',')
+		listings = listings.filter(location_name__icontains = loc_icontains[0])
+		location_address = loc_input_q
+	else:
+		listings = listings.filter(location_name__icontains= 'Nairobi')
+		location_address = 'Nairobi,Kenya'
+	listings_count = listings.count()
+	paginator = Paginator(listings, 3)
+	page = request.GET.get('page')
+	listings = paginator.get_page(page)
+	return render(request, 'listings/rental-listings.html', {'listings':listings,'listings_count':listings_count, "location_address":location_address})
+
+def onsale_detail(request, pk):
+	listing = get_object_or_404(PropertyForSale, pk=pk)
+	is_favourite = False
+	if listing.favourite.filter(id=request.user.id).exists():
+		is_favourite = True
 	images = listing.images.all()
 	videos = listing.videos.all()
-	return render(request, 'listings/onsale_detail.html', {'listing': listing, 'images':images, 'videos': videos})
+	return render(request, 'listings/onsale_detail.html', {'listing': listing,'is_favourite':is_favourite ,'images':images, 'videos': videos})
 
-def rental_detail(request, listing_id):
-	rentals = get_object_or_404(RentalProperty, pk=listing_id)
+@login_required(login_url='account_login')
+def onsale_favourite(request,pk):
+	listing = get_object_or_404(PropertyForSale, pk=pk)
+	if listing.favourite.filter(pk=request.user.pk).exists():
+		listing.favourite.remove(request.user.pk)
+	else:
+		listing.favourite.add(request.user.pk)
+	return HttpResponseRedirect(listing.get_absolute_url())
+
+def ajxonsale_favourite(request):
+	if request.method == 'POST':
+		user = request.user.id
+		is_favourite = False
+		pk = request.POST.get('pk')
+		print(pk)
+		listing = get_object_or_404(PropertyForSale, pk=pk)
+		print(listing.property_name)
+		_liked = listing.favourite.filter(pk=user).exists()
+		print(_liked)
+		if _liked:
+			listing.favourite.remove(user)
+			is_favourite = False
+			# print('listing removed from favs')
+		else:
+			listing.favourite.add(user)
+			is_favourite = True
+		context = {
+		'is_favourite':is_favourite,
+		'listing':listing,
+		}
+		if request.is_ajax():
+			html = render_to_string('listings/favourite-section.html', context, request=request)
+			return JsonResponse({'form':html})
+
+def rental_detail(request, pk):
+	rentals = get_object_or_404(RentalProperty, pk=pk)
+	is_favourite = False
+	if rentals.favourite.filter(id=request.user.id).exists():
+		is_favourite = True
 	images = rentals.images.all()
 	videos = rentals.videos.all()
-	return render(request, 'listings/rental_detail.html', {'rentals': rentals, 'images':images, 'videos': videos})
+	return render(request, 'listings/rental_detail.html', {'listing': rentals,'is_favourite':is_favourite, 'images':images, 'videos': videos})
+
+@login_required(login_url='account_login')
+def rental_favourite(request,pk):
+	listing = get_object_or_404(RentalProperty, pk=pk)
+	if listing.favourite.filter(pk=request.user.pk).exists():
+		listing.favourite.remove(request.user.pk)
+	else:
+		listing.favourite.add(request.user.pk)
+	return HttpResponseRedirect(listing.get_absolute_url())
 
 @login_required(login_url='account_login')
 def listing_form(request):

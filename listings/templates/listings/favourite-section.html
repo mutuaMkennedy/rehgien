@@ -1,0 +1,9 @@
+
+<form class="ajxFavForm"  action="{% url 'listings:axs_favourite'%}" method="post">
+  {% csrf_token %}
+    {% if is_favourite %}
+    <button id="ajxFav" type="submit" value = "{{listing.pk}}"><i class="fas fa-heart fa-lg" style="color:red;"></i></button>
+    {% else %}
+    <button id="ajxFav" type="submit" value = "{{listing.pk}}"><i class="fas fa-heart fa-lg" style="color:grey;"></i></button>
+    {% endif%}
+</form>

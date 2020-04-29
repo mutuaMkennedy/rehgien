@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.serializers import serialize
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
 from . models import (Districts, Divisions, KenyaNationalPolytechnics,
 						KenyaPrimarySchools, PrivateColleges,
 						PrivateUniversities, PublicColleges, UniversitiesColleges,
@@ -12,13 +14,10 @@ from listings.models import (
 							RentalProperty,
 							)
 
-# Query for all listiongs
-def onsale_listings(request):
-	listings = PropertyForSale.objects.all()
-	# paginator = Paginator(listings, 4)  #show the first 20 items
-	# page = request.GET.get('page')
-	# listings_paged = paginator.get_page(page)
-	return render(request, 'location/location-onsale.html', {'listings': listings})
+from .serializer import SalePropertySerializer
+from rest_framework.generics import ListAPIView
+from .pagination import ListingGeoJsonPagination
+from rest_framework.renderers import JSONRenderer
 
 def rental_listings(request):
 	rentals = RentalProperty.objects.all()
@@ -32,22 +31,14 @@ def map_box(request):
 	return render(request, 'location/mapbox.html', {'mapbox_access_token':mapbox_access_token})
 
 #Dataset querysets for spatial analysis
+class SaleListApi(ListAPIView):
+	queryset = PropertyForSale.objects.all()
+	serializer_class = SalePropertySerializer
+	pagination_class = ListingGeoJsonPagination
+	# renderer_classes = [JSONRenderer]
+	# authentication_classes = [authentication.SessionAuthentication]
+	# permission_classes = [permissions.IsAdminUser]
 
-def for_sale_property_points(request):
-	points = serialize('geojson', PropertyForSale.objects.all(), fields=(
-						'property_name', 'price', 'location_name','type','thumb','location',
-						'bathrooms', 'bedrooms', 'floor_area', 'size_units', 'pk',
-						'publishdate','prop_images'
-						))
-	return HttpResponse( points, content_type='json')
-
-def for_rent_property_points(request):
-	points = serialize('geojson', RentalProperty.objects.all(),fields=(
-						'property_name', 'price', 'location_name','type','thumb','location',
-						'bathrooms', 'bedrooms', 'floor_area', 'size_units', 'pk',
-						'publishdate'
-						))
-	return HttpResponse( points, content_type='json')
 
 def divisions_dataset(request):
 	data1 = serialize('geojson', Divisions.objects.all())

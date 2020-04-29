@@ -32,12 +32,12 @@ urlpatterns = [
     path('mortgage/', include('mortgage.urls')),
     path('contact/', include('contact.urls')),
     path('profile/', include('profiles.urls')),
-    path('search/', include('search.urls')),
     path('apis/', include('listings.apis.urls')),
     path('location-apis/', include('location.api.urls')),
     path('apis/', include('profiles.apis.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^photologue/', include('photologue.urls', namespace='photologue')),
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     #url(r'^search/', include('haystack.urls')),
 ]
 

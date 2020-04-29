@@ -36,13 +36,13 @@
   <div class="row">
     {% for agent in agents %}
     <div id="agent-card" class="card">
-      <div class="row valign-wrapper">
-        <div class="col s12 md6 l4 xl4 ag-row">
+      <div class="row">
+        <div class="col s12 md6 l4 xl4">
           <div class="ag-img">
             {% if agent.profile_image %}
-            <img src="{{agent.profile_image.url}}" style='width:150px;height150px' alt="{{agent.user.first_name}}">
+            <img src="{{agent.profile_image.url}}" style='width:120px;height120px' alt="{{agent.user.first_name}}">
             {% else %}
-            <img src="{% static 'img/avatar.png'%}" style='width:150px;height150px' alt="{{agent.user.first_name}}">
+            <img src="{% static 'img/avatar.png'%}" style='width:120px;height120px' alt="{{agent.user.first_name}}">
             {% endif%}
           </div>
         </div>
@@ -64,6 +64,7 @@
     </div>
     {% endfor %}
   </div>
-
+  <!-- paginator for agent list-->
+  {% include 'profiles/pagination.html' with listings=agents %}
 </div>
 {% endblock %}

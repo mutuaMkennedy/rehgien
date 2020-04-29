@@ -38,6 +38,7 @@
               <div  id="pfl-d-sw" class="col s12">
                 <ul id="pfl-pg-switch" class="tabs tabs-fixed-width">
                     <li class="tab col s3"><a href="#MyListings"><i class="fas fa-home" style="color:#5b0088"></i></a></li>
+                    <li class="tab col s3"><a href="#MyFavs"><i class="fas fa-heart fa-lg" style="color:#5b0088"></i></a></li>
                     <li class="tab col s3"><a href="#Analytics"><i class="far fa-chart-bar" style="color:#5b0088"></i></a></li>
                     <li class="tab col s3"><a href="#AdInteractions"><i class="fas fa-chart-line" style="color:#5b0088"></i></a></li>
                     <li class="tab col s3"><a href="#Advertise"><i class="fas fa-bullhorn" style="color:#5b0088"></i></a></li>
@@ -55,37 +56,25 @@
                                     <div id="rec-card" class="card">
                                       <div id="rec-img" class="card-image">
                                         <a href="{% url 'listings:onsale_detail' onsale_listings.id %}"><img src="{{onsale_listings.thumb.url}}" alt="nai"></a>
-                                        <span id="rec-date" class="card-title"><p>{{onsale_listings.publishdate}}</p></span>
-                                        <i id="rec-fav-button" class="material-icons right">favorite_border</i>
+                                        <span id="rec-date" class="card-title"><p>{{onsale_listings.publishdate.date}}</p></span>
 
                                       </div>
                                       <div id="rec-content" class="card-content">
                                         <ol>
-                                          <li class="rec-h-name">{{onsale_listings.property_name}}</li>
-                                          <li class="rec-h-features"> {{onsale_listings.bathrooms}} ba| {{onsale_listings.bedrooms}} bds| {{onsale_listings.floor_area}} {{onsale_listings.size_units}}</li>
                                           <li class="rec-h-price">Ksh: {{onsale_listings.price}}</li>
+                                          <li class="rec-h-features"> <i class="fas fa-shower"></i>{{onsale_listings.bathrooms}} ba| <i class="fas fa-bed"></i>{{onsale_listings.bedrooms}} bds| <i class="fas fa-ruler-combined"></i>{{onsale_listings.floor_area}} {{onsale_listings.size_units}}</li>
+                                          <li class="rec-h-name">{{onsale_listings.property_name}}</li>
                                           <li class="rec-h-location">{{onsale_listings.location_name}}</li>
                                         </ol>
                                       </div>
 
                                       <div class="card-links">
-                                        <a href="{% url 'listings:s_delete' onsale_listings.pk%}"><button id="link-del" type="button" name="button"><img src="{% static 'img/delete-forever-active.svg' %}"></button></a>
-                                        <a href="{% url 'listings:update' onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><img src="{% static 'img/mark-upgrade.svg' %}"></button></a>
+                                        <a href="{% url 'listings:s_delete' onsale_listings.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
+                                        <a href="{% url 'listings:update' onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
 
                                       </div>
                                       </div>
                                     </div>
-
-                          <!-- pop up warning-delete-->
-                          <!-- <div id="del" class="modal">
-                            <p>Are you sure you want to delete this item!!</p>
-                            <a href="#"><button class="delete" type="submit" name="button"> Delete</button></a>
-                          </div> -->
-                          <!-- pop up warning-edit-->
-                          <!-- <div id="edit" class="modal">
-                            <p>Are you sure you wish to edit this listing</p>
-                            <a href="#"><button class="update" type="submit" name="button"> Edit</button></a>
-                          </div> -->
 
                         {% endfor %}
                     {% else %}
@@ -95,22 +84,8 @@
                     </div>
                     {% endif%}
                 </div>
-                <!-- paginator for onsale listings-->
-                <div id="profile-paginator" class="pagination">
-                    <span class="step-links">
-                        {% if user_sale_posts.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ user_sale_posts.previous_page_number }}">previous</a>
-                        {% endif %}
-                        <span class="current">
-                        Page {{ user_sale_posts.number }} of {{ user_sale_posts.paginator.num_pages }}.
-                        </span>
-                        {% if user_sale_posts.has_next %}
-                        <a href="?page={{ user_sale_posts.next_page_number }}">next</a>
-                        <a href="?page={{ user_sale_posts.paginator.num_pages }}">last &raquo;</a>
-                        {% endif %}
-                    </span>
-                </div>
+                  <!-- paginator for onsale listings-->
+                  {% include 'profiles/pagination.html' with listings=user_sale_posts %}
 
                 </div>
 
@@ -126,15 +101,14 @@
                             <div id="rec-card" class="card" name="rec-card">
                               <div id="rec-img" class="card-image">
                                 <a href="{% url 'listings:rental_detail' rentals.id %}"><img src="{{rentals.thumb.url}}" alt="nai"></a>
-                                <span id="rec-date" class="card-title"><p>{{rentals.publishdate}}</p></span>
-                                <i id="rec-fav-button" class="material-icons right">favorite_border</i>
+                                <span id="rec-date" class="card-title"><p>{{rentals.publishdate.date}}</p></span>
 
                               </div>
                               <div id="rec-content" class="card-content">
                                 <ol>
-                                  <li class="rec-h-name">{{rentals.property_name}}</li>
-                                  <li class="rec-h-features"> {{rentals.bathrooms}} ba| {{rentals.bedrooms}} bds| {{rentals.floor_area}} {{rentals.size_units}}</li>
                                   <li class="rec-h-price">Ksh: {{rentals.price}} p/m</li>
+                                  <li class="rec-h-features"> <i class="fas fa-shower"></i>{{rentals.bathrooms}} ba| <i class="fas fa-bed"></i>{{rentals.bedrooms}} bds| <i class="fas fa-ruler-combined"></i>{{rentals.floor_area}} {{rentals.size_units}}</li>
+                                  <li class="rec-h-name">{{rentals.property_name}}</li>
                                   <li class="rec-h-location">{{rentals.location_name}}</li>
                                 </ol>
                               </div>
@@ -147,17 +121,6 @@
                             </div>
                       </div>
 
-                      <!-- pop up warning-delete-->
-                      <!-- <div id="del" class="modal">
-                        <p>Are you sure you want to delete this item!!</p>
-                        <a href="#"><button class="delete" type="submit" name="button"> Delete</button></a>
-                      </div> -->
-                      <!-- pop up warning-edit-->
-                      <!-- <div id="edit" class="modal">
-                        <p>Are you sure you wish to edit this listing</p>
-                        <a href="#"><button class="update" type="submit" name="button"> Edit</button></a>
-                      </div> -->
-
                       {% endfor%}
 
                       {% else %}
@@ -167,23 +130,132 @@
                       </div>
                       {%endif%}
                     </div>
-                    <!-- paginator for rentals-->
-                    <div id="profile-paginator" class="pagination">
-                        <span class="step-links">
-                            {% if user_rental_posts.has_previous %}
-                            <a href="?page=1">&laquo; first</a>
-                            <a href="?page={{ user_rental_posts.previous_page_number }}">previous</a>
-                            {% endif %}
-                            <span class="current">
-                            Page {{ user_rental_posts.number }} of {{ user_rental_posts.paginator.num_pages }}.
-                            </span>
-                            {% if user_rental_posts.has_next %}
-                            <a href="?page={{ user_rental_posts.next_page_number }}">next</a>
-                            <a href="?page={{ user_rental_posts.paginator.num_pages }}">last &raquo;</a>
-                            {% endif %}
-                        </span>
-                  </div>
+                      <!-- paginator for rental listings-->
+                      {% include 'profiles/pagination.html' with listings=user_rental_posts %}
+
                 </div>
+                  </div>
+
+                  <div id="MyFavs" class="favourites-sc">
+                    <div id="MyListings" class="pfl-listings">
+                          <p class="profile-title">Favourite For Sale Listings</p>
+                        <div class="profile-sale">
+                            <div id="pfl-sal" class="row">
+                                  {% if user_sale_favs %}
+                                  {% for favs in user_sale_favs %}
+
+                                    <div class="col s12 md6 l6 xl4">
+                                      <div id="rec-card" class="card">
+                                        <div id="rec-img" class="card-image">
+                                          <a href="{% url 'listings:onsale_detail' favs.id %}">
+                                          <img src="{{favs.thumb.url}}" alt="nai">
+                                          <div class="fav-button">
+                                            <a href="{% url 'listings:s_favourite' favs.pk%}"><i class="material-icons right" style="color:red;">favorite_border</i></a>
+                                          </div>
+                                        </a>
+                                          <span id="rec-date" class="card-title"><p>{{favs.publishdate.date}}</p></span>
+
+                                        </div>
+                                        <div id="rec-content" class="card-content">
+                                          <ol>
+                                            <li class="rec-h-price">Ksh: {{favs.price}}</li>
+                                            <li class="rec-h-features"> {{favs.bathrooms}} ba| {{favs.bedrooms}} bds| {{favs.floor_area}} {{favs.size_units}}</li>
+                                            <li class="rec-h-name">{{favs.property_name}}</li>
+                                            <li class="rec-h-location">{{favs.location_name}}</li>
+                                          </ol>
+                                        </div>
+                                        </div>
+                                      </div>
+
+                          {% endfor %}
+                      {% else %}
+                      <div class="empty-list">
+                        <p>No favourites for <b>{{user}}</b>. Favourites you add will appear here.</p>
+                        <img src="{% static 'img/no_data.svg'%}" alt="No favourites">
+                      </div>
+                      {% endif%}
+                  </div>
+                  <!-- paginator for onsale listings-->
+                  <div id="profile-paginator" class="pagination">
+                      <span class="step-links">
+                          {% if user_sale_favs.has_previous %}
+                          <a href="?page=1">&laquo; first</a>
+                          <a href="?page={{ user_sale_favs.previous_page_number }}">previous</a>
+                          {% endif %}
+                          <span class="current">
+                          Page {{ user_sale_favs.number }} of {{ user_sale_favs.paginator.num_pages }}.
+                          </span>
+                          {% if user_sale_favs.has_next %}
+                          <a href="?page={{ user_sale_favs.next_page_number }}">next</a>
+                          <a href="?page={{ user_sale_favs.paginator.num_pages }}">last &raquo;</a>
+                          {% endif %}
+                      </span>
+                  </div>
+
+                  </div>
+
+
+
+                  <p class="profile-title">Favourite Rental Listings</p>
+                  <div class="profile-rentals">
+                      <div class="row">
+                        {% if user_rental_posts%}
+                        {% for rentals in user_rental_posts %}
+                        <div class="col s12 md6 l6 xl4">
+
+                              <div id="rec-card" class="card" name="rec-card">
+                                <div id="rec-img" class="card-image">
+                                  <a href="{% url 'listings:rental_detail' rentals.id %}"><img src="{{rentals.thumb.url}}" alt="nai"></a>
+                                  <span id="rec-date" class="card-title"><p>{{rentals.publishdate}}</p></span>
+                                  <div class="fav-button">
+                                    <a href="{% url 'listings:r_favourite' rentals.pk%}"><i class="material-icons right" style="color:red;">favorite_border</i></a>
+                                  </div>
+
+                                </div>
+                                <div id="rec-content" class="card-content">
+                                  <ol>
+                                    <li class="rec-h-price">Ksh: {{rentals.price}} p/m</li>
+                                    <li class="rec-h-features"> {{rentals.bathrooms}} ba| {{rentals.bedrooms}} bds| {{rentals.floor_area}} {{rentals.size_units}}</li>
+                                    <li class="rec-h-name">{{rentals.property_name}}</li>
+                                    <li class="rec-h-location">{{rentals.location_name}}</li>
+                                  </ol>
+                                </div>
+
+                                <div class="card-links">
+                                  <a href="{% url 'listings:r_delete' rentals.pk%}"><button id="link-del" type="button" name="button"><img src="{% static 'img/delete-forever-active.svg' %}"></button></a>
+                                  <a href="{% url 'listings:rental_update' rentals.pk%}"><button id="link-edit" type="button" name="button"><img src="{% static 'img/mark-upgrade.svg' %}"></button></a>
+
+                                </div>
+                              </div>
+                        </div>
+
+                        {% endfor%}
+
+                        {% else %}
+                        <div class="empty-list">
+                          <p>No active rentals for <b>{{user}}</b>. Rentals you list will appear here.</p>
+                          <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
+                        </div>
+                        {%endif%}
+                      </div>
+                      <!-- paginator for rentals-->
+                      <div id="profile-paginator" class="pagination">
+                          <span class="step-links">
+                              {% if user_rental_posts.has_previous %}
+                              <a href="?page=1">&laquo; first</a>
+                              <a href="?page={{ user_rental_posts.previous_page_number }}">previous</a>
+                              {% endif %}
+                              <span class="current">
+                              Page {{ user_rental_posts.number }} of {{ user_rental_posts.paginator.num_pages }}.
+                              </span>
+                              {% if user_rental_posts.has_next %}
+                              <a href="?page={{ user_rental_posts.next_page_number }}">next</a>
+                              <a href="?page={{ user_rental_posts.paginator.num_pages }}">last &raquo;</a>
+                              {% endif %}
+                          </span>
+                    </div>
+                  </div>
+                    </div>
                   </div>
                   <div id="Analytics" class="analytics-sc">
                     <div class="a-content">
@@ -212,3 +284,41 @@
 </section>
 
 {% endblock %}
+
+{% block footer %}
+<footer >
+<section id="footer" class="section section-follow black-text">
+  <div class="container">
+    <div class="row">
+      <div class="f-details center">
+        <a href="#"> Privacy Policy</a>
+        <a href="#"> Terms & Conditions</a>
+        <a href="#"> Advertise</a>
+        <a href="#"> Contact Us</a>
+        <a href="{% url 'contact:about_us'%}"> About Us</a>
+      </div>
+      <div id="footer-details" class="col s12 center">
+        <a href="#" class="black-text">
+          <i class="fab fa-facebook fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-twitter fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-linkedin fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-instagram fa-2x"></i>
+        </a>
+      </div>
+      <p class="flow-text black-text center" id="c-year"></p>
+      <script type="text/javascript">
+        var d = new Date();
+        document.getElementById("c-year").innerHTML= 'While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright '+ d.getFullYear();
+      </script>
+    </div>
+  </div>
+</section>
+
+</footer>
+{% endblock%}

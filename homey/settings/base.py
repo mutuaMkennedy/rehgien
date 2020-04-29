@@ -52,10 +52,13 @@ INSTALLED_APPS = [
     'multiselectfield',
     'django_elasticsearch_dsl',
     'rest_framework',
+    'rest_framework_gis',
     'rest_framework.authtoken',
     'rest_auth',
     'rest_auth.registration',
     'cloudinary',
+    'ckeditor',
+    'ckeditor_uploader',
     #'haystack',
     # 'tastypie',
 ]
@@ -165,8 +168,79 @@ STATICFILES_DIRS = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets_new')
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_RESTRICT_BY_USER = True
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+
+CKEDITOR_CONFIGS = {
+    'user_profile': {
+        'skin': 'n1theme',
+        'removePlugins':'elementspath',
+        # 'skin': 'office2013',
+        # 'toolbar_Basic': [
+        #     ['Source', '-', 'Bold', 'Italic']
+        # ],
+        'toolbar_userprofile': [
+            ['Templates'],
+            ['Bold',],
+            ['Undo', 'Redo'], '/',
+            ['Youtube'],
+            ['Link', 'Unlink', 'Preview'],
+            # {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
+            # {'name': 'forms',
+            #  'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+            #            'HiddenField']},
+            # '/',
+            # {'name': 'paragraph',
+            #  'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+            #            'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+            #            'Language']},
+            # {'name': 'insert','items': ['Image']},
+            # '/',
+            # {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            # {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            # {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            # {'name': 'about', 'items': ['About']},
+            # '/',  # put this to force next toolbar on new line
+            # {'name': '', 'items': [
+            #     # put the name of your editor.ui.addButton here
+            #     'Bold','Italic','Link','Undo', 'Redo',
+            #     'Templates','Preview','Maximize','Print','Youtube',
+            #
+            # ]},
+        ],
+        'toolbar': 'userprofile',  # put selected toolbar config here
+        # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
+        # 'height': 291,
+        # 'width': '100%',
+        # 'filebrowserWindowHeight': 725,
+        # 'filebrowserWindowWidth': 940,
+        # 'toolbarCanCollapse': True,
+        # 'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
+        'tabSpaces': 4,
+        'extraPlugins': ','.join([
+            'uploadimage', # the upload image feature
+            # your extra plugins here
+            'youtube',
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            # 'devtools',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath'
+        ]),
+    },
+}
 
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (-1.10, 37.01),
@@ -186,11 +260,11 @@ cloudinary.config(
   api_secret = "BAsPMg7zobSDbjzPs0yrwnCf-S0"
 )
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     )
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 # allauth further Configs
 ACCOUNT_AUTHENTICATION_METHOD = "username"

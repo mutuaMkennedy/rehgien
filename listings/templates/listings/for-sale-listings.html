@@ -1,0 +1,979 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content%}
+
+<section>
+<div id="filter-cont" class="container">
+  <fieldset id="fieldset">
+      <div class="row">
+        <div class="col s12 md3 l3 xl3">
+          <div id='geocoder' class='geocoder'></div>
+        </div>
+        <div class="col s12 md3 l3 xl3" style='width:auto;'>
+          <div id="price-slider">
+            <div id="price-from" class="input-field col s12">
+             <select>
+               <option value="" disabled selected>Price From</option>
+               <option value="1000000">1M</option>
+               <option value="2000000">2M</option>
+               <option value="3000000">3M</option>
+               <option value="4000000">4M</option>
+               <option value="6000000">6M</option>
+               <option value="10000000">10M</option>
+               <option value="15000000">15M</option>
+               <option value="30000000">30M</option>
+               <option value="60000000">60M</option>
+               <option value="100000000">100M</option>
+             </select>
+           </div>
+           <div id="price-to" class="input-field col s12">
+            <select>
+              <option value="" disabled selected>Price To</option>
+              <option value="1000000">1M</option>
+              <option value="2000000">2M</option>
+              <option value="3000000">3M</option>
+              <option value="4000000">4M</option>
+              <option value="6000000">6M</option>
+              <option value="10000000">10M</option>
+              <option value="15000000">15M</option>
+              <option value="30000000">30M</option>
+              <option value="60000000">60M</option>
+              <option value="100000000">100M</option>
+            </select>
+          </div>
+          </div>
+        </div>
+        <div id="type-filter" class="input-field col s12 md1 l1 xl1">
+           <select multiple>
+             <option value="" disabled selected>Type</option>
+             <option value="Apartment">Apartment</option>
+             <option value="Bungalow">Bungalow</option>
+             <option value="Single family">Single family</option>
+             <option value="Townhouse">Townhouse</option>
+             <option value="Condominium">Condo</option>
+             <option value="Dormitory">Dormitory</option>
+             <option value="Terraced">Terraced</option>
+             <option value="Mansion">Mansion</option>
+             <option value="Other">Other</option>
+           </select>
+         </div>
+
+         <div class="col s12 md2 l2 xl2">
+           <div class="bdba-input">
+             <div id="beds" class="input-field col s12">
+              <select>
+                <option value="" disabled selected>Beds</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+              </select>
+            </div>
+            <div id="baths" class="input-field col s12">
+             <select>
+               <option value="" disabled selected>Baths</option>
+               <option value="1">1+</option>
+               <option value="2">2+</option>
+               <option value="3">3+</option>
+             </select>
+           </div>
+           </div>
+         </div>
+        <div class="col s12 md1 l1 xl1">
+        <button id="submit_f_button" type="button" name="button" class="btn small"> Filter</button>
+        </div>
+        </div>
+
+  </fieldset>
+</div>
+  <div id="asCont" class="container" style="width:100%;">
+    <div class='all-content'>
+        <!-- <div id='feature-listing' class='container'> -->
+
+          <div id="all-row2" class="row">
+            {% if listings %}
+            <div id="page-head" class="page-head col s12">
+              <h2>Homes & Real Estate listings for sale in {{location_address}}.</h2>
+                <h3>{{listings_count}} homes availlable on Rehgien.</h3>
+            </div>
+            <div class="col s12">
+              <div id="sort-input" class="input-field col s12">
+               <select>
+                 <option value="" disabled selected>Sort</option>
+                 <option value="1">Newer</option>
+                 <option value="2">Older</option>
+                 <option value="3">Priced Highest</option>
+                 <option value="4">Beds</option>
+                 <option value="5">Baths</option>
+                 <option value="6">Area</option>
+               </select>
+             </div>
+            </div>
+              <div id="obj" class="col s12 md6 l6 xl4">
+
+              </div>
+          {% else %}
+          <div id="page-head" class="page-head col s12">
+            <h2>No matching results for {{location_address}}.</h2>
+              <h3>Try another location.</h3>
+          </div>
+          {% endif %}
+          </div>
+        <!-- </div> -->
+
+        {% if listings.paginator.num_pages > 1 %}
+
+            <!-- start -->
+            {% include 'listings/pagination.html' with listings=listings %}
+            <!-- end -->
+
+        {% endif %}
+    </div>
+  </div>
+  <div class="container" id="map-container">
+
+    <div id='map' class="hide-on-med-and-down">
+        <!-- Dropdown Trigger -->
+       <a id='map-btn' class='dropdown-trigger btn-small blue' href='#' data-target='map-dropdown'><i class="small material-icons">school</i></a>
+
+        <ul id='map-dropdown' class='dropdown-content'>
+          <li id="menu-items"></li>
+        </ul>
+        <div class="help-text1 center hide-on-med-and-down" >
+          <p>Zoom to filter results</p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<!--mapbox scripts-->
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+if (!mapboxgl.supported()) {
+  alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
+  } else {
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
+        minZoom: 6.2,
+        maxZoom:14,
+        center: [37.01, -1.10]
+  });
+}
+//geocoder
+var geocoder = new MapboxGeocoder({
+accessToken: mapboxgl.accessToken,
+mapboxgl: mapboxgl,
+placeholder:'Location Name(eg. Nairobi)',
+countries:'KE',
+marker:false,
+});
+
+document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+// disable map rotation using right click + drag
+map.dragRotate.disable();
+
+// disable map rotation using touch rotation gesture
+map.touchZoomRotate.disableRotation();
+
+// Adds geolocate control to the map.
+map.addControl(new mapboxgl.GeolocateControl({
+    positionOptions: {
+        enableHighAccuracy: true
+    },
+    trackUserLocation: true
+}));
+// Adds zoom and rotation controls to the map.
+map.addControl(new mapboxgl.NavigationControl());
+
+
+//from Here code for adding features to the map
+// Holds visible listings features for filtering
+var homes = [];
+
+// Create a popup, but don't add it to the map yet.
+var popup = new mapboxgl.Popup({
+    closeButton: false
+});
+
+var geojson = {
+type: 'FeatureCollection',
+features: [
+{% for loc in listings %}
+    {
+    type: 'Feature',
+    geometry: {
+        type: 'Point',
+        coordinates: [{{ loc.location.x }}, {{ loc.location.y }}]
+    },
+    properties: {
+        pk: '{{ loc.pk }}',
+        title: '{{ loc.property_name }}',
+        thumb:'{{loc.thumb.url}}',
+        location_name:'{{loc.location_name}}',
+        price:'{{loc.price}}',
+        bathrooms: '{{loc.bathrooms}}',
+        bedrooms: '{{loc.bedrooms}}',
+        floor_area: '{{loc.floor_area}}',
+        size_units : '{{loc.size_units}}',
+        detail_page_url : "{% url 'listings:onsale_detail' loc.pk%}",
+        created_date:"{{loc.publishdate.date}}"
+    }
+    },
+{% endfor %}
+]
+};
+
+var listingEl = document.getElementById('obj');
+
+function renderListings(features) {
+    // Clear any existing listings
+    listingEl.innerHTML = '';
+    if (features.length) {
+      features.forEach(function(feature) {
+          var prop = feature.properties;
+          var card = document.createElement('div');
+          card.className = 'card';
+          card.id = 'all-card2';
+
+          var name = document.createElement('li');
+          name.className='rec-h-name';
+          name.textContent = prop.title;
+
+
+          var location = document.createElement('li');
+          location.target = '_blank';
+          location.className = 'rec-h-location';
+          location.textContent = prop.location_name;
+
+
+          var price = document.createElement('li');
+          price.target = '_blank';
+          price.className = 'rec-h-price';
+          price.textContent = "Ksh: " + prop.price;
+
+          var date = document.createElement('li');
+          date.target = '_blank';
+          date.className = 'r-a-date';
+          date.textContent = 'Last update on:' + prop.created_date;
+
+          var propFeatures = document.createElement('li');
+          propFeatures.className = 'rec-h-features';
+          propFeatures.innerHTML = '<i class="fas fa-shower"></i>' + prop.bathrooms +'ba' + '| ' + '<i class="fas fa-bed"></i>' + prop.bedrooms + 'bds' + '| ' + '<i class="fas fa-ruler-combined"></i>'  + prop.floor_area + ' '+ prop.size_units
+
+          var image = document.createElement("img");
+          image.src = prop.thumb;
+          image.id = 'all-image2';
+
+          var detailsLink = document.createElement('a');
+          detailsLink.id= 'detailsLink';
+          detailsLink.href = prop.detail_page_url;
+
+
+
+          card.addEventListener('mouseover', function() {
+              // Highlight corresponding feature on the map
+              popup.setLngLat(feature.geometry.coordinates)
+              .setHTML(
+              '<div id="popup" class="popup" style="z-index: 10;">' +
+                '<img '+ 'src=' + feature.properties.thumb + '>' +
+                '<ul class="list-group">' +
+                '<li class="list-group-item">' + "Ksh:" + feature.properties.price + "p/m" +" </li>" +
+                '<li class="list-group-item">' + feature.properties.location_name +" </li>"+
+                '<li class="list-group-item">' + feature.properties.title + " </li>" + '</ul> </div>'
+
+             )
+              .addTo(map);
+          });
+
+          card.addEventListener('mouseleave', function() {
+              map.getCanvas().style.cursor = '';
+              popup.remove();
+          });
+
+          listingEl.appendChild(card);
+          detailsLink.appendChild(image);
+          detailsLink.appendChild(date);
+          detailsLink.appendChild(price);
+          detailsLink.appendChild(propFeatures);
+          detailsLink.appendChild(name);
+          detailsLink.appendChild(location);
+          card.appendChild(detailsLink);
+
+
+
+      });
+      var pageHead = document.getElementById("page-head");
+       pageHead.style.display='block';
+
+      var ls_pagination = document.getElementById("ls_pagination");
+       ls_pagination.style.display='block';
+
+    }
+     else {
+       var pageHead = document.getElementById("page-head");
+        pageHead.style.display='none';
+
+      var ls_pagination = document.getElementById("sort-input");
+         ls_pagination.style.display='none';
+
+       var ls_pagination = document.getElementById("ls_pagination");
+        ls_pagination.style.display='none';
+
+        var help1 = document.createElement("p");
+        help1.id = 'help-text0';
+        help1.className = 'center';
+        help1.textContent = 'No matching results.Try Refining your search.';
+
+        listingEl.appendChild(help1);
+
+          // remove features filter
+          map.setFilter('points', ['has', 'price']);
+        }
+}
+
+function normalize(string) {
+    return string.trim().toLowerCase();
+}
+
+function getUniqueFeatures(array, comparatorProperty) {
+    var existingFeatureKeys = {};
+    // Because features come from tiled vector data, feature geometries may be split
+    // or duplicated across tile boundaries and, as a result, features may appear
+    // multiple times in query results.
+    var uniqueFeatures = array.filter(function(el) {
+        if (existingFeatureKeys[el.properties[comparatorProperty]]) {
+          return false;
+        } else {
+          existingFeatureKeys[el.properties[comparatorProperty]] = true;
+          return true;
+        }
+    });
+
+
+    return uniqueFeatures;
+}
+
+
+  map.on('load', function() {
+    map.addSource('property',{
+      "type": "geojson",
+      "data": geojson
+    });
+    map.addLayer({
+    "id": "points",
+    "source": 'property',
+    "type": "circle",
+    "paint": {
+        "circle-radius": 6,
+        "circle-stroke-width": 1.5,
+        "circle-color": "#2ECC71",
+        "circle-stroke-color":"blue"
+    },
+  });
+
+
+  map.on('zoom',function() {
+      var features = map.queryRenderedFeatures({layers: ['points']});
+
+      if (features) {
+        var uniqueFeatures = getUniqueFeatures(features, "pk");
+        // Populate features for the listing overlay.
+        renderListings(uniqueFeatures);
+
+        // Clear the input container
+        // filterEl.value = '';
+        // filter_by_price.value = '';
+
+        // Store the current features in `homes` variable to
+        // later use for filtering on `keyup`.
+        homes = uniqueFeatures;
+      }
+  });
+  map.on('render',function() {
+      var features = map.queryRenderedFeatures({layers: ['points']});
+
+      if (features) {
+        var uniqueFeatures = getUniqueFeatures(features, "pk");
+        // Populate features for the listing overlay.
+        renderListings(uniqueFeatures);
+
+        // Clear the input container
+        // filterEl.value = '';
+
+        // Store the current features in `homes` variable to
+        // later use for filtering on `keyup`.
+        homes = uniqueFeatures;
+      }
+  });
+
+  map.on('mousemove', 'points', function(e) {
+      // Change the cursor style as a UI indicator.
+      map.getCanvas().style.cursor = 'pointer';
+
+      // Populate the popup and set its coordinates based on the feature.
+      var feature = e.features[0];
+      popup.setLngLat(feature.geometry.coordinates)
+      .setHTML(
+      '<div id="popup" class="popup" style="z-index: 10;">' +
+        '<img '+ 'src=' + feature.properties.thumb + '>' +
+        '<ul class="list-group">' +
+        '<li class="list-group-item">' +"Ksh:" + feature.properties.price +" </li>" +
+        '<li class="list-group-item">' + feature.properties.location_name +" </li>"+
+        '<li class="list-group-item">' + feature.properties.title + " </li>" + '</ul> </div>'
+
+     )
+      .addTo(map);
+  });
+
+  map.on('mouseleave', 'points', function() {
+      map.getCanvas().style.cursor = '';
+      popup.remove();
+  });
+
+
+    // Call this function on initializatio
+    // passing an empty array to render an empty state
+    renderListings([]);
+});
+
+
+
+//adding primary schools data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('primary_sch', image);
+      map.addSource('primary_schools',{
+        "type": "geojson",
+        "data": "{%url 'location:primary_schools_data'%}"
+        });
+        map.addLayer({
+        "id": "Primary Schools",
+        "type": "symbol",
+        "source":"primary_schools",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "primary_sch",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Primary Schools', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name_of_sc;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Primary Schools', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Primary Schools', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding polytechnics schools data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('polytechnics', image);
+      map.addSource('polytechnics_schools',{
+        "type": "geojson",
+        "data": "{%url 'location:polytechnics_data'%}"
+        });
+        map.addLayer({
+        "id": "Technicals",
+        "type": "symbol",
+        "source":"polytechnics_schools",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "polytechnics",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Technicals', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Technicals', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Technicals', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding private colleges data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('private_coll', image);
+      map.addSource('private_colleges',{
+        "type": "geojson",
+        "data": "{%url 'location:private_colleges_data'%}"
+        });
+        map.addLayer({
+        "id": "Private Colleges",
+        "type": "symbol",
+        "source":"private_colleges",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "private_coll",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Private Colleges', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Private Colleges', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Private Colleges', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding private universities data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('private_uni', image);
+      map.addSource('private_universities',{
+        "type": "geojson",
+        "data": "{%url 'location:private_universities_data'%}"
+        });
+        map.addLayer({
+        "id": "Private Universities",
+        "type": "symbol",
+        "source":"private_universities",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "private_uni",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Private Universities', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Private Universities', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Private Universities', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding public colleges data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('public_coll', image);
+      map.addSource('public_colleges',{
+        "type": "geojson",
+        "data": "{%url 'location:public_colleges_data'%}"
+        });
+        map.addLayer({
+        "id": "Public Colleges",
+        "type": "symbol",
+        "source":"public_colleges",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "public_coll",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Public Colleges', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Public Colleges', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Public Colleges', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding university colleges data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('university_coll', image);
+      map.addSource('university_colleges',{
+        "type": "geojson",
+        "data": "{%url 'location:university_colleges_data'%}"
+        });
+        map.addLayer({
+        "id": "University Colleges",
+        "type": "symbol",
+        "source":"university_colleges",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "university_coll",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'University Colleges', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'University Colleges', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'University Colleges', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding secondary schools data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('secondary_sch', image);
+      map.addSource('secondary_schools',{
+        "type": "geojson",
+        "data": "{%url 'location:secondary_schools_data'%}"
+        });
+        map.addLayer({
+        "id": "Secondary Schools",
+        "type": "symbol",
+        "source":"secondary_schools",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "secondary_sch",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Secondary Schools', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.institute;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Secondary Schools', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Secondary Schools', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding university data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('university', image);
+      map.addSource('universities',{
+        "type": "geojson",
+        "data": "{%url 'location:universities_data'%}"
+        });
+        map.addLayer({
+        "id": "Main Universities",
+        "type": "symbol",
+        "source":"universities",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "university",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Main Universities', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Main Universities', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Main Universities', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding teachers training colleges data points
+map.on('load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('teachers_training', image);
+      map.addSource('teachers_training_coll',{
+        "type": "geojson",
+        "data": "{%url 'location:teachers_training_data'%}"
+        });
+        map.addLayer({
+        "id": "Teachers Colleges",
+        "type": "symbol",
+        "source":"teachers_training_coll",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "teachers_training",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Teachers Colleges', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Teachers Colleges', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Teachers Colleges', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//turn layers on and off
+var toggleableLayerIds = [ 'Primary Schools', 'Secondary Schools','Technicals',
+                            'Private Colleges','Private Universities', 'Private Colleges',
+                            'University Colleges', 'Main Universities', 'Teachers Colleges'
+                          ];
+
+for (var i = 0; i < toggleableLayerIds.length; i++) {
+    var id = toggleableLayerIds[i];
+
+    var link = document.createElement('a');
+      link.href = '#';
+      link.className = '';
+      link.textContent = id;
+
+    link.onclick = function (e) {
+        var clickedLayer = this.textContent;
+          e.preventDefault();
+          e.stopPropagation();
+
+        var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+        if (visibility === 'visible') {
+        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+        this.className = '';
+        } else {
+        this.className = 'active';
+        map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+        }
+    };
+
+    var layers = document.getElementById('menu-items');
+    layers.appendChild(link);
+}
+</script>
+
+<script type="text/javascript">
+  document.querySelector(".mapboxgl-ctrl-geocoder--input").value="{{location_address}}";
+</script>
+
+{% endblock %}
+
+{% block footer%}
+<footer class="listings-footer" style="width:50%;">
+  <div class="container" style="width:100%; margin:0px;">
+    <div class="footer-content center">
+      <div class="row">
+        <div class="f-details center">
+          <a href="#"> Privacy Policy</a>
+          <a href="#"> Terms & Conditions</a>
+          <a href="#"> Advertise</a>
+          <a href="#"> Mobile App</a>
+          <a href="#"> FAQ'S</a>
+          <a href="#"> Contact Us</a>
+          <a href="{% url 'contact:about_us'%}"> About Us</a>
+        </div>
+        <div id="footer-details" class="col s12 center">
+          <a href="#" class="black-text">
+            <i class="fab fa-facebook fa-2x"></i>
+          </a>
+          <a href="#" class="black-text">
+            <i class="fab fa-twitter fa-2x"></i>
+          </a>
+          <a href="#" class="black-text">
+            <i class="fab fa-linkedin fa-2x"></i>
+          </a>
+          <a href="#" class="black-text">
+            <i class="fab fa-instagram fa-2x"></i>
+          </a>
+          <p>While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy.</p>
+        </div>
+        <p class="flow-text black-text center" id="c-year"></p>
+        <script type="text/javascript">
+          var d = new Date();
+          document.getElementById("c-year").innerHTML= 'Copyright '+ d.getFullYear();
+        </script>
+      </div>
+    </div>
+  </div>
+  <div class="ft-bk-sl">
+    <img src="{% static 'img/nairobi-skyline.png'%}">
+  </div>
+</footer>
+{% endblock%}

@@ -20,23 +20,49 @@ def profile(request):
 	user = request.user
 	for_sale_user_posts = PropertyForSale.objects.all().filter(owner=request.user)
 	rental_user_posts = RentalProperty.objects.all().filter(owner=request.user)
+	user_sale_favourites = user.favourite.all()
+	for_sale = PropertyForSale.objects.all()
+	# sale favourites pagination
+	paginator_favs = Paginator(user_sale_favourites, 3) #show the first 3
+	favs_page = request.GET.get('page')
+	user_sale_favs = paginator_favs.get_page(favs_page)
 	#SALES PAGINATION
-	paginator_sales = Paginator(for_sale_user_posts, 6) #show the first 3
+	paginator_sales = Paginator(for_sale_user_posts, 3) #show the first 3
 	listing_page = request.GET.get('page')
 	user_sale_posts = paginator_sales.get_page(listing_page)
 	#RENTALS PAGINATION
-	paginator_rentals = Paginator(rental_user_posts, 6) #show the first 3
+	paginator_rentals = Paginator(rental_user_posts, 3) #show the first 3
 	_listing_page = request.GET.get('page')
 	user_rental_posts = paginator_rentals.get_page(_listing_page)
-	return render(request, 'profiles/user_profile.html', {'user': user, 'user_sale_posts':user_sale_posts, 'user_rental_posts':user_rental_posts})
+	return render(request, 'profiles/user_profile.html', {
+	'user': user, 'user_sale_posts':user_sale_posts, 'user_rental_posts':user_rental_posts,
+	'user_sale_favs':user_sale_favs,
+	})
 
 def agent_list(request):
 	agent_list = UserProfile.objects.all()
+	paginator_agents = Paginator(agent_list, 3) #show the first 3
+	agents_page = request.GET.get('page')
+	agent_list = paginator_agents.get_page(agents_page)
 	return render(request, 'profiles/agents_list.html', {'agents':agent_list})
 
 def agent_detail(request, pk):
 	agent = get_object_or_404( UserProfile, pk=pk )
-	return render(request, 'profiles/agent_detail.html', {'agent':agent})
+	sale_listings = PropertyForSale.objects.filter(owner=agent.user)
+	rental_listings = RentalProperty.objects.filter(owner=agent.user)
+	s_count = sale_listings.count()
+	r_count = sale_listings.count()
+	s_r_total = int(s_count) + int(r_count)
+	s_paginator = Paginator(sale_listings, 3) #show the first 3
+	sales_page = request.GET.get('page')
+	sale_listings_p = s_paginator.get_page(sales_page)
+	r_paginator = Paginator(rental_listings, 3) #show the first 3
+	rentals_page = request.GET.get('page')
+	rental_listings_p = r_paginator.get_page(rentals_page)
+	return render(request, 'profiles/agent_detail.html', {'agent':agent, 'sale_listings': sale_listings,
+	 													'rental_listings':rental_listings, 'sale_listings_p':sale_listings_p,
+														'rental_listings_p':rental_listings_p, 's_r_total':s_r_total,
+														's_count':s_count,'r_count':r_count})
 
 @login_required(login_url='account_login')
 def edit_profile(request):

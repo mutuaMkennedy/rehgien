@@ -1,4 +1,3 @@
-{%load static from staticfiles%}
 {%load static%}
 {% load cloudinary %}
 {% load i18n %}
@@ -9,21 +8,50 @@
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
   <link href='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
-  <link rel="shortcut icon" type="image/jpg" href="{%static 'img/logo-fav.png'%}">
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css' type='text/css' />
+  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js'></script>
+  <link rel="shortcut icon" type="image/png" href="{%static 'img/logo-fav.png'%}">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Rehgien| Explore Real Estate</title>
 
   <!-- CSS  -->
-  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
   <link rel="stylesheet" type="text/css" href="{%static 'css/material-icons.css'%}">
   <link href="{%static 'css/materialize.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="{%static 'css/css/all.min.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <!--<link rel="stylesheet" href="fontawesome-free-5.1.0-web/css/fontawesome.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">-->
   <link href="{%static 'css/style.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <script src="https://use.fontawesome.com/a8e276a1a5.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
 <body>
+  <script>
+      //after window is loaded completely
+      window.onload = function(){
+          //hide the preloader
+          document.querySelector(".preloader").style.display = "none";
+      }
+  </script>
+  <div class="preloader valign-wrapper">
+      <div class="preloader-img">
+        <img src="{% static 'img/logo_preloader.png'%}" alt="logo">
+      </div>
+      <div id="preloader-c" class="preloader-wrapper small active">
+       <div class="spinner-layer spinner-blue-only">
+         <div class="circle-clipper left">
+           <div class="circle"></div>
+         </div><div class="gap-patch">
+           <div class="circle"></div>
+         </div><div class="circle-clipper right">
+           <div class="circle"></div>
+         </div>
+       </div>
+     </div>
+  </div>
+<header>
   <!-- navbar -->
   <div class="navbar-fixed">
   <!--<nav class="transparent z-depth-0">-->
@@ -32,12 +60,67 @@
       <a id="logo-container" href="{% url 'listings:homepage'%}" class="brand-logo center"><img class="logo" src="{%static 'img/logo.png'%}"></a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-base1"class="left hide-on-med-and-down">
-        <li><a href="{% url 'location:onsale_listings'%}">Buy</a></li>
-        <li><a href="{% url 'location:rental_listings'%}">Rent</a></li>
-        <li><a href="{% url 'profiles:agent_list'%}">Find an Agent</a></li>
-        <li><a href="#">Request a property</a></li>
+        <li><a href="{% url 'listings:sale_listings'%}">Buy</a></li>
+        <li><a href="{% url 'listings:rental_listings'%}">Rent</a></li>
+        <li><a href="#" id='ag-trigger' class="dropdown-trigger" data-target='ag-dropdown'>Find a pro</a></li>
+        <li><a href="#" id='svc-trigger' class="dropdown-trigger" data-target='svc-dropdown'>Request Service</a></li>
 
       </ul>
+      <div id="svc-dropdown" class="dropdown-content hide-on-med-and-down">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 md6 l6 xl6">
+              <div class="r-svc">
+                <h6><b>Choose a Service</b></h6>
+                <li><a href="#">Find me a property</a></li>
+                <li><a href="#">Find me a Proffesional</a></li>
+                <li><a href="#">Help me sell my property</a></li>
+                <li><a href="#">I want something else</a></li>
+              </div>
+            </div>
+            <div class="col s12 md6 l6 xl6">
+              <div class="r-m-svc">
+                <h6><b>Services Coming Soon</b></h6>
+                <li><a href="#">Market Report</a></li>
+                <li><a href="#">Market Insights</a></li>
+                <li><a href="#">Mortgage and Financing</a></li>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="ag-dropdown" class="dropdown-content hide-on-med-and-down">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 md4 l4 xl4">
+              <div class="re_pros">
+                <h6><b>Real Estate Profesionals</b></h6>
+                <li><a href="{% url 'profiles:agent_list'%}"">Real Estate Agents</a></li>
+                <li><a href="#">Property Managers</a></li>
+                <li><a href="#">Appraisers/Valuers</a></li>
+              </div>
+            </div>
+            <div class="col s12 md4 l4 xl4">
+              <div class="o_pros">
+                <h6><b>Other Profesionals</b></h6>
+                <li><a href="#">Interior Designers</a></li>
+                <li><a href="#">Real Estate Photographers</a></li>
+                <li><a href="#">Plumbers</a></li>
+                <li><a href="#">Home Movers</a></li>
+              </div>
+            </div>
+            <div class="col s12 md4 l4 xl4">
+              <div class="o_pros">
+                <h6><b>Are you a pro? advertise with us today</</h6>
+                <li><a href="#">I'm a Real Estate Profesional</a></li>
+                <li><a href="#">Other</a></li>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <ul id="nav-base2" class="right hide-on-med-and-down">
         {% if not request.user.is_authenticated %}
         <li><a href="{% url 'account_login' %}" class="modal-trigger"><i class="fas fa-user-alt-slash"></i> LogIn</a></li>
@@ -47,12 +130,11 @@
         {% else %}
         <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
         <li><a href="{% url 'listings:rental_listing_form' %}"> Post a Rental</a></li>
-        <li><a id='ac-trigger' class="dropdown-trigger" data-target='ac-dropdown'><i class="far fa-user-circle" style="color:green;"></i>
-          {{request.user.first_name|make_list|first|upper}} {{request.user.last_name|make_list|first|upper}}</a>
+        <li><a id='ac-trigger' class="dropdown-trigger" data-target='ac-dropdown'><i class="far fa-user-circle fa-lg" style="color:green;"></i> {{request.user.first_name|make_list|first|upper}} {{request.user.last_name|make_list|first|upper}}</a>
       </li>
 
       </ul>
-      <div id="ac-dropdown"class="dropdown-content">
+      <div id="ac-dropdown"class="dropdown-content hide-on-med-and-down">
         <div class="ac-drd-img">
           {% if request.user.profile.profile_image%}
           <img src="{{request.user.profile.profile_image.url}}" alt="profile.img" style="width:40px">
@@ -65,19 +147,18 @@
       </div>
       {% endif %}
       <ul id="mobile-nav" class="sidenav">
-        <li><a href="#">Home</a></li>
-        <li><a href="{% url 'location:onsale_listings' %}">Buy</a></li>
-        <li><a href="{% url 'location:rental_listings'%}">Rent</a></li>
+        <li><a href="{%url 'listings:homepage'%}">Home</a></li>
+        <li><a href="{% url 'listings:sale_listings' %}">Buy</a></li>
+        <li><a href="{% url 'listings:rental_listings'%}">Rent</a></li>
         <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
         <li><a href="{% url 'listings:rental_listing_form' %}">Post your Rental</a></li>
         {% if not request.user.is_authenticated %}
         <li><a href="{% url 'account_login' %}" class="modal-trigger"><i class="fas fa-user-alt-slash"></i>LogIn</a></li>
         <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
-        <!-- <li><a href="#"><b>or</b></a></li> -->
-        <!-- <li><a href="#">Subscribe for updates</a></li> -->
         {% else %}
-        <li><a><i class="far fa-user-circle" style="color:green;"></i> {{request.user.first_name|make_list|first|upper}} {{request.user.last_name|make_list|first|upper}}</a></li>
-        <li class="center" ><a href="{% url 'profiles:account'%}">My profile</a></li>
+        <li><a href="{% url 'profiles:account'%}">My profile</a></li>
+        <li><a><i class="far fa-user-circle" style="color:green;"></i>
+          {{request.user.first_name|make_list|first|upper}} {{request.user.last_name|make_list|first|upper}}</a></li>
         <li><a href="#id01" class="modal-trigger">Logout</a></li>
         {% endif %}
 
@@ -85,6 +166,9 @@
     </div>
   </nav>
 </div>
+</header>
+
+<main>
 {% if messages %}
     <ul class="messages">
         {% for message in messages %}
@@ -110,48 +194,13 @@
   </form>
 
 </div>
-
-
   {%block content%}
   {%endblock%}
+</main>
 
-   <!--section follow-->
-    <footer >
-    <section id="footer" class="section section-follow black-text">
-      <div class="container">
-        <div class="row">
-          <div class="f-details center">
-            <a href="#"> Privacy Policy</a>
-            <a href="#"> Terms & Conditions</a>
-            <a href="#"> Advertise</a>
-            <a href="#"> Contact Us</a>
-            <a href="{% url 'contact:about_us'%}"> About Us</a>
-          </div>
-          <div id="footer-details" class="col s12 center">
-            <a href="#" class="black-text">
-              <i class="fab fa-facebook fa-2x"></i>
-            </a>
-            <a href="#" class="black-text">
-              <i class="fab fa-twitter fa-2x"></i>
-            </a>
-            <a href="#" class="black-text">
-              <i class="fab fa-linkedin fa-2x"></i>
-            </a>
-            <a href="#" class="black-text">
-              <i class="fab fa-instagram fa-2x"></i>
-            </a>
-          </div>
-          <p class="flow-text black-text center" id="c-year"></p>
-          <script type="text/javascript">
-            var d = new Date();
-            document.getElementById("c-year").innerHTML= 'While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright '+ d.getFullYear();
-          </script>
-        </div>
-      </div>
-    </section>
+{% block footer %}
 
-  </footer>
-
+{% endblock footer%}
 
   <!--  Scripts-->
   <script src="{% static 'js/jquery.min.js' %}"></script>
@@ -162,5 +211,9 @@
   <script src="{% static 'js/jquery.autocomplete.js' %}"></script>
   <script src="{% static 'js/our_search_code.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/js/all.min.js' %}"></script>
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
   </body>
 </html>

@@ -3,152 +3,167 @@
 {%block content%}
 
 <!--banner-->
-  <section class="slider">
-    <ul class="slides">
-      <li>
-        <img class="banner-img" src="{% static 'img/banner1.jpg' %}">
-        <div class="caption align white-text center">
-          <h3>Find your dream Home</h3>
-          <!-- <h5>Quality Drives Assurance and Confidence...</h5> -->
 
-        </div>
-<i id="down-arrow" class="material-icons">keyboard_arrow_down</i>
-<i id="down-arrow2" class="material-icons">keyboard_arrow_down</i>
-      </li>
- </ul>
+    <div class="HomePgBanner" style="background-image:url({%static 'img/banner1.jpg' %});">
+      <h3>Find your dream Home</h3>
+      <div id="home-map" style="display=none">
 
-</section>
-<div class="s-sc">
-  {% include 'search/search_form.html'%}
-</div>
-<br>
-<h4 id="svg-title" class="center"> Want to buy or rent a house? With Rehgien Its simple than you think!</h4>
-<br>
-  <div id="svgCardsContainer" class="container">
-      <div  id="svgRow" class="row">
-        <div class="col s12 md6 l6 xl4">
-          <div id="svg-cards" class="card">
-            <a href="#"><img id="forSaleSvg"src="{%static 'img/houseSearching.svg'%}" alt="looking for a house?"></a>
-            <h6 class="svg-title"><b>Explore our collection of properties</b></h6>
-            <p class="svg-prg">
-              Buying or renting? we have what you want in one place.
-              All properties listed with Rehgien are certified to ensure credibility.
-              No more fake Agents, Agencies or Properties.
-            </p>
-          </div>
-        </div>
-        <div class="col s12 md6 l6 xl4">
-          <div id="svg-cards" class="card">
-            <a href="#"><img id="forSaleSvg"src="{%static 'img/map_1r69.svg'%}" alt="our maps"></a>
-            <h6 class="svg-title"><b>Use our maps to understand the neighbourhood</b></h6>
-            <p class="svg-prg">
-              Rehgien has prioritized in building maps that help you understand the neighbourhood the property resides better. We are
-              continually building to make this experience better for you.
-            </p>
-          </div>
-        </div>
-        <div class="col s12 md6 l6 xl4">
-          <div id="svg-cards" class="card">
-            <a href="#"><img id="forSaleSvg"src="{%static 'img/observe.svg'%}" alt="buy"></a>
-            <h6 class="svg-title"><b>Gather more information.</b></h6>
-            <p class="svg-prg">
-              Rehgien focuses on quality visual presentations. Use virtual reality to further explore a propertie's features
-              via an interactive video session. When you are done Contact a verfied agent.
-            </p>
-          </div>
-        </div>
       </div>
-  </div>
+      <div id="search-section" class="container">
+        <div class="row">
+          <div class="col s12">
+            <ul id="switch" class="tabs">
+                <li class="tab col s3"><a href="#buy">Buy</a></li>
+                <li class="tab col s3"><a href="#rent">Rent</a></li>
+            </ul>
+          </div>
+          <div id="buy" class="col s12">
+            <form class="HomeSearchBar" action="{% url 'listings:sale_listings'%}" method="GET">
+              <div id="s_geocoder">
 
-
-
-<!-- <h4 id="recent-title" class="center">Recent Realestate & Homes Listings</h4>
-<div class="r-bd">
-  <div id="recent-section" class="container">
-    <div class="row">
-      <div class="col s12">
-        <ul id="r-switch" class="tabs">
-            <li class="tab col s12 m6"><a href="#onSale">On sale</a></li>
-            <li class="tab col s12 m6"><a href="#forRent">Rentals</a></li>
-        </ul>
-      </div>
-      <div id="onSale" class="col s12">
-        <!--Popular For Sale listings-->
-        <!-- <section id="popular" class="section-popular">
-          <div id="rec-container" class="container">
-            <div class="row">
-              {%for houses in onsale_reversed%}
-              <div class="col s12 md6 l6 xl4">
-
-                    <div id="rec-card" class="card" name="rec-card">
-                      <div id="rec-img" class="card-image">
-                        <a href="{% url 'listings:onsale_detail' houses.id %}"><img src="{{houses.thumb.url}}" alt="nai"></a>
-                        <span id="rec-date" class="card-title"><p>{{houses.publishdate}}</p></span>
-                        <i id="rec-fav-button" class="material-icons right">favorite_border</i>
-
-                      </div>
-                      <div id="rec-content" class="card-content">
-                        <ol>
-                          <li class="rec-h-name">{{houses.property_name}}</li>
-                          <li class="rec-h-features"> {{houses.bathrooms}} ba| {{houses.bedrooms}} bds| {{houses.floor_area}} {{houses.size_units}}</li>
-                          <li class="rec-h-price">Ksh: {{houses.price}}</li>
-                          <li class="rec-h-location">{{houses.location_name}}</li>
-                        </ol>
-                      </div> -->
-                      <!-- <div class="rec-all-icons">
-                        <img class="space"src="{%static 'icons/svgs/double-king-size-bed.svg'%}">
-                        <i class="material-icons">hotel</i>
-                        <img class="bath"src="{%static 'icons/svgs/bathtub-with-opened-shower.svg'%}">
-                      </div> -->
-                    <!-- </div>
               </div>
-            {%endfor%}
-
+              <button type="submit"><i class="fas fa-search fa-lg" style="color:grey;"></i></button>
+            </form>
           </div>
-          </div>
-        </section>
+          <div id="rent" class="col s12">
+            <form class="HomeSearchBar" action="{% url 'listings:rental_listings'%}" method="GET">
+              <div id="r_geocoder">
 
-      </div> -->
-      <!-- <div id="forRent" class="col s12"> -->
-        <!--Popular For Rent listings-->
-        <!-- <section id="popular" class="section-popular">
-          <div id="rec-container" class="container">
-            <div class="row">
-              {%for houses in rentals_reversed%}
-              <div class="col s12 md6 l6 xl4">
-
-                    <div id="rec-card" class="card" name="rec-card">
-                      <div id="rec-img" class="card-image">
-                        <a href="{% url 'listings:rental_detail' houses.id %}"><img src="{{houses.thumb.url}}" alt="nai"></a>
-                        <span id="rec-date" class="card-title"><p>{{houses.publishdate}}</p></span>
-                        <i id="rec-fav-button" class="material-icons right">favorite_border</i>
-
-                      </div>
-                      <div id="rec-content" class="card-content">
-                        <ol>
-                          <li class="rec-h-name">{{houses.property_name}}</li>
-                          <li class="rec-h-features"> {{houses.bathrooms}} ba| {{houses.bedrooms}} bds| {{houses.floor_area}} {{houses.size_units}}</li>
-                          <li class="rec-h-price">Ksh: {{houses.price}} p.m</li>
-                          <li class="rec-h-location">{{houses.location_name}}</li>
-                        </ol>
-                      </div> -->
-                      <!-- <div class="rec-all-icons">
-                        <img class="space"src="{%static 'icons/svgs/double-king-size-bed.svg'%}">
-                        <i class="material-icons">hotel</i>
-                        <img class="bath"src="{%static 'icons/svgs/bathtub-with-opened-shower.svg'%}">
-                      </div> -->
-                    <!-- </div>
               </div>
-            {%endfor%}
+              <button type="submit"><i class="fas fa-search fa-lg" style="color:grey;"></i></button>
+            </form>
+          </div>
+        </div>
 
-          </div>
-          </div>
-        </section>
       </div>
+      <i id="down-arrow" class="material-icons">keyboard_arrow_down</i>
+      <i id="down-arrow2" class="material-icons">keyboard_arrow_down</i>
     </div>
+<section>
+  <br>
+    <div id="svgCardsContainer" class="container">
+  <h4 id="svg-title" class="center" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="true" data-aos-duration="1000">
+     Use Rehgien to find Real Estate and proffesionals.
+   </h4>
+        <div  id="svgRow" class="row">
+          <div class="col s12">
+            <div id="svg-cards" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="true" data-aos-duration="1000">
+              <div class="s-c-wrp">
+                        <img id="forSaleSvg"src="{%static 'img/best_place.svg'%}" alt="looking for a house?">
+              </div>
+              <div class="s-c-cnt">
+                <h6 class="svg-title"><b>Find Real Estate</b></h6>
+                <p class="svg-prg">
+                  Buying or renting? We have what you want in one place.
+                  Choose from two ways to get the property you want, (1) Browse, or (2) Request a Property.
+                  Whatever way you choose we have made it easy for you to make the best decision.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col s12">
+            <div id="svg-cards" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="true" data-aos-duration="1000">
+              <div class="s-c-cnt">
+                <h6 class="svg-title"><b>Sell or Rent</b></h6>
+                <p class="svg-prg">
+                  With Rehgien its easy to list your property and find a client. Simply choose one of our verified agents, connect,
+                  engage and have you property listed with us? Want to know more head over to our <a href="#">FAQ Section</a>.
+                </p>
+              </div>
+              <div class="s-c-wrp">
+                <img id="forSaleSvg"src="{%static 'img/for_sale.svg'%}" alt="sell-rent">
+              </div>
+            </div>
+          </div>
+          <div class="col s12">
+            <div id="svg-cards" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="true" data-aos-duration="1000">
+                <div class="s-c-wrp">
+                  <img id="forSaleSvg"src="{%static 'img/experts.svg'%}" alt="experts">
+                </div>
+                <div class="s-c-cnt">
+                  <h6 class="svg-title"><b>Find an Pro</b></h6>
+                  <p class="svg-prg">
+                    Choose from large database of verified proffesionals. Its now easier to
+                    connect and receive services form a real estate proffesional. Simply head over to our find a pro section or simply
+                    request for a pro.
+                  </p>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+  mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+  if (!mapboxgl.supported()) {
+    alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
+    } else {
+      var map = new mapboxgl.Map({
+          container: 'home-map',
+          // style: 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
+          minZoom: 6.2,
+          maxZoom:14,
+          center: [37.01, -1.10]
+    });
+  }
 
-  </div>
-</div> -->
-<br>
+  //geocoder
+  var geocoder = new MapboxGeocoder({
+  accessToken: mapboxgl.accessToken,
+  mapboxgl: mapboxgl,
+  placeholder:'Enter an address, city or town name!',
+  name:'location',
+  countries:'KE',
+  marker:false,
+  });
 
+  document.getElementById('s_geocoder').appendChild(geocoder.onAdd(map));
+  document.getElementById('r_geocoder').appendChild(geocoder.onAdd(map));
+</script>
+<script type="text/javascript">
+  document.querySelector(".mapboxgl-ctrl-geocoder--input").name="location_input";
+</script>
 {%endblock%}
+
+{% block footer %}
+<footer id="hpf">
+ <section id="footer" class="section section-follow black-text">
+   <div class="container" style="width:100%;">
+     <div class="row">
+       <div class="f-details center">
+         <a href="#"> Privacy Policy</a>
+         <a href="#"> Terms & Conditions</a>
+         <a href="#"> Advertise</a>
+         <a href="#"> Mobile App</a>
+         <a href="#"> FAQ'S</a>
+         <a href="#"> Contact Us</a>
+         <a href="{% url 'contact:about_us'%}"> About Us</a>
+       </div>
+       <div id="footer-details" class="col s12 center">
+         <a href="#" class="black-text">
+           <i class="fab fa-facebook fa-2x"></i>
+         </a>
+         <a href="#" class="black-text">
+           <i class="fab fa-twitter fa-2x"></i>
+         </a>
+         <a href="#" class="black-text">
+           <i class="fab fa-linkedin fa-2x"></i>
+         </a>
+         <a href="#" class="black-text">
+           <i class="fab fa-instagram fa-2x"></i>
+         </a>
+         <p>While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy.</p>
+       </div>
+       <p class="flow-text black-text center" id="c-year"></p>
+       <script type="text/javascript">
+         var d = new Date();
+         document.getElementById("c-year").innerHTML= 'Copyright '+ d.getFullYear();
+       </script>
+     </div>
+   </div>
+ </section>
+ <div class="ft-bk-sl">
+   <img src="{% static 'img/nairobi-skyline.png'%}">
+ </div>
+</footer>
+{% endblock %}

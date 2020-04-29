@@ -167,6 +167,7 @@ class PropertyForSale(models.Model):
 	owner = models.ForeignKey(User, default=None, related_name='sale_property', on_delete=models.CASCADE)
 	phone = models.CharField(max_length=13)
 	email = models.EmailField(blank=None)
+	favourite = models.ManyToManyField(User, related_name='favourite', blank =True)
 	#likes = models.ManyToManyField(User, related_name = 'likes')
 	#slug  = models.SlugField()
 
@@ -177,6 +178,13 @@ class PropertyForSale(models.Model):
 	#def save(self, *args, **kwargs):
 		#self.slug = slugify(self.name)
 		#super(PropertyForSale, self).save(*args, **kwargs)
+	@property
+	def longitude(self):
+		return self.location.x
+
+	@property
+	def latitude(self):
+		return self.location.y
 
 	def save(self, *args, **kwargs):
 		if not self.id:
@@ -207,7 +215,7 @@ class PropertyForSale(models.Model):
 
 class PropertyForSaleImages(models.Model):
 	property = models.ForeignKey(PropertyForSale, on_delete=models.CASCADE, related_name='images', null=True)
-	image = CloudinaryField('image', blank=True)
+	image = CloudinaryField('image', blank=True, overwrite=True, resource_type='image')
 
 	def save(self, *args, **kwargs):
 		if not self.id:
@@ -286,6 +294,15 @@ class RentalProperty(models.Model):
 	owner = models.ForeignKey(User, default=None, related_name='rent_property', on_delete=models.CASCADE)
 	phone = models.CharField(max_length=13)
 	email = models.EmailField(blank=None)
+	favourite = models.ManyToManyField(User, related_name='rental_favourite', blank =True)
+
+	@property
+	def longitude(self):
+		return self.location.x
+
+	@property
+	def latitude(self):
+		return self.location.y
 
 	def save(self, *args, **kwargs):
 		if not self.id:

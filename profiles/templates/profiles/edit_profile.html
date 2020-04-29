@@ -1,6 +1,9 @@
 {% extends 'base1.html'%}
 {% load static %}
 {% block content %}
+{% load leaflet_tags %}
+{% leaflet_js plugins="forms" %}
+{% leaflet_css plugins="forms" %}
 {% load crispy_forms_tags%}
 <div class="container">
   <div class="ag-d-banner" style="background-image:url({% static 'img/ice-pattern.jpg'%});" ></div>
@@ -13,6 +16,7 @@
           <div class="u-pf-details">
             <h5>Edit your details</h5>
             {{u_edit_form.as_p}}
+            {{p_edit_form.media}}
             {{p_edit_form.as_p}}
           </div>
           <div class="s-prof">
