@@ -1,6 +1,8 @@
 import sys
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+# from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
 from multiselectfield import MultiSelectField
 from django.template.defaultfilters import slugify
@@ -10,114 +12,133 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from cloudinary.models import CloudinaryField
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
 import cloudinary
 # Create your models here.
-
-# Lists for multiple choice fields
-APPLIANCES_CHOICES = (
-			('DISH', 'Dishwasher'), ('GARB', 'Garbage disposal'),
- 			('OVEN', 'Oven'), ('REFRIG', 'Refrigerator'),
-			('NON', 'None')
-)
-
-BASEMENT_CHOICES = (
-		('FINI', 'Finished'), ('UNFI', 'Unfinished'),
- 		('PART', 'Partially finished'), ('NON', 'None'),
-)
-
-FLOOR_COVERING_CHOICES  = (
-			('CARP', 'Carpet'), ('CONC', 'Concrete'), ('HARD', 'Hardwood'),
-			('TILE', 'Tile'), ('SOFT', 'SoftWood'), ('OTH', 'Other'),
-)
-
-ROOMS_CHOICES = (
-		('BREA', 'BreakFast nook'), ('DINI', 'Dining room'), ('FAMI', 'Family room'),
-		('LIBR', 'Library'), ('MAST', 'Master bath'), ('MUDR', 'Mud room'),
-		('OF', 'Office'), ('PANT', 'Pantry'), ('RECR', 'Recreation room'),
-		('WORK', 'Workshop'), ('So/AR', 'Solarium/Atrium'), ('SUNR', 'Sun room'),
-		('WALK', 'walk-in-closet'),
-)
-
-INDOOR_FEATURES_CHOICES = (
-				('ATTI', 'Attic'), ('CEIL', 'Ceiling fans'),
-				('DOUB', 'Double pane windows'), ('FIRE', 'Fireplace'),
-				('SECU', 'Security system'), ('SKYL', 'Skylights'),
-				('VAUL', 'Vaulted ceiling'),
-)
-
-COOLING_TYPE_CHOICES = (
-			('CENT', 'Central'), ('EVAP', 'Evaporative'),
-			('GEOT', 'Geothermal'), ('REFR', 'Refrigeration'),
-			('SOLA', 'Solar'), ('WALL', 'Wall'),
-			('OTHE', 'Other'), ('NON', 'None'),
-)
-
-HEATING_TYPE_CHOICES = (
-			('BASE', 'Baseboard'), ('FORC', 'Forced air'),
-			('GEOT', 'Geothermal'), ('HEAT', 'Heat pump'),
-			('RADI', 'Radiant'), ('STOV', 'Stove'),
-			('WALL', 'Wall'), ('OTH', 'Other'),
-)
-
-HEATING_FUEL_CHOICES = (
-			('COAL', 'Coal'), ('ELEC', 'Electric'),
-			('GAS', 'Gas'), ('OIL', 'Oil'),
-			('PR/BU', 'Propane/Butane'), ('SOLA', 'Solar'),
-			('WO/PE', 'Wood/Pelet'), ('OTH', 'Other'),
-			('NON', 'None'),
-)
-
-BUILDING_AMENITIES_CHOICES = (
-				('BASK', 'Basketball court'), ('CONT', 'Controlled access'),
-				('DISA', 'Disabled access'), ('DOOR', 'Doorman'),
-				('ELEV', 'Elevator'), ('FITN', 'Fitness Center'),
-				('GATE', 'Gated entry'), ('NEAR', 'Near Transportation'),
-				('SPOR', 'Sports court'),
-)
-
-EXTERIOR_CHOICES = (
-		('BRIC', 'Brick'), ('CE/CO', 'Cement/Concrete'),
-		('STON', 'Stone'), ('VINY', 'Vinyl'),
-		('WOOD', 'Wood'), ('OTH', 'Other'),
-)
-
-OUTDOOR_AMENITIES_CHOICES = (
-			('BALC', 'Balcony'), ('FENC', 'Fenced yard'),
-			('GARD', 'Garden'), ('GREEN', 'Greenhouse'),
-			('LAWN', 'Lawn'), ('POND', 'Pond'),
-			('POOL', 'Pool'), ('SAUN', 'Sauna'),
-			('SPRI', 'Sprinkler system'), ('wATER', 'Waterfront'),
-)
-
-PARKING_CHOICES = (
-			('CARP', 'Carport'), ('GATTACH', 'Garage-Attached'),
-			('GDETACH', 'Garage-Detached'), ('OFFS', 'Off-street'),
-			('ONST', 'On-street'), ('NON', 'None'),
-)
-
-ROOF_CHOICES = (
-		('ASPH', 'Asphalt'), ('TILE', 'Tile'),
-		('SLAT', 'Slate'), ('OTH', 'Other'),
-)
-
-VIEW_CHOICES = (
-		('CITY', 'City'), ('TERR', 'Territorial'),
-		('MOUN', 'Mountain'), ('WATE', 'Water'),
-		('PARK', 'Park'), ('NON', 'None'),
-)
-# HOUSE TYPES choices
-HOUSE_TYPE_CHOICES = {
-	('APARTMENT', 'Apartment'), ('BUNGALOW', 'Bungalow'),
-	('CONDOMINIUM', 'Condominium'), ('DORMITORY', 'Dormitory'),
-	('DUPLEX', 'Duplex'), ('MANSION', 'Mansion'),
-	('SINGLEFAMILIY', 'Single family'), ('TERRACED', 'Terraced house'),
-	('TOWNHOUSE', 'Townhouse'), ('OTHER', 'Other'),
-	}
 # User = settings.AUTH_USER_MODEL
 
+class PropertyTypeImage(models.Model):
+	apartment = models.ImageField(upload_to='categoryImages/', null=True, blank=True)
+	bungalow = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
+	condominium = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
+	dormitory = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
+	duplex = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
+	mansion = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
+	single_family = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
+	terraced_house = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
+	townhouse = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
+	other = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
+
+	def save(self,*args,**kwargs):
+		if not self.pk and PropertyTypeImage.objects.exists():
+			raise	ValidationError('There can be only one PropertyTypeImage instance')
+			return	super(PropertyTypeImage,	self).save(*args,	**kwargs)
+
+	class Meta:
+		verbose_name_plural = 'PropertyTypeImages'
+
 class PropertyForSale(models.Model):
+	# Lists for multiple choice fields
+	APPLIANCES_CHOICES = (
+				('DISH', 'Dishwasher'), ('GARB', 'Garbage disposal'),
+	 			('OVEN', 'Oven'), ('REFRIG', 'Refrigerator'),
+				('NON', 'None')
+	)
+
+	BASEMENT_CHOICES = (
+			('FINI', 'Finished'), ('UNFI', 'Unfinished'),
+	 		('PART', 'Partially finished'), ('NON', 'None'),
+	)
+
+	FLOOR_COVERING_CHOICES  = (
+				('CARP', 'Carpet'), ('CONC', 'Concrete'), ('HARD', 'Hardwood'),
+				('TILE', 'Tile'), ('SOFT', 'SoftWood'), ('OTH', 'Other'),
+	)
+
+	ROOMS_CHOICES = (
+			('BREA', 'BreakFast nook'), ('DINI', 'Dining room'), ('FAMI', 'Family room'),
+			('LIBR', 'Library'), ('MAST', 'Master bath'), ('MUDR', 'Mud room'),
+			('OF', 'Office'), ('PANT', 'Pantry'), ('RECR', 'Recreation room'),
+			('WORK', 'Workshop'), ('So/AR', 'Solarium/Atrium'), ('SUNR', 'Sun room'),
+			('WALK', 'walk-in-closet'),
+	)
+
+	INDOOR_FEATURES_CHOICES = (
+					('ATTI', 'Attic'), ('CEIL', 'Ceiling fans'),
+					('DOUB', 'Double pane windows'), ('FIRE', 'Fireplace'),
+					('SECU', 'Security system'), ('SKYL', 'Skylights'),
+					('VAUL', 'Vaulted ceiling'),
+	)
+
+	COOLING_TYPE_CHOICES = (
+				('CENT', 'Central'), ('EVAP', 'Evaporative'),
+				('GEOT', 'Geothermal'), ('REFR', 'Refrigeration'),
+				('SOLA', 'Solar'), ('WALL', 'Wall'),
+				('OTHE', 'Other'), ('NON', 'None'),
+	)
+
+	HEATING_TYPE_CHOICES = (
+				('BASE', 'Baseboard'), ('FORC', 'Forced air'),
+				('GEOT', 'Geothermal'), ('HEAT', 'Heat pump'),
+				('RADI', 'Radiant'), ('STOV', 'Stove'),
+				('WALL', 'Wall'), ('OTH', 'Other'),
+	)
+
+	HEATING_FUEL_CHOICES = (
+				('COAL', 'Coal'), ('ELEC', 'Electric'),
+				('GAS', 'Gas'), ('OIL', 'Oil'),
+				('PR/BU', 'Propane/Butane'), ('SOLA', 'Solar'),
+				('WO/PE', 'Wood/Pelet'), ('OTH', 'Other'),
+				('NON', 'None'),
+	)
+
+	BUILDING_AMENITIES_CHOICES = (
+					('BASK', 'Basketball court'), ('CONT', 'Controlled access'),
+					('DISA', 'Disabled access'), ('DOOR', 'Doorman'),
+					('ELEV', 'Elevator'), ('FITN', 'Fitness Center'),
+					('GATE', 'Gated entry'), ('NEAR', 'Near Transportation'),
+					('SPOR', 'Sports court'),
+	)
+
+	EXTERIOR_CHOICES = (
+			('BRIC', 'Brick'), ('CE/CO', 'Cement/Concrete'),
+			('STON', 'Stone'), ('VINY', 'Vinyl'),
+			('WOOD', 'Wood'), ('OTH', 'Other'),
+	)
+
+	OUTDOOR_AMENITIES_CHOICES = (
+				('BALC', 'Balcony'), ('FENC', 'Fenced yard'),
+				('GARD', 'Garden'), ('GREEN', 'Greenhouse'),
+				('LAWN', 'Lawn'), ('POND', 'Pond'),
+				('POOL', 'Pool'), ('SAUN', 'Sauna'),
+				('SPRI', 'Sprinkler system'), ('wATER', 'Waterfront'),
+	)
+
+	PARKING_CHOICES = (
+				('CARP', 'Carport'), ('GATTACH', 'Garage-Attached'),
+				('GDETACH', 'Garage-Detached'), ('OFFS', 'Off-street'),
+				('ONST', 'On-street'), ('NON', 'None'),
+	)
+
+	ROOF_CHOICES = (
+			('ASPH', 'Asphalt'), ('TILE', 'Tile'),
+			('SLAT', 'Slate'), ('OTH', 'Other'),
+	)
+
+	VIEW_CHOICES = (
+			('CITY', 'City'), ('TERR', 'Territorial'),
+			('MOUN', 'Mountain'), ('WATE', 'Water'),
+			('PARK', 'Park'), ('NON', 'None'),
+	)
+	# HOUSE TYPES choices
+	HOUSE_TYPE_CHOICES = {
+		('APARTMENT', 'Apartment'), ('BUNGALOW', 'Bungalow'),
+		('CONDOMINIUM', 'Condominium'), ('DORMITORY', 'Dormitory'),
+		('DUPLEX', 'Duplex'), ('MANSION', 'Mansion'),
+		('SINGLEFAMILY', 'Single family'), ('TERRACED', 'Terraced house'),
+		('TOWNHOUSE', 'Townhouse'), ('OTHER', 'Other'),
+		}
 	#Property Facts
 	property_name = models.CharField(max_length=20, default=None, db_index=True)
 	type = models.CharField(max_length=20, choices = HOUSE_TYPE_CHOICES, default='APARTMENT')
@@ -125,7 +146,7 @@ class PropertyForSale(models.Model):
 	virtual_tour_url = models.CharField(max_length = 500, default = None)
 	location_name = models.CharField(max_length= 20, default=None)
 	location = models.PointField(srid=4326, default=None)
-	thumb = models.ImageField(default=None, null=True)
+	thumb = CloudinaryField('image', resource_type='image', folder='Property_ForSale_Thumbnails', default=None, null=True)
 	bathrooms = models.PositiveIntegerField(default=1, blank = True)
 	bedrooms = models.PositiveIntegerField(default=1)
 	total_rooms = models.PositiveIntegerField(default = 1, blank = False)
@@ -164,10 +185,10 @@ class PropertyForSale(models.Model):
 	#owner Information
 	related_website = models.CharField(max_length = 100, default = None)
 	publishdate = models.DateTimeField(auto_now=False, auto_now_add=True)
-	owner = models.ForeignKey(User, default=None, related_name='sale_property', on_delete=models.CASCADE)
+	owner = models.ForeignKey(settings.AUTH_USER_MODEL, default=None, related_name='sale_property', on_delete=models.CASCADE)
 	phone = models.CharField(max_length=13)
 	email = models.EmailField(blank=None)
-	favourite = models.ManyToManyField(User, related_name='favourite', blank =True)
+	favourite = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='favourite', blank =True)
 	#likes = models.ManyToManyField(User, related_name = 'likes')
 	#slug  = models.SlugField()
 
@@ -199,9 +220,9 @@ class PropertyForSale(models.Model):
 		imageTemporary	=	Image.open(thumb)
 		outputIoStream	=	BytesIO()
 		imageTemporaryResized	=	imageTemporary.resize( (1020,573) ) # Resize can be set to various varibale values in settings.py
-		imageTemporary.save(outputIoStream , format='JPEG', quality=30) # change quality according to requirement.
+		imageTemporary.save(outputIoStream , format='JPEG', quality=70) # change quality according to requirement.
 		outputIoStream.seek(0)
-		uploadedImage	=	InMemoryUploadedFile(outputIoStream,'ImageField', "%s.jpg" % thumb.name.split('.')[0], 'image/jpeg', sys.getsizeof(outputIoStream), None)
+		uploadedImage	=	InMemoryUploadedFile(outputIoStream,'CloudinaryField', "%s.jpg" % thumb.name.split('.')[0], 'image/jpeg', sys.getsizeof(outputIoStream), None)
 		return uploadedImage
 
 	def get_absolute_url(self):
@@ -215,7 +236,8 @@ class PropertyForSale(models.Model):
 
 class PropertyForSaleImages(models.Model):
 	property = models.ForeignKey(PropertyForSale, on_delete=models.CASCADE, related_name='images', null=True)
-	image = CloudinaryField('image', blank=True, overwrite=True, resource_type='image')
+	image = CloudinaryField('image', blank=True, overwrite=True, resource_type='image',
+	 						folder='property_photos')
 
 	def save(self, *args, **kwargs):
 		if not self.id:
@@ -226,9 +248,9 @@ class PropertyForSaleImages(models.Model):
 		imageTemporary	=	Image.open(image)
 		outputIoStream	=	BytesIO()
 		imageTemporaryResized	=	imageTemporary.resize( (1020,573) ) # Resize can be set to various varibale values in settings.py
-		imageTemporary.save(outputIoStream , format='JPEG', quality=30) # change quality according to requirement.
+		imageTemporary.save(outputIoStream , format='JPEG', quality=70) # change quality according to requirement.
 		outputIoStream.seek(0)
-		uploadedImage	=	InMemoryUploadedFile(outputIoStream,'ImageField', "%s.jpg" % image.name.split('.')[0], 'image/jpeg', sys.getsizeof(outputIoStream), None)
+		uploadedImage	=	InMemoryUploadedFile(outputIoStream,'CloudinaryField', "%s.jpg" % image.name.split('.')[0], 'image/jpeg', sys.getsizeof(outputIoStream), None)
 		return uploadedImage
 
 	class Meta:
@@ -238,22 +260,127 @@ class PropertyForSaleImages(models.Model):
 def photo_delete(sender, instance, **kwargs):
 	cloudinary.uploader.destroy(instance.image.public_id)
 
+
 class PropertyForSaleVideos(models.Model):
 	property = models.ForeignKey(PropertyForSale, on_delete=models.CASCADE, related_name= 'videos', null=True)
-	video = models.FileField(upload_to='videos/', null=True, validators=[validate_video_extension])
+	video = CloudinaryField('video', resource_type='video', folder='Property_ForSale_Videos', null=True, validators=[validate_video_extension])
 
 	class Meta:
 		verbose_name_plural = 'PropertyForSaleVideos'
 
+@receiver(pre_delete, sender=PropertyForSaleVideos)
+def video_delete(sender, instance, **kwargs):
+	cloudinary.uploader.destroy(instance.video.public_id)
 
 class RentalProperty(models.Model):
+	# Lists for multiple choice fields
+	APPLIANCES_CHOICES = (
+				('DISH', 'Dishwasher'), ('GARB', 'Garbage disposal'),
+	 			('OVEN', 'Oven'), ('REFRIG', 'Refrigerator'),
+				('NON', 'None')
+	)
+
+	BASEMENT_CHOICES = (
+			('FINI', 'Finished'), ('UNFI', 'Unfinished'),
+	 		('PART', 'Partially finished'), ('NON', 'None'),
+	)
+
+	FLOOR_COVERING_CHOICES  = (
+				('CARP', 'Carpet'), ('CONC', 'Concrete'), ('HARD', 'Hardwood'),
+				('TILE', 'Tile'), ('SOFT', 'SoftWood'), ('OTH', 'Other'),
+	)
+
+	ROOMS_CHOICES = (
+			('BREA', 'BreakFast nook'), ('DINI', 'Dining room'), ('FAMI', 'Family room'),
+			('LIBR', 'Library'), ('MAST', 'Master bath'), ('MUDR', 'Mud room'),
+			('OF', 'Office'), ('PANT', 'Pantry'), ('RECR', 'Recreation room'),
+			('WORK', 'Workshop'), ('So/AR', 'Solarium/Atrium'), ('SUNR', 'Sun room'),
+			('WALK', 'walk-in-closet'),
+	)
+
+	INDOOR_FEATURES_CHOICES = (
+					('ATTI', 'Attic'), ('CEIL', 'Ceiling fans'),
+					('DOUB', 'Double pane windows'), ('FIRE', 'Fireplace'),
+					('SECU', 'Security system'), ('SKYL', 'Skylights'),
+					('VAUL', 'Vaulted ceiling'),
+	)
+
+	COOLING_TYPE_CHOICES = (
+				('CENT', 'Central'), ('EVAP', 'Evaporative'),
+				('GEOT', 'Geothermal'), ('REFR', 'Refrigeration'),
+				('SOLA', 'Solar'), ('WALL', 'Wall'),
+				('OTHE', 'Other'), ('NON', 'None'),
+	)
+
+	HEATING_TYPE_CHOICES = (
+				('BASE', 'Baseboard'), ('FORC', 'Forced air'),
+				('GEOT', 'Geothermal'), ('HEAT', 'Heat pump'),
+				('RADI', 'Radiant'), ('STOV', 'Stove'),
+				('WALL', 'Wall'), ('OTH', 'Other'),
+	)
+
+	HEATING_FUEL_CHOICES = (
+				('COAL', 'Coal'), ('ELEC', 'Electric'),
+				('GAS', 'Gas'), ('OIL', 'Oil'),
+				('PR/BU', 'Propane/Butane'), ('SOLA', 'Solar'),
+				('WO/PE', 'Wood/Pelet'), ('OTH', 'Other'),
+				('NON', 'None'),
+	)
+
+	BUILDING_AMENITIES_CHOICES = (
+					('BASK', 'Basketball court'), ('CONT', 'Controlled access'),
+					('DISA', 'Disabled access'), ('DOOR', 'Doorman'),
+					('ELEV', 'Elevator'), ('FITN', 'Fitness Center'),
+					('GATE', 'Gated entry'), ('NEAR', 'Near Transportation'),
+					('SPOR', 'Sports court'),
+	)
+
+	EXTERIOR_CHOICES = (
+			('BRIC', 'Brick'), ('CE/CO', 'Cement/Concrete'),
+			('STON', 'Stone'), ('VINY', 'Vinyl'),
+			('WOOD', 'Wood'), ('OTH', 'Other'),
+	)
+
+	OUTDOOR_AMENITIES_CHOICES = (
+				('BALC', 'Balcony'), ('FENC', 'Fenced yard'),
+				('GARD', 'Garden'), ('GREEN', 'Greenhouse'),
+				('LAWN', 'Lawn'), ('POND', 'Pond'),
+				('POOL', 'Pool'), ('SAUN', 'Sauna'),
+				('SPRI', 'Sprinkler system'), ('wATER', 'Waterfront'),
+	)
+
+	PARKING_CHOICES = (
+				('CARP', 'Carport'), ('GATTACH', 'Garage-Attached'),
+				('GDETACH', 'Garage-Detached'), ('OFFS', 'Off-street'),
+				('ONST', 'On-street'), ('NON', 'None'),
+	)
+
+	ROOF_CHOICES = (
+			('ASPH', 'Asphalt'), ('TILE', 'Tile'),
+			('SLAT', 'Slate'), ('OTH', 'Other'),
+	)
+
+	VIEW_CHOICES = (
+			('CITY', 'City'), ('TERR', 'Territorial'),
+			('MOUN', 'Mountain'), ('WATE', 'Water'),
+			('PARK', 'Park'), ('NON', 'None'),
+	)
+	# HOUSE TYPES choices
+	HOUSE_TYPE_CHOICES = {
+		('APARTMENT', 'Apartment'), ('BUNGALOW', 'Bungalow'),
+		('CONDOMINIUM', 'Condominium'), ('DORMITORY', 'Dormitory'),
+		('DUPLEX', 'Duplex'), ('MANSION', 'Mansion'),
+		('SINGLEFAMILY', 'Single family'), ('TERRACED', 'Terraced house'),
+		('TOWNHOUSE', 'Townhouse'), ('OTHER', 'Other'),
+		}
+
 	property_name = models.CharField(max_length = 20, blank = False)
 	type = models.CharField(max_length = 20, choices = HOUSE_TYPE_CHOICES, default = 'APARTMENT')
 	price = models.PositiveIntegerField(default=0)
 	virtual_tour_url = models.CharField(max_length = 500, default = None)
 	location_name = models.CharField(max_length= 100, default='Nairobi')
 	location = models.PointField(srid=4326, default=None)
-	thumb = models.ImageField(default=None)
+	thumb = CloudinaryField('image', resource_type='image', folder='Rental_Thumbnails', default=None)
 	bathrooms = models.PositiveIntegerField(default=1, blank = True)
 	bedrooms = models.PositiveIntegerField(default=1)
 	total_rooms = models.PositiveIntegerField(default = 1, blank = False)
@@ -264,7 +391,7 @@ class RentalProperty(models.Model):
 						('SQft', 'SqFt'),
 						('SQm', 'SqM'),
 								)
-	size_units = models.CharField(max_length = 10,choices = measurement_unit_choices, default = 'Acres')
+	size_units = models.CharField(max_length = 10,choices = measurement_unit_choices, default = 'SQft')
 	number_of_units = models.PositiveIntegerField(default = 1)
 	number_of_stories = models.PositiveIntegerField(default = 0)
 	parking_spaces = models.PositiveIntegerField(default = 1)
@@ -291,10 +418,10 @@ class RentalProperty(models.Model):
 	#owner Information
 	related_website = models.CharField(max_length = 100, default = None)
 	publishdate = models.DateTimeField(auto_now=False, auto_now_add=True)
-	owner = models.ForeignKey(User, default=None, related_name='rent_property', on_delete=models.CASCADE)
+	owner = models.ForeignKey(settings.AUTH_USER_MODEL, default=None, related_name='rent_property', on_delete=models.CASCADE)
 	phone = models.CharField(max_length=13)
 	email = models.EmailField(blank=None)
-	favourite = models.ManyToManyField(User, related_name='rental_favourite', blank =True)
+	favourite = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='rental_favourite', blank =True)
 
 	@property
 	def longitude(self):
@@ -313,9 +440,9 @@ class RentalProperty(models.Model):
 		imageTemporary = Image.open(thumb)
 		outputIoStream = BytesIO()
 		imageTemporaryResized = imageTemporary.resize( (1020,573) ) # Resize can be set to various varibale values in settings.py
-		imageTemporary.save(outputIoStream , format='JPEG', quality=30) # change quality according to requirement.
+		imageTemporary.save(outputIoStream , format='JPEG', quality=70) # change quality according to requirement.
 		outputIoStream.seek(0)
-		uploadedImage = InMemoryUploadedFile(outputIoStream,'ImageField', "%s.jpg" % thumb.name.split('.')[0], 'image/jpeg', sys.getsizeof(outputIoStream), None)
+		uploadedImage = InMemoryUploadedFile(outputIoStream,'CloudinaryField', "%s.jpg" % thumb.name.split('.')[0], 'image/jpeg', sys.getsizeof(outputIoStream), None)
 		return uploadedImage
 
 	def get_absolute_url(self):
@@ -331,7 +458,7 @@ class RentalProperty(models.Model):
 
 class RentalImages(models.Model):
 	property = models.ForeignKey(RentalProperty, on_delete=models.CASCADE, related_name='images', null=True)
-	image = models.ImageField(default=None)
+	image = CloudinaryField('image', folder='Rental_Images', resource_type='image', default=None)
 
 	def save(self, *args, **kwargs):
 		if not self.id:
@@ -342,17 +469,25 @@ class RentalImages(models.Model):
 		imageTemporary	=	Image.open(image)
 		outputIoStream	=	BytesIO()
 		imageTemporaryResized	=	imageTemporary.resize( (1020,573) ) # Resize can be set to various varibale values in settings.py
-		imageTemporary.save(outputIoStream , format='JPEG', quality=30) # change quality according to requirement.
+		imageTemporary.save(outputIoStream , format='JPEG', quality=70) # change quality according to requirement.
 		outputIoStream.seek(0)
-		uploadedImage	=	InMemoryUploadedFile(outputIoStream,'ImageField', "%s.jpg" % image.name.split('.')[0], 'image/jpeg', sys.getsizeof(outputIoStream), None)
+		uploadedImage	=	InMemoryUploadedFile(outputIoStream,'CloudinaryField', "%s.jpg" % image.name.split('.')[0], 'image/jpeg', sys.getsizeof(outputIoStream), None)
 		return uploadedImage
 
 	class Meta:
 		verbose_name_plural = 'RentalImages'
 
+@receiver(pre_delete, sender=RentalImages)
+def r_photo_delete(sender, instance, **kwargs):
+	cloudinary.uploader.destroy(instance.image.public_id)
+
 class RentalVideos(models.Model):
 	property = models.ForeignKey(RentalProperty, on_delete=models.CASCADE, related_name= 'videos', null=True)
-	video = models.FileField(upload_to='videos/', null=True)
+	video = CloudinaryField('video', resource_type='video', folder='Rental_Videos', null=True, validators=[validate_video_extension])
 
 	class Meta:
 		verbose_name_plural = 'RentalVideos'
+
+@receiver(pre_delete, sender=RentalVideos)
+def r_video_delete(sender, instance, **kwargs):
+	cloudinary.uploader.destroy(instance.video.public_id)

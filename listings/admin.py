@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import (
+						PropertyTypeImage,
 						PropertyForSale,
 						PropertyForSaleImages,
 						PropertyForSaleVideos,
@@ -37,5 +38,6 @@ class RentalPropertyAdmin(LeafletGeoAdmin):
 	inlines = [RentalImagesInline, RentalVideosInline]
 	list_display = ('property_name', 'type', 'owner')
 
+admin.site.register(PropertyTypeImage)
 admin.site.register(PropertyForSale, PropertyForSaleAdmin)
 admin.site.register(RentalProperty, RentalPropertyAdmin)

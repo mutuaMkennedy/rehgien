@@ -1,7 +1,7 @@
 {% extends 'base1.html' %}
 {% load static %}
 {% block content %}
-
+{% load cloudinary %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
       <script type="text/javascript">
 
@@ -34,9 +34,9 @@
       </script>
 
 <section id="d-bd">
-    <div class="product-carousel container">
+    <div class="container">
       <div id="ca-row" class="row">
-        <div id="c-slide" class="col s12 md6 l6 xl6">
+        <div id="c-slide" class="col s12 md8 l8 xl8">
           <div id="c-slider" class="carousel carousel-slider" data-indicators="true">
             <h4 class="listing-title-d">{{listing.property_name}}</h4>
             <div class="fa-sh-btns">
@@ -48,38 +48,35 @@
               </div>
             </div>
             {%for img in images%}
-            <a href="#{{img.image}}!" class="carousel-item" data-cindex='{{img.image|length}}' ><img src="{{img.image.url}}"></a>
+            <a href="#{{img.image}}!" class="carousel-item" data-cindex='{{img.image|length}}' >{% cloudinary img.image ImageTransformation %}</a>
             {%endfor%}
             <div class="prev"><i class="fas fa-chevron-circle-left fa-lg"></i></div>
             <div class="next"><i class="fas fa-chevron-circle-right fa-lg"></i></div>
           </div>
         </div>
-        <div id="contact-form1" class="container col s12 md6 l6 xl6">
-          <div id="cont-c" class="col s12 m7">
+        <div id="contact-form1" class="col s12 md4 l4 xl4">
               <div id="cont-card" class="card horizontal">
                 <div id="c-img" class="card-image">
-                  {%if listing.owner.profile.profile_image %}
-                  <img src="{{listing.owner.profile.profile_image.url}}" alt="{{listing.owner.first_name}}">
+                  {%if listing.owner.agent_profile.profile_image %}
+                  <img src="{{listing.owner.agent_profile.profile_image.url}}" alt="{{listing.owner.first_name}}">
                   {% else %}
                   <img src="{% static 'img/avatar.png'%}" alt="avatar.png">
                   {% endif %}
                 </div>
                 <div class="card-stacked">
                   <div class="prof-card-content">
-                    <h6 class="green-text"><b>{{listing.owner.first_name}} </b></h6>
-                    <h5 class="black-text"><b>Company name</b></h5>
-                    <p>{{listing.phone}}</p>
+                    <h6><b>{{listing.owner.first_name}} </b></h6>
+                    <h5><b>Company name</b></h5>
+                    <li>{{listing.phone}}</li>
                   </div>
                   <div class="verified-agent">
                   <i class="fas fa-user-check fa-lg" style="color:lime;"></i>
-                  <p> Verified by Rehgien</p>
+                  <li> Verified by Rehgien</li>
                   </div>
                 </div>
               </div>
-            </div>
-          <div class="row">
               <form id="agentContactForm1" action="{% url 'contact:send_email' %}" class="col s12" method="POST">
-                <h6 class="black-text" style='font-size:12px;'><b>Contact this agent</b></h6>
+                <h6 class="black-text" style='font-size:12px; font-family:Roboto,Arial;'><b>Contact this agent</b></h6>
                 {% csrf_token %}
                 <div id="name_phone" class="row">
                   <div class="input-field col s12">
@@ -109,7 +106,6 @@
                 </div>
                 <button id="agentSendButton" type="submit" name="button"> Send Message</button>
               </form>
-              </div>
               <div class="cont-terms">
                 <p>By clicking send you agree that Homey and Real Estate professionals may contact you via phone/text
                 about your inquiry, which may involve the use of automated means. You are not required to consent as a
@@ -154,7 +150,7 @@
   <!-- pop up video-->
   <div id="vid" class="modal">
     {% for vids in videos %}
-    <video src="{{ vids.video.url }}" type="video/mp4" class="videos" controls="controls"/>
+    <video src="{% cloudinary_url vids.video VideoTransformation %}" type="video/mp4" class="videos" controls="controls"/>
 
     {% endfor %}
   </div>

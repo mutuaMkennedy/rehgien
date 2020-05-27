@@ -4,9 +4,11 @@ cloudinary==1.20.0
 defusedxml==0.5.0
 Django==2.2.12
 django-allauth==0.38.0
+django-ckeditor==5.9.0
 django-crispy-forms==1.7.2
 django-elasticsearch-dsl==6.4.2
 django-haystack==2.8.1
+django-js-asset==1.2.2
 django-leaflet==0.26.0
 django-multiselectfield==0.1.8
 django-photologue==3.8.1
@@ -14,6 +16,7 @@ django-rest-auth==0.9.5
 django-sortedm2m==1.5.0
 django-tastypie==0.14.3
 djangorestframework==3.10.2
+djangorestframework-gis==0.15
 djangorestframework-simplejwt==4.4.0
 drf-writable-nested==0.5.4
 elasticsearch==6.4.0

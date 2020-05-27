@@ -1,0 +1,340 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% load cloudinary %}
+{% block content %}
+
+<div class="ag-dtl-wrapper">
+<section>
+  <div class="container" style="width:90%; background-color:#ffffff;">
+    <div class="row">
+      <div class="col s12" style="padding:0;">
+        <div id="ag-d-card" class="card">
+            <div class="card-header" style="background-image:linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),url({% static 'img/dservice-cover.jpg'%});">
+
+            </div>
+
+            <div class="img-rv-wrapper">
+              <div class="ag-d-img">
+                {% if pro.profile_image%}
+                <img src="{{pro.profile_image.url}}" alt="{{pro.user.first_name}}" style="width:150px;height:150px;" class="">
+                {% else %}
+                <img src="{%static 'img/avatar.png'%}" alt="{{pro.user.first_name}}" style="width:150px;height:150px;">
+                {% endif %}
+              </div>
+              <div class="ag-d-details">
+                <div class="b-dtls">
+                  <h5> {{pro.user.first_name}} {{pro.user.last_name}}</h5>
+                </div>
+                <div class="ag-rating">
+                  {% if average_rating.rating__avg %}
+                  <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i> {{average_rating.rating__avg|floatformat}}/5 <a href="#reviews" onclick="test('reviews'); return false;">({{reviews_count}} Reviews)</a></li>
+                  {% else %}
+                  <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i>Not rated. ({{reviews_count}} Reviews)</li>
+                  {% endif %}
+                  <form action="{% url 'profiles:d_service_review'%}" method="GET">
+                      <li><button type="submit" name="agr" value="{{pro.pk}}" >Review Me</button></li>
+                  </form>
+                </div>
+                <div class="ag-d-lst">
+              </div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12 md3 l3 xl3">
+        <div class="proffesional-dtls col s12">
+          <div id="ag-o-d">
+            <h1>Proffesional Details</h1>
+            {% if pro.address%}
+            <li><b>Address:</b><br>{{pros.address}}</li>
+            {% else %}
+            <li><b>Address:</b><br>Not Provided</li>
+            {% endif %}
+            {% if pro.website_link%}
+            <li><b>Website:</b><br><a href="#" target='_blank'>{{pro.website_link}}</a></li>
+            {% else%}
+            <li><b>Website:</b><br><a href="#" target='_blank'>Not Provided</a></li>
+            {% endif %}
+            <li><b>Rehgien Member since</b>:{{pro.member_since.date}}</li>
+            <li class="social-btns"><b>Follow Us:</b><br>
+              {% if pro.linkedin_link%}
+              <a href="{{pro.linkedin_link}}" target='_blank'><i class="fab fa-linkedin-in fa-2x"></i></a>
+              {% endif %}
+              {% if pro.facebook_link%}
+              <a href="{{pro.facebook_link}}" target='_blank'><i class="fab fa-facebook-f fa-2x"></i></a>
+              {% endif%}
+              {% if pro.twitter_link%}
+              <a href="{{pro.twitter_link}}" target='_blank'><i class="fab fa-twitter fa-2x"></i></a>
+              {% endif%}
+              {% if pro.instagram_link%}
+              <a href="{{pro.instagram_link}}" target='_blank'><i class="fab fa-instagram fa-2x"></i></a>
+              {% endif%}
+            </li>
+          </div>
+        </div>
+        <div class="ag-contact-wrapper">
+        <div class="ag-d-contact">
+          <form id="ag-d-contact" action="#" class="col s12" method="POST">
+            <h6><b>Contact {{pro.user.first_name}}</b></h6>
+            {% csrf_token %}
+            <div id="n_p_r" class="row">
+              <div class="input-field col s12">
+                <input id="c_name" type="text" name="name" class="validate" placeholder="Your Name">
+              </div>
+              <div class="input-field col s12">
+                <input id="c_phone_number" type="number" name="phone_number" min="0" class="validate" placeholder="Phone number">
+              </div>
+            </div>
+            <div id="e_r" class="row">
+              <div class="input-field col s12">
+                <input id="c_email" type="email" name="from_email" class="validate" placeholder="Your Email">
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input disabled id="c_recepient" type="hidden" name="recepient" value="{{pro.email}}" class="validate">
+              </div>
+            </div>
+            <div id="c_r" class="row">
+              <div class="input-field col s12">
+                <textarea id="message" rows="4" name="message"></textarea>
+              </div>
+            </div>
+            <div id="c_b">
+              <button id="c_SendButton" type="submit" name="button"> Send Message</button>
+            </div>
+          </form>
+        </div>
+        <div class="ag-personal-info col s12">
+          <div class="ag-pl-inf">
+            <h1>You can also contact us Directly</h1>
+            <li>{{pro.user.email}}</li>
+            <li>{{pro.phone}}</li>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="col s12 md9 l9 xl9">
+              <div class="row">
+                <div class="col s12 md9 l9 xl9">
+                  <div>
+                    <div class="ag-about ">
+                      <h6>About</h6>
+                      {% if pro.about %}
+                      <p>{{pro.about|safe}}</p>
+                      {% else %}
+                      <p>Content not provided!</p>
+                      {% endif %}
+                    </div>
+                  </div>
+
+              <div class="reviews-section">
+                <a name='reviews' id="reviews"></a>
+                  <h1>Reviews</h1>
+                  <div class="review-comments">
+                    {% if pros_reviews %}
+                    {% for reviews in pros_reviews%}
+                    <div class="review-wrapper">
+                    <div class="revCo-header">
+                      {% if reviews.rating == 5%}
+                      <h2><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i>
+                        Highly likely to recommend.
+                      </h2>
+                      {% endif %}
+                      {% if reviews.rating == 4%}
+                      <h2><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#B3B4B3;'></i>
+                        Likely to recommend.</h2>
+                      {% endif %}
+                      {% if reviews.rating == 3%}
+                      <h2><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i>
+                        Slightly likely to recommend.</h2>
+                      {% endif %}
+                      {% if reviews.rating == 2%}
+                      <h2><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i>
+                        Not likely to recommend.</h2>
+                      {% endif %}
+                      {% if reviews.rating == 1%}
+                      <h2><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3;'></i>
+                        Never likely to recomend.</h2>
+                      {% endif %}
+                      <div class="revCo-or">
+                        <li>{{reviews.review_date.date}} - {{reviews.user.username}}</li> <br>
+                        {% if reviews.quality_avg_rating == 5%}
+                        <li>
+                          Quality of work:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.quality_avg_rating == 4%}
+                        <li>
+                          Quality of work:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.quality_avg_rating == 3%}
+                        <li>
+                          Quality of work:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.quality_avg_rating == 2%}
+                        <li>
+                          Quality of work:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.quality_avg_rating == 1%}
+                        <li>
+                          Quality of work:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.creativity_avg_rating == 5%}
+                        <li>
+                          Creativity:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.creativity_avg_rating == 4%}
+                        <li>
+                          Creativity:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.creativity_avg_rating == 3%}
+                        <li>
+                          Creativity:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.creativity_avg_rating == 2%}
+                        <li>
+                          Creativity:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                          </li>
+                        {% endif %}
+                        {% if reviews.creativity_avg_rating == 1%}
+                        <li>
+                          Creativity:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                          </li>
+                        {% endif %}
+                        {% if reviews.attention_to_detail == 5%}
+                        <li>
+                          Attention to detail:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.attention_to_detail == 4%}
+                        <li>
+                          Attention to detail:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.attention_to_detail == 3%}
+                        <li>
+                          Attention to detail:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.attention_to_detail == 2%}
+                        <li>
+                          Attention to detail:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.attention_to_detail == 1%}
+                        <li>
+                          Attention to detail:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="revCO-content">
+                      <p>{{ reviews.comment}}</p>
+                    </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="no-reviews">
+                      <h2>No reviews for this agent.</h2>
+                    </div>
+                    {% endif %}
+                  </div>
+              </div>
+                </div>
+              </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</div>
+<script type="text/javascript">
+  function scrollTo(to, duration) {
+    if (document.body.scrollTop == to) return;
+    var diff = to - document.body.scrollTop;
+    var scrollStep = Math.PI / (duration / 10);
+    var count = 0, currPos;
+    start = window.pageYOffset;
+    scrollInterval = setInterval(function(){
+
+      if((document.body.scrollTop || document.documentElement.scrollTop || 0)!=to){
+            count++
+            currPos=start+diff*(.5-.5*Math.cos(count*scrollStep))
+            /* https://stackoverflow.com/q/28633221/3405291 */
+            /* To support both Chromium-based and Firefox */
+            document.body.scrollTop=currPos
+            document.documentElement.scrollTop=currPos
+        }else{clearInterval(scrollInterval)}
+    },10);
+}
+
+function test(elID)
+{
+    var dest = document.getElementById(elID);
+    scrollTo(dest.offsetTop, 500);
+}
+</script>
+{% endblock %}
+{% block footer %}
+<footer >
+<section id="footer" class="section section-follow black-text">
+  <div class="container">
+    <div class="row">
+      <div class="f-details center">
+        <a href="#"> Privacy Policy</a>
+        <a href="#"> Terms & Conditions</a>
+        <a href="#"> Advertise</a>
+        <a href="#"> Contact Us</a>
+        <a href="{% url 'contact:about_us'%}"> About Us</a>
+      </div>
+      <div id="footer-details" class="col s12 center">
+        <a href="#" class="black-text">
+          <i class="fab fa-facebook fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-twitter fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-linkedin fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-instagram fa-2x"></i>
+        </a>
+      </div>
+      <p class="flow-text black-text center" id="c-year"></p>
+      <script type="text/javascript">
+        var d = new Date();
+        document.getElementById("c-year").innerHTML= 'While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright '+ d.getFullYear();
+      </script>
+    </div>
+  </div>
+</section>
+
+</footer>
+{% endblock%}

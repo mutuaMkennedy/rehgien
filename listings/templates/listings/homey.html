@@ -4,44 +4,24 @@
 
 <!--banner-->
 
-    <div class="HomePgBanner" style="background-image:url({%static 'img/banner1.jpg' %});">
+    <div class="HomePgBanner" style="background-image:linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),url({%static 'img/pm-cover.jpg' %});">
       <h3>Find your dream Home</h3>
-      <div id="home-map" style="display=none">
-
-      </div>
       <div id="search-section" class="container">
         <div class="row">
-          <div class="col s12">
-            <ul id="switch" class="tabs">
-                <li class="tab col s3"><a href="#buy">Buy</a></li>
-                <li class="tab col s3"><a href="#rent">Rent</a></li>
-            </ul>
-          </div>
-          <div id="buy" class="col s12">
             <form class="HomeSearchBar" action="{% url 'listings:sale_listings'%}" method="GET">
               <div id="s_geocoder">
 
               </div>
               <button type="submit"><i class="fas fa-search fa-lg" style="color:grey;"></i></button>
             </form>
-          </div>
-          <div id="rent" class="col s12">
-            <form class="HomeSearchBar" action="{% url 'listings:rental_listings'%}" method="GET">
-              <div id="r_geocoder">
-
-              </div>
-              <button type="submit"><i class="fas fa-search fa-lg" style="color:grey;"></i></button>
-            </form>
-          </div>
         </div>
 
       </div>
       <i id="down-arrow" class="material-icons">keyboard_arrow_down</i>
       <i id="down-arrow2" class="material-icons">keyboard_arrow_down</i>
     </div>
-<section>
-  <br>
-    <div id="svgCardsContainer" class="container">
+<section style="background-color:#4caf5014;;">
+    <div id="svgCardsContainer" class="container" style="background-color:#ffffff; padding:10px; border-radius:10px; width:90%;">
   <h4 id="svg-title" class="center" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="true" data-aos-duration="1000">
      Use Rehgien to find Real Estate and proffesionals.
    </h4>
@@ -94,34 +74,18 @@
     </div>
 </section>
 <script type="text/javascript">
-  mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
-  if (!mapboxgl.supported()) {
-    alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
-    } else {
-      var map = new mapboxgl.Map({
-          container: 'home-map',
-          // style: 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
-          minZoom: 6.2,
-          maxZoom:14,
-          center: [37.01, -1.10]
-    });
-  }
+mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+var geocoder = new MapboxGeocoder({
+accessToken: mapboxgl.accessToken,
+types: 'country,region,place,postcode,locality,neighborhood',
+countries:'KE',
+placeholder:'Enter an address, city, neighborhood or postcode.'
+});
 
-  //geocoder
-  var geocoder = new MapboxGeocoder({
-  accessToken: mapboxgl.accessToken,
-  mapboxgl: mapboxgl,
-  placeholder:'Enter an address, city or town name!',
-  name:'location',
-  countries:'KE',
-  marker:false,
-  });
-
-  document.getElementById('s_geocoder').appendChild(geocoder.onAdd(map));
-  document.getElementById('r_geocoder').appendChild(geocoder.onAdd(map));
+geocoder.addTo('#s_geocoder');
 </script>
 <script type="text/javascript">
-  document.querySelector(".mapboxgl-ctrl-geocoder--input").name="location_input";
+  document.querySelector(".mapboxgl-ctrl-geocoder--input").name="location";
 </script>
 {%endblock%}
 

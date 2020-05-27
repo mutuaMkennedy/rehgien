@@ -1,99 +1,122 @@
 {% extends 'base1.html' %}
 {% load static %}
 {% block content %}
+{% load cloudinary %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+      <script type="text/javascript">
 
-<section id="d-bd">
-    <div class="product-carousel container">
-      <div id="ca-row" class="row">
-        <div id="c-slide" class="col s12 md6 l6 xl6">
-          <div id="c-slider" class="carousel carousel-slider" data-indicators="true">
-            <h4 class="listing-title-d">{{listing.property_name}}</h4>
-            <div class="fa-sh-btns">
-              <div class="dtl-fav-btn">
-                {% if is_favourite%}
-                <a href="{% url 'listings:r_favourite' listing.pk%}"><i class="fas fa-heart fa-lg" style="color:red;"></i></a>
-                {% else %}
-                <a href="{% url 'listings:r_favourite' listing.pk%}"><i class="fas fa-heart fa-lg" style="color:grey;"></i></a>
-                {% endif %}
+        $(document).ready(function(event){
+          $(document).on('click','#ajxFav', function(event){
+             event.preventDefault();
+             var pk = $(this).attr('value');
+             console.log(pk);
+             $.ajax({
+               type : 'post',
+               url : '{% url "listings:axr_favourite"%}',
+               data : {
+                  'pk':pk,
+                  'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+               },
+               dataType: 'json',
+               // success: LikePost
+               success: function(response) {
+                 $('#dtl-fav-btn').html(response['form'])
+                 console.log($('#dtl-fav-btn').html(response['form']));
+
+
+               },
+               error: function(rs,e){
+                 console.log(rs.responseText)
+               },
+             });
+          });
+        });
+      </script>
+
+      <section id="d-bd">
+          <div class="container">
+            <div id="ca-row" class="row">
+              <div id="c-slide" class="col s12 md8 l8 xl8">
+                <div id="c-slider" class="carousel carousel-slider" data-indicators="true">
+                  <h4 class="listing-title-d">{{listing.property_name}}</h4>
+                  <div class="fa-sh-btns">
+                    <div id="dtl-fav-btn">
+                        {% include 'listings/rental-fav-section.html'%}
+                    </div>
+                    <div class="share-button">
+                      <a href="#"><i class="fas fa-share"></i></a>
+                    </div>
+                  </div>
+                  {%for img in images%}
+                  <a href="#{{img.image}}!" class="carousel-item" data-cindex='{{img.image|length}}' >{% cloudinary img.image ImageTransformation %}</a>
+                  {%endfor%}
+                  <div class="prev"><i class="fas fa-chevron-circle-left fa-lg"></i></div>
+                  <div class="next"><i class="fas fa-chevron-circle-right fa-lg"></i></div>
+                </div>
               </div>
-              <div class="share-button">
-                <a href="#"><i class="fas fa-share"></i></a>
+              <div id="contact-form1" class="col s12 md4 l4 xl4">
+                    <div id="cont-card" class="card horizontal">
+                      <div id="c-img" class="card-image">
+                        {%if listing.owner.profile.profile_image %}
+                        <img src="{{listing.owner.profile.profile_image.url}}" alt="{{listing.owner.first_name}}">
+                        {% else %}
+                        <img src="{% static 'img/avatar.png'%}" alt="avatar.png">
+                        {% endif %}
+                      </div>
+                      <div class="card-stacked">
+                        <div class="prof-card-content">
+                          <h6><b>{{listing.owner.first_name}} </b></h6>
+                          <h5><b>Company name</b></h5>
+                          <li>{{listing.phone}}</li>
+                        </div>
+                        <div class="verified-agent">
+                        <i class="fas fa-user-check fa-lg" style="color:lime;"></i>
+                        <li> Verified by Rehgien</li>
+                        </div>
+                      </div>
+                    </div>
+                    <form id="agentContactForm1" action="{% url 'contact:send_email' %}" class="col s12" method="POST">
+                      <h6 class="black-text" style='font-size:12px; font-family:Roboto,Arial;'><b>Contact this agent</b></h6>
+                      {% csrf_token %}
+                      <div id="name_phone" class="row">
+                        <div class="input-field col s12">
+                          <input id="name" type="text" name="name" class="validate" placeholder="Your Name">
+                        </div>
+                        <div class="input-field col s12">
+                          <input id="phone_number" type="number" name="phone_number" min="0" class="validate" placeholder="Phone number">
+                        </div>
+                        </div>
+                      <div id="fEmail" class="row">
+                        <div class="input-field col s12">
+                          <input id="from_email" type="email" name="from_email" class="validate" placeholder="Your Email">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s12">
+                          <input disabled id="recepient" type="hidden" name="recepient" value="{{listing.email}}" class="validate">
+                        </div>
+                      </div>
+                      <div id="eMessage" class="row">
+                        <div class="input-field col s12">
+                          <textarea id="message" rows="4" name="message" cols="80"></textarea>
+                          <script type="text/javascript">
+                            document.getElementById("message").defaultValue="Hello im interested in your listing: {{listing.name}} located in {{listing.location_name}}";
+                          </script>
+                        </div>
+                      </div>
+                      <button id="agentSendButton" type="submit" name="button"> Send Message</button>
+                    </form>
+                    <div class="cont-terms">
+                      <p>By clicking send you agree that Homey and Real Estate professionals may contact you via phone/text
+                      about your inquiry, which may involve the use of automated means. You are not required to consent as a
+                    condition of purchasing any property, goods or services. Note local data rates for texts/messages may apply.
+                    You also agree to our terms of service</p>
+                    </div>
               </div>
             </div>
-            {%for img in images%}
-            <a href="#{{img.image}}!" class="carousel-item" data-cindex='{{img.image|length}}' ><img src="{{img.image.url}}"></a>
-            {%endfor%}
-            <div class="prev"><i class="fas fa-chevron-circle-left fa-lg"></i></div>
-            <div class="next"><i class="fas fa-chevron-circle-right fa-lg"></i></div>
           </div>
-        </div>
-        <div id="contact-form1" class="container col s12 md6 l6 xl6">
-          <div id="cont-c" class="col s12 m7">
-              <div id="cont-card" class="card horizontal">
-                <div id="c-img" class="card-image">
-                  {%if listing.owner.profile.profile_image %}
-                  <img src="{{listing.owner.profile.profile_image.url}}" alt="{{listing.owner.first_name}}">
-                  {% else %}
-                  <img src="{% static 'img/avatar.png'%}" alt="avatar.png">
-                  {% endif %}
-                </div>
-                <div class="card-stacked">
-                  <div class="prof-card-content">
-                    <h6 class="green-text"><b>{{listing.owner.first_name}} </b></h6>
-                    <h5 class="black-text"><b>Company name</b></h5>
-                    <p>{{listing.phone}}</p>
-                  </div>
-                  <div class="verified-agent">
-                  <i class="fas fa-user-check fa-lg" style="color:lime;"></i>
-                  <p> Verified by Rehgien</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <div class="row">
-              <form id="agentContactForm1" action="{% url 'contact:send_email' %}" class="col s12" method="POST">
-                <h6 class="black-text" style='font-size:12px;'><b>Contact this agent</b></h6>
-                {% csrf_token %}
-                <div id="name_phone" class="row">
-                  <div class="input-field col s12">
-                    <input id="name" type="text" name="name" class="validate" placeholder="Your Name">
-                  </div>
-                  <div class="input-field col s12">
-                    <input id="phone_number" type="number" name="phone_number" min="0" class="validate" placeholder="Phone number">
-                  </div>
-                  </div>
-                <div id="fEmail" class="row">
-                  <div class="input-field col s12">
-                    <input id="from_email" type="email" name="from_email" class="validate" placeholder="Your Email">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="input-field col s12">
-                    <input disabled id="recepient" type="hidden" name="recepient" value="{{listing.email}}" class="validate">
-                  </div>
-                </div>
-                <div id="eMessage" class="row">
-                  <div class="input-field col s12">
-                    <textarea id="message" rows="4" name="message" cols="80"></textarea>
-                    <script type="text/javascript">
-                      document.getElementById("message").defaultValue="Hello im interested in your listing: {{listing.name}} located in {{listing.location_name}}";
-                    </script>
-                  </div>
-                </div>
-                <button id="agentSendButton" type="submit" name="button"> Send Message</button>
-              </form>
-              </div>
-              <div class="cont-terms">
-                <p>By clicking send you agree that Homey and Real Estate professionals may contact you via phone/text
-                about your inquiry, which may involve the use of automated means. You are not required to consent as a
-              condition of purchasing any property, goods or services. Note local data rates for texts/messages may apply.
-              You also agree to our terms of service</p>
-              </div>
-        </div>
-      </div>
-    </div>
 
-</section>
+      </section>
 <section>
   <div class="container">
     <div class="row">
@@ -127,7 +150,7 @@
   <!-- pop up video-->
   <div id="vid" class="modal">
     {% for vids in videos %}
-    <video src="{{ vids.video.url }}" type="video/mp4" class="videos" controls="controls"/>
+    <video src="{% cloudinary_url vids.video VideoTransformation %}" type="video/mp4" class="videos" controls="controls"/>
 
     {% endfor %}
   </div>

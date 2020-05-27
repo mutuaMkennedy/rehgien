@@ -177,14 +177,14 @@ CKEDITOR_BROWSE_SHOW_DIRS = True
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
 CKEDITOR_CONFIGS = {
-    'user_profile': {
+    'agent_profile': {
         'skin': 'n1theme',
         'removePlugins':'elementspath',
         # 'skin': 'office2013',
         # 'toolbar_Basic': [
         #     ['Source', '-', 'Bold', 'Italic']
         # ],
-        'toolbar_userprofile': [
+        'toolbar_agentprofile': [
             ['Templates'],
             ['Bold',],
             ['Undo', 'Redo'], '/',
@@ -213,7 +213,7 @@ CKEDITOR_CONFIGS = {
             #
             # ]},
         ],
-        'toolbar': 'userprofile',  # put selected toolbar config here
+        'toolbar': 'agentprofile',  # put selected toolbar config here
         # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
         # 'height': 291,
         # 'width': '100%',
@@ -265,6 +265,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+AUTH_USER_MODEL = 'profiles.User'
 
 # allauth further Configs
 ACCOUNT_AUTHENTICATION_METHOD = "username"

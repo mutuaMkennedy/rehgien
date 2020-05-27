@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from listings.models import (
+                    PropertyTypeImage,
                     PropertyForSale,
                     RentalProperty,
                     PropertyForSaleImages,
@@ -8,6 +9,7 @@ from listings.models import (
                     RentalVideos
                     )
 from listings.apis.serializers import (
+                    PropertyTypeImageSerializer,
                     PropertyForSaleSerializer,
                     RentalPropertySerializer,
                     PropertyForSaleImagesSerializer,
@@ -33,10 +35,14 @@ from rest_framework.permissions import  (
                     IsAuthenticatedOrReadOnly
                     )
 from .permissions import IsOwnerOrReadOnly
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+# referencing the custom user model
+User = get_user_model()
 
 #USERS VIEW
-
+#will be removed duplicate of UsersListAPI in profiles app apiview
 class UsersList(ListAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -62,6 +68,10 @@ class UserRentalPosts(ListAPIView):
         return RentalProperty.objects.filter(owner=user)
 
 #On Sale view APIS
+class PropertyTypeImageList(ListAPIView):
+    serializer_class = PropertyTypeImageSerializer
+    queryset = PropertyTypeImage.objects.all()
+
 #listing all for sale property
 class ForSaleListApi(ListAPIView):
     # queryset = PropertyForSale.objects.all()

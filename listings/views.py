@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
 from django.forms import modelformset_factory
 from django.core.exceptions import PermissionDenied
@@ -11,7 +12,7 @@ from . models import (
 				PropertyForSale, PropertyForSaleImages,
 				PropertyForSaleVideos, RentalProperty,RentalImages, RentalVideos,
 				)
-from profiles.models import UserProfile
+from profiles.models import AgentProfile
 from . import forms
 from . import models
 from django.contrib.auth.decorators import login_required
@@ -33,10 +34,12 @@ except ImportError:
 from django.core.paginator import Paginator
 #from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 #from haystack.query import SearchQuerySet
-# Create your views here.
 
-# def directions(request):
-# 	return render (request,"listings/navigation_map.html")
+# referencing the custom user model
+User = get_user_model()
+
+def check_q_valid(param):
+	return param !="" and param is not None
 
 def homepage(request):
 	onsale_recent = PropertyForSale.objects.order_by('publishdate')[:6]
@@ -47,46 +50,102 @@ def homepage(request):
 	return render(request, 'listings/homey.html', {'onsale_reversed': onsale_reversed, 'rentals_reversed': rentals_reversed})
 
 def sale_listings_results(request):
+	ImageTransformation = dict(
+	format = "jpg",
+	transformation = [
+		dict(height=333, width=500, crop="fill",quality="auto", gravity="center",
+		 format="auto", dpr="auto", fl="progressive"),
+			]
+		)
 	listings = PropertyForSale.objects.all()
-	loc_input_q = request.GET.get('location_input')
-	if loc_input_q !="" and loc_input_q is not None:
+	loc_input_q = request.GET.get('location')
+	min_price = request.GET.get('min_price')
+	max_price = request.GET.get('max_price')
+	property_type= request.GET.get('property_type')
+	bedrooms = request.GET.get('bedrooms')
+	bathrooms = request.GET.get('bathrooms')
+	if check_q_valid(loc_input_q):
 		loc_icontains = loc_input_q.split(',')
 		listings = listings.filter(location_name__icontains = loc_icontains[0])
 		location_address = loc_input_q
+	if check_q_valid(min_price) and check_q_valid(max_price):
+		listings = listings.filter(price__range = (min_price,max_price))
+	if check_q_valid(property_type):
+		listings = listings.filter(type__iexact=property_type)
+	if check_q_valid(bedrooms):
+		listings = listings.filter(bedrooms__gte=bedrooms)
+	if check_q_valid(bathrooms):
+		listings = listings.filter(bathrooms__gte=bathrooms)
 	else:
 		listings = listings.filter(location_name__icontains= 'Nairobi')
 		location_address = 'Nairobi,Kenya'
 	listings_count = listings.count()
-	paginator = Paginator(listings, 3)
+	paginator = Paginator(listings, 10)
 	page = request.GET.get('page')
 	listings = paginator.get_page(page)
 	return render(request, 'listings/for-sale-listings.html', {'listings':listings, 'listings_count':listings_count,
-			"location_address":location_address})
+			"location_address":location_address, "ImageTransformation":ImageTransformation})
 
 def rental_listings_results(request):
+	ImageTransformation = dict(
+	format = "jpg",
+	transformation = [
+		dict(height=333, width=500, crop="fill",quality="auto", gravity="center",
+		 format="auto", dpr="auto",fl="progressive"),
+			]
+		)
 	listings = RentalProperty.objects.all()
-	loc_input_q = request.GET.get('location_input')
-	if loc_input_q !="" and loc_input_q is not None:
+	loc_input_q = request.GET.get('location')
+	min_price = request.GET.get('min_price')
+	max_price = request.GET.get('max_price')
+	property_type= request.GET.get('property_type')
+	bedrooms = request.GET.get('bedrooms')
+	bathrooms = request.GET.get('bathrooms')
+	if check_q_valid(loc_input_q):
 		loc_icontains = loc_input_q.split(',')
 		listings = listings.filter(location_name__icontains = loc_icontains[0])
 		location_address = loc_input_q
+	if check_q_valid(min_price) and check_q_valid(max_price):
+		listings = listings.filter(price__range = (min_price,max_price))
+	if check_q_valid(property_type):
+		listings = listings.filter(type__iexact=property_type)
+	if check_q_valid(bedrooms):
+		listings = listings.filter(bedrooms__gte=bedrooms)
+	if check_q_valid(bathrooms):
+		listings = listings.filter(bathrooms__gte=bathrooms)
 	else:
 		listings = listings.filter(location_name__icontains= 'Nairobi')
 		location_address = 'Nairobi,Kenya'
 	listings_count = listings.count()
-	paginator = Paginator(listings, 3)
+	paginator = Paginator(listings, 10)
 	page = request.GET.get('page')
 	listings = paginator.get_page(page)
-	return render(request, 'listings/rental-listings.html', {'listings':listings,'listings_count':listings_count, "location_address":location_address})
+	return render(request, 'listings/rental-listings.html', {'listings':listings,'listings_count':listings_count,
+	 "location_address":location_address, "ImageTransformation":ImageTransformation})
 
 def onsale_detail(request, pk):
+	ImageTransformation = dict(
+	format = "jpeg",
+	transformation = [
+		dict(height=450, width=640, crop="fill",quality="auto", gravity="center",
+		 format="auto", dpr="auto"),
+			]
+		)
+	VideoTransformation = dict(
+	format = "mp4",
+	transformation = [
+		dict(height=360, width=640, crop="pad",quality=100, gravity="center",
+		 format="auto", dpr="auto", fallback_content="Your browser does not support HTML5 video tags."),
+			]
+		)
 	listing = get_object_or_404(PropertyForSale, pk=pk)
 	is_favourite = False
 	if listing.favourite.filter(id=request.user.id).exists():
 		is_favourite = True
 	images = listing.images.all()
 	videos = listing.videos.all()
-	return render(request, 'listings/onsale_detail.html', {'listing': listing,'is_favourite':is_favourite ,'images':images, 'videos': videos})
+	return render(request, 'listings/onsale_detail.html', {'listing': listing,'is_favourite':is_favourite ,'images':images, 'videos': videos,
+				'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation})
 
 @login_required(login_url='account_login')
 def onsale_favourite(request,pk):
@@ -97,6 +156,7 @@ def onsale_favourite(request,pk):
 		listing.favourite.add(request.user.pk)
 	return HttpResponseRedirect(listing.get_absolute_url())
 
+@login_required(login_url='account_login')
 def ajxonsale_favourite(request):
 	if request.method == 'POST':
 		user = request.user.id
@@ -122,14 +182,51 @@ def ajxonsale_favourite(request):
 			html = render_to_string('listings/favourite-section.html', context, request=request)
 			return JsonResponse({'form':html})
 
+@login_required(login_url='account_login')
+def ajxrental_favourite(request):
+	if request.method == 'POST':
+		user = request.user.id
+		is_favourite = False
+		pk = request.POST.get('pk')
+		listing = get_object_or_404(RentalProperty, pk=pk)
+		_liked = listing.favourite.filter(pk=user).exists()
+		if _liked:
+			listing.favourite.remove(user)
+			is_favourite = False
+		else:
+			listing.favourite.add(user)
+			is_favourite = True
+		context = {
+		'is_favourite':is_favourite,
+		'listing':listing,
+		}
+		if request.is_ajax():
+			html = render_to_string('listings/rental-fav-section.html', context, request=request)
+			return JsonResponse({'form':html})
+
 def rental_detail(request, pk):
+	ImageTransformation = dict(
+	format = "jpeg",
+	transformation = [
+		dict(height=450, width=640, crop="fill",quality="auto", gravity="center",
+		 format="auto", dpr="auto"),
+			]
+		)
+	VideoTransformation = dict(
+	format = "mp4",
+	transformation = [
+		dict(height=360, width=640, crop="pad",quality=100, gravity="center",
+		 format="auto", dpr="auto", fallback_content="Your browser does not support HTML5 video tags."),
+			]
+		)
 	rentals = get_object_or_404(RentalProperty, pk=pk)
 	is_favourite = False
 	if rentals.favourite.filter(id=request.user.id).exists():
 		is_favourite = True
 	images = rentals.images.all()
 	videos = rentals.videos.all()
-	return render(request, 'listings/rental_detail.html', {'listing': rentals,'is_favourite':is_favourite, 'images':images, 'videos': videos})
+	return render(request, 'listings/rental_detail.html', {'listing': rentals,'is_favourite':is_favourite, 'images':images, 'videos': videos,
+	 			'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation})
 
 @login_required(login_url='account_login')
 def rental_favourite(request,pk):

@@ -1,9 +1,20 @@
 from django import forms
-from django.contrib.auth.models import User
-from .models import UserProfile
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from .models import AgentProfile
+from .models import AgentReviews
 from leaflet.forms.widgets import LeafletWidget
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
+# referencing the custom user model
+User = get_user_model()
+
+speciality_choices = {
+        ('1', 'Buying and Selling of houses'),
+        ('2', 'Renting houses'),
+        ('3', 'Leasing office spaces'),
+        ('4', 'Buying and selling of land'),
+    }
 class profile_form(forms.ModelForm):
     class Meta:
         model = User
@@ -15,7 +26,7 @@ class profile_form(forms.ModelForm):
         user.last_name = self.cleaned_data['last_name']
         user.email = self.cleaned_data['email']
         user.save()
-        # profile = UserProfile()
+        # profile = AgentProfile()
         # profile.user = user
         # profile.first_name = self.cleaned_data['first_name']
         # profile.last_name = self.cleaned_data['last_name']
@@ -27,10 +38,17 @@ class UserEditForm(forms.ModelForm):
         model = User
         fields = ['username','first_name', 'last_name','email']
 
-class ProfileEditForm(forms.ModelForm):
-    about = forms.CharField(widget=CKEditorUploadingWidget(config_name='user_profile'))
+class AgentProfileEditForm(forms.ModelForm):
+    speciality = forms.MultipleChoiceField(required=False, choices =speciality_choices, widget = forms.SelectMultiple())
+    about = forms.CharField(widget=CKEditorUploadingWidget(config_name='agent_profile'))
     class Meta:
-        model = UserProfile
-        exclude = ['user','account_type']
+        model = AgentProfile
+        exclude = ['user','account_type', 'featured_agent']
         fields = '__all__'
         widgets = {'location':LeafletWidget()}
+
+class AgentReviewForm(forms.ModelForm):
+    class Meta:
+        model = AgentReviews
+        exclude = ['user']
+        fields = '__all__'

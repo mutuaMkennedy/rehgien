@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from listings.apis.views import (
+                PropertyTypeImageList,
                 ForSaleListApi,
                 ForSaleCreateApi,
                 ForSaleDetailApi,
@@ -25,6 +26,7 @@ from listings.apis.views import (
 # router.register('OnsaleListings', views.onSaleViewSet())
 
 urlpatterns = [
+    path('listings/propertyTypeImages/', PropertyTypeImageList.as_view(), name='p_type_list_api'),
     #for sale url endpoints
     path('listings/for-sale/', ForSaleListApi.as_view(), name='for_sale_list_api'),
     path('listings/for-sale/create/', ForSaleCreateApi.as_view(), name='onsale_create_api'),
@@ -38,7 +40,7 @@ urlpatterns = [
     path('listings/for-rent/<int:pk>/edit/', ForRentUpdateApi.as_view(), name='rentals_update_api'),
     path('listings/for-rent/<int:pk>/delete/', ForRentDeleteApi.as_view(), name='rentals_delete_api'),
     #Users & authentication
-    path('accounts/users/', UsersList.as_view(), name='users'),
+    path('accounts/users/', UsersList.as_view(), name='users'), #will be removed . diplicate of users_list in profiles app
     path('accounts/user/listings/for-sale/', UserSalePosts.as_view(), name='user_sale_posts'),
     path('accounts/user/listings/rentals/', UserRentalPosts.as_view(), name='user_rental_posts'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

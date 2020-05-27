@@ -11,6 +11,7 @@ urlpatterns = [
 	url(r'^onsale/(?P<pk>[0-9]+)/$', views.onsale_detail, name='onsale_detail'),
 	path('on_sale/favourite/<int:pk>/', views.onsale_favourite, name='s_favourite'),
 	path('on_sale/ajx_favourite/', views.ajxonsale_favourite, name='axs_favourite'),
+	path('for_rent/ajx_favourite/', views.ajxrental_favourite, name='axr_favourite'),
 	url(r'^rental/(?P<pk>[0-9]+)/$', views.rental_detail, name='rental_detail'),
 	path('rental/favourite/<int:pk>/', views.rental_favourite, name='r_favourite'),
 	path('on_sale/<int:pk>/edit/', views.for_sale_update, name='update'),

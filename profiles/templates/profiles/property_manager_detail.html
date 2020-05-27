@@ -1,0 +1,598 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% load cloudinary %}
+{% block content %}
+
+<div class="ag-dtl-wrapper">
+<section>
+  <div class="container" style="width:90%; background-color:#ffffff;">
+    <div class="row">
+      <div class="col s12" style="padding:0;">
+        <div id="ag-d-card" class="card">
+            <div class="card-header" style="background-image:linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),url({% static 'img/pm-cover.jpg'%});">
+
+            </div>
+
+            <div class="img-rv-wrapper">
+              <div class="ag-d-img">
+                {% if agent.profile_image%}
+                <img src="{{agent.profile_image.url}}" alt="{{agent.user.first_name}}" style="width:150px;height:150px;" class="">
+                {% else %}
+                <img src="{%static 'img/avatar.png'%}" alt="{{agent.user.first_name}}" style="width:150px;height:150px;">
+                {% endif %}
+              </div>
+              <div class="ag-d-details">
+                <div class="b-dtls">
+                  <h5> {{agent.user.first_name}} {{agent.user.last_name}}</h5>
+                </div>
+                <div class="ag-rating">
+                  {% if average_rating.rating__avg %}
+                  <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i> {{average_rating.rating__avg|floatformat}}/5 <a href="#reviews" onclick="test('reviews'); return false;">({{reviews_count}} Reviews)</a></li>
+                  {% else %}
+                  <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i>Not rated. ({{reviews_count}} Reviews)</li>
+                  {% endif %}
+                  <form action="{% url 'profiles:pm_review'%}" method="GET">
+                      <li><button type="submit" name="agr" value="{{agent.pk}}" >Review Me</button></li>
+                  </form>
+                </div>
+                <div class="ag-d-lst">
+                <li>{{s_r_total}} listings on Rehgien</li>
+                  <li><a href="#agent-sales"><i class="fas fa-home fa-lg" style="color:#5b0088;"></i> {{s_count}} Sale Listings</a></li>
+                  <li><a href="#agent-rentals"><i class="fas fa-sign fa-lg" style="color:#5b0088;"></i> {{r_count}} Rental Listings</a></li>
+                </div>
+              </div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12 md3 l3 xl3">
+        <div class="proffesional-dtls col s12">
+          <div id="ag-o-d">
+            <h1>Proffesional Details</h1>
+            {% if agent.address%}
+            <li><b>Address:</b><br>{{agent.address}}</li>
+            {% else %}
+            <li><b>Address:</b><br>Not Provided</li>
+            {% endif %}
+            {% if agent.website_link%}
+            <li><b>Website:</b><br><a href="#" target='_blank'>{{agent.website_link}}</a></li>
+            {% else%}
+            <li><b>Website:</b><br><a href="#" target='_blank'>Not Provided</a></li>
+            {% endif %}
+            <li><b>License No:</b> {{agent.license_number}}</li>
+            <li><b>Rehgien Member since</b>:{{agent.member_since.date}}</li>
+            <li class="social-btns"><b>Follow Us:</b><br>
+              {% if agent.linkedin_link%}
+              <a href="{{agent.linkedin_link}}" target='_blank'><i class="fab fa-linkedin-in fa-2x"></i></a>
+              {% endif %}
+              {% if agent.facebook_link%}
+              <a href="{{agent.facebook_link}}" target='_blank'><i class="fab fa-facebook-f fa-2x"></i></a>
+              {% endif%}
+              {% if agent.twitter_link%}
+              <a href="{{agent.twitter_link}}" target='_blank'><i class="fab fa-twitter fa-2x"></i></a>
+              {% endif%}
+            </li>
+          </div>
+        </div>
+        <div class="ag-contact-wrapper">
+        <div class="ag-d-contact">
+          <form id="ag-d-contact" action="#" class="col s12" method="POST">
+            <h6><b>Contact this agent</b></h6>
+            {% csrf_token %}
+            <div id="n_p_r" class="row">
+              <div class="input-field col s12">
+                <input id="c_name" type="text" name="name" class="validate" placeholder="Your Name">
+              </div>
+              <div class="input-field col s12">
+                <input id="c_phone_number" type="number" name="phone_number" min="0" class="validate" placeholder="Phone number">
+              </div>
+            </div>
+            <div id="e_r" class="row">
+              <div class="input-field col s12">
+                <input id="c_email" type="email" name="from_email" class="validate" placeholder="Your Email">
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input disabled id="c_recepient" type="hidden" name="recepient" value="{{agent.email}}" class="validate">
+              </div>
+            </div>
+            <div id="c_r" class="row">
+              <div class="input-field col s12">
+                <textarea id="message" rows="4" name="message"></textarea>
+              </div>
+            </div>
+            <div id="c_b">
+              <button id="c_SendButton" type="submit" name="button"> Send Message</button>
+            </div>
+          </form>
+        </div>
+        <div class="ag-personal-info col s12">
+          <div class="ag-pl-inf">
+            <h1>You can also contact us Directly</h1>
+            <li>{{agent.user.email}}</li>
+            <li>{{agent.phone}}</li>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="col s12 md9 l9 xl9">
+              <div class="row">
+                <div class="col s12 md9 l9 xl9">
+
+              <div>
+                <div class="ag-about ">
+                  <h6>About</h6>
+                  {% if agent.about %}
+                  <p>{{agent.about|safe}}</p>
+                  {% else %}
+                  <p>Content not provided!</p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="ag-sr-m-sc">
+                <h1>Listings Distribution</h1>
+                <li><i class="fas fa-circle" style="color:red;"></i>For Sale ({{s_count}})
+                  <i class="fas fa-circle" style="color:blue;"></i>For Rent ({{r_count}})</li>
+                <div id='ag-d-sr-map'>
+
+                </div>
+              </div>
+
+              <div class="ag-sr-lsts">
+                <a  name="agent-sales" id='agent-sales'></a>
+                <h1>What we are selling</h1>
+                <table>
+                  <tr>
+                    <th>Property</th>
+                    <th>Address</th>
+                    <th>Baths</th>
+                    <th>Beds</th>
+                    <th>Price</th>
+                  </tr>
+                  {% for listings in sale_listings_p %}
+                  <tr>
+                    <td><a href="{% url 'listings:onsale_detail' listings.pk %}"><img src="{% cloudinary_url listings.thumb ImageTransformation %}" alt="{{listings.property_name}}" width="100px" height=50px></a></td>
+                    <td><a href="{% url 'listings:onsale_detail' listings.pk %}">{{listings.location_name}}</a></td>
+                    <td>{{listings.bathrooms}}</td>
+                    <td>{{listings.bedrooms}}</td>
+                    <td>{{listings.price}}</td>
+
+                  </tr>
+                  {% endfor %}
+                </table>
+                <div class="s_l_pgnt">
+                  <!-- paginator for rental listings-->
+                  {% include 'profiles/pagination.html' with listings=sale_listings_p %}
+                </div>
+                <a  name="agent-rentals" id='agent-rentals'></a>
+                  <h1>What we are renting</h1>
+                <table>
+                  <tr>
+                    <th>Property</th>
+                    <th>Address</th>
+                    <th>Baths</th>
+                    <th>Beds</th>
+                    <th>Price</th>
+                  </tr>
+                  {% for listings in rental_listings_p %}
+                  <tr>
+                    <td><a href="{% url 'listings:onsale_detail' listings.pk %}"><img src="{% cloudinary_url listings.thumb ImageTransformation %}" alt="{{listings.property_name}}" width="100px" height="50px"></a></td>
+                    <td><a href="{% url 'listings:onsale_detail' listings.pk %}">{{listings.location_name}}</a></td>
+                    <td>{{listings.bathrooms}}</td>
+                    <td>{{listings.bedrooms}}</td>
+                    <td>{{listings.price}}</td>
+
+                  </tr>
+                  {% endfor %}
+                </table>
+                <div class="s_l_pgnt">
+                  <!-- paginator for rental listings-->
+                  {% include 'profiles/pagination.html' with listings=rental_listings_p %}
+                </div>
+              </div>
+
+              <div class="reviews-section">
+                <a name='reviews' id="reviews"></a>
+                  <h1>Reviews</h1>
+                  <div class="review-comments">
+                    {% if agent_reviews %}
+                    {% for reviews in agent_reviews%}
+                    <div class="review-wrapper">
+                    <div class="revCo-header">
+                      {% if reviews.rating == 5%}
+                      <h2><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i>
+                        Highly likely to recommend.
+                      </h2>
+                      {% endif %}
+                      {% if reviews.rating == 4%}
+                      <h2><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#B3B4B3;'></i>
+                        Likely to recommend.</h2>
+                      {% endif %}
+                      {% if reviews.rating == 3%}
+                      <h2><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i>
+                        Slightly likely to recommend.</h2>
+                      {% endif %}
+                      {% if reviews.rating == 2%}
+                      <h2><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i>
+                        Not likely to recommend.</h2>
+                      {% endif %}
+                      {% if reviews.rating == 1%}
+                      <h2><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3;'></i>
+                        Never likely to recomend.</h2>
+                      {% endif %}
+                      <div class="revCo-or">
+                        <li>{{reviews.review_date.date}} - {{reviews.user.username}}</li> <br>
+                        {% if reviews.responsive_rating == 5%}
+                        <li>
+                          Responsiveness:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.responsive_rating == 4%}
+                        <li>
+                          Responsiveness:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.responsive_rating == 3%}
+                        <li>
+                          Responsiveness:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.responsive_rating == 2%}
+                        <li>
+                          Responsiveness:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.responsive_rating == 1%}
+                        <li>
+                          Responsiveness:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.communication_rating == 5%}
+                        <li>
+                          Communication:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.communication_rating == 4%}
+                        <li>
+                          Communication:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.communication_rating == 3%}
+                        <li>
+                          Communication:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.communication_rating == 2%}
+                        <li>
+                          Communication:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                          </li>
+                        {% endif %}
+                        {% if reviews.communication_rating == 1%}
+                        <li>
+                          Communication:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                          </li>
+                        {% endif %}
+                        {% if reviews.attention_to_detail == 5%}
+                        <li>
+                          Attention to detail:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.attention_to_detail == 4%}
+                        <li>
+                          Attention to detail:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.attention_to_detail == 3%}
+                        <li>
+                          Attention to detail:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.attention_to_detail == 2%}
+                        <li>
+                          Attention to detail:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                        {% if reviews.attention_to_detail == 1%}
+                        <li>
+                          Attention to detail:
+                          <i class="far fa-star" style='color:#1BFF00;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i><i class="far fa-star" style='color:#DFDFDF ;'></i>
+                        </li>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="revCO-content">
+                      <p>{{ reviews.comment}}</p>
+                    </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="no-reviews">
+                      <h2>No reviews for this agent.</h2>
+                    </div>
+                    {% endif %}
+                  </div>
+              </div>
+                </div>
+              </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</div>
+<section>
+  <script type="text/javascript">
+    mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+    if (!mapboxgl.supported()) {
+      alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
+      } else {
+        var map = new mapboxgl.Map({
+            container: 'ag-d-sr-map',
+            style: 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
+            minZoom: 6,
+            maxZoom:14,
+            center: [37.01, -1.10]
+      });
+    }
+    //fit to bounds
+    map.fitBounds([
+    {%for cd in sale_listings %}
+      [{{cd.location.x}}, {{cd.location.y}}],
+    {%endfor%}
+    {%for cd in rental_listings %}
+      [{{cd.location.x}}, {{cd.location.y}}],
+    {%endfor%}
+    ]);
+    // disable map rotation using right click + drag
+    map.dragRotate.disable();
+
+    // disable map rotation using touch rotation gesture
+    map.touchZoomRotate.disableRotation();
+
+
+    // Adds zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+
+    var s_geojson = {
+    type: 'FeatureCollection',
+    features: [
+    {% for loc in sale_listings %}
+        {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [{{ loc.location.x }}, {{ loc.location.y }}]
+        },
+        properties: {
+            title: '{{ loc.property_name }}',
+            thumb:'{% cloudinary_url loc.thumb ImageTransformation %}',
+            location_name:'{{loc.location_name}}',
+            price:'{{loc.price}}',
+        }
+        },
+    {% endfor %}
+    ]
+    };
+
+    var r_geojson = {
+    type: 'FeatureCollection',
+    features: [
+    {% for loc in rental_listings %}
+        {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [{{ loc.location.x }}, {{ loc.location.y }}]
+        },
+        properties: {
+            title: '{{ loc.property_name }}',
+            thumb:'{% cloudinary_url loc.thumb ImageTransformation %}',
+            location_name:'{{loc.location_name}}',
+            price:'{{loc.price}}',
+        }
+        },
+    {% endfor %}
+    ]
+    };
+
+    //loading sale data
+    map.on('load', function() {
+      map.addSource('s_property',{
+        "type": "geojson",
+        "data": s_geojson
+      });
+
+      //loading rental data
+      map.addSource('r_property',{
+        "type": "geojson",
+        "data": r_geojson
+      });
+
+      //sales layer
+      map.addLayer({
+      "id": "s_points",
+      "source": 's_property',
+      "type": "circle",
+      "paint": {
+          "circle-radius": 6,
+          "circle-stroke-width": 1.5,
+          "circle-color": "red",
+          "circle-stroke-color":"white"
+      },
+    });
+
+    //rentals layer
+    map.addLayer({
+    "id": "r_points",
+    "source": 'r_property',
+    "type": "circle",
+    "paint": {
+        "circle-radius": 6,
+        "circle-stroke-width": 1.5,
+        "circle-color": "blue",
+        "circle-stroke-color":"white"
+    },
+  });
+
+  var popup = new mapboxgl.Popup({
+  closeButton: false,
+  closeOnClick: false
+  });
+
+//sale listings
+  map.on('mouseenter', 's_points', function(e) {
+  // Change the cursor style as a UI indicator.
+  map.getCanvas().style.cursor = 'pointer';
+
+  var coordinates = e.features[0].geometry.coordinates.slice();
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  // Populate the popup and set its coordinates
+  // based on the feature found.
+    popup
+    .setLngLat(coordinates)
+    .setHTML(
+    '<div id="popup" class="popup" style="z-index: 10;">' +
+      '<img '+ 'src=' + e.features[0].properties.thumb + '>' +"</li>"+
+      '<li>' +
+      '<ul class="list-group">' +
+      '<li class="list-group-item">' + e.features[0].properties.title +" </li>" +
+      '<li class="list-group-item">' + e.features[0].properties.location_name +" </li>"+
+      '<li class="list-group-item">' +"Ksh:" + e.features[0].properties.price+ " </li>" + '</ul> </div>'
+    )
+    .addTo(map);
+  });
+
+  //rentals popup
+  map.on('mouseenter', 'r_points', function(e) {
+  // Change the cursor style as a UI indicator.
+  map.getCanvas().style.cursor = 'pointer';
+
+  var coordinates = e.features[0].geometry.coordinates.slice();
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  // Populate the popup and set its coordinates
+  // based on the feature found.
+    popup
+    .setLngLat(coordinates)
+    .setHTML(
+    '<div id="popup" class="popup" style="z-index: 10;">' +
+      '<img '+ 'src=' + e.features[0].properties.thumb + '>' +"</li>"+
+      '<li>' +
+      '<ul class="list-group">' +
+      '<li class="list-group-item">' + e.features[0].properties.title +" </li>" +
+      '<li class="list-group-item">' + e.features[0].properties.location_name +" </li>"+
+      '<li class="list-group-item">' +"Ksh:" + e.features[0].properties.price+ " </li>" + '</ul> </div>'
+    )
+    .addTo(map);
+  });
+
+  map.on('mouseleave', 's_points', function() {
+    map.getCanvas().style.cursor = '';
+    popup.remove();
+  });
+
+  map.on('mouseleave', 'r_points', function() {
+    map.getCanvas().style.cursor = '';
+    popup.remove();
+  });
+
+  })
+
+  </script>
+  </section>
+<script type="text/javascript">
+  function scrollTo(to, duration) {
+    if (document.body.scrollTop == to) return;
+    var diff = to - document.body.scrollTop;
+    var scrollStep = Math.PI / (duration / 10);
+    var count = 0, currPos;
+    start = window.pageYOffset;
+    scrollInterval = setInterval(function(){
+
+      if((document.body.scrollTop || document.documentElement.scrollTop || 0)!=to){
+            count++
+            currPos=start+diff*(.5-.5*Math.cos(count*scrollStep))
+            /* https://stackoverflow.com/q/28633221/3405291 */
+            /* To support both Chromium-based and Firefox */
+            document.body.scrollTop=currPos
+            document.documentElement.scrollTop=currPos
+        }else{clearInterval(scrollInterval)}
+    },10);
+}
+
+function test(elID)
+{
+    var dest = document.getElementById(elID);
+    scrollTo(dest.offsetTop, 500);
+}
+</script>
+{% endblock %}
+{% block footer %}
+<footer >
+<section id="footer" class="section section-follow black-text">
+  <div class="container">
+    <div class="row">
+      <div class="f-details center">
+        <a href="#"> Privacy Policy</a>
+        <a href="#"> Terms & Conditions</a>
+        <a href="#"> Advertise</a>
+        <a href="#"> Contact Us</a>
+        <a href="{% url 'contact:about_us'%}"> About Us</a>
+      </div>
+      <div id="footer-details" class="col s12 center">
+        <a href="#" class="black-text">
+          <i class="fab fa-facebook fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-twitter fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-linkedin fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-instagram fa-2x"></i>
+        </a>
+      </div>
+      <p class="flow-text black-text center" id="c-year"></p>
+      <script type="text/javascript">
+        var d = new Date();
+        document.getElementById("c-year").innerHTML= 'While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright '+ d.getFullYear();
+      </script>
+    </div>
+  </div>
+</section>
+
+</footer>
+{% endblock%}

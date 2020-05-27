@@ -1,18 +1,19 @@
 {% extends 'base1.html' %}
 {% load static %}
+{%load cloudinary %}
 {% block content %}
 <section>
   <div id="pfl-pg-cont" class="container">
         <div id="pfl-page-row" class="row">
           <div id='cd-wrap' class="col s12 md6 l6 xl4">
             <div id="profile-view" class="card">
-                  {% if user.profile.profile_image%}
+                  {% if user.agent_profile.profile_image%}
                   <div class="pfl-card-img">
-                    <img src="{{ user.profile.profile_image.url}}" alt="{{user.last_name}}">
+                    <img src="{{ user.agent_profile.profile_image.url}}" alt="{{user.last_name}}">
                   </div>
                   {% else %}
                   <div class="pfl-card-img">
-                    <img src="{% static 'img/avatar.png'%}" alt="{user.last_name}}">
+                    <img src="{% static 'img/avatar.png'%}" alt="{{user.last_name}}">
                   </div>
                   {% endif %}
                     <div class="user-details">
@@ -55,7 +56,7 @@
                                   <div class="col s12 md6 l6 xl4">
                                     <div id="rec-card" class="card">
                                       <div id="rec-img" class="card-image">
-                                        <a href="{% url 'listings:onsale_detail' onsale_listings.id %}"><img src="{{onsale_listings.thumb.url}}" alt="nai"></a>
+                                        <a href="{% url 'listings:onsale_detail' onsale_listings.id %}">{% cloudinary onsale_listings.thumb ImageTransformation %}</a>
                                         <span id="rec-date" class="card-title"><p>{{onsale_listings.publishdate.date}}</p></span>
 
                                       </div>
@@ -100,7 +101,7 @@
 
                             <div id="rec-card" class="card" name="rec-card">
                               <div id="rec-img" class="card-image">
-                                <a href="{% url 'listings:rental_detail' rentals.id %}"><img src="{{rentals.thumb.url}}" alt="nai"></a>
+                                <a href="{% url 'listings:rental_detail' rentals.id %}">{% cloudinary rentals.thumb ImageTransformation %}</a>
                                 <span id="rec-date" class="card-title"><p>{{rentals.publishdate.date}}</p></span>
 
                               </div>
@@ -114,8 +115,8 @@
                               </div>
 
                               <div class="card-links">
-                                <a href="{% url 'listings:r_delete' rentals.pk%}"><button id="link-del" type="button" name="button"><img src="{% static 'img/delete-forever-active.svg' %}"></button></a>
-                                <a href="{% url 'listings:rental_update' rentals.pk%}"><button id="link-edit" type="button" name="button"><img src="{% static 'img/mark-upgrade.svg' %}"></button></a>
+                                <a href="{% url 'listings:r_delete' rentals.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
+                                <a href="{% url 'listings:rental_update' rentals.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
 
                               </div>
                             </div>
@@ -148,7 +149,7 @@
                                       <div id="rec-card" class="card">
                                         <div id="rec-img" class="card-image">
                                           <a href="{% url 'listings:onsale_detail' favs.id %}">
-                                          <img src="{{favs.thumb.url}}" alt="nai">
+                                          {% cloudinary favs.thumb ImageTransformation %}
                                           <div class="fav-button">
                                             <a href="{% url 'listings:s_favourite' favs.pk%}"><i class="material-icons right" style="color:red;">favorite_border</i></a>
                                           </div>
@@ -199,13 +200,13 @@
                   <p class="profile-title">Favourite Rental Listings</p>
                   <div class="profile-rentals">
                       <div class="row">
-                        {% if user_rental_posts%}
-                        {% for rentals in user_rental_posts %}
+                        {% if user_rental_favs %}
+                        {% for rentals in user_rental_favs %}
                         <div class="col s12 md6 l6 xl4">
 
                               <div id="rec-card" class="card" name="rec-card">
                                 <div id="rec-img" class="card-image">
-                                  <a href="{% url 'listings:rental_detail' rentals.id %}"><img src="{{rentals.thumb.url}}" alt="nai"></a>
+                                  <a href="{% url 'listings:rental_detail' rentals.id %}">{% cloudinary rentals.thumb ImageTransformation %}</a>
                                   <span id="rec-date" class="card-title"><p>{{rentals.publishdate}}</p></span>
                                   <div class="fav-button">
                                     <a href="{% url 'listings:r_favourite' rentals.pk%}"><i class="material-icons right" style="color:red;">favorite_border</i></a>
@@ -220,12 +221,6 @@
                                     <li class="rec-h-location">{{rentals.location_name}}</li>
                                   </ol>
                                 </div>
-
-                                <div class="card-links">
-                                  <a href="{% url 'listings:r_delete' rentals.pk%}"><button id="link-del" type="button" name="button"><img src="{% static 'img/delete-forever-active.svg' %}"></button></a>
-                                  <a href="{% url 'listings:rental_update' rentals.pk%}"><button id="link-edit" type="button" name="button"><img src="{% static 'img/mark-upgrade.svg' %}"></button></a>
-
-                                </div>
                               </div>
                         </div>
 
@@ -233,7 +228,7 @@
 
                         {% else %}
                         <div class="empty-list">
-                          <p>No active rentals for <b>{{user}}</b>. Rentals you list will appear here.</p>
+                          <p>No favourites for <b>{{user}}</b>. Favourites you add will appear here.</p>
                           <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
                         </div>
                         {%endif%}
@@ -241,16 +236,16 @@
                       <!-- paginator for rentals-->
                       <div id="profile-paginator" class="pagination">
                           <span class="step-links">
-                              {% if user_rental_posts.has_previous %}
+                              {% if user_rental_favs.has_previous %}
                               <a href="?page=1">&laquo; first</a>
-                              <a href="?page={{ user_rental_posts.previous_page_number }}">previous</a>
+                              <a href="?page={{ user_rental_favs.previous_page_number }}">previous</a>
                               {% endif %}
                               <span class="current">
-                              Page {{ user_rental_posts.number }} of {{ user_rental_posts.paginator.num_pages }}.
+                              Page {{ user_rental_favs.number }} of {{ user_rental_favs.paginator.num_pages }}.
                               </span>
-                              {% if user_rental_posts.has_next %}
-                              <a href="?page={{ user_rental_posts.next_page_number }}">next</a>
-                              <a href="?page={{ user_rental_posts.paginator.num_pages }}">last &raquo;</a>
+                              {% if user_rental_favs.has_next %}
+                              <a href="?page={{ user_rental_favs.next_page_number }}">next</a>
+                              <a href="?page={{ user_rental_favs.paginator.num_pages }}">last &raquo;</a>
                               {% endif %}
                           </span>
                     </div>

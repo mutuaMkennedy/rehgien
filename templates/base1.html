@@ -8,8 +8,8 @@
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
   <link href='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
-  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css' type='text/css' />
-  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js'></script>
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css' type='text/css' />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
   <link rel="shortcut icon" type="image/png" href="{%static 'img/logo-fav.png'%}">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -36,6 +36,7 @@
       }
   </script>
   <div class="preloader valign-wrapper">
+    <div class="preloader-content">
       <div class="preloader-img">
         <img src="{% static 'img/logo_preloader.png'%}" alt="logo">
       </div>
@@ -50,6 +51,7 @@
          </div>
        </div>
      </div>
+    </div>
   </div>
 <header>
   <!-- navbar -->
@@ -57,7 +59,7 @@
   <!--<nav class="transparent z-depth-0">-->
     <nav class="teal" role="navigation">
     <div class="nav-wrapper">
-      <a id="logo-container" href="{% url 'listings:homepage'%}" class="brand-logo center"><img class="logo" src="{%static 'img/logo.png'%}"></a>
+      <a id="logo-wrapper" href="{% url 'listings:homepage'%}" class="brand-logo center" style="height:60px;"><img class="logo" src="{%static 'img/logo.png'%}"></a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-base1"class="left hide-on-med-and-down">
         <li><a href="{% url 'listings:sale_listings'%}">Buy</a></li>
@@ -69,7 +71,7 @@
       <div id="svc-dropdown" class="dropdown-content hide-on-med-and-down">
         <div class="container">
           <div class="row">
-            <div class="col s12 md6 l6 xl6">
+            <div class="col s12 md6 l6 xl6" style="border-right:1px solid #dddddd; margin-top:5px;">
               <div class="r-svc">
                 <h6><b>Choose a Service</b></h6>
                 <li><a href="#">Find me a property</a></li>
@@ -93,26 +95,23 @@
       <div id="ag-dropdown" class="dropdown-content hide-on-med-and-down">
         <div class="container">
           <div class="row">
-            <div class="col s12 md4 l4 xl4">
-              <div class="re_pros">
-                <h6><b>Real Estate Profesionals</b></h6>
-                <li><a href="{% url 'profiles:agent_list'%}"">Real Estate Agents</a></li>
-                <li><a href="#">Property Managers</a></li>
-                <li><a href="#">Appraisers/Valuers</a></li>
-              </div>
+            <div class="col s12 md4 l4 xl4" style="border-right:1px solid #dddddd; margin-top:5px; display:flex;">
+                <div class="re_pros">
+                  <h6><b>Real Estate Pros</b></h6>
+                    <li><a href="{% url 'profiles:agent_list'%}">Real estate agents</a></li>
+                    <li><a href="{% url 'profiles:pm_list'%}">Property managers</a></li>
+                    <li><b>Coming soon</b></li>
+                    <li><a href="#!" style="color: #d1d1d1 !important;" >Building inspectors</a></li>
+                    <li><a href="#!" style="color: #d1d1d1 !important;">Appraisers/Valuers</a></li>
+                </div>
+                <div class="o_pros">
+                  <h6><b>Other Pros</b></h6>
+                  <li><a href="{% url 'profiles:d_service_list'%}">Design & service</a></li>
+                </div>
             </div>
-            <div class="col s12 md4 l4 xl4">
+            <div class="col s12 md8 l8 xl8" style="margin-top:5px;">
               <div class="o_pros">
-                <h6><b>Other Profesionals</b></h6>
-                <li><a href="#">Interior Designers</a></li>
-                <li><a href="#">Real Estate Photographers</a></li>
-                <li><a href="#">Plumbers</a></li>
-                <li><a href="#">Home Movers</a></li>
-              </div>
-            </div>
-            <div class="col s12 md4 l4 xl4">
-              <div class="o_pros">
-                <h6><b>Are you a pro? advertise with us today</</h6>
+                <h6><b>Are you a pro? advertise with us today</b></h6>
                 <li><a href="#">I'm a Real Estate Profesional</a></li>
                 <li><a href="#">Other</a></li>
               </div>
@@ -125,8 +124,6 @@
         {% if not request.user.is_authenticated %}
         <li><a href="{% url 'account_login' %}" class="modal-trigger"><i class="fas fa-user-alt-slash"></i> LogIn</a></li>
         <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
-        <!-- <li><a href="#"><b>or</b></a></li> -->
-        <!-- <li><a href="#">Subscribe for updates</a></li> -->
         {% else %}
         <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
         <li><a href="{% url 'listings:rental_listing_form' %}"> Post a Rental</a></li>
@@ -135,15 +132,23 @@
 
       </ul>
       <div id="ac-dropdown"class="dropdown-content hide-on-med-and-down">
-        <div class="ac-drd-img">
-          {% if request.user.profile.profile_image%}
-          <img src="{{request.user.profile.profile_image.url}}" alt="profile.img" style="width:40px">
+        <div class="ac-drd-img valign-wrapper">
+        <div class="ac-drd-img-wrapper">
+          {% if request.user.agent_profile.profile_image%}
+          <img src="{{request.user.agent_profile.profile_image.url}}" alt="profile.img" style="width:40px">
           {% else %}
           <img src="{% static 'img/avatar.png'%}" alt="avatar.png"style="width:40px">
           {% endif %}
         </div>
-        <li><a href="{% url 'profiles:account'%}">My profile</a></li>
-        <li><a href="#id01" class="modal-trigger"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+          <div class="ac-drd-li-wrapper">
+            <li>{{request.user.email}}</li>
+          </div>
+        </div>
+        <div class="ac-drd-linkItems">
+          <li><a href="{% url 'profiles:account'%}"><i class="fas fa-user-check"></i>My profile</a></li>
+          <li><a href="#">Favourites(0)</a></li>
+          <li><a href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+        </div>
       </div>
       {% endif %}
       <ul id="mobile-nav" class="sidenav">
@@ -159,7 +164,7 @@
         <li><a href="{% url 'profiles:account'%}">My profile</a></li>
         <li><a><i class="far fa-user-circle" style="color:green;"></i>
           {{request.user.first_name|make_list|first|upper}} {{request.user.last_name|make_list|first|upper}}</a></li>
-        <li><a href="#id01" class="modal-trigger">Logout</a></li>
+        <li><a href="{% url 'account_logout' %}">Logout</a></li>
         {% endif %}
 
       </ul>
@@ -169,13 +174,20 @@
 </header>
 
 <main>
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-         <li {% if message.tag %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+{% if messages%}
+    <ul class="messages" id="message_box">
+        {% for message in messages%}
+         <li {% if message.tag %} class="{{ message.tags }}" {% endif %}>
+           {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+           <i class="far fa-check-circle" style="color:#0aef13;"></i>
+           {% else %}
+           <i class="fas fa-times" style='color:red'></i>
+           {% endif %}
+           {{ message }}
+         </li>
         {% endfor %}
     </ul>
-{% endif %}
+{%endif%}
 
 <!-- logout  Modal-->
 
@@ -201,7 +213,13 @@
 {% block footer %}
 
 {% endblock footer%}
+<script type="text/javascript">
+  var message_ele = document.getElementById("message_box");
 
+setTimeout(function(){
+   message_ele.style.display = "none";
+}, 6000);
+</script>
   <!--  Scripts-->
   <script src="{% static 'js/jquery.min.js' %}"></script>
   <script src="{% static 'js/materialize.js' %}"></script>
