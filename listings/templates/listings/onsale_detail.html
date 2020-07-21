@@ -75,7 +75,7 @@
                   </div>
                 </div>
               </div>
-              <form id="agentContactForm1" action="{% url 'contact:send_email' %}" class="col s12" method="POST">
+              <form id="agentContactForm1" action="{% url 'contact:send_message' %}" class="col s12" method="POST">
                 <h6 class="black-text" style='font-size:12px; font-family:Roboto,Arial;'><b>Contact this agent</b></h6>
                 {% csrf_token %}
                 <div id="name_phone" class="row">
@@ -100,7 +100,7 @@
                   <div class="input-field col s12">
                     <textarea id="message" rows="4" name="message" cols="80"></textarea>
                     <script type="text/javascript">
-                      document.getElementById("message").defaultValue="Hello im interested in your listing: {{listing.name}} located in {{listing.location_name}}";
+                      document.getElementById("message").defaultValue="Hello im interested a listing you are selling: {{listing.name}} located in {{listing.location_name}}";
                     </script>
                   </div>
                 </div>

@@ -14,13 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include,re_path
 from django.conf.urls import url
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from photologue.sitemaps import GallerySitemap, PhotoSitemap
 from listings import views
+from django.views.generic import TemplateView
 #from haystack.forms import FacetedSearchForm
 #from haystack.views import FacetedSearchView
 
@@ -38,6 +39,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^photologue/', include('photologue.urls', namespace='photologue')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    # path('msg/', TemplateView.as_view(template_name = 'index.html')),
     #url(r'^search/', include('haystack.urls')),
 ]
 
@@ -49,7 +51,8 @@ urlpatterns += [
     path('apis/api-auth/', include('rest_framework.urls')),
     url(r'^apis/rest-auth/', include('rest_auth.urls')),
     url(r'^apis/rest-auth/', include('rest_auth.urls')),
-    url(r'^apis/rest-auth/registration/', include('rest_auth.registration.urls'))
+    url(r'^apis/rest-auth/registration/', include('rest_auth.registration.urls')),
+    re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name = 'index.html')),
 ]
 
 sitemaps = {

@@ -24,6 +24,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Libre+Baskerville&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
@@ -38,10 +39,10 @@
   <div class="preloader valign-wrapper">
     <div class="preloader-content">
       <div class="preloader-img">
-        <img src="{% static 'img/logo_preloader.png'%}" alt="logo">
+        <!-- <img src="{% static 'img/rhg_logo1.png'%}" alt="logo"> -->
       </div>
       <div id="preloader-c" class="preloader-wrapper small active">
-       <div class="spinner-layer spinner-blue-only">
+       <div class="spinner-layer spinner-red-only">
          <div class="circle-clipper left">
            <div class="circle"></div>
          </div><div class="gap-patch">
@@ -59,7 +60,7 @@
   <!--<nav class="transparent z-depth-0">-->
     <nav class="teal" role="navigation">
     <div class="nav-wrapper">
-      <a id="logo-wrapper" href="{% url 'listings:homepage'%}" class="brand-logo center" style="height:60px;"><img class="logo" src="{%static 'img/logo.png'%}"></a>
+      <a id="logo-wrapper" href="{% url 'listings:homepage'%}" class="brand-logo left" style="height:60px;"><img class="logo" src="{%static 'img/rhg_logo1.png'%}"></a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-base1"class="left hide-on-med-and-down">
         <li><a href="{% url 'listings:sale_listings'%}">Buy</a></li>
@@ -225,10 +226,12 @@ setTimeout(function(){
   <script src="{% static 'js/materialize.js' %}"></script>
   <script src="{% static 'js/init.js' %}"></script>
   <script src="{% static 'js/gall.js' %}"></script>
+  <script src="{% static 'js/chat_room.js' %}"></script>
   <script src="{% static 'js/mat.js' %}"></script>
   <script src="{% static 'js/jquery.autocomplete.js' %}"></script>
   <script src="{% static 'js/our_search_code.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/js/all.min.js' %}"></script>
+  <script src="https://media.twiliocdn.com/sdk/js/chat/v3.3/twilio-chat.min.js"></script>
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script>
     AOS.init();

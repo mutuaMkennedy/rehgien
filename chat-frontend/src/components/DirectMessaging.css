@@ -1,0 +1,23 @@
+.DmModal .ui.selection.active.dropdown{
+  border: 2px solid #00ffd5;
+}
+.DmModal .ui.active.selection.dropdown{
+  border-radius:5px !important;
+}
+
+.DmModal .ui.selection.active.dropdown .menu{
+  border:none;
+  box-shadow:none;
+  -webkit-box-shadow:none;
+}
+
+.DmModal .ui.dropdown .menu{
+  box-shadow:none;
+  -webkit-box-shadow:none;
+  margin-top:10px;
+}
+
+.DmModal .ui.dropdown .menu:hover{
+  box-shadow:none;
+  -webkit-box-shadow:none;
+}

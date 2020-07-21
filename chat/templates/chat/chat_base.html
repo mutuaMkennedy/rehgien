@@ -1,0 +1,184 @@
+{%load static%}
+{% load cloudinary %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css' type='text/css' />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+  <link rel="shortcut icon" type="image/png" href="{%static 'img/logo-fav.png'%}">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Rehgien| Explore Real Estate</title>
+
+  <!-- CSS  -->
+  <link rel="stylesheet" type="text/css" href="{%static 'css/material-icons.css'%}">
+  <link href="{%static 'css/materialize.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{%static 'css/css/all.min.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{%static 'css/css/fontawesome.min.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{%static 'css/style.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{%static 'search_drop_src/selectstyle.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
+  <script src="https://use.fontawesome.com/a8e276a1a5.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Libre+Baskerville&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link rel="stylesheet" href="{%static 'emoji_dist/emojionearea.min.css'%}">
+</head>
+<body>
+  <script>
+      //after window is loaded completely
+      window.onload = function(){
+          //hide the preloader
+          document.querySelector(".preloader").style.display = "none";
+      }
+  </script>
+  <div class="preloader valign-wrapper">
+    <div class="preloader-content">
+      <div class="preloader-img">
+        <img src="{% static 'img/logo_preloader.png'%}" alt="logo">
+      </div>
+      <div id="preloader-c" class="preloader-wrapper small active">
+       <div class="spinner-layer spinner-blue-only">
+         <div class="circle-clipper left">
+           <div class="circle"></div>
+         </div><div class="gap-patch">
+           <div class="circle"></div>
+         </div><div class="circle-clipper right">
+           <div class="circle"></div>
+         </div>
+       </div>
+     </div>
+    </div>
+  </div>
+<header>
+  <!-- navbar -->
+  <div id="roomNavFxd" class="navbar-fixed">
+  <!--<nav class="transparent z-depth-0">-->
+    <nav id="roomnavNav" class="teal" role="navigation">
+    <div id="roomNavWrapper" class="nav-wrapper">
+      <div class="rommNavLogo">
+        <a href="#"><img src="{%static 'img/logo.png'%}" alt="Rehgien logo"></a>
+      </div>
+      <div class="notificationsBar">
+        <ul id="notfCts_collapsible" class="collapsible">
+           <li>
+             <div id="notfCts-collapsible-header" class="collapsible-header"><i class="far fa-bell"></i></div>
+             <div id="notfCts-collapsible-body" class="collapsible-body">
+             </div>
+           </li>
+         </ul>
+      </div>
+      <ul id="rmnav-base" class="right hide-on-med-and-down">
+        {% if not request.user.is_authenticated %}
+        <li><a href="{% url 'account_login' %}" class="modal-trigger"><i class="fas fa-user-alt-slash"></i> LogIn</a></li>
+        <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+        {% else %}
+        <li><a id='ac-trigger' class="dropdown-trigger" data-target='ac-dropdown'><i class="far fa-user-circle fa-lg" style="color:green;"></i> {{request.user.first_name|make_list|first|upper}} {{request.user.last_name|make_list|first|upper}}</a>
+      </li>
+
+      </ul>
+      <div id="ac-dropdown"class="dropdown-content hide-on-med-and-down">
+        <div class="ac-drd-img valign-wrapper">
+        <div class="ac-drd-img-wrapper">
+          {% if request.user.agent_profile.profile_image%}
+          <img src="{{request.user.agent_profile.profile_image.url}}" alt="profile.img" style="width:40px">
+          {% else %}
+          <img src="{% static 'img/avatar.png'%}" alt="avatar.png"style="width:40px">
+          {% endif %}
+        </div>
+          <div class="ac-drd-li-wrapper">
+            <li>{{request.user.email}}</li>
+          </div>
+        </div>
+        <div class="ac-drd-linkItems">
+          <li><a href="{% url 'profiles:account'%}"><i class="fas fa-user-check"></i>My profile</a></li>
+          <li><a href="#">Favourites(0)</a></li>
+          <li><a href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </nav>
+</div>
+</header>
+
+<main>
+{% if messages%}
+    <ul class="messages" id="message_box">
+        {% for message in messages%}
+         <li {% if message.tag %} class="{{ message.tags }}" {% endif %}>
+           {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+           <i class="far fa-check-circle" style="color:#0aef13;"></i>
+           {% else %}
+           <i class="fas fa-times" style='color:red'></i>
+           {% endif %}
+           {{ message }}
+         </li>
+        {% endfor %}
+    </ul>
+{%endif%}
+
+<!-- logout  Modal-->
+
+<div id="id01" class="modal">
+
+  <h1>{% trans "Sign Out" %}</h1>
+
+  <p>{% trans 'Are you sure you want to sign out?' %}</p>
+
+  <form method="post" action="{% url 'account_logout' %}">
+    {% csrf_token %}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
+    <button type="submit">{% trans 'Sign Out' %}</button>
+  </form>
+
+</div>
+  {%block content%}
+  {%endblock%}
+</main>
+
+{% block footer %}
+
+{% endblock footer%}
+<script type="text/javascript">
+  var message_ele = document.getElementById("message_box");
+
+setTimeout(function(){
+   message_ele.style.display = "none";
+}, 6000);
+</script>
+  <!--  Scripts-->
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/getstream/dist/js_min/getstream.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stream-chat"></script>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  <script src="{% static 'js/materialize.js' %}"></script>
+  <script src="{% static 'js/init.js' %}"></script>
+  <script src="{% static 'js/gall.js' %}"></script>
+  <script src="{% static 'js/chat_room.js' %}"></script>
+  <script src="{% static 'js/mat.js' %}"></script>
+  <script src="{% static 'js/jquery.autocomplete.js' %}"></script>
+  <script src="{% static 'js/our_search_code.js' %}"></script>
+  <script src="{% static 'js/streamchat.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+  <script src="{% static 'search_drop_src/selectstyle.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/js/all.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'emoji_dist/emojionearea.min.js'%}"></script>
+  <script src="https://media.twiliocdn.com/sdk/js/chat/v3.3/twilio-chat.min.js"></script>
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+  </body>
+</html>

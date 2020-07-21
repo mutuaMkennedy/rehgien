@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'contact',
     'profiles',
     'search',
+    'chat',
     # other applications
     'photologue',
     'sortedm2m',
@@ -59,6 +60,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'ckeditor',
     'ckeditor_uploader',
+    'corsheaders',
     #'haystack',
     # 'tastypie',
 ]
@@ -91,6 +93,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'homey.urls'
@@ -98,7 +101,7 @@ ROOT_URLCONF = 'homey.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),os.path.join(BASE_DIR, 'chat-frontend/build'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -165,6 +168,7 @@ SIGNUP_REDIRECT_URL = ('listing:homepage')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'chat-frontend/build/static'),
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets_new')
@@ -263,10 +267,22 @@ cloudinary.config(
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
     )
 }
 
+REST_AUTH_SERIALIZERS = {
+    'TOKEN_SERIALIZER': 'chat.apis.serializers.StreamTokenSerializer',
+}
+
 AUTH_USER_MODEL = 'profiles.User'
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    'http://127.0.0.1:8000',
+    'http://165.227.185.180'
+]
+# CORS_ORIGIN_ALLOW_ALL = True
 
 # allauth further Configs
 ACCOUNT_AUTHENTICATION_METHOD = "username"
@@ -279,3 +295,12 @@ EMAIL_HOST_USER = "mutuakennedy81@gmail.com"
 EMAIL_HOST_PASSWORD = 'ierhjgdkfdmrghml'
 EMAIL_PORT = 587
 EMAIL_USE_SSL = False
+
+TWILIO_ACCOUNT_SID = 'AC1db0e8cfbae1e3b9b5834772c0ef8d6c'
+TWILIO_API_KEY = 'SK5c969e58ab96a19249489add62911305'
+TWILIO_API_SECRET = 'qDSWimtxgzelWceywCF2Sbcslr7s1o7P'
+TWILIO_CHAT_SERVICE_SID = 'ISe0ef1fd1e4f444aba9ccc09b28047ab5'
+TWILIO_AUTH_TOKEN = '7f70419841a1632045d657089acd65c1'
+
+STREAM_API_KEY = 'ke9puq24fsgq'
+STREAM_API_SECRET = '8efsewntkc7mpzvevw245b768w5pddxqc5muk8u2gqxpeggdymygmts4r6xh7zuh'
