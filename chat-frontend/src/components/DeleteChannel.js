@@ -154,7 +154,6 @@ class LeaveOrDeleteChannel extends React.Component {
 
   render() {
     const creatorID = this.props.creatorID;
-    console.log(creatorID);
     return (
       <div>
             <SemanticPopup

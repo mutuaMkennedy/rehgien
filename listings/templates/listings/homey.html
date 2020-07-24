@@ -4,7 +4,7 @@
 
 <!--banner-->
 
-    <div class="HomePgBanner" style="background-image:url({%static 'img/pm-cover.jpg' %});">
+    <div class="HomePgBanner" style="background-image:linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),url({%static 'img/b2.jpg' %});">
       <h3>Find your dream Home</h3>
       <div id="search-section" class="container">
         <div class="row">
@@ -21,55 +21,157 @@
       <i id="down-arrow2" class="material-icons">keyboard_arrow_down</i>
     </div>
 <section style="background-color:#4caf5014;;">
-    <div id="svgCardsContainer" class="container" style="background-color:#ffffff; padding:10px; border-radius:10px; width:90%;">
-  <h4 id="svg-title" class="center" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="true" data-aos-duration="1000">
-     Use Rehgien to find Real Estate and proffesionals.
-   </h4>
+    <div id="svgCardsContainer" class="container" style="background-color:#ffffff; padding:10px; border-radius:10px; width:100%;">
         <div  id="svgRow" class="row">
+          <div class="HmPgTdsc">
+            <h4 id="svg-title" class="center">
+               Do more on Rehgien
+             </h4>
+             <p>Experience new ways to find your desired home and connect with proffesionals. Experience real estate in a better way!</p>
+          </div>
           <div class="col s12">
-            <div id="svg-cards" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="true" data-aos-duration="1000">
+            <div id="svg-cards" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="false" data-aos-duration="1000">
               <div class="s-c-wrp">
-                        <img id="forSaleSvg"src="{%static 'img/best_place.svg'%}" alt="looking for a house?">
+                        <img id="forSaleSvg"src="{%static 'img/browsing.jpg'%}" alt="looking for a house?">
               </div>
               <div class="s-c-cnt">
-                <h6 class="svg-title"><b>Find Real Estate</b></h6>
+                <h6 class="svg-title"><b>Your next home is a few clicks away</b></h6>
                 <p class="svg-prg">
-                  Buying or renting? We have what you want in one place.
-                  Choose from two ways to get the property you want, (1) Browse, or (2) Request a Property.
+                  Buying or renting? Find your next home fast.
+                  Choose from two ways to get the property you want:
+                  <span><i class="far fa-check-circle"></i>Browse listings.</span>
+                  <span><i class="far fa-check-circle"></i>Request the property.</span>
                   Whatever way you choose we have made it easy for you to make the best decision.
                 </p>
-              </div>
-            </div>
-          </div>
-          <div class="col s12">
-            <div id="svg-cards" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="true" data-aos-duration="1000">
-              <div class="s-c-cnt">
-                <h6 class="svg-title"><b>Sell or Rent</b></h6>
-                <p class="svg-prg">
-                  With Rehgien its easy to list your property and find a client. Simply choose one of our verified agents, connect,
-                  engage and have you property listed with us? Want to know more head over to our <a href="#">FAQ Section</a>.
-                </p>
-              </div>
-              <div class="s-c-wrp">
-                <img id="forSaleSvg"src="{%static 'img/for_sale.svg'%}" alt="sell-rent">
-              </div>
-            </div>
-          </div>
-          <div class="col s12">
-            <div id="svg-cards" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="true" data-aos-duration="1000">
-                <div class="s-c-wrp">
-                  <img id="forSaleSvg"src="{%static 'img/experts.svg'%}" alt="experts">
+                <div class='hm-CtA-bWrap'>
+                  <button class="hm-CtA-browse" type="button" name="button">
+                    <a href="#">Browse</a>
+                  </button>
+                  <button class="hm-CtA-request" type="button" name="button">
+                    <a href="#">Make a Request</a>
+                  </button>
                 </div>
-                <div class="s-c-cnt">
-                  <h6 class="svg-title"><b>Find an Pro</b></h6>
-                  <p class="svg-prg">
-                    Choose from large database of verified proffesionals. Its now easier to
-                    connect and receive services form a real estate proffesional. Simply head over to our find a pro section or simply
-                    request for a pro.
+              </div>
+            </div>
+          </div>
+          <div class="col s12">
+            <div id="svg-card2" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="false" data-aos-duration="1000">
+              <div class="s-c-cnt">
+                <h6 class="svg-title2"><b>Selling or Renting doesn't have to be hard.</b></h6>
+                <p class="svg-prg2">
+                  Get your property listed with us using one of our agents and sell faster than ever before. <br>
+                   When you sell with our agents you get an interactive 3D video walkthrough so that buyers can tour your home without leaving theirs.
+                   <br><br>Want to know more head over to our <a href="#">FAQ Section</a>.
+                </p>
+                <div class='hm-CtA-bWrap'>
+                  <button class="hm-CtA-request" type="button" name="button">
+                    <a href="#">Find me an agent</a>
+                  </button>
+                </div>
+              </div>
+              <div class="s-c-wrp-2">
+                <img id="forSaleSvg-3"src="{%static 'img/vr-1.png'%}" alt="sell-rent">
+                <img id="forSaleSvg-4"src="{%static 'img/vr-2.png'%}" alt="sell-rent">
+
+              </div>
+            </div>
+          </div>
+          <div class="col s12">
+            <div id="svg-card3" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="false" data-aos-duration="1000">
+              <div class="s-c-cnt">
+                <h6 class="svg-title3"><b>A home for proffesionals</b></h6>
+              </div>
+                <div class="s-c-wrp-3">
+                  <p class="svg-prg3">
+                    Finally a community built for Real estate proffesionals.
+                    This is the place to generate more deals and leads. From gaining insights to giving advice, the Rehgien Community is a place to help you connect and grow with thousands of agents nationwide.
                   </p>
                 </div>
+
+                <div class='hm-CtA-bWrap'>
+                  <button class="hm-CtA-request" type="button" name="button">
+                    <a href="#">Join now</a>
+                  </button>
+                </div>
+
             </div>
           </div>
+          <div class="col s12">
+            <div class="hMpleads-card" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="false" data-aos-duration="1000">
+              <div class="s-c-wrp-2">
+                <img class="hMleadsImage"src="{%static 'img/leads.png'%}" alt="seller lead">
+                <img class="hMleadsImage2"src="{%static 'img/leads2.png'%}" alt="buyer lead">
+              </div>
+              <div class="s-c-cnt">
+                <h6 class="hMlead-title"><b>Rehgien markets.</b></h6>
+                <p class="hMleads-prg">
+                  Getting motivated clients is hard. We make it easy with our
+                  pre-qualified leads. We have pioneered two lead generation programmes:
+
+                  <span><i class="far fa-check-circle"></i>Client-Agent Lead Programme (CALP).</span>
+                  <span><i class="far fa-check-circle"></i>Agent-Agent Lead Programme (AALP).</span>
+
+                  Accept leads in real time. Set your preferences and you’ll see leads
+                  in your area. Our process is simple and based on supply and demand.
+                  Close leads faster than ever.
+                </p>
+                <div class='hm-CtA-bWrap'>
+                  <button class="hm-CtA-request" type="button" name="button">
+                    <a href="#">Learn More</a>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col s12">
+            <div class="hMpMsg-card" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="false" data-aos-duration="1000">
+              <div class="s-c-cnt">
+                <h6 class="hMpMsg-title"><b>Rehgien community.</b></h6>
+                <p class="hMpMsg-prg">
+                  Experience seemless communication with other members on rehgien. <br><br>
+                  Create meaningfull conversations, meet new people and grow your network
+                  using our real time messaging platform built to allow team collaboration.<br><br>
+                </p>
+                <div class='hm-CtA-bWrap'>
+                  <button class="hm-CtA-request" type="button" name="button">
+                    <a href="#">Join now</a>
+                  </button>
+                </div>
+              </div>
+              <div class="s-c-wrp-2">
+                <img class="hMpMsgImage-1"src="{%static 'img/messaging_threads.png'%}" alt="messaging_threads">
+                <img class="hMpMsgImage-2"src="{%static 'img/messaging_group.png'%}" alt="messaging_group">
+                <img class="hMpMsgImage-3"src="{%static 'img/messaging_private.png'%}" alt="messaging_private">
+              </div>
+            </div>
+          </div>
+
+          <div class="col s12">
+            <div id="svg-card3" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="false" data-aos-duration="1000">
+              <div class="s-c-cnt">
+                <h6 class="svg-title3"><b>Service Providers Partnership Programme</b></h6>
+              </div>
+                <div class="s-c-wrp-3">
+                  <p class="svg-prg3">
+                    Real estate is one of the most service diverse industries.
+                    We are open to partnering with various service providers ranging from utility service providers, designers, movers etc. to offer more value to our clients and members as we help you grow your business.
+                     Be a part of the Rehgien Community, grow your business with us.
+                  </p>
+                </div>
+
+                <div class='hm-CtA-bWrap'>
+                  <button class="hm-CtA-serviceP" type="button" name="button">
+                    <a href="#">Become a Partner</a>
+                  </button>
+                  <button class="hm-CtA-serviceL" type="button" name="button">
+                    <a href="#">Learn More</a>
+                  </button>
+                </div>
+
+            </div>
+          </div>
+
         </div>
     </div>
 </section>
