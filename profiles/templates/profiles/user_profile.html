@@ -5,37 +5,48 @@
 <section>
   <div id="pfl-pg-cont" class="container">
         <div id="pfl-page-row" class="row">
-          <div id='cd-wrap' class="col s12 md6 l6 xl4">
+          <div class="profileDashBanner" style="background-image:linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ),url({%static 'img/b2.jpg' %});">
+            <h1 style="text-align:center;">Hello <br>{{user.first_name}}</h1>
+
+          </div>
+          <div id='cd-wrap' class="col s12">
             <div id="profile-view" class="card">
                   {% if user.agent_profile.profile_image%}
                   <div class="pfl-card-img">
                     <img src="{{ user.agent_profile.profile_image.url}}" alt="{{user.last_name}}">
+                    <span>
+                      <img src="{% static 'img/premium_medal.svg'%}" alt="premium account">
+                    </span>
                   </div>
                   {% else %}
                   <div class="pfl-card-img">
                     <img src="{% static 'img/avatar.png'%}" alt="{{user.last_name}}">
+                    <span>
+                      <img src="{% static 'img/premium_medal.svg'%}" alt="premium account">
+                    </span>
                   </div>
                   {% endif %}
                     <div class="user-details">
                       <div class="pfl-act-inf">
-                        <h6>{{user.first_name}} {{user.last_name}}</h6>
-                        <h6>{{user.email}}</h6>
-                        <h6>{{user.profile.phone}}</h6>
-                        <h6><a href="{% url 'profiles:edit_profile'%}"><i class="fas fa-user-edit" style="blue"></i>Edit Profile</a></h6>
+                        <h6><a href="#">
+                          <img src="{% static 'img/leads_purchase.svg'%}" alt="leads purchase">
+                        </a></h6>
+                        <h6><a href="/messaging">
+                          <img src="{% static 'img/comment.svg'%}" alt="chat_room">
+                        </a></h6>
+                        <span>
+                            <h6><a href="{% url 'profiles:edit_profile'%}">
+                              <img src="{% static 'img/e_person.svg'%}" alt="edit profile">
+                            </a></h6>
+                            <h6><a href="{% url 'account_change_password' %}">
+                              <img src="{% static 'img/change_password.svg'%}" alt="change profile">
+                            </a></h6>
+                        </span>
                       </div>
                     </div>
             </div>
-            <div id="profile-view" class="card">
-                <div class="user-details">
-                  <div class="pfl-act-inf">
-                    <h6><i class="fas fa-medal" style="color:green; font-size:20px;"></i><br>Premium {{user.profile.account_type}}</h6>
-                    <h6><a href="{% url 'account_change_password' %}">Password change</a> </h6>
-                  </div>
-                </div>
-            </div>
           </div>
-            <div class="pfl-d col s12 md6 l6 xl4">
-              <div class="pfl-d-banner" style="background-image:url({% static 'img/ice-pattern.jpg'%});" ></div>
+            <div class="pfl-d col s12">
               <div  id="pfl-d-sw" class="col s12">
                 <ul id="pfl-pg-switch" class="tabs tabs-fixed-width">
                     <li class="tab col s3"><a href="#MyListings"><i class="fas fa-home" style="color:#5b0088"></i></a></li>

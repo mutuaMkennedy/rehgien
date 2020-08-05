@@ -1,20 +1,26 @@
-{% extends "base1.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% load i18n %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="row">
-<div class="col s12 md6 l6 xl6">
-  <div class="signup-svg">
-    <img src="{% static 'img/arrived.svg'%}" alt="signup">
-  </div>
-</div>
+<div class="SignUpPgElWrapper">
+    <div class="SignUpImageWrapper">
+      <div class="signup-banner" style="background-image:linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),url({% static 'img/signupCover.jpg'%});">
+        <div class="auth-BIfWrapper">
+            <h1>Join the Rehgien network</h1>
+            <p>Real estate can be complex, but we are making it easy for everyone one step at a time. Whether a business,  a pro or an individual Rehgien is where to be.</p>
+        </div>
+      </div>
+    </div>
 
-<div class="col s12 md6 l6 xl6">
+<div class="SignUpFormBox">
     <div class="signup0">
+  <a href="{%url 'listings:homepage'%}">
+    <div class="loginLogo" style="background-image:url({%static 'img/rhg_logo1.png' %});">
+    </div>
+  </a>
       <h1>{% trans "Sign Up" %}</h1>
 
       <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
@@ -28,7 +34,6 @@
         <button type="submit">{% trans "Sign Up" %} &raquo;</button>
       </form>
     </div>
-  </div>
   </div>
 </div>
 

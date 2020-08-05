@@ -1,6 +1,22 @@
+{%load static%}
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link rel="shortcut icon" type="image/png" href="{%static 'img/logo-fav.png'%}">
+    <link href="{%static 'css/style.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="stylesheet" type="text/css" href="{%static 'css/material-icons.css'%}">
+    <link href="{%static 'css/materialize.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="{%static 'css/css/all.min.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="{%static 'css/style.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+    <script src="https://use.fontawesome.com/a8e276a1a5.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Libre+Baskerville&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
     <title>{% block head_title %}{% endblock %}</title>
     {% block extra_head %}
     {% endblock %}
@@ -8,18 +24,22 @@
   <body>
     {% block body %}
 
-    {% if messages %}
-    <div>
-      <strong>Messages:</strong>
-      <ul>
-        {% for message in messages %}
-        <li>{{message}}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
+    {% if messages%}
+        <ul class="messages" id="message_box">
+            {% for message in messages%}
+             <li {% if message.tag %} class="{{ message.tags }}" {% endif %}>
+               {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+               <i class="far fa-check-circle" style="color:#0aef13;"></i>
+               {% else %}
+               <i class="fas fa-times" style='color:red'></i>
+               {% endif %}
+               {{ message }}
+             </li>
+            {% endfor %}
+        </ul>
+    {%endif%}
 
-    <div>
+    <!-- <div>
       <strong>Menu:</strong>
       <ul>
         {% if user.is_authenticated %}
@@ -30,11 +50,19 @@
         <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
         {% endif %}
       </ul>
-    </div>
+    </div> -->
     {% block content %}
     {% endblock %}
     {% endblock %}
     {% block extra_body %}
     {% endblock %}
+  <script src="{% static 'js/materialize.js' %}"></script>
+  <script type="text/javascript">
+    var message_ele = document.getElementById("message_box");
+
+  setTimeout(function(){
+     message_ele.style.display = "none";
+  }, 6000);
+  </script>
   </body>
 </html>

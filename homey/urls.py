@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from photologue.sitemaps import GallerySitemap, PhotoSitemap
 from listings import views
 from django.views.generic import TemplateView
+from allauth.account.views import confirm_email
 #from haystack.forms import FacetedSearchForm
 #from haystack.views import FacetedSearchView
 
@@ -39,6 +40,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^photologue/', include('photologue.urls', namespace='photologue')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    url(r'^apis/rest-auth/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email')
     # path('msg/', TemplateView.as_view(template_name = 'index.html')),
     #url(r'^search/', include('haystack.urls')),
 ]
@@ -52,7 +54,7 @@ urlpatterns += [
     url(r'^apis/rest-auth/', include('rest_auth.urls')),
     url(r'^apis/rest-auth/', include('rest_auth.urls')),
     url(r'^apis/rest-auth/registration/', include('rest_auth.registration.urls')),
-    re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name = 'index.html')),
+    # re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name = 'index.html')),
 ]
 
 sitemaps = {

@@ -4,7 +4,7 @@
 
 <!--banner-->
 
-    <div class="HomePgBanner" style="background-image:linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),url({%static 'img/b2.jpg' %});">
+    <div class="HomePgBanner" style="background-image:linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ),url({%static 'img/b2.jpg' %});">
       <h3>Find your dream Home</h3>
       <div id="search-section" class="container">
         <div class="row">
@@ -27,7 +27,7 @@
             <h4 id="svg-title" class="center">
                Do more on Rehgien
              </h4>
-             <p>Experience new ways to find your desired home and connect with proffesionals. Experience real estate in a better way!</p>
+             <p>Experience more value by trusting us. We have solutions targeting both proffesionals and regular people. </p>
           </div>
           <div class="col s12">
             <div id="svg-cards" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="false" data-aos-duration="1000">
@@ -45,7 +45,7 @@
                 </p>
                 <div class='hm-CtA-bWrap'>
                   <button class="hm-CtA-browse" type="button" name="button">
-                    <a href="#">Browse</a>
+                    <a href="{% url 'listings:sale_listings'%}">Browse</a>
                   </button>
                   <button class="hm-CtA-request" type="button" name="button">
                     <a href="#">Make a Request</a>
@@ -65,13 +65,13 @@
                 </p>
                 <div class='hm-CtA-bWrap'>
                   <button class="hm-CtA-request" type="button" name="button">
-                    <a href="#">Find me an agent</a>
+                    <a href="{% url 'profiles:agent_list'%}">Find an agent</a>
                   </button>
                 </div>
               </div>
               <div class="s-c-wrp-2">
-                <img id="forSaleSvg-3"src="{%static 'img/vr-1.png'%}" alt="sell-rent">
-                <img id="forSaleSvg-4"src="{%static 'img/vr-2.png'%}" alt="sell-rent">
+                <img id="forSaleSvg-3"src="{%static 'img/vr-1.png'%}" alt="vr1">
+                <img id="forSaleSvg-4"src="{%static 'img/vr-2.png'%}" alt="vr2">
 
               </div>
             </div>
@@ -90,7 +90,7 @@
 
                 <div class='hm-CtA-bWrap'>
                   <button class="hm-CtA-request" type="button" name="button">
-                    <a href="#">Join now</a>
+                    <a href="{% url 'account_signup' %}">Join now</a>
                   </button>
                 </div>
 
@@ -135,7 +135,7 @@
                 </p>
                 <div class='hm-CtA-bWrap'>
                   <button class="hm-CtA-request" type="button" name="button">
-                    <a href="#">Join now</a>
+                    <a href="/messaging">Join now</a>
                   </button>
                 </div>
               </div>

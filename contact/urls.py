@@ -5,6 +5,7 @@ from . import views
 app_name = 'contact'
 
 urlpatterns = [
-    path('email/', views.send_message, name='send_message'),
-    path('about_us/', views.about_us, name="about_us"),
+    path('contact_listing_agent/', views.contact_listing_agent, name='contact_listing_agent'),
+    path('contact_professional/', views.contact_pro, name='contact_pro'),
+    path('about_rehgien/', views.about_us, name='about_us'),
 ]

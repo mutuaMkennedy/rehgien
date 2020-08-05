@@ -3,13 +3,13 @@ import axios from "axios";
 import styled from 'styled-components';
 import base from './baseAddress.js';
 
-
-console.log(base);
 //Login Page styled css components
 const StLoginRoot = styled.div`
   display:flex;
   height:90vh;
-
+  @media (max-width: 786px) {
+    flex-direction:column;
+  }
 `
 const StLoginNavBar = styled.div`
   width:100%;
@@ -17,20 +17,26 @@ const StLoginNavBar = styled.div`
 
 `
 const StLoginLogo = styled.div`
-  background-image:url('http://127.0.0.1:8000/static/img/rhg_logo1.png');
+  background-image:url( '${base}/static/img/rhg_logo1.png' );
   background-position:center;
   background-repeat:no-repeat;
   background-size:cover;
   width:100px;
   height:100%;
   margin-left:80px;
+  @media (max-width: 786px) {
+    margin-left:auto;
+    margin-right:auto;
+  }
 `
 
 const StLoginCWrapper = styled.div`
   width:50%;
   display:flex;
   justify-content:center;
-
+  @media (max-width: 786px) {
+    width:100%;
+  }
 `
 
 const StLoginBanner = styled.div`
@@ -41,6 +47,9 @@ const StLoginBanner = styled.div`
   background-size: cover;
   border-radius:10px;
   margin:5px;
+  @media (max-width: 786px) {
+    display:none;
+  }
 `
 
 const StLoginBnTitleWrp = styled.div`
@@ -69,6 +78,9 @@ const StLoginCard = styled.div`
   /* margin-bottom:auto; */
   display:flex;
   flex-direction:column;
+  @media (max-width: 786px) {
+    width:90%;
+  }
 `
 
 const Title = styled.h1`
@@ -84,6 +96,9 @@ const LgInputWrapper = styled.div`
   font-weight:bold;
   margin-top:5px;
   display:flex;
+  @media (max-width: 786px) {
+    flex-direction:column;
+  }
 
 `
 
@@ -97,6 +112,9 @@ const Input = styled.input`
   ::placeholder {
     font-family:Roboto, Arial;
     font-size:14px;
+  }
+  @media (max-width: 786px) {
+    width:100%;
   }
 
 `
@@ -253,7 +271,7 @@ class Login extends Component {
                           To access Rehgien chat you need a verified account.
                         </LoginInfWrapperParagraph>
                         <LoginInfWrapperParagraph>
-                          If not Visit here and create an account
+                          If not Visit <a href= {base + '/accounts/signup/'}>here</a> and create an account
                         </LoginInfWrapperParagraph>
                       </LoginInfWrapper>
                   </StLoginCard>

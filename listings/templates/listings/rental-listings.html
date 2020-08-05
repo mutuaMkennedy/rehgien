@@ -109,69 +109,112 @@
 
   </fieldset>
 </div>
-  <div id="asCont" class="container" style="width:100%;">
-    <div class="fixed-action-btn">
-      <button type="button" name="button" class='show-map-btn btn-floating show-on-medium-and-down'>Map</button>
-    </div>
-    <div class='all-content'>
-        <!-- <div id='feature-listing' class='container'> -->
 
-          <div id="all-row2" class="row">
-            {% if listings %}
-            <div id="page-head" class="page-head col s12">
-              <h2>Homes & Real Estate listings for rent in {{location_address}}.</h2>
-                <h3>{{listings_count}} rentals availlable on Rehgien.</h3>
-            </div>
-            <div class="col s12">
-              <div id="sort-input" class="input-field col s12">
-               <select>
-                 <option value="" disabled selected>Sort</option>
-                 <option value="1">Newer</option>
-                 <option value="2">Older</option>
-                 <option value="3">Priced Highest</option>
-                 <option value="4">Beds</option>
-                 <option value="5">Baths</option>
-                 <option value="6">Area</option>
-               </select>
-             </div>
-            </div>
-              <div id="obj" class="col s12 md6 l6 xl4">
+</section>
 
+<section>
+  <div class="ListingsMapWrapper">
+    <div id="asCont" class="container">
+        <button  id='revealMap' class='show-map-btn show-on-medium-and-down'>
+          Map
+        </button>
+      <div class='all-content'>
+          <!-- <div id='feature-listing' class='container'> -->
+
+            <div id="all-row2" class="row">
+              {% if listings %}
+              <div id="page-head" class="page-head col s12">
+                <h2>Homes & Real Estate listings for rent in {{location_address}}.</h2>
+                  <h3>{{listings_count}} rentals availlable on Rehgien.</h3>
               </div>
-          {% else %}
-          <div id="page-head" class="page-head col s12">
-            <h2>No matching results for {{location_address}}.</h2>
-              <h3>Try another location or refine your search.</h3>
+              <div class="col s12">
+                <div id="sort-input" class="input-field col s12">
+                 <select>
+                   <option value="" disabled selected>Sort</option>
+                   <option value="1">Newer</option>
+                   <option value="2">Older</option>
+                   <option value="3">Priced Highest</option>
+                   <option value="4">Beds</option>
+                   <option value="5">Baths</option>
+                   <option value="6">Area</option>
+                 </select>
+               </div>
+              </div>
+                <div id="obj" class="col s12 md6 l6 xl4">
+
+                </div>
+            {% else %}
+            <div id="page-head" class="page-head col s12">
+              <h2>No matching results for {{location_address}}.</h2>
+                <h3>Try another location or refine your search.</h3>
+            </div>
+            {% endif %}
+            </div>
+          <!-- </div> -->
+              <!-- start -->
+              {% include 'listings/pagination.html' with listings=listings %}
+              <!-- end -->
+
+
+      </div>
+      <footer class="listings-footer">
+        <div class="container" style="width:100%; margin:0px;">
+          <div class="footer-content center">
+            <div class="row">
+              <div class="f-details center">
+                <a href="#"> Privacy Policy</a>
+                <a href="#"> Terms & Conditions</a>
+                <a href="#"> Advertise</a>
+                <a href="#"> Mobile App</a>
+                <a href="#"> FAQ'S</a>
+                <a href="#"> Contact Us</a>
+                <a href="{% url 'contact:about_us'%}"> About Us</a>
+              </div>
+              <div id="footer-details" class="col s12 center">
+                <a href="#" class="black-text">
+                  <i class="fab fa-facebook fa-2x"></i>
+                </a>
+                <a href="#" class="black-text">
+                  <i class="fab fa-twitter fa-2x"></i>
+                </a>
+                <a href="#" class="black-text">
+                  <i class="fab fa-linkedin fa-2x"></i>
+                </a>
+                <a href="#" class="black-text">
+                  <i class="fab fa-instagram fa-2x"></i>
+                </a>
+                <p>While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy.</p>
+              </div>
+              <p class="flow-text black-text center" id="c-year"></p>
+              <script type="text/javascript">
+                var d = new Date();
+                document.getElementById("c-year").innerHTML= 'Copyright '+ d.getFullYear();
+              </script>
+            </div>
           </div>
-          {% endif %}
-          </div>
-        <!-- </div> -->
-
-        {% if listings.paginator.num_pages > 1 %}
-
-            <!-- start -->
-            {% include 'listings/pagination.html' with listings=listings %}
-            <!-- end -->
-
-        {% endif %}
-    </div>
-  </div>
-  <div class="container" id="map-container">
-
-    <div id='map' class="hide-on-med-and-down">
-        <!-- Dropdown Trigger -->
-       <a id='map-btn' class='dropdown-trigger btn-small blue' href='#' data-target='map-dropdown'><i class="small material-icons">school</i></a>
-
-        <ul id='map-dropdown' class='dropdown-content'>
-          <li id="menu-items"></li>
-        </ul>
-        <div class="help-text1 center hide-on-med-and-down" >
-          <p>Zoom to filter results</p>
         </div>
+        <div class="ft-bk-sl">
+          <img src="{% static 'img/nairobi-skyline.png'%}">
+        </div>
+      </footer>
+    </div>
+    <div class="container" id="map-container">
+      <div id='map'>
+        <button type="button" id="hideMapbtn"  class="show-on-medium-and-down" style="background-image:url({%static 'img/close.svg' %});"></button>
+
+          <!-- Dropdown Trigger -->
+         <a id='map-btn' class='dropdown-trigger btn-small blue' href='#' data-target='map-dropdown'><i class="small material-icons">school</i></a>
+
+          <ul id='map-dropdown' class='dropdown-content'>
+            <li id="menu-items"></li>
+          </ul>
+          <div class="help-text1 center" >
+            <p>Pan to filter results</p>
+          </div>
+      </div>
     </div>
   </div>
 </section>
-
 <!--mapbox scripts-->
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
@@ -344,7 +387,7 @@ function renderListings(features) {
        pageHead.style.display='block';
 
       var ls_pagination = document.getElementById("ls_pagination");
-       ls_pagination.style.display='block';
+        ls_pagination.style.display='block';
 
        var sort_input = document.getElementById("sort-input");
           sort_input.style.display='block';
@@ -969,51 +1012,25 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
 </script>
 
 <script type="text/javascript">
-  document.querySelector(".mapboxgl-ctrl-geocoder--input").value="{{location_address}}";
+    document.querySelector(".mapboxgl-ctrl-geocoder--input").value="{{location_address}}";
     document.querySelector(".mapboxgl-ctrl-geocoder--input").name="location";
+    var openMapBtn = document.getElementById('revealMap');
+    var closeMapBtn = document.getElementById('hideMapbtn');
+
+    openMapBtn.addEventListener('click',function() {
+        var mapContainer = document.getElementById("map-container");
+            mapContainer.style.position="fixed";
+            mapContainer.style.width="100%";
+            mapContainer.style.height="100vh";
+            mapContainer.style.background="#fff";
+        });
+
+    closeMapBtn.addEventListener('click', function(){
+        console.log('close');
+        var mapContainer = document.getElementById("map-container");
+            mapContainer.style.width="0";
+            mapContainer.style.height="0";
+      });
 </script>
 
 {% endblock %}
-
-{% block footer%}
-<footer class="listings-footer">
-  <div class="container" style="width:100%; margin:0px;">
-    <div class="footer-content center">
-      <div class="row">
-        <div class="f-details center">
-          <a href="#"> Privacy Policy</a>
-          <a href="#"> Terms & Conditions</a>
-          <a href="#"> Advertise</a>
-          <a href="#"> Mobile App</a>
-          <a href="#"> FAQ'S</a>
-          <a href="#"> Contact Us</a>
-          <a href="{% url 'contact:about_us'%}"> About Us</a>
-        </div>
-        <div id="footer-details" class="col s12 center">
-          <a href="#" class="black-text">
-            <i class="fab fa-facebook fa-2x"></i>
-          </a>
-          <a href="#" class="black-text">
-            <i class="fab fa-twitter fa-2x"></i>
-          </a>
-          <a href="#" class="black-text">
-            <i class="fab fa-linkedin fa-2x"></i>
-          </a>
-          <a href="#" class="black-text">
-            <i class="fab fa-instagram fa-2x"></i>
-          </a>
-          <p>While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy.</p>
-        </div>
-        <p class="flow-text black-text center" id="c-year"></p>
-        <script type="text/javascript">
-          var d = new Date();
-          document.getElementById("c-year").innerHTML= 'Copyright '+ d.getFullYear();
-        </script>
-      </div>
-    </div>
-  </div>
-  <div class="ft-bk-sl">
-    <img src="{% static 'img/nairobi-skyline.png'%}">
-  </div>
-</footer>
-{% endblock%}

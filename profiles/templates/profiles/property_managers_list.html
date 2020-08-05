@@ -42,11 +42,11 @@
             <div class="featured-ag-img-wrapper">
               {% if f_agent.profile_image%}
               <a href="{% url 'profiles:pm_detail' f_agent.pk%}">
-                <img src="{{f_agent.profile_image.url}}" alt="{{f_agent.get_full_name}}" class='circle responsive-img' style="width:100px;height:100px;">
+                <img src="{{f_agent.profile_image.url}}" alt="{{f_agent.get_full_name}}" class='circle responsive-img' style="width:100px;height:100px;object-fit:cover;">
               </a>
               {% else %}
               <a href="{% url 'profiles:pm_detail' f_agent.pk%}">
-                <img src="{% static 'img/avatar.png'%}" alt="{{f_agent.get_full_name}}" class='circle responsive-img' style="width:100px;height:100px;">
+                <img src="{% static 'img/avatar.png'%}" alt="{{f_agent.get_full_name}}" class='circle responsive-img' style="width:100px;height:100px;object-fit:cover;">
               </a>
               {% endif %}
             </div>
@@ -163,11 +163,11 @@
                 <div class="ag-prfX-image">
                   {% if agent.profile_image %}
                   <a href="{% url 'profiles:pm_detail' agent.pk%}">
-                  <img src="{{agent.profile_image.url}}" style='width:120px;height:120px' class='circle responsive-img' alt="{{agent.user.first_name}}">
+                  <img src="{{agent.profile_image.url}}" style='width:120px;height:120px;object-fit:cover;' class='circle responsive-img' alt="{{agent.user.first_name}}">
                   </a>
                   {% else %}
                   <a href="{% url 'profiles:pm_detail' agent.pk%}">
-                  <img src="{% static 'img/avatar.png'%}" style='width:120px;height:120px' class='circle responsive-img' alt="{{agent.user.first_name}}">
+                  <img src="{% static 'img/avatar.png'%}" style='width:120px;height:120px;object-fit:cover;' class='circle responsive-img' alt="{{agent.user.first_name}}">
                   </a>
                   {% endif%}
                 </div>

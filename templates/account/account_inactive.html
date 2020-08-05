@@ -1,11 +1,21 @@
-{% extends "base1.html" %}
+{% extends "base.html" %}
+{%load static%}
 
 {% load i18n %}
 
 {% block head_title %}{% trans "Account Inactive" %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Account Inactive" %}</h1>
+  <div class="AcctInactivePgWrapper">
+    <div class="Acct-LockedElBox">
+      <div class="Acct-LockedSvg" style="background-image:url({%static 'img/loginLock.svg'%});">
+      </div>
+      <div class="Acct-InactivePage">
+        <h1>{% trans "Account Inactive" %}</h1>
 
-<p>{% trans "This account is inactive." %}</p>
+        <p>{% trans "This account is inactive. Contact us for more details" %}</p>
+        <p><a href="{%url 'listings:homepage'%}">Take me home!</a></p>
+      </div>
+    </div>
+  </div>
 {% endblock %}

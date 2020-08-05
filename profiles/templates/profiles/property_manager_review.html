@@ -24,9 +24,9 @@
           </div>
           <div class="rvw-p-img-box">
             {% if agent.profile_image%}
-            <img src="{{agent.profile_image.url}}" alt="{{agent.get_full_name}}" style="width:100px; height:100px;" class="circle">
+            <img src="{{agent.profile_image.url}}" alt="{{agent.get_full_name}}" style="width:100px; height:100px;object-fit:cover;" class="circle">
             {% else %}
-            <img src="{%static 'img/avatar.png'%}" alt="{{agent.get_full_name}}" style="width:100px; height:100px;" class="circle">
+            <img src="{%static 'img/avatar.png'%}" alt="{{agent.get_full_name}}" style="width:100px; height:100px;object-fit:cover;" class="circle">
             {% endif %}
           </div>
           <div class="rvw-p-dtls-box">

@@ -66,7 +66,6 @@
                 <div class="card-stacked">
                   <div class="prof-card-content">
                     <h6><b>{{listing.owner.first_name}} </b></h6>
-                    <h5><b>Company name</b></h5>
                     <li>{{listing.phone}}</li>
                   </div>
                   <div class="verified-agent">
@@ -75,39 +74,41 @@
                   </div>
                 </div>
               </div>
-              <form id="agentContactForm1" action="{% url 'contact:send_message' %}" class="col s12" method="POST">
+              <form id="agentContactForm1" action="{% url 'contact:contact_listing_agent' %}" class="col s12" method="POST">
                 <h6 class="black-text" style='font-size:12px; font-family:Roboto,Arial;'><b>Contact this agent</b></h6>
                 {% csrf_token %}
+                <div class="MsglistingDetails">
+                  <input id="recepient" type="hidden" name="recepient" value="{{listing.email}}" class="validate">
+                  <input type="hidden" name="recepientPhoneNumber" value="{{listing.phone}}">
+                  <input type="hidden" name="currentListingPath" value="{{ request.build_absolute_uri }}">
+                  <input type="hidden" name="currentListingName" value=" {{listing.property_name}}">
+                  <input type="hidden" name="currentListingLocation" value=" {{listing.location_name}}">
+                </div>
                 <div id="name_phone" class="row">
-                  <div class="input-field col s12">
-                    <input id="name" type="text" name="name" class="validate" placeholder="Your Name">
-                  </div>
-                  <div class="input-field col s12">
-                    <input id="phone_number" type="number" name="phone_number" min="0" class="validate" placeholder="Phone number">
-                  </div>
-                  </div>
+                    <div class="input-field col s12">
+                      <input id="name" type="text" name="name" class="validate" placeholder="Your Name">
+                    </div>
+                    <div class="input-field col s12">
+                      <input id="phone_number" type="number" name="phone_number" min="0" class="validate" placeholder="Phone number">
+                    </div>
+                </div>
                 <div id="fEmail" class="row">
                   <div class="input-field col s12">
                     <input id="from_email" type="email" name="from_email" class="validate" placeholder="Your Email">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="input-field col s12">
-                    <input disabled id="recepient" type="hidden" name="recepient" value="{{listing.email}}" class="validate">
                   </div>
                 </div>
                 <div id="eMessage" class="row">
                   <div class="input-field col s12">
                     <textarea id="message" rows="4" name="message" cols="80"></textarea>
                     <script type="text/javascript">
-                      document.getElementById("message").defaultValue="Hello im interested a listing you are selling: {{listing.name}} located in {{listing.location_name}}";
+                      document.getElementById("message").defaultValue="Hello i'm interested in a property you are selling in {{listing.location_name}}";
                     </script>
                   </div>
                 </div>
                 <button id="agentSendButton" type="submit" name="button"> Send Message</button>
               </form>
               <div class="cont-terms">
-                <p>By clicking send you agree that Homey and Real Estate professionals may contact you via phone/text
+                <p>By clicking send you agree that Rehgien and Real Estate professionals may contact you via phone/text
                 about your inquiry, which may involve the use of automated means. You are not required to consent as a
               condition of purchasing any property, goods or services. Note local data rates for texts/messages may apply.
               You also agree to our terms of service</p>
