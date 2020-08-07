@@ -264,12 +264,12 @@ cloudinary.config(
   api_secret = "BAsPMg7zobSDbjzPs0yrwnCf-S0"
 )
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-    )
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#         # 'rest_framework.authentication.TokenAuthentication',
+#     )
+# }
 
 REST_AUTH_SERIALIZERS = {
     'TOKEN_SERIALIZER': 'chat.apis.serializers.StreamTokenSerializer',

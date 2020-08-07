@@ -17,6 +17,99 @@ from listings.models import (
 # referencing the custom user model
 User = get_user_model()
 
+# Lists for multiple choice fields
+APPLIANCES_CHOICES = (
+            ('DISH', 'Dishwasher'), ('GARB', 'Garbage disposal'),
+            ('OVEN', 'Oven'), ('REFRIG', 'Refrigerator'),
+            ('NON', 'None')
+)
+
+BASEMENT_CHOICES = (
+        ('FINI', 'Finished'), ('UNFI', 'Unfinished'),
+        ('PART', 'Partially finished'), ('NON', 'None'),
+)
+
+FLOOR_COVERING_CHOICES  = (
+            ('CARP', 'Carpet'), ('CONC', 'Concrete'), ('HARD', 'Hardwood'),
+            ('TILE', 'Tile'), ('SOFT', 'SoftWood'), ('OTH', 'Other'),
+)
+
+ROOMS_CHOICES = (
+        ('BREA', 'BreakFast nook'), ('DINI', 'Dining room'), ('FAMI', 'Family room'),
+        ('LIBR', 'Library'), ('MAST', 'Master bath'), ('MUDR', 'Mud room'),
+        ('OF', 'Office'), ('PANT', 'Pantry'), ('RECR', 'Recreation room'),
+        ('WORK', 'Workshop'), ('So/AR', 'Solarium/Atrium'), ('SUNR', 'Sun room'),
+        ('WALK', 'walk-in-closet'),
+)
+
+INDOOR_FEATURES_CHOICES = (
+                ('ATTI', 'Attic'), ('CEIL', 'Ceiling fans'),
+                ('DOUB', 'Double pane windows'), ('FIRE', 'Fireplace'),
+                ('SECU', 'Security system'), ('SKYL', 'Skylights'),
+                ('VAUL', 'Vaulted ceiling'),
+)
+
+COOLING_TYPE_CHOICES = (
+            ('CENT', 'Central'), ('EVAP', 'Evaporative'),
+            ('GEOT', 'Geothermal'), ('REFR', 'Refrigeration'),
+            ('SOLA', 'Solar'), ('WALL', 'Wall'),
+            ('OTHE', 'Other'), ('NON', 'None'),
+)
+
+HEATING_TYPE_CHOICES = (
+            ('BASE', 'Baseboard'), ('FORC', 'Forced air'),
+            ('GEOT', 'Geothermal'), ('HEAT', 'Heat pump'),
+            ('RADI', 'Radiant'), ('STOV', 'Stove'),
+            ('WALL', 'Wall'), ('OTH', 'Other'),
+)
+
+HEATING_FUEL_CHOICES = (
+            ('COAL', 'Coal'), ('ELEC', 'Electric'),
+            ('GAS', 'Gas'), ('OIL', 'Oil'),
+            ('PR/BU', 'Propane/Butane'), ('SOLA', 'Solar'),
+            ('WO/PE', 'Wood/Pelet'), ('OTH', 'Other'),
+            ('NON', 'None'),
+)
+
+BUILDING_AMENITIES_CHOICES = (
+                ('BASK', 'Basketball court'), ('CONT', 'Controlled access'),
+                ('DISA', 'Disabled access'), ('DOOR', 'Doorman'),
+                ('ELEV', 'Elevator'), ('FITN', 'Fitness Center'),
+                ('GATE', 'Gated entry'), ('NEAR', 'Near Transportation'),
+                ('SPOR', 'Sports court'),
+)
+
+EXTERIOR_CHOICES = (
+        ('BRIC', 'Brick'), ('CE/CO', 'Cement/Concrete'),
+        ('STON', 'Stone'), ('VINY', 'Vinyl'),
+        ('WOOD', 'Wood'), ('OTH', 'Other'),
+)
+
+OUTDOOR_AMENITIES_CHOICES = (
+            ('BALC', 'Balcony'), ('FENC', 'Fenced yard'),
+            ('GARD', 'Garden'), ('GREEN', 'Greenhouse'),
+            ('LAWN', 'Lawn'), ('POND', 'Pond'),
+            ('POOL', 'Pool'), ('SAUN', 'Sauna'),
+            ('SPRI', 'Sprinkler system'), ('wATER', 'Waterfront'),
+)
+
+PARKING_CHOICES = (
+            ('CARP', 'Carport'), ('GATTACH', 'Garage-Attached'),
+            ('GDETACH', 'Garage-Detached'), ('OFFS', 'Off-street'),
+            ('ONST', 'On-street'), ('NON', 'None'),
+)
+
+ROOF_CHOICES = (
+        ('ASPH', 'Asphalt'), ('TILE', 'Tile'),
+        ('SLAT', 'Slate'), ('OTH', 'Other'),
+)
+
+VIEW_CHOICES = (
+        ('CITY', 'City'), ('TERR', 'Territorial'),
+        ('MOUN', 'Mountain'), ('WATE', 'Water'),
+        ('PARK', 'Park'), ('NON', 'None'),
+)
+
 #will be removed duplicate of UserSerializer in profiles app serializers
 class UserSerializer(serializers.ModelSerializer):
     sale_property = serializers.PrimaryKeyRelatedField(many=True, queryset=PropertyForSale.objects.all())
@@ -45,6 +138,19 @@ class PropertyForSaleSerializer(WritableNestedModelSerializer):
     images= PropertyForSaleImagesSerializer(many=True)
     videos=PropertyForSaleVideosSerializer(many=True)
     listing_type = serializers.CharField(default='For Sale', required=False)
+    cooling_type = serializers.MultipleChoiceField(choices=COOLING_TYPE_CHOICES, required=False)
+    appliances = serializers.MultipleChoiceField(choices=APPLIANCES_CHOICES, required=False)
+    floor_covering = serializers.MultipleChoiceField(choices=FLOOR_COVERING_CHOICES, required=False)
+    rooms = serializers.MultipleChoiceField(choices=ROOMS_CHOICES, required=False)
+    indoor_features = serializers.MultipleChoiceField(choices=INDOOR_FEATURES_CHOICES, required=False)
+    heating_type = serializers.MultipleChoiceField(choices=HEATING_TYPE_CHOICES, required=False)
+    heating_fuel = serializers.MultipleChoiceField(choices=HEATING_FUEL_CHOICES, required=False)
+    building_amenities = serializers.MultipleChoiceField(choices=BUILDING_AMENITIES_CHOICES, required=False)
+    exterior = serializers.MultipleChoiceField(choices=EXTERIOR_CHOICES, required=False)
+    outdoor_amenities = serializers.MultipleChoiceField(choices=OUTDOOR_AMENITIES_CHOICES, required=False)
+    parking = serializers.MultipleChoiceField(choices=PARKING_CHOICES, required=False)
+    roof = serializers.MultipleChoiceField(choices=ROOF_CHOICES, required=False)
+    view = serializers.MultipleChoiceField(choices=VIEW_CHOICES, required=False)
     class Meta:
         model=PropertyForSale
         fields=[
@@ -93,6 +199,19 @@ class RentalPropertySerializer(WritableNestedModelSerializer):
     images=RentalImagesSerializer(many=True)
     videos=RentalVideosSerializer(many=True)
     listing_type = serializers.CharField(default='For Rent', required=False)
+    appliances = serializers.MultipleChoiceField(choices=APPLIANCES_CHOICES, required=False)
+    floor_covering = serializers.MultipleChoiceField(choices=FLOOR_COVERING_CHOICES, required=False)
+    rooms = serializers.MultipleChoiceField(choices=ROOMS_CHOICES, required=False)
+    indoor_features = serializers.MultipleChoiceField(choices=INDOOR_FEATURES_CHOICES, required=False)
+    cooling_type = serializers.MultipleChoiceField(choices=COOLING_TYPE_CHOICES, required=False)
+    heating_type = serializers.MultipleChoiceField(choices=HEATING_TYPE_CHOICES, required=False)
+    heating_fuel = serializers.MultipleChoiceField(choices=HEATING_FUEL_CHOICES, required=False)
+    building_amenities = serializers.MultipleChoiceField(choices=BUILDING_AMENITIES_CHOICES, required=False)
+    exterior = serializers.MultipleChoiceField(choices=EXTERIOR_CHOICES, required=False)
+    outdoor_amenities = serializers.MultipleChoiceField(choices=OUTDOOR_AMENITIES_CHOICES, required=False)
+    parking = serializers.MultipleChoiceField(choices=PARKING_CHOICES, required=False)
+    roof = serializers.MultipleChoiceField(choices=ROOF_CHOICES, required=False)
+    view = serializers.MultipleChoiceField(choices=VIEW_CHOICES, required=False)
     class Meta:
         model = RentalProperty
         fields = [

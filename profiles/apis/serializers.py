@@ -37,6 +37,13 @@ class NormalUserProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AgentProfileSerializer(serializers.ModelSerializer):
+    speciality_choices = (
+        ('1', 'Buying and Selling of houses'),
+        ('2', 'Renting houses'),
+        ('3', 'Leasing office spaces'),
+        ('4', 'Buying and selling of land'),
+    )
+    speciality_choices = serializers.MultipleChoiceField(choices=speciality_choices, required=False)
     class Meta:
         model = AgentProfile
         fields = [
