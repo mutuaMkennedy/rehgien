@@ -1,4 +1,5 @@
 {% extends 'base1.html' %}
+{% load social_share %}
 {% load static %}
 {% block content %}
 {% load cloudinary %}
@@ -30,12 +31,44 @@
                },
              });
           });
+
+          //OwlCarousel
+          $(".owl-carousel").owlCarousel({
+              loop:true,
+              margin:10,
+              nav:true,
+              responsiveClass:true,
+              responsive:{
+                 0:{
+                     items:1,
+                     nav:true
+                 },
+                 480:{
+                     items:3,
+                     nav:false
+                 },
+                 768:{
+                     items:3,
+                     nav:true,
+                     loop:false
+                 }
+             }
+            });
         });
       </script>
 
       <section id="d-bd">
           <div class="container">
             <div id="ca-row" class="row">
+              <nav class="breadc-nav">
+                <div class="nav-wrapper-bread">
+                  <div class="col s12">
+                    <a href="{% url 'listings:homepage'%}" class="breadcrumb">Home</a>
+                    <a href="{% url 'listings:sale_listings'%}" class="breadcrumb">Rent</a>
+                    <a class="breadcrumb">{{listing.property_name}}</a>
+                  </div>
+                </div>
+              </nav>
               <div id="c-slide" class="col s12 md8 l8 xl8">
                 <div id="c-slider" class="carousel carousel-slider" data-indicators="true">
                   <h4 class="listing-title-d">{{listing.property_name}}</h4>
@@ -44,14 +77,21 @@
                         {% include 'listings/rental-fav-section.html'%}
                     </div>
                     <div class="share-button">
-                      <a href="#"><i class="fas fa-share"></i></a>
+                      <a class="modal-trigger" href="#socialShareModal">
+                        <img src="{% static 'img/share.svg'%}" alt="share">
+                          Share
+                      </a>
                     </div>
                   </div>
                   {%for img in images%}
                   <a href="#{{img.image}}!" class="carousel-item" data-cindex='{{img.image|length}}' >{% cloudinary img.image ImageTransformation %}</a>
                   {%endfor%}
-                  <div class="prev"><i class="fas fa-chevron-circle-left fa-lg"></i></div>
-                  <div class="next"><i class="fas fa-chevron-circle-right fa-lg"></i></div>
+                  <div class="prev">
+                    <img src="{% static 'img/circled_back_arrow.svg'%}" alt="prev">
+                  </div>
+                  <div class="next">
+                    <img src="{% static 'img/circled_next_arrow.svg'%}" alt="next">
+                  </div>
                 </div>
               </div>
               <div id="contact-form1" class="col s12 md4 l4 xl4">
@@ -69,7 +109,6 @@
                           <li>{{listing.phone}}</li>
                         </div>
                         <div class="verified-agent">
-                        <i class="fas fa-user-check fa-lg" style="color:lime;"></i>
                         <li> Verified by Rehgien</li>
                         </div>
                       </div>
@@ -118,6 +157,52 @@
           </div>
 
       </section>
+<section class="socialShareModalWrapp">
+  <!-- Modal Structure -->
+    <div id="socialShareModal" class="modal">
+      <div class="modal-content">
+        <div class="socialShareLinks">
+          <div class="socialShareEmail">
+            <h4>Share Home</h4>
+            <form class="email_socialShare" action="{% url 'contact:share_listing'%}" method="post">
+              {% csrf_token %}
+              <div class="e_sS_hiddenDetails">
+                <input type="hidden" name="e_sS_propertyName" value="{{listing.property_name}}">
+                <input type="hidden" name="e_sS_PropertyLocation" value="{{listing.location_name}}">
+                <input type="hidden" name="e_sS_PropertyPrice" value="Ksh: {{listing.price}} p/m">
+                <input type="hidden" name="e_sS_PropertyBathrooms" value="{{listing.bathrooms}}">
+                <input type="hidden" name="e_sS_PropertyBedrooms" value="{{listing.bedrooms}}">
+                <input type="hidden" name="e_sS_PropertySize" value="{{listing.floor_area}}{{listing.size_units}}">
+                <input type="hidden" name="e_sS_absoluteUrl" value="{{request.build_absolute_uri}}">
+                <input type="hidden" name="e_sS_propertyImage" value="{{listing.thumb.url}}">
+              </div>
+              <h6>From</h6>
+              <div class="e_sS_senderEmail">
+                  <input type="email" name="e_sS_senderEmail" placeholder="Your Email Address" validate>
+              </div>
+              <h6>Share home with</h6>
+              <div class="e_sS_recepientEmail">
+                  <input type="email" name="e_sS_recepientEmail" placeholder="Recepient Email Address" validate>
+              </div>
+              <div class="e_sS_submitEmail">
+                <button type="submit">Share</button>
+              </div>
+            </form>
+          </div>
+          <div class="socialShareIcos">
+            <h4>Or,Share a link to this Home via:</h4>
+            <span>
+              {% post_to_facebook listing.get_absolute_url%}
+              {% post_to_twitter 'Check this home out:' listing.get_absolute_url %}
+              {% post_to_whatsapp listing.get_absolute_url %}
+              {% post_to_telegram "Check this home out:" listing.get_absolute_url %}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
 <section>
   <div class="container">
     <div class="row">
@@ -250,7 +335,7 @@
   </div>
 </section>
 <section>
-  <div class="container">
+  <div class="container add-details-cont">
     <div class="row">
         <div id="add-details" class="col s12 md3 l3 xl3">
             <h6><b>Additional Home Facts</b></h6>
@@ -323,41 +408,68 @@
 <section>
 <div class="container">
   <div class="row">
-    <h1 class="sld-h" >Similar Listings For You</h1>
-    <div class="sld">
-    <div id="similar-Lcard" class="card">
-      <div class="slc-img-wrapper">
-        <img src="{% static 'img/placeh.jpg'%}" alt="">
-      </div>
-      <div class="slc-f-wrapper">
-        <li>Ksh: 25,0000 p/m</li>
-        <li>Property Name</li>
-        <li>Location</li>
-      </div>
+    {% if similar_listings %}
+    <h1 class="sld-h" >Similar Homes Around Nairobi You May Like</h1>
+    <div class="owl-carousel sld">
+      {% for similar_property in similar_listings%}
+      <a href="{% url 'listings:onsale_detail' similar_property.pk%}">
+        <div id="similar-Lcard" class="card">
+          <div class="slc-img-wrapper">
+            <li>Last update on: {{similar_property.publishdate.date}}</li>
+            <img src="{{similar_property.thumb.url}}" alt="{{similar_property.property_name}}">
+          </div>
+          <div class="slc-f-wrapper">
+            <li>Ksh:{{similar_property.price}}</li>
+            <span class="slc-f-properties">
+              <li><i class="fas fa-shower"></i>{{similar_property.bathrooms}}
+              <i class="fas fa-bed"></i>{{similar_property.bedrooms}}
+              <i class="fas fa-ruler-combined"></i>{{similar_property.floor_area}} {{similar_property.size_units}}</li>
+            </span>
+            <span class="slc-f-properties2">
+              <li>{{similar_property.property_name}}</li>
+              <li>{{similar_property.location_name}}</li>
+            </span>
+          </div>
+        </div>
+      </a>
+    {% endfor%}
     </div>
+    {% endif %}
+  </div>
+</div>
+</section>
 
-    <div id="similar-Lcard" class="card">
-      <div class="slc-img-wrapper">
-        <img src="{% static 'img/placeh.jpg'%}" alt="">
-      </div>
-      <div class="slc-f-wrapper">
-        <li>Ksh: 25,0000 p/m</li>
-        <li>Bream Estate</li>
-        <li>Port land, Thika</li>
-      </div>
-    </div>
+<section>
+<div class="container">
+  <div class="row">
+    {% if similar_listings_in_area %}
+    <h1 class="sld-h" >Similar Homes In This Area You May Like</h1>
+    <div class=" owl-carousel sld">
+      {% for similar_property in similar_listings_in_area%}
+      <a href="{% url 'listings:onsale_detail' similar_property.pk%}">
+        <div id="similar-Lcard" class="card">
+          <div class="slc-img-wrapper">
+            <li>Last update on: {{similar_property.publishdate.date}}</li>
+            <img src="{{similar_property.thumb.url}}" alt="{{similar_property.property_name}}">
+          </div>
+          <div class="slc-f-wrapper">
+            <li>Ksh:{{similar_property.price}}</li>
+            <span class="slc-f-properties">
+              <li><i class="fas fa-shower"></i>{{similar_property.bathrooms}}
+              <i class="fas fa-bed"></i>{{similar_property.bedrooms}}
+              <i class="fas fa-ruler-combined"></i>{{similar_property.floor_area}} {{similar_property.size_units}}</li>
+            </span>
+            <span class="slc-f-properties2">
+              <li>{{similar_property.property_name}}</li>
+              <li>{{similar_property.location_name}}</li>
+            </span>
+          </div>
+        </div>
+      </a>
+    {% endfor%}
 
-    <div id="similar-Lcard" class="card">
-      <div class="slc-img-wrapper">
-        <img src="{% static 'img/placeh.jpg'%}" alt="">
-      </div>
-      <div class="slc-f-wrapper">
-        <li>Ksh: 25,0000 p/m</li>
-        <li>Bream Estate</li>
-        <li>Port land, Thika</li>
-      </div>
     </div>
-    </div>
+    {% endif %}
   </div>
 </div>
 </section>

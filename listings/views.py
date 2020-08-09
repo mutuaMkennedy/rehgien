@@ -144,7 +144,17 @@ def onsale_detail(request, pk):
 		is_favourite = True
 	images = listing.images.all()
 	videos = listing.videos.all()
+	# filter for similar listings
+	similar_listings = PropertyForSale.objects.filter(	\
+		price__range = (listing.price - listing.price * 0.2, listing.price + listing.price * 0.2),
+		location_name__icontains = listing.location_name.split(',')[0]
+		).exclude(id = listing.id)
+	similar_listings_in_area = PropertyForSale.objects.filter(	\
+		price__range = (listing.price - listing.price * 0.2, listing.price + listing.price * 0.2),
+		location_name__icontains = listing.location_name.split(',')[-1]
+		).exclude(id = listing.id)
 	return render(request, 'listings/onsale_detail.html', {'listing': listing,'is_favourite':is_favourite ,'images':images, 'videos': videos,
+				"similar_listings":similar_listings,"similar_listings_in_area":similar_listings_in_area,
 				'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation})
 
 @login_required(login_url='account_login')
@@ -225,8 +235,18 @@ def rental_detail(request, pk):
 		is_favourite = True
 	images = rentals.images.all()
 	videos = rentals.videos.all()
+	# filter for similar listings
+	similar_listings = PropertyForSale.objects.filter(	\
+		price__range = (rentals.price - rentals.price * 0.2, rentals.price + rentals.price * 0.2),
+		location_name__icontains = rentals.location_name.split(',')[0]
+		).exclude(id = rentals.id)
+	similar_listings_in_area = PropertyForSale.objects.filter(	\
+		price__range = (rentals.price - rentals.price * 0.2, rentals.price + rentals.price * 0.2),
+		location_name__icontains = rentals.location_name.split(',')[-1]
+		).exclude(id = rentals.id)
 	return render(request, 'listings/rental_detail.html', {'listing': rentals,'is_favourite':is_favourite, 'images':images, 'videos': videos,
-	 			'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation})
+	 			"similar_listings":similar_listings,"similar_listings_in_area":similar_listings_in_area,
+				'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation})
 
 @login_required(login_url='account_login')
 def rental_favourite(request,pk):
@@ -261,9 +281,9 @@ def listing_form(request):
 				file_instance2 = PropertyForSaleVideos(video = vid, property=PropertyForSale.objects.get(id=instance.id))
 				file_instance2.save()
 			messages.success(request, 'Your Listing has been posted Successfully!')
-			return redirect('listings:homepage')
+			return redirect('profiles:account')
 		else:
-			messages.error(request,'Could not complete request!')
+			messages.error(request,'Could not complete request. Try again later.')
 	else:
 		PropertyForm = forms.ListingForm()
 		ImageForm = forms.ImageForm()
@@ -320,7 +340,7 @@ def for_sale_update(request, pk):
 				messages.success(request, 'Update Successull')
 				return redirect('profiles:account')
 			else:
-				messages.error(request, 'Ooops! Cannot Update Contact the adminstrator!!')
+				messages.error(request, 'Unable to update try again later')
 		else:
 			PropertyForm = forms.ListingForm(instance=listing)
 			img_formset = image_formset(queryset = PropertyForSaleImages.objects.filter(property=listing))
@@ -353,9 +373,9 @@ def rental_listing_form(request):
 				file_instance = RentalVideos(video = vid, property=RentalProperty.objects.get(id=instance.id))
 				file_instance.save()
 			messages.success(request, 'Your Listing has been posted Successfully!')
-			return redirect('listings:homepage')
+			return redirect('profiles:account')
 		else:
-			messages.error(request,'Could not complete request!')
+			messages.error(request,'Could not complete request. Try again later!')
 	else:
 		PropertyForm = forms.RentalListingForm()
 		ImageForm = forms.RentalImageForm()
@@ -413,7 +433,7 @@ def for_rent_update(request, pk):
 				messages.success(request, 'Update Successull')
 				return redirect('profiles:account')
 			else:
-				messages.error(request, 'Ooops! Cannot Update Contact the adminstrator!!')
+				messages.error(request, 'Unable to update try again later!!')
 		else:
 			PropertyForm = forms.ListingForm(instance=listing)
 			img_formset = image_formset(queryset = RentalImages.objects.filter(property=listing))

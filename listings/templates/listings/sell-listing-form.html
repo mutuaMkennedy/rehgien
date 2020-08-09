@@ -194,7 +194,7 @@
     </div>
     <p><b>By clicking create you agree that you own this property or are acting on behalf of the owner of this property as an Agent. Also you consent to our <a href="#">terms of service</a></b></p>
     <br>
-    <div class="submit-button" style='display:none'>
+    <div class="submit-button">
       <input type="submit" value="Create">
     </div>
   </div>
@@ -233,9 +233,9 @@ function showTab(n) {
     document.getElementById("prevStepBtn").style.display = "inline";
   }
   if (n == (x.length - 1)) {
-    document.getElementById("nextStepBtn").innerHTML = "Create";
+    document.getElementById("nextStepBtn").style.display = "none";
   } else {
-    document.getElementById("nextStepBtn").innerHTML = "Next";
+    document.getElementById("nextStepBtn").style.display = "inline";
   }
   //... and run a function that will display the correct step indicator:
   fixStepIndicator(n)

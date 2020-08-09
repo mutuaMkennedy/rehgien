@@ -141,3 +141,49 @@ def contact_pro(request):
     else:
         messages.error(request,"Ooops! something went wrong. Make sure all fields are entered and valid.")
         return redirect(current_path)
+
+def share_listing(request):
+    property_name = request.POST.get("e_sS_propertyName", '')
+    property_Location = request.POST.get("e_sS_PropertyLocation", '')
+    property_absoluteUrl = request.POST.get("e_sS_absoluteUrl", '')
+    property_image = request.POST.get("e_sS_propertyImage", '')
+    property_price = request.POST.get("e_sS_PropertyPrice", '')
+    property_bathrooms = request.POST.get("e_sS_PropertyBathrooms", '')
+    property_bedrooms = request.POST.get("e_sS_PropertyBedrooms", '')
+    property_size= request.POST.get("e_sS_PropertySize", '')
+    senderEmail = request.POST.get("e_sS_senderEmail", '')
+    recepientEmail = request.POST.get("e_sS_recepientEmail", '')
+    subject = senderEmail + " wants you to see this home"
+
+    if property_name and property_Location and property_absoluteUrl and property_image and \
+        senderEmail and recepientEmail and property_price and property_bathrooms and property_bedrooms and property_size:
+        try:
+            plainMessage =  senderEmail  + ' wants you to see this home' + '\n url: ' + property_absoluteUrl + \
+                            "From \n" + 'The Rehgien Team'
+            context = {
+                    'propertyLocation': property_Location,
+                    'propertyName':property_name,
+                    'recepientEmail':recepientEmail,
+                    'senderEmail':senderEmail,
+                    'property_absoluteUrl':property_absoluteUrl,
+                    "propertyImage":property_image,
+                    "propertyPrice":property_price,
+                    "propertyBathrooms":property_bathrooms,
+                    "propertyBedrooms":property_bedrooms,
+                    "propertySize":property_size
+                     }
+            htmlMessage = render_to_string('contact/share_home.html', context)
+
+            message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepientEmail])
+            message.attach_alternative(htmlMessage, "text/html")
+            message.send()
+
+            messages.success(request, 'Share successfull. We will have sent an email to ' + recepientEmail)
+            return redirect(property_absoluteUrl)
+        except BadHeaderError:
+            messages.error(request, 'Something went wrong! Could not complete request. Try again later')
+            return redirect(property_absoluteUrl)
+
+    else:
+        messages.error(request,"Ooops! something went wrong. Make sure all fields are entered and valid.")
+        return redirect(property_absoluteUrl)

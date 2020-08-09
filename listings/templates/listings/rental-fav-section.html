@@ -1,8 +1,13 @@
+{% load static%}
 <form class="ajxFavForm"  action="{% url 'listings:axr_favourite'%}" method="post">
   {% csrf_token %}
-    {% if is_favourite %}
-    <button id="ajxFav" type="submit" value = "{{listing.pk}}"><i class="fas fa-heart fa-lg" style="color:red;"></i></button>
-    {% else %}
-    <button id="ajxFav" type="submit" value = "{{listing.pk}}"><i class="fas fa-heart fa-lg" style="color:grey;"></i></button>
-    {% endif%}
+  {% if is_favourite %}
+  <button id="ajxFav" type="submit" value = "{{listing.pk}}">
+    <img src="{% static 'img/heart_red.svg'%}" alt="saved">
+     Saved</button>
+  {% else %}
+  <button id="ajxFav" type="submit" value = "{{listing.pk}}">
+    <img src="{% static 'img/heart.svg'%}" alt="save">
+     Save</button>
+  {% endif%}
 </form>

@@ -14,6 +14,7 @@ django-leaflet==0.26.0
 django-multiselectfield==0.1.8
 django-photologue==3.8.1
 django-rest-auth==0.9.5
+django-social-share==2.0.0
 django-sortedm2m==1.5.0
 django-tastypie==0.14.3
 djangorestframework==3.10.2
