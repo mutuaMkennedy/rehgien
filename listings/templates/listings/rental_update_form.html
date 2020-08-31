@@ -6,9 +6,12 @@
 {% leaflet_js plugins="forms" %}
 {% leaflet_css plugins="forms" %}
 
-<section>
-<div class="container">
-<div class="row">
+<section class='ListingFormSection'>
+<div class="container ListingFormContainer">
+<div class="row ListingFormRow">
+  <div class="Lst-BannerImg" style="background-image:linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ),url({%static 'img/property_sky.jpg'%})">
+    <h1>Update Your Listing.</h1>
+  </div>
 <form class="post-form" action="{% url 'listings:rental_update' listing.pk %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
   <div class="ListingFormStep">

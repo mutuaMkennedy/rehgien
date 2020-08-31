@@ -56,7 +56,6 @@
     {% endblock %}
     {% block extra_body %}
     {% endblock %}
-  <script src="{% static 'js/materialize.js' %}"></script>
   <script type="text/javascript">
     var message_ele = document.getElementById("message_box");
 
@@ -64,5 +63,13 @@
      message_ele.style.display = "none";
   }, 6000);
   </script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/materialize.js' %}"></script>
+  <script src="{% static 'js/init.js' %}"></script>
+  <script src="{% static 'js/gall.js' %}"></script>
+  <script src="{% static 'js/mat.js' %}"></script>
+  <script src="{% static 'js/jquery.autocomplete.js' %}"></script>
+  <script src="{% static 'js/our_search_code.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/js/all.min.js' %}"></script>
   </body>
 </html>

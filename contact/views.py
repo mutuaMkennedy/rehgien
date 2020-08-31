@@ -178,7 +178,7 @@ def share_listing(request):
             message.attach_alternative(htmlMessage, "text/html")
             message.send()
 
-            messages.success(request, 'Share successfull. We will have sent an email to ' + recepientEmail)
+            messages.success(request, 'Share successfull. We have sent an email to ' + recepientEmail)
             return redirect(property_absoluteUrl)
         except BadHeaderError:
             messages.error(request, 'Something went wrong! Could not complete request. Try again later')

@@ -5,36 +5,63 @@
 {% leaflet_js plugins="forms" %}
 {% leaflet_css plugins="forms" %}
 {% load crispy_forms_tags%}
-<div class="container">
-  <div class="ag-d-banner" style="background-image:url({% static 'img/ice-pattern.jpg'%});" ></div>
-</div>
-<div class="container">
-  <div class="row">
-    <div class="col s12 md6 l6 xl6">
-        <form class="user-pf-form" action="{% url 'profiles:edit_profile' %}" method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="u-pf-details">
-            <h5>Edit your details</h5>
-            {{u_edit_form.as_p}}
-            {{p_edit_form.media}}
-            {{p_edit_form.as_p}}
-          </div>
-          <div class="s-prof">
-            <button type="submit" name="button">Save Changes</button>
-          </div>
-        </form>
+<section class="ed_profile_section">
+  <div class="container ed_profile_cont">
+    <div class="row ed_profile_row">
+        {% if request.user.user_type == 'Agent' %}
+                <form class="user-pf-form" action="{% url 'profiles:edit_ag_profile' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="u-pf-details">
+                    <h5>Edit your details</h5>
+                    {{u_edit_form.as_p}}
+                    {{p_edit_form.media}}
+                    {{p_edit_form.as_p}}
+                  </div>
+                  <div class="s-prof">
+                    <button type="submit" name="button">Save Changes</button>
+                  </div>
+                </form>
+          {% elif request.user.user_type == 'PropertyManager'%}
+                <form class="user-pf-form" action="{% url 'profiles:edit_pm_profile' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="u-pf-details">
+                    <h5>Edit your details</h5>
+                    {{pmu_edit_form.as_p}}
+                    {{pm_edit_form.media}}
+                    {{pm_edit_form.as_p}}
+                  </div>
+                  <div class="s-prof">
+                    <button type="submit" name="button">Save Changes</button>
+                  </div>
+                </form>
+            {% elif request.user.user_type == 'Design&servicePro'%}
+                <form class="user-pf-form" action="{% url 'profiles:edit_ds_profile' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="u-pf-details">
+                    <h5>Edit your details</h5>
+                    {{dsu_edit_form.as_p}}
+                    {{ds_edit_form.media}}
+                    {{ds_edit_form.as_p}}
+                  </div>
+                  <div class="s-prof">
+                    <button type="submit" name="button">Save Changes</button>
+                  </div>
+                </form>
+            {% elif request.user.user_type == 'NormalUser'%}
+                <form class="user-pf-form" action="{% url 'profiles:edit_n_user_profile' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="u-pf-details">
+                    <h5>Edit your details</h5>
+                    {{nu_edit_form.as_p}}
+                    {{nup_edit_form.as_p}}
+                  </div>
+                  <div class="s-prof">
+                    <button type="submit" name="button">Save Changes</button>
+                  </div>
+                </form>
+          {%endif%}
     </div>
-    <div class="col s12 md6 l6 xl6">
-      <div class="pf-p-wrapper">
-          <div class="pf-p-svg">
-            <img src="{% static 'img/profile.svg'%}" alt="profile.svg">
-          </div>
-      </div>
-    </div>
-  </div>
 
-</div>
-<div class="container">
-  <div class="ag-d-banner" style="background-image:url({% static 'img/ice-pattern.jpg'%});" ></div>
-</div>
+  </div>
+</section>
 {% endblock %}

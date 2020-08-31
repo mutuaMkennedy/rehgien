@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {withChatContext} from "stream-chat-react";
 import styled from 'styled-components';
-import Logout from "../Logout";
 import DirectMessage from "./DirectMessaging";
 import GroupChannel from "./GroupChannel";
 import { Icon } from 'semantic-ui-react';
@@ -31,13 +30,6 @@ const SidebarButtonsWrapper = styled.div`
   padding: 15px;
 `
 
-const SidebarActionBtnWrapper = styled.div`
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-end;
-  Width:100%;
-`
 const SidebarButton = styled.button`
   width:35px;
   height:35px;
@@ -112,10 +104,6 @@ const CustomChatSidePanel =  withChatContext(
                     style={{'borderRadius': '10px'}}
                     />
             </SidebarButtonsWrapper>
-
-            <SidebarActionBtnWrapper>
-              <Logout/>
-            </SidebarActionBtnWrapper>
 
         </SidebarWrapper>
       );

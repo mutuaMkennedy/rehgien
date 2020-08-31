@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect, Route } from "react-router-dom";
 
 const AuthedRoute = ({ component: Component, loading, ...rest }) => {
-  const isAuthed = Boolean(localStorage.getItem("token"));
+  const isAuthed = Boolean(localStorage.getItem("auth_token"));
   return (
     <Route
       {...rest}
@@ -16,7 +16,7 @@ const AuthedRoute = ({ component: Component, loading, ...rest }) => {
         ) : (
           <Redirect
             to={{
-              pathname: "/messaging/auth/login",
+              pathname: "/pro/auth/login",
               state: { next: props.location }
             }}
           />

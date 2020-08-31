@@ -1,7 +1,12 @@
 from django import forms
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from .models import AgentProfile
+from .models import (
+                    NormalUserProfile,
+                    AgentProfile,
+                    PropertyManagerProfile,
+                    DesignAndServiceProProfile
+                    )
 from .models import AgentReviews
 from leaflet.forms.widgets import LeafletWidget
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
@@ -38,6 +43,11 @@ class UserEditForm(forms.ModelForm):
         model = User
         fields = ['username','first_name', 'last_name','email']
 
+class NormalUserProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = NormalUserProfile
+        fields = '__all__'
+
 class AgentProfileEditForm(forms.ModelForm):
     speciality = forms.MultipleChoiceField(required=False, choices =speciality_choices, widget = forms.SelectMultiple())
     about = forms.CharField(widget=CKEditorUploadingWidget(config_name='agent_profile'))
@@ -47,8 +57,27 @@ class AgentProfileEditForm(forms.ModelForm):
         fields = '__all__'
         widgets = {'location':LeafletWidget()}
 
-class AgentReviewForm(forms.ModelForm):
+class PropertyManagerProfileEditForm(forms.ModelForm):
+    about = forms.CharField(widget=CKEditorUploadingWidget(config_name='agent_profile'))
     class Meta:
-        model = AgentReviews
-        exclude = ['user']
+        model = PropertyManagerProfile
+        exclude = ['user','account_type', 'featured_agent']
         fields = '__all__'
+        widgets = {'location':LeafletWidget()}
+
+class DesignAndServiceProProfileEditForm(forms.ModelForm):
+    pro_speciality = (
+            ('Interior Designer', 'Interior Designer'),
+            ('Architect','Architect'),
+            ('Landscape architect','Landscape architect'),
+            ('Home mover','Home mover'),
+            ('Plumbing','Plumbing'),
+            ('Photographer','Photographer'),
+            )
+    pro_speciality = forms.MultipleChoiceField(required=False, choices =pro_speciality, widget = forms.SelectMultiple())
+    about = forms.CharField(widget=CKEditorUploadingWidget(config_name='agent_profile'))
+    class Meta:
+        model = DesignAndServiceProProfile
+        exclude = ['user','account_type', 'featured_pro']
+        fields = '__all__'
+        widgets = {'location':LeafletWidget()}

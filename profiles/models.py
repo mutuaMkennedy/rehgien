@@ -13,14 +13,14 @@ from multiselectfield import MultiSelectField
 # extending user model
 class User(AbstractUser):
     user_type_choices = (
-                ('NormalUser','Normaluser'),
+                ('NormalUser','NormalUser'),
                 ('Agent','Agent'),
                 ('PropertyManager','PropertyManager'),
                 ('Design&servicePro','Design&servicePro'),
                 ('Admin','Admin')
                 )
 
-    user_type = models.CharField(max_length=10,choices=user_type_choices, default='NormalUser')
+    user_type = models.CharField(max_length=20,choices=user_type_choices, default='NormalUser')
 
 # Extra data on users through profiles from here
 #Default profile for normal users
@@ -32,8 +32,7 @@ class NormalUserProfile(models.Model):
     #     return reverse( 'profiles:agent_detail', kwargs={'pk':self.pk})
 
     def __str__(self):
-        return self.user.first_name + \
-         '-' + self.user.last_name + '-' + self.user.email
+        return self.user
 
     class Meta:
         verbose_name_plural = 'NormalUserProfiles'

@@ -185,6 +185,11 @@ class PropertyForSaleSerializer(WritableNestedModelSerializer):
     #     instance.save()
     #     return instance
 
+class  FavouritePropertyForSaleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PropertyForSale
+        fields = ['favourite']
+
 class RentalImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model=RentalImages
@@ -239,3 +244,8 @@ class RentalPropertySerializer(WritableNestedModelSerializer):
     #     for video_data in video_data:
     #         RentalVideos.objects.create(property=property, **video_data)
     #     return property
+
+class  FavouriteRentalPropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RentalProperty
+        fields = ['favourite']

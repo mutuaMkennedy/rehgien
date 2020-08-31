@@ -6,34 +6,22 @@ import base from './baseAddress.js';
 //Login Page styled css components
 const StLoginRoot = styled.div`
   display:flex;
-  height:90vh;
+  height:100vh;
+  position:absolute;
+  background:#fff;
+  top:0;
   @media (max-width: 786px) {
     flex-direction:column;
   }
 `
-const StLoginNavBar = styled.div`
-  width:100%;
-  height:9vh;
-
-`
-const StLoginLogo = styled.div`
-  background-image:url( '${base}/static/img/rhg_logo1.png' );
-  background-position:center;
-  background-repeat:no-repeat;
-  background-size:cover;
-  width:100px;
-  height:100%;
-  margin-left:80px;
-  @media (max-width: 786px) {
-    margin-left:auto;
-    margin-right:auto;
-  }
-`
 
 const StLoginCWrapper = styled.div`
+  margin-top:10%;
   width:50%;
   display:flex;
-  justify-content:center;
+  /* justify-content:center; */
+  align-items:center;
+  flex-direction:column;
   @media (max-width: 786px) {
     width:100%;
   }
@@ -50,6 +38,15 @@ const StLoginBanner = styled.div`
   @media (max-width: 786px) {
     display:none;
   }
+`
+
+const LoginLogo = styled.div`
+  width:65px;
+  height:65px;
+  background:url('${base}/static/img/logo-fav.png');
+  background-position:center;
+  background-size:contain;
+  background-repeat: no-repeat !important;
 `
 
 const StLoginBnTitleWrp = styled.div`
@@ -74,7 +71,7 @@ const StLoginBnParagraph = styled.p`
 `
 
 const StLoginCard = styled.div`
-  margin-top:10%;
+  /* margin-top:10%; */
   /* margin-bottom:auto; */
   display:flex;
   flex-direction:column;
@@ -193,6 +190,7 @@ class Login extends Component {
             });
 
             localStorage.setItem("token", authorization.data.stream_token);
+            localStorage.setItem("auth_token", authorization.data.auth_token);
             localStorage.setItem("user_id", authorization.data.user_id);
             localStorage.setItem("user_name", authorization.data.user_name);
             localStorage.setItem("user_avatar", authorization.data.user_avatar);
@@ -204,7 +202,7 @@ class Login extends Component {
               auth_error:''
             });
 
-            this.props.history.push("/messaging");
+            this.props.history.go("/pro/home");
 
         } catch (e) {
           this.setState({
@@ -234,12 +232,9 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
-        <StLoginNavBar>
-              <StLoginLogo/>
-        </StLoginNavBar>
         <StLoginRoot>
             <StLoginCWrapper>
+                  <LoginLogo/>
                   <StLoginCard>
                     <Title>Login</Title>
                       <form>
@@ -268,26 +263,26 @@ class Login extends Component {
                       <Button onClick={this.initStream}>Login</Button>
                       <LoginInfWrapper>
                         <LoginInfWrapperParagraph>
-                          To access Rehgien chat you need a verified account.
+                          This part of Rehgien is exclusive to verified pro accounts. Other users visit<a href={base + '/'}> here.</a>
                         </LoginInfWrapperParagraph>
                         <LoginInfWrapperParagraph>
-                          If not Visit <a href= {base + '/accounts/signup/'}>here</a> and create an account
+                          If you are a pro and don't have an account please <a href={base + '/accounts/signup/'}>signup</a> first.
+
                         </LoginInfWrapperParagraph>
                       </LoginInfWrapper>
                   </StLoginCard>
               </StLoginCWrapper>
             <StLoginBanner>
               <StLoginBnTitleWrp>
-                  <StLoginBnTitle>A Big Community</StLoginBnTitle>
-                  <StLoginBnTitle>A Small World</StLoginBnTitle>
+                  <StLoginBnTitle>Join The</StLoginBnTitle>
+                  <StLoginBnTitle>Growing Community</StLoginBnTitle>
                   <StLoginBnParagraph>
                   Join a comunity of Real Estate Proffesionals on Rehgien.
-                  Use channels to create Conversations, Discussions and/or Partner/Team Collaborations.
+                  Experience a collection of exlusive features tailored for proffesionals.
                   </StLoginBnParagraph>
               </StLoginBnTitleWrp>
             </StLoginBanner>
         </StLoginRoot>
-      </div>
     );
   }
 }

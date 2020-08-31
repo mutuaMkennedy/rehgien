@@ -35,9 +35,21 @@
                           <img src="{% static 'img/comment.svg'%}" alt="chat_room">
                         </a></h6>
                         <span>
-                            <h6><a href="{% url 'profiles:edit_profile'%}">
+                            <h6>
+                              <a
+                              {% if request.user.user_type == 'Agent' %}
+                                href="{% url 'profiles:edit_ag_profile'%}"
+                              {% elif request.user.user_type == 'PropertyManager' %}
+                                href="{% url 'profiles:edit_pm_profile'%}"
+                              {% elif request.user.user_type == 'Design&servicePro' %}
+                                href="{% url 'profiles:edit_ds_profile'%}"
+                              {% elif request.user.user_type == 'NormalUser' %}
+                                  href="{% url 'profiles:edit_n_user_profile'%}"
+                              {% endif %}
+                              >
                               <img src="{% static 'img/e_person.svg'%}" alt="edit profile">
-                            </a></h6>
+                              </a>
+                          </h6>
                             <h6><a href="{% url 'account_change_password' %}">
                               <img src="{% static 'img/change_password.svg'%}" alt="change profile">
                             </a></h6>

@@ -136,11 +136,35 @@ def agent_detail(request, pk):
 				'professionalism_avg_rating':professionalism_avg_rating, 'ImageTransformation':ImageTransformation})
 
 @login_required(login_url='account_login')
-def edit_profile(request):
+def edit_n_user_profile(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+				nu_edit_form = forms.UserEditForm(request.POST, instance=request.user)
+				nup_edit_form = forms.NormalUserProfileEditForm(request.POST, request.FILES,
+								instance=request.user.n_user_profile)
+				if nup_edit_form.is_valid() and nu_edit_form.is_valid():
+					nu_edit_form.save()
+					nup_edit_form.save()
+
+					messages.success(request, 'Profile Updated Successfully!')
+					return redirect('profiles:account')
+				else:
+					messages.error(request,'Could not complete request!')
+		else:
+			nu_edit_form = forms.UserEditForm(instance=request.user)
+			nup_edit_form = forms.NormalUserProfileEditForm(instance=request.user.n_user_profile)
+	else:
+		raise PermissionDenied
+	return render(request, 'profiles/edit_profile.html', {'nup_edit_form':nup_edit_form,
+	 			'nu_edit_form':nu_edit_form})
+
+@login_required(login_url='account_login')
+def edit_agent_profile(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 				u_edit_form = forms.UserEditForm(request.POST, instance=request.user)
-				p_edit_form = forms.AgentProfileEditForm(request.POST, request.FILES, instance=request.user.agent_profile)
+				p_edit_form = forms.AgentProfileEditForm(request.POST, request.FILES, \
+								instance=request.user.agent_profile)
 				if p_edit_form.is_valid() and u_edit_form.is_valid():
 					u_edit_form.save()
 					p_edit_form.save()
@@ -155,6 +179,52 @@ def edit_profile(request):
 	else:
 		raise PermissionDenied
 	return render(request, 'profiles/edit_profile.html', {'p_edit_form':p_edit_form, 'u_edit_form':u_edit_form})
+
+@login_required(login_url='account_login')
+def edit_pm_profile(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+				pmu_edit_form = forms.UserEditForm(request.POST, instance=request.user)
+				pm_edit_form = forms.PropertyManagerProfileEditForm(request.POST, \
+								request.FILES, instance=request.user.pm_profile)
+				if pm_edit_form.is_valid() and pmu_edit_form.is_valid():
+					pmu_edit_form.save()
+					pm_edit_form.save()
+
+					messages.success(request, 'Profile Updated Successfully!')
+					return redirect('profiles:account')
+				else:
+					messages.error(request,'Could not complete request!')
+		else:
+			pmu_edit_form = forms.UserEditForm(instance=request.user)
+			pm_edit_form = forms.PropertyManagerProfileEditForm(instance=request.user.pm_profile)
+	else:
+		raise PermissionDenied
+	return render(request, 'profiles/edit_profile.html', {'pm_edit_form':pm_edit_form,
+	 				'pmu_edit_form':pmu_edit_form})
+
+@login_required(login_url='account_login')
+def edit_ds_profile(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+				dsu_edit_form = forms.UserEditForm(request.POST, instance=request.user)
+				ds_edit_form = forms.DesignAndServiceProProfileEditForm(request.POST, \
+								request.FILES, instance=request.user.DService_profile)
+				if ds_edit_form.is_valid() and dsu_edit_form.is_valid():
+					dsu_edit_form.save()
+					ds_edit_form.save()
+
+					messages.success(request, 'Profile Updated Successfully!')
+					return redirect('profiles:account')
+				else:
+					messages.error(request,'Could not complete request!')
+		else:
+			dsu_edit_form = forms.UserEditForm(instance=request.user)
+			ds_edit_form = forms.DesignAndServiceProProfileEditForm(instance=request.user.DService_profile)
+	else:
+		raise PermissionDenied
+	return render(request, 'profiles/edit_profile.html', {'ds_edit_form':ds_edit_form,
+	 				'dsu_edit_form':dsu_edit_form})
 
 @login_required(login_url='account_login')
 def agent_review(request):

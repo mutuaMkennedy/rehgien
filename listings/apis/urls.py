@@ -18,7 +18,9 @@ from listings.apis.views import (
                 ForRentDeleteApi,
                 UsersList,
                 UserSalePosts,
-                UserRentalPosts
+                UserRentalPosts,
+                FavouriteForSaleUpdateApi,
+                FavouriteForRentUpdateApi
                 )
 # from rest_framework import routers
 #
@@ -32,12 +34,14 @@ urlpatterns = [
     path('listings/for-sale/create/', ForSaleCreateApi.as_view(), name='onsale_create_api'),
     url(r'^listings/for-sale/(?P<pk>[0-9]+)/$', ForSaleDetailApi.as_view(), name='onsale_detail_api'),
     path('listings/for-sale/<int:pk>/edit/', ForSaleUpdateApi.as_view(), name='onsale_update_api'),
+    path('listings/for-sale/<int:pk>/favourite/', FavouriteForSaleUpdateApi.as_view(), name='onsale_fav_api'),
     path('listings/for-sale/<int:pk>/delete/', ForSaleDeleteApi.as_view(), name='onsale_delete_api'),
     #rental url endpoints
     path('listings/for-rent/', ForRentListApi.as_view(), name='rentals_list_api'),
     path('listings/for-rent/create/', ForRentCreateApi.as_view(), name='rentals_create_api'),
     url(r'^listings/for-rent/(?P<pk>[0-9]+)/$', ForRentDetailApi.as_view(), name='rentals_detail_api'),
     path('listings/for-rent/<int:pk>/edit/', ForRentUpdateApi.as_view(), name='rentals_update_api'),
+    path('listings/for-rent/<int:pk>/favourite/', FavouriteForRentUpdateApi.as_view(), name='rentals_fav_api'),
     path('listings/for-rent/<int:pk>/delete/', ForRentDeleteApi.as_view(), name='rentals_delete_api'),
     #Users & authentication
     path('accounts/users/', UsersList.as_view(), name='users'), #will be removed . diplicate of users_list in profiles app

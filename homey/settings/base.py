@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'corsheaders',
-    'django_social_share'
+    'django_social_share',
+    'markets'
     #'haystack',
     # 'tastypie',
 ]
@@ -268,9 +269,11 @@ cloudinary.config(
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     )
 }
+
 
 REST_AUTH_SERIALIZERS = {
     'TOKEN_SERIALIZER': 'chat.apis.serializers.StreamTokenSerializer',

@@ -16,7 +16,9 @@ from listings.apis.serializers import (
                     PropertyForSaleVideosSerializer,
                     RentalImagesSerializer,
                     RentalVideosSerializer,
-                    UserSerializer
+                    UserSerializer,
+                    FavouritePropertyForSaleSerializer,
+                    FavouriteRentalPropertySerializer
                     )
 from rest_framework import generics
 from rest_framework.filters import SearchFilter
@@ -107,6 +109,11 @@ class ForSaleUpdateApi(RetrieveUpdateAPIView):
     serializer_class = PropertyForSaleSerializer
     permission_classes = [IsOwnerOrReadOnly,IsAdminUser]
 
+class FavouriteForSaleUpdateApi(RetrieveUpdateAPIView):
+    queryset = PropertyForSale.objects.all()
+    serializer_class = FavouritePropertyForSaleSerializer
+    permission_classes = [IsAuthenticated]
+
 #Deleting a for sale listing
 class ForSaleDeleteApi(DestroyAPIView):
     queryset = PropertyForSale.objects.all()
@@ -146,6 +153,11 @@ class ForRentUpdateApi(RetrieveUpdateAPIView):
     queryset = RentalProperty.objects.all()
     serializer_class = RentalPropertySerializer
     permission_classes = [IsOwnerOrReadOnly,IsAdminUser]
+
+class FavouriteForRentUpdateApi(RetrieveUpdateAPIView):
+    queryset = RentalProperty.objects.all()
+    serializer_class = FavouriteRentalPropertySerializer
+    permission_classes = [IsAuthenticated]
 
 #Retrieving details of a specific rental listing
 class ForRentDeleteApi(DestroyAPIView):
