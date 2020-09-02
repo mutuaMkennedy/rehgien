@@ -6,7 +6,7 @@ import styled from 'styled-components';
 //
 
 const ActionCard = styled.div`
-  width:40px;
+  width:auto;
   height: 40px;
   border-bottom-right-radius: 30px;
   border-bottom-left-radius: 30px;
@@ -19,7 +19,7 @@ const LogOutButton = styled.button`
   text-align:center;
   background-color:transparent;
   font-size:1.07142857rem;
-  color:#000;
+  color:rgba(0,0,0,.87);
   font-family:Lato,Helvetica Neue,Arial,Helvetica,sans-serif;
   border:0;
   :hover {

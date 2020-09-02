@@ -33,10 +33,17 @@ const  BannerText = styled.div`
   float:left;
   width:60%;
   height:100%;
+  @media (max-width: 786px){
+    width:100%;
+    float:none
+  }
 `
 const  BannerHeadings = styled.div`
   padding:10px;
   width:70%;
+  @media (max-width: 786px){
+    width:100%;
+  }
 `
 const  BannerTextHeaderSmall = styled.h1`
   color:#555555;
@@ -47,6 +54,10 @@ const  BannerTextHeader = styled.h1`
   color:#fff;
   font-family: Libre Baskerville, Arial;
   font-size:50px;
+  @media (max-width: 786px){
+    width:100%;
+    font-size:40px;
+  }
 `
 const  BannerTextSpan = styled.span`
   color:#ffff;
@@ -99,6 +110,9 @@ const  HomeHeader = styled.h1`
   font-size:30px;
   text-align:center;
   line-height:30px;
+  @media (max-width: 786px){
+    font-size:25px;
+  }
 `
 const  HomeParagraph = styled.p`
   color:#000;
@@ -112,9 +126,9 @@ const  HomeParagraph = styled.p`
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  /* @media (max-width: 786px){
-    width:100%;
-  } */
+  @media (max-width: 786px){
+    width:80%;
+  }
 `
 const  PageSection = styled.div`
   width:100%;
@@ -124,10 +138,11 @@ const  PageSection = styled.div`
   align-items:flex-end;
   flex-direction:column;
   background-color:#fff;
-  /* @media (max-width: 786px){
+  @media (max-width: 786px){
     flex-direction:column;
+    height:auto;
     align-items:center;
-  } */
+  }
 `
 const  PageSectionContent = styled.div`
   width:100%;
@@ -135,29 +150,31 @@ const  PageSectionContent = styled.div`
   display: flex;
   justify-content:space-between;
   align-items:center;
-  /* @media (max-width: 786px){
-    flex-direction:column;
+  @media (max-width: 786px){
+    flex-direction:column-reverse;
     justify-content:center;
     height:auto;
-  } */
+  }
 `
 const PageSectionText = styled.div`
   width:40%;
   height:100%;
   margin-top:150px;
-  margin-left:150px;
-  /* @media (max-width: 786px){
-    margin-top:0;
+  margin-left:100px;
+  @media (max-width: 786px){
     margin-left:0;
     width:100%;
     padding:10px;
-  } */
+  }
 `
 const  PageSectionHeader = styled.h1`
   color:#000;
   font-family: Libre Baskerville, Arial;
   font-size:30px;
   text-align:start;
+  @media (max-width: 786px){
+    font-size:25px;
+  }
 `
 const  PageSectionParagraph = styled.p`
   width:400px;
@@ -166,6 +183,9 @@ const  PageSectionParagraph = styled.p`
   font-size:15px;
   line-height:20px;
   font-family: 'Ubuntu', sans-serif;
+  @media (max-width: 786px){
+    width:100%;
+  }
 `
 const  PageSectionParagraphSpan = styled.span`
     display:flex;
@@ -193,9 +213,7 @@ const PageSectionImage = styled.div`
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-size: cover !important;
-  /* border-radius:50%; */
   border-top-left-radius:10px;
-  /* border-bottom-right-radius:50%; */
   border-bottom-left-radius:10px;
 `
 const PageSectionSmallImage = styled.div`
@@ -207,7 +225,7 @@ const PageSectionSmallImage = styled.div`
   border-radius:10px;
   position:relative;
   bottom:90%;
-  right:50px;
+  right:0;
   /* margin-left:auto; */
   margin-right:auto;
   background-color:#fff;
@@ -217,6 +235,10 @@ const PageSectionImageBox = styled.div`
   height:100%;
   border-radius:10px;
   position:relative;
+  @media (max-width: 786px){
+      height:500px;
+      width:100%;
+  }
 `
 const  PageSection1 = styled.div`
   width:100%;
@@ -227,6 +249,22 @@ const  PageSection1 = styled.div`
   align-items:flex-start;
   flex-direction:column;
   background-color:#f1f9f1;
+  @media (max-width: 786px){
+    height:auto;
+    align-items:center;
+  }
+`
+const  PageSectionContent1 = styled.div`
+  width:100%;
+  height:500px;
+  display: flex;
+  justify-content:space-between;
+  align-items:center;
+  @media (max-width: 786px){
+    flex-direction:column;
+    justify-content:center;
+    height:auto;
+  }
 `
 const PageSectionImage1 = styled.div`
   width:100%;
@@ -248,15 +286,25 @@ const PageSectionSmallImage1 = styled.div`
   position:relative;
   bottom:90%;
   left:15px;
-  /* margin-left:auto; */
   margin-left:auto;
   background-color:#fff;
+  @media (max-width: 786px){
+    border-top-right-radius:0;
+    background-position: left !important;
+    background-size: cover !important;
+    left:0;
+  }
 `
 const PageSectionText1 = styled.div`
   width:40%;
   height:100%;
   margin-top:150px;
   margin-left:100px;
+  @media (max-width: 786px){
+    margin-left:0;
+    width:100%;
+    padding:10px;
+  }
 `
 const  PageSection2 = styled.div`
   width:100%;
@@ -267,12 +315,16 @@ const  PageSection2 = styled.div`
   flex-direction:column;
   background:#000;
   color:#ffff;
+
 `
 const  PageSectionHeader2 = styled.h1`
   color:#fff;
   font-family: Libre Baskerville, Arial;
   font-size:30px;
   text-align:start;
+  @media (max-width: 786px){
+  font-size:25px;
+  }
 `
 const  PageSectionContent2 = styled.div`
   padding:10px;
@@ -282,6 +334,9 @@ const  PageSectionContent2 = styled.div`
   flex-direction:column;
   justify-content:center;
   align-items:center;
+  @media (max-width: 786px){
+    width:100%;
+  }
 `
 const  PageSectionParagraph2 = styled.p`
   width:650px;
@@ -290,6 +345,9 @@ const  PageSectionParagraph2 = styled.p`
   font-size:15px;
   line-height:20px;
   font-family: 'Ubuntu', sans-serif;
+  @media (max-width: 786px){
+    width:100%;
+  }
 `
 const  PageSectionButton2= styled.button`
   background:blue;
@@ -316,6 +374,9 @@ const  PageSection3 = styled.div`
   flex-direction:column;
   background-color:#003188;
   color:#fff;
+  @media (max-width: 786px){
+  margin-top:150px;
+  }
 `
 const  PageLinks = styled.div`
   width:100%;
@@ -325,12 +386,19 @@ const  PageLinks = styled.div`
   align-items:center;
   background-color:#fff;
   color:#000;
+  @media (max-width: 786px){
+    height:auto;
+    padding:20px;
+  }
 `
 const  PageLinksItems = styled.div`
   width:100%;
   height:auto;
   display: flex;
   justify-content:flex-start;
+  @media (max-width: 786px){
+    flex-direction:column;
+  }
 `
 const  PageLinksContent = styled.div`
   width:100%;
@@ -352,6 +420,9 @@ const PageLinksText = styled.div`
   width:40%;
   height:auto;
   margin-top:50px;
+  @media (max-width: 786px){
+  width:100%;
+  }
 `
 const   PageLinksHeader = styled.h1`
   color:#000;
@@ -374,6 +445,9 @@ const PageLinksImageBox = styled.div`
   display:flex;
   justify-content:space-around;
   align-items:center;
+  @media (max-width: 786px){
+  width:100%;
+  }
 `
 const  PageFooter = styled.div`
   width:100%;
@@ -384,6 +458,10 @@ const  PageFooter = styled.div`
   background-color:#fff;
   color:#000;
   border-top:1px solid #d1d1d1;
+  @media (max-width: 786px){
+    height:auto;
+    flex-direction:column-reverse;
+  }
 `
 const  PageFooterGroupLeft = styled.div`
   width:30%;
@@ -395,6 +473,10 @@ const  PageFooterGroupLeft = styled.div`
   align-items:center;
   background-color:#fff;
   color:#000;
+  @media (max-width: 786px){
+    width:100%;
+      justify-content:center;
+  }
 `
 const  PageFooterGroupRight = styled.div`
   width:70%;
@@ -405,6 +487,9 @@ const  PageFooterGroupRight = styled.div`
   align-items:center;
   background-color:#fff;
   color:#000;
+  @media (max-width: 786px){
+    width:100%;
+  }
 `
 const  PageFooterLogo = styled.div`
   width:200px;
@@ -419,6 +504,10 @@ const  PageNavLinkWrap = styled.div`
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
+  @media (max-width: 786px){
+    width:100%;
+    padding:10px;
+  }
 `
 const  PageNavLinkHeader = styled.h1`
   font-family:Arial;
@@ -453,7 +542,7 @@ class Home extends Component {
               <BannerText>
                 <BannerHeadings>
                   <BannerTextHeaderSmall>
-                    <BannerTextHeader> Get More Working<br/><BannerTextSpan> With Us.</BannerTextSpan></BannerTextHeader>
+                    <BannerTextHeader> More Than A Agency<br/><BannerTextSpan> Network.</BannerTextSpan></BannerTextHeader>
                     Tailored Solutions for Real Estate Proffesionals.
                   </BannerTextHeaderSmall>
                   <BannerTextParagraph>
@@ -488,7 +577,7 @@ class Home extends Component {
             <PageSectionContent>
                 <PageSectionText>
                     <div style={{'width':'100px', 'height':'25px', 'background':'#fb5f3d', 'borderRadius':'25px'}}/>
-                    <PageSectionHeader>Save Time, Get Qualified Leads</PageSectionHeader>
+                    <PageSectionHeader>Save Time, Get Qualified <br/> Leads</PageSectionHeader>
                     <PageSectionParagraph>
                     Getting motivated clients is hard. We make it easy with our pre-qualified leads.
                     <br/>
@@ -513,7 +602,7 @@ class Home extends Component {
             </PageSectionContent>
           </PageSection>
           <PageSection1>
-            <PageSectionContent>
+            <PageSectionContent1>
                 <PageSectionImageBox>
                   <PageSectionImage1  style={{'backgroundImage': `linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) ),url(${groupChat})`}}>
 
@@ -540,7 +629,7 @@ class Home extends Component {
                     </PageSectionParagraph>
                     <a href='/pro/messaging' style={{'color':'#fff'}}><PageSectionButton>Start Messaging</PageSectionButton></a>
                 </PageSectionText1>
-            </PageSectionContent>
+            </PageSectionContent1>
           </PageSection1>
 
           <PageSection3>
@@ -568,7 +657,7 @@ class Home extends Component {
                   designers, movers etc. to offer more value to our clients and members as we help you grow your business.
                   Be a part of the Rehgien Community, grow your business with us.
                 </PageSectionParagraph2>
-                <div style={{'display':'flex', 'justifyContent':'space-around', 'alignItems':'center', 'width':'500px'}}>
+                <div style={{'display':'flex', 'justifyContent':'space-around', 'alignItems':'center', 'width':'300px', 'flexWrap': 'wrap'}}>
                   <PageSectionButton2>Become a Partner</PageSectionButton2>
                   <PageSectionButton2>Learn More</PageSectionButton2>
                 </div>

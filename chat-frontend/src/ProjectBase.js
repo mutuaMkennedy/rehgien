@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch,Route,Link,NavLink  } from "react-router-dom";
-import { Menu,Dropdown} from 'semantic-ui-react';
+import { Menu,Dropdown,Icon} from 'semantic-ui-react';
 import styled from 'styled-components';
 import base from './baseAddress.js';
 import logo from './static/logo_pro.png';
@@ -32,6 +32,12 @@ const Navbar = styled.div`
   top:0;
   z-index:999;
 `
+const LogoLink = styled(Link)`
+  @media (max-width: 786px){
+    margin-left:50%;
+    transform:translate(-50%,0);
+  }
+`
 const LeadNavbarLogo = styled.div`
   width:160px;
   height:45px;
@@ -40,54 +46,133 @@ const LeadNavbarLogo = styled.div`
   background-repeat: no-repeat !important;
   background-size: contain !important;
 `
+const MobileNavbarWrapper = styled.div`
+  z-index:999;
+  display:block;
+  position: relative;
+  transition: width 0.5s;
+  width:100%;
+  background:#fff;
+  height:60px;
+  @media (max-width: 768px){
+    position: fixed;
+    height:30vh;
+    top:0px;
+    display:none;
+  }
+`
+const NavbarMenu = styled(Menu)`
+  width:100%;
+  text-transform:uppercase;
+  justify-content:flex-end;
+  @media (max-width: 768px){
+    justify-content:center;
+    align-items:center;
+  }
+`
+const NavbarMenuItems = styled.div`
+  display:flex;
+  align-items:center;
+  @media (max-width: 786px){
+    flex-direction:column;
+  }
+`
+const NavbarRevealButton = styled.button`
+  width:auto;
+  height:60px;
+  border:none;
+  display:none;
+  position:absolute;
+  left:0;
+  background:#fff;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const NavbarCloseButton = styled.button`
+  width:30px;
+  height:30px;
+  border:none;
+  text-align:center;
+  font-size:30px;
+  line-height:30px;
+  background:#fff;
+  position:relative;
+  left:100%;
+  color:#757575;
+  transform:translate(-100%,0);
+  display:none;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+
+function openMobileMenu(){
+  var navWrp = document.getElementById('proNavMenu');
+  navWrp.style.display='block';
+};
+
+function closeMobileMenu(){
+  var navWrp = document.getElementById('proNavMenu');
+  navWrp.style.display='none';
+};
+
 const isAuthed = Boolean(localStorage.getItem("auth_token"));
 
 const ProjectBase = () => (
   <Router>
   <Navbar>
-      <Link to="/pro/home">
+      <LogoLink to="/pro/home">
           <LeadNavbarLogo style={{'background':`url(${logo})`}}/>
-      </Link>
-      <Menu fluid secondary size='large' style={{'margin':'0','marginRight':'20px'}}>
-          <Menu.Menu position='right' style={{'alignItems':'center'}}>
-          {isAuthed ? (
-              <>
-                <NavLink  to="/pro/messaging">
-                    <Menu.Item
-                      name='Messaging'
-                    />
-                </NavLink>
-                  <Dropdown item text='Leads'>
-                      <Dropdown.Menu>
-                      <NavLink  to="/pro/markets/leads/property_requests">
-                        <Dropdown.Item>Property Requests</Dropdown.Item>
-                      </NavLink >
-                      <NavLink  to="/pro/markets/leads/pro_requests">
-                        <Dropdown.Item>Pro Requests</Dropdown.Item>
-                      </NavLink >
-                      <NavLink  to="/pro/markets/leads/other_requests">
-                        <Dropdown.Item>Other requests</Dropdown.Item>
-                      </NavLink >
-                      <NavLink  to="/pro/markets/leads/agent_lead_requests">
-                        <Dropdown.Item>Agent Lead Requests</Dropdown.Item>
-                      </NavLink >
-                      <NavLink  to="/pro/markets/leads/agent_property_requests">
-                        <Dropdown.Item>Agent Property Requests</Dropdown.Item>
-                      </NavLink >
-                      </Dropdown.Menu>
-                  </Dropdown>
-                  <Menu.Item>
-                    <Logout/>
-                  </Menu.Item>
-                </>
-              ):(
-                  <NavLink  to="/pro/auth/login">
-                    <Menu.Item name='Login'/>
-                  </NavLink>
-              )
-              }
-          </Menu.Menu>
-        </Menu>
+      </LogoLink>
+      <NavbarRevealButton onClick={openMobileMenu}>
+          <Icon name='bars' style={{'color':'#e2e2e4', 'fontSize':'24px'}}/>
+      </NavbarRevealButton>
+      <MobileNavbarWrapper id='proNavMenu'>
+          <NavbarCloseButton onClick={closeMobileMenu}>
+            x
+          </NavbarCloseButton>
+          <NavbarMenu fluid secondary size='large' style={{'margin':'0','marginRight':'20px'}}>
+              <Menu.Menu >
+              {isAuthed ? (
+                  <NavbarMenuItems>
+                        <NavLink  to="/pro/messaging">
+                            <Menu.Item
+                              name='Messaging'
+                            />
+                        </NavLink>
+                          <Dropdown item text='Leads'>
+                              <Dropdown.Menu>
+                              <NavLink  to="/pro/markets/leads/property_requests">
+                                <Dropdown.Item>Property Requests</Dropdown.Item>
+                              </NavLink >
+                              <NavLink  to="/pro/markets/leads/pro_requests">
+                                <Dropdown.Item>Pro Requests</Dropdown.Item>
+                              </NavLink >
+                              <NavLink  to="/pro/markets/leads/other_requests">
+                                <Dropdown.Item>Other requests</Dropdown.Item>
+                              </NavLink >
+                              <NavLink  to="/pro/markets/leads/agent_lead_requests">
+                                <Dropdown.Item>Agent Lead Requests</Dropdown.Item>
+                              </NavLink >
+                              <NavLink  to="/pro/markets/leads/agent_property_requests">
+                                <Dropdown.Item>Agent Property Requests</Dropdown.Item>
+                              </NavLink >
+                              </Dropdown.Menu>
+                          </Dropdown>
+                          <Menu.Item>
+                            <Logout/>
+                          </Menu.Item>
+                    </NavbarMenuItems>
+                  ):(
+                      <NavLink  to="/pro/auth/login">
+                        <Menu.Item name='Login'/>
+                      </NavLink>
+                  )
+                  }
+              </Menu.Menu>
+          </NavbarMenu>
+      </MobileNavbarWrapper>
   </Navbar>
     <Switch>
       <UnauthedRoute exact path="/pro/auth/login" component={Login} />
