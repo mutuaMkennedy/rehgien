@@ -28,6 +28,11 @@ const LeaderBoard = styled.div`
   overflow-y:auto;
   -webkit-box-shadow: 0 1px 3px 0 #fff, 0 0 0 1px #fff;
   box-shadow: 0 1px 3px 0 #fff, 0 0 0 1px #fff;
+  @media (max-width: 786px){
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
 `
 
 class LeaderPanel extends Component {

@@ -53,6 +53,50 @@ const LeftSidebar = styled.div`
   height:90%;
   background-color:transparent;
   float:left;
+  @media (max-width: 786px){
+    display:none;
+    position:absolute;
+    top:0;
+    z-index:1000;
+    width:100%;
+    height:100vh;
+    background:#fff;
+  }
+`
+const RevealLeftSidebarButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:blue;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const HideLeftSidebarButton = styled.button`
+  width:30px;
+  height:30px;
+  line-height:12px;
+  position:absolute;
+  right:10px;
+  top:10px;
+  z-index:10;
+  text-align:center;
+  border:none;
+  background:#00000066;
+  color:#fff;
+  font-family:Lato,Arial;
+  font-size:12px;
+  display:none;
+  border-radius:50%;
+  @media (max-width: 786px){
+    display:block;
+  }
 `
 const RightSidebar = styled.div`
   width:20%;
@@ -60,6 +104,50 @@ const RightSidebar = styled.div`
   height:90%;
   background-color:transparent;
   float:right;
+  @media (max-width: 786px){
+    display:none;
+    position:absolute;
+    top:0;
+    z-index:1000;
+    width:100%;
+    height:100vh;
+    background:#fff;
+  }
+`
+const RevealRightSidebarButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:blue;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const HideRightSidebarButton = styled.button`
+  width:30px;
+  height:30px;
+  line-height:12px;
+  position:absolute;
+  right:10px;
+  top:10px;
+  z-index:10;
+  text-align:center;
+  border:none;
+  background:#00000066;
+  color:#fff;
+  font-family:Lato,Arial;
+  font-size:12px;
+  display:none;
+  border-radius:50%;
+  @media (max-width: 786px){
+    display:block;
+  }
 `
 const CardContainer = styled.div`
   padding:10px;
@@ -67,15 +155,25 @@ const CardContainer = styled.div`
   float:right;
   height:90%;
   overflow-y:auto;
+  @media (max-width: 786px){
+  height:calc(100% - 106px);
+  width:100%;
+  }
 `
 const StyledCard = styled(Card)`
   display:flex !important;
   flex-direction:row !important;
+  @media (max-width: 786px){
+    flex-direction:column !important;
+  }
 `
 const SectionDivider = styled.div`
   height: 100%;
   width: 10px;
   border-left: 1px solid #2224261a;
+  @media (max-width: 786px){
+    display:none;
+  }
 `
 
 const EmptyResults = styled.div`
@@ -88,12 +186,129 @@ const EmptyResults = styled.div`
 
 const FilterBar = styled.div`
   width:100%;
-  height:65px;
+  height:auto;
   background-color:#fff;
   padding: 10px;
   -webkit-box-shadow: 0 1px 3px 0 #fff, 0 0 0 1px #fff;
   box-shadow: 0 1px 3px 0 #fff, 0 0 0 1px #fff;
 `
+const RespFilterField = styled.div`
+width:100%;
+@media (max-width: 786px){
+  display:none;
+}
+`
+const RevealActionButtons = styled.div`
+  display:none;
+  @media (max-width: 786px){
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+`
+const FilterRevealButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:blue;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const FilterHideButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:#fb5f3d;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:none;
+  }
+`
+const FilterEmptyDiv = styled.div`
+  display:none;
+  margin-top:20px;
+  margin-bottom:10px;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const StatsGroup = styled(Statistic.Group)`
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  width:100%;
+`
+const CustomModalActions = styled(Modal.Actions)`
+  @media (max-width: 786px){
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center !important;
+    justify-content:center;
+  }
+`
+
+function agLrShowFilters(){
+  var filterField1 = document.getElementById('ag_respFieldPt');
+  var filterField2 = document.getElementById('ag_respFieldMP');
+  var filterField3 = document.getElementById('ag_respFieldMaV');
+  var filterField4 = document.getElementById('ag_respFieldRqT');
+  var revealButtons = document.getElementById('ag_RevealButtons');
+  var hideFilter = document.getElementById('ag_hideFilter');
+
+  filterField1.style.display='block';
+  filterField2.style.display='block';
+  filterField3.style.display='block';
+  filterField4.style.display='block';
+  revealButtons.style.display='none';
+  hideFilter.style.display='block';
+};
+
+function agLrHideFilters(){
+  var filterField1 = document.getElementById('ag_respFieldPt');
+  var filterField2 = document.getElementById('ag_respFieldMP');
+  var filterField3 = document.getElementById('ag_respFieldMaV');
+  var filterField4 = document.getElementById('ag_respFieldRqT');
+  var revealButtons = document.getElementById('ag_RevealButtons');
+  var hideFilter = document.getElementById('ag_hideFilter');
+
+  filterField1.style.display='none';
+  filterField2.style.display='none';
+  filterField3.style.display='none';
+  filterField4.style.display='none';
+  revealButtons.style.display='flex';
+  hideFilter.style.display='none';
+};
+
+function agLrShowLeftSideBar(){
+  var leftSideBar = document.getElementById('agLrleftSideBar');
+  leftSideBar.style.display='block';
+};
+function agLrHideLeftSideBar(){
+  var leftSideBar = document.getElementById('agLrleftSideBar');
+  leftSideBar.style.display='none';
+};
+
+function agLrShowRightSideBar(){
+  var rightSideBar = document.getElementById('agLrrightSideBar');
+  rightSideBar.style.display='block';
+};
+function agLrHideRightSideBar(){
+  var rightSideBar = document.getElementById('agLrrightSideBar');
+  rightSideBar.style.display='none';
+};
 
 const authToken = localStorage.getItem("auth_token");
 const tokenUserId = localStorage.getItem("user_id");
@@ -363,7 +578,7 @@ class AgentLeadRequests extends Component {
                 <Card.Content extra textAlign='left' style={{'display':'flex', 'justifyContent': 'flex-start','alignItems':'center', }}>
                       <SectionDivider/>
                       <div style={{'width':'100%'}}>
-                          <Statistic.Group size='mini' widths='two'>
+                          <StatsGroup size='mini'>
                               <Statistic color='green'>
                                 <Statistic.Value>{item.claimer.length}</Statistic.Value>
                                 <Statistic.Label style={{'fontSize':'10px',}}>Claims</Statistic.Label>
@@ -378,7 +593,7 @@ class AgentLeadRequests extends Component {
                                 }</Statistic.Value>
                                 <Statistic.Label style={{'fontSize':'10px',}}>Qualified</Statistic.Label>
                               </Statistic>
-                          </Statistic.Group>
+                          </StatsGroup>
                       </div>
                 </Card.Content>
                 <Card.Content extra textAlign='left' style={{'display':'flex', 'justifyContent': 'center','alignItems':'center', }}>
@@ -402,12 +617,11 @@ class AgentLeadRequests extends Component {
             <Modal.Content scrolling>
               <AgentLeadRequestModalContent details={this.state.activeItem} timeRemaining={diffDays}/>
             </Modal.Content>
-            <Modal.Actions>
+            <CustomModalActions>
               Not interested? Perhaps you know an agent who might be.
-              <Button negative icon='share' content='Refer' onClick={() => this.secondOpenModal()}/>
-                OR
-              <Button icon='check' content='All Done' onClick={() => this.closeModal()}/>
-            </Modal.Actions>
+              <Button negative icon='share' content='Refer' onClick={() => this.secondOpenModal()} style={{'marginTop':'5px'}}/>
+              <Button icon='check' content='All Done' onClick={() => this.closeModal()} style={{'marginTop':'5px'}}/>
+            </CustomModalActions>
                 <Modal open={this.state.secondOpen} size='small' dimmer='inverted'>
                       <Modal.Header>Share on email or social.</Modal.Header>
                       <Modal.Content>
@@ -440,7 +654,7 @@ class AgentLeadRequests extends Component {
                         </div>
                       </Modal.Content>
                       <Modal.Actions>
-                        <form onSubmit={this.handleRefer}>
+                        <form onSubmit={this.handleRefer} style={{'margin':'5px'}}>
                           <Button
                             type='submit'
                             icon='check'
@@ -482,7 +696,7 @@ class AgentLeadRequests extends Component {
                   </div>
                 </Modal.Content>
                 <Modal.Actions>
-                <form onSubmit={this.handleRefer}>
+                <form onSubmit={this.handleRefer} style={{'margin':'5px'}}>
                     <Button
                       type='submit'
                       icon='check'
@@ -502,19 +716,46 @@ class AgentLeadRequests extends Component {
             <Form.Group inline widths='equal'>
             <Form.Input fluid placeholder='Enter an address, city or neighborhood'
             name='locationName' onChange={this.handleInputChange} value={this.state.location_name}/>
-            <Form.Select fluid options={propertyTypeOptions} placeholder=' property type'
-            name='propertyType' onChange={this.handleSelectChange} value={this.state.propertyType}/>
-            <Form.Input fluid  placeholder='Enter Minimum price'
-            name='price' onChange={this.handleInputChange} value={this.state.minPrice}/>
-            <Form.Input fluid  placeholder='Market Value'
-            name='marketValue' onChange={this.handleInputChange} value={this.state.maxPrice}/>
-            <Form.Select fluid options={ownershipOptions} placeholder='Request Type'
-            name='requestType' onChange={this.handleSelectChange} value={this.state.requestType}/>
+            <RespFilterField id='ag_respFieldPt'>
+              <FilterEmptyDiv/>
+              <Form.Select fluid options={propertyTypeOptions} placeholder=' property type'
+              name='propertyType' onChange={this.handleSelectChange} value={this.state.propertyType}/>
+            </RespFilterField>
+            <RespFilterField id='ag_respFieldMP'>
+              <FilterEmptyDiv/>
+              <Form.Input fluid  placeholder='Enter price'
+              name='price' onChange={this.handleInputChange} value={this.state.price}/>
+            </RespFilterField>
+            <RespFilterField id='ag_respFieldMaV'>
+              <FilterEmptyDiv/>
+              <Form.Input fluid  placeholder='Market Value'
+              name='marketValue' onChange={this.handleInputChange} value={this.state.marketValue}/>
+            </RespFilterField>
+            <RespFilterField id='ag_respFieldRqT'>
+              <FilterEmptyDiv/>
+              <Form.Select fluid options={ownershipOptions} placeholder='Request Type'
+              name='requestType' onChange={this.handleSelectChange} value={this.state.requestType}/>
+            </RespFilterField>
             </Form.Group>
           {/*<AgentLeadRequestCreate/>*/}
         </Form>
+          <RevealActionButtons id='ag_RevealButtons' >
+              <FilterRevealButton onClick={agLrShowFilters}>
+                Show Filters
+              </FilterRevealButton>
+              <RevealLeftSidebarButton onClick={agLrShowLeftSideBar}>
+                Statistics
+              </RevealLeftSidebarButton>
+              <RevealRightSidebarButton onClick={agLrShowRightSideBar}>
+                Activity
+              </RevealRightSidebarButton>
+          </RevealActionButtons>
+          <FilterHideButton id='ag_hideFilter' onClick={agLrHideFilters}>
+            Hide Filters
+        </FilterHideButton>
       </FilterBar>
-          <LeftSidebar>
+          <LeftSidebar id='agLrleftSideBar'>
+            <HideLeftSidebarButton onClick={agLrHideLeftSideBar}>x</HideLeftSidebarButton>
           {this.state.loading === true ? (
             <EmptyResults>
                <Loader active inline='centered' size='small' />
@@ -524,7 +765,8 @@ class AgentLeadRequests extends Component {
             )
           }
           </LeftSidebar>
-          <RightSidebar>
+          <RightSidebar id='agLrrightSideBar'>
+          <HideRightSidebarButton onClick={agLrHideRightSideBar}>x</HideRightSidebarButton>
             {this.state.loading === true ? (
               <EmptyResults>
                  <Loader active inline='centered' size='small' />

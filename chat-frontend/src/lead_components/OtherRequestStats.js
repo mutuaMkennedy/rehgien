@@ -33,6 +33,17 @@ box-shadow: 0 1px 3px 0 #63f1eb24, 0 0 0 1px #63f1eb24;
 const ContentHeaderTwo = styled.h5`
   background-color: #fff;
   text-align:left;
+  @media (max-width: 786px){
+  text-align:center;
+  }
+`
+const CustomPieChart = styled(PieChart)`
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  @media (max-width: 786px){
+    width:100% !important;
+  }
 `
 
 const StatsBoard = styled.div`
@@ -128,7 +139,7 @@ export default class OtherRequestStats extends PureComponent {
               </StatsBoard>
               <ContentHeaderTwo>Qualified Status</ContentHeaderTwo>
               {dataValueArray.length > 0 ? (
-                  <PieChart width={200} height={150}>
+                  <CustomPieChart width={200} height={150}>
                     <Pie
                       activeIndex={this.state.activeIndex}
                       activeShape={renderActiveShape}
@@ -145,7 +156,7 @@ export default class OtherRequestStats extends PureComponent {
                         data.map((entry, index) =><Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
                       }
                     </Pie>
-                  </PieChart>
+                  </CustomPieChart>
               ) : (
                 <StatsBoard>
                     <Statistic color='blue'>

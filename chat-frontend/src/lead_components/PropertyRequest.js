@@ -7,7 +7,7 @@ import {
   Item,
   Modal,
   Loader,
-  Form
+  Form,
 } from 'semantic-ui-react';
 import {
   EmailShareButton,
@@ -53,6 +53,50 @@ const LeftSidebar = styled.div`
   height:90%;
   background-color:transparent;
   float:left;
+  @media (max-width: 786px){
+    display:none;
+    position:absolute;
+    top:0;
+    z-index:1000;
+    width:100%;
+    height:100vh;
+    background:#fff;
+  }
+`
+const RevealLeftSidebarButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:blue;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const HideLeftSidebarButton = styled.button`
+  width:30px;
+  height:30px;
+  line-height:12px;
+  position:absolute;
+  right:10px;
+  top:10px;
+  z-index:10;
+  text-align:center;
+  border:none;
+  background:#00000066;
+  color:#fff;
+  font-family:Lato,Arial;
+  font-size:12px;
+  display:none;
+  border-radius:50%;
+  @media (max-width: 786px){
+    display:block;
+  }
 `
 const RightSidebar = styled.div`
   width:20%;
@@ -60,6 +104,50 @@ const RightSidebar = styled.div`
   height:90%;
   background-color:transparent;
   float:right;
+  @media (max-width: 786px){
+    display:none;
+    position:absolute;
+    top:0;
+    z-index:1000;
+    width:100%;
+    height:100vh;
+    background:#fff;
+  }
+`
+const RevealRightSidebarButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:blue;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const HideRightSidebarButton = styled.button`
+  width:30px;
+  height:30px;
+  line-height:12px;
+  position:absolute;
+  right:10px;
+  top:10px;
+  z-index:10;
+  text-align:center;
+  border:none;
+  background:#00000066;
+  color:#fff;
+  font-family:Lato,Arial;
+  font-size:12px;
+  display:none;
+  border-radius:50%;
+  @media (max-width: 786px){
+    display:block;
+  }
 `
 const CardContainer = styled.div`
   padding:10px;
@@ -67,17 +155,25 @@ const CardContainer = styled.div`
   float:right;
   height:90%;
   overflow-y:auto;
+  @media (max-width: 786px){
+  width:100%;
+  }
 `
 const StyledCard = styled(Card)`
   display:flex !important;
   flex-direction:row !important;
+  @media (max-width: 786px){
+    flex-direction:column !important;
+  }
 `
 const SectionDivider = styled.div`
   height: 100%;
   width: 10px;
   border-left: 1px solid #2224261a;
+  @media (max-width: 786px){
+    display:none;
+  }
 `
-
 const EmptyResults = styled.div`
   height: 100%;
   width: 100%;
@@ -85,15 +181,132 @@ const EmptyResults = styled.div`
   justify-content:center;
   align-items:center;
 `
-
 const FilterBar = styled.div`
   width:100%;
-  height:65px;
+  height:auto;
   background-color:#fff;
   padding: 10px;
   -webkit-box-shadow: 0 1px 3px 0 #fff, 0 0 0 1px #fff;
   box-shadow: 0 1px 3px 0 #fff, 0 0 0 1px #fff;
 `
+const RespFilterField = styled.div`
+width:100%;
+@media (max-width: 786px){
+  display:none;
+}
+`
+const RevealActionButtons = styled.div`
+  display:none;
+  @media (max-width: 786px){
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+`
+const FilterRevealButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:blue;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const FilterHideButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:#fb5f3d;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:none;
+  }
+`
+const FilterEmptyDiv = styled.div`
+  display:none;
+  margin-top:20px;
+  margin-bottom:10px;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const StatsGroup = styled(Statistic.Group)`
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  width:100%;
+`
+const CustomModalActions = styled(Modal.Actions)`
+  @media (max-width: 786px){
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center !important;
+    justify-content:center;
+  }
+`
+
+
+function showFilters(){
+  var filterField1 = document.getElementById('respFieldPt');
+  var filterField2 = document.getElementById('respFieldMiP');
+  var filterField3 = document.getElementById('respFieldMaP');
+  var filterField4 = document.getElementById('respFieldRt');
+  var revealButtons = document.getElementById('RevealButtons');
+  var hideFilter = document.getElementById('hideFilter');
+
+  filterField1.style.display='block';
+  filterField2.style.display='block';
+  filterField3.style.display='block';
+  filterField4.style.display='block';
+  revealButtons.style.display='none';
+  hideFilter.style.display='block';
+};
+
+function hideFilters(){
+  var filterField1 = document.getElementById('respFieldPt');
+  var filterField2 = document.getElementById('respFieldMiP');
+  var filterField3 = document.getElementById('respFieldMaP');
+  var filterField4 = document.getElementById('respFieldRt');
+  var revealButtons = document.getElementById('RevealButtons');
+  var hideFilter = document.getElementById('hideFilter');
+
+  filterField1.style.display='none';
+  filterField2.style.display='none';
+  filterField3.style.display='none';
+  filterField4.style.display='none';
+  revealButtons.style.display='flex';
+  hideFilter.style.display='none';
+};
+
+function showLeftSideBar(){
+  var leftSideBar = document.getElementById('leftSideBar');
+  leftSideBar.style.display='block';
+};
+function hideLeftSideBar(){
+  var leftSideBar = document.getElementById('leftSideBar');
+  leftSideBar.style.display='none';
+};
+
+function showRightSideBar(){
+  var rightSideBar = document.getElementById('rightSideBar');
+  rightSideBar.style.display='block';
+};
+function hideRightSideBar(){
+  var rightSideBar = document.getElementById('rightSideBar');
+  rightSideBar.style.display='none';
+};
 
 const authToken = localStorage.getItem("auth_token");
 const tokenUserId = localStorage.getItem("user_id");
@@ -158,7 +371,7 @@ class PropertyRequests extends Component {
     propertyType:'',
     maxPrice:'',
     minPrice:'',
-    requestType:''
+    requestType:'',
     }
     //activating claim modal
     this.openModal = (item) => {
@@ -248,6 +461,7 @@ class PropertyRequests extends Component {
       this.setState({_activeItem:'',_secondOpen: false,_secondsetOpen:false });
     }
   }
+
 
   render() {
     let leads = this.state.lead.slice();
@@ -352,7 +566,7 @@ class PropertyRequests extends Component {
                 <Card.Content extra textAlign='left' style={{'display':'flex', 'justifyContent': 'flex-start','alignItems':'center', }}>
                       <SectionDivider/>
                       <div style={{'width':'100%'}}>
-                          <Statistic.Group size='mini' widths='two'>
+                          <StatsGroup size='mini'>
                               <Statistic color='green'>
                                 <Statistic.Value>{item.claimer.length}</Statistic.Value>
                                 <Statistic.Label style={{'fontSize':'10px',}}>Claims</Statistic.Label>
@@ -367,7 +581,7 @@ class PropertyRequests extends Component {
                                 }</Statistic.Value>
                                 <Statistic.Label style={{'fontSize':'10px',}}>Qualified</Statistic.Label>
                               </Statistic>
-                          </Statistic.Group>
+                          </StatsGroup>
                       </div>
                 </Card.Content>
                 <Card.Content extra textAlign='left' style={{'display':'flex', 'justifyContent': 'center','alignItems':'center', }}>
@@ -390,12 +604,11 @@ class PropertyRequests extends Component {
                   <Modal.Content scrolling>
                     <PropRequestModalContent details={this.state.activeItem} timeRemaining={diffDays}/>
                   </Modal.Content>
-                  <Modal.Actions>
+                  <CustomModalActions>
                     Dont have this property? Perhaps you know an agent who does.
-                    <Button negative icon='share' content='Refer' onClick={() => this.secondOpenModal()}/>
-                      OR
-                    <Button icon='check' content='All Done' onClick={() => this.closeModal()}/>
-                  </Modal.Actions>
+                    <Button negative icon='share' content='Refer' onClick={() => this.secondOpenModal()} style={{'marginTop':'5px'}}/>
+                    <Button icon='check' content='All Done' onClick={() => this.closeModal()} style={{'marginTop':'5px'}}/>
+                  </CustomModalActions>
                       <Modal open={this.state.secondOpen} size='small' dimmer='inverted'>
                             <Modal.Header>Share on email or social.</Modal.Header>
                             <Modal.Content>
@@ -428,7 +641,7 @@ class PropertyRequests extends Component {
                               </div>
                             </Modal.Content>
                             <Modal.Actions>
-                          <form onSubmit={this.handleRefer}>
+                          <form onSubmit={this.handleRefer} style={{'margin':'5px'}}>
                               <Button
                                 type='submit'
                                 icon='check'
@@ -470,7 +683,7 @@ class PropertyRequests extends Component {
                         </div>
                       </Modal.Content>
                       <Modal.Actions>
-                      <form onSubmit={this.handleRefer}>
+                      <form onSubmit={this.handleRefer} style={{'margin':'5px'}}>
                         <Button type='submit' icon='check' content='All Done' />
                       </form>
                       </Modal.Actions>
@@ -482,22 +695,51 @@ class PropertyRequests extends Component {
     return (
       <LeadListWrapper>
       <FilterBar>
-        <Form size='tiny'>
+        <Form size='tiny' style={{'zIndex':'10','background':'#fff'}}>
             <Form.Group inline widths='equal'>
+            <div style={{'width':'100%'}}>
             <Form.Input fluid placeholder='Enter an address, city or neighborhood'
             name='location' onChange={this.handleInputChange} value={this.state.location}/>
-            <Form.Select fluid options={propertyTypeOptions} placeholder=' property type'
-            name='propertyType' onChange={this.handleSelectChange} value={this.state.propertyType}/>
-            <Form.Input fluid  placeholder='Enter Minimum price'
-            name='minPrice' onChange={this.handleInputChange} value={this.state.minPrice}/>
-            <Form.Input fluid  placeholder='Enter Maximum price'
-            name='maxPrice' onChange={this.handleInputChange} value={this.state.maxPrice}/>
-            <Form.Select fluid options={options} placeholder='Request Type'
-            name='requestType' onChange={this.handleSelectChange} value={this.state.requestType}/>
+            </div>
+            <RespFilterField id='respFieldPt'>
+              <FilterEmptyDiv></FilterEmptyDiv>
+              <Form.Select fluid options={propertyTypeOptions} placeholder=' property type'
+              name='propertyType' onChange={this.handleSelectChange} value={this.state.propertyType}/>
+            </RespFilterField>
+            <RespFilterField id='respFieldMiP'>
+              <FilterEmptyDiv></FilterEmptyDiv>
+              <Form.Input fluid  placeholder='Enter Minimum price'
+              name='minPrice' onChange={this.handleInputChange} value={this.state.minPrice}/>
+            </RespFilterField>
+            <RespFilterField id='respFieldMaP'>
+            <FilterEmptyDiv></FilterEmptyDiv>
+              <Form.Input fluid  placeholder='Enter Maximum price'
+              name='maxPrice' onChange={this.handleInputChange} value={this.state.maxPrice}/>
+            </RespFilterField>
+            <RespFilterField id='respFieldRt'>
+              <FilterEmptyDiv></FilterEmptyDiv>
+              <Form.Select fluid options={options} placeholder='Request Type'
+              name='requestType' onChange={this.handleSelectChange} value={this.state.requestType}/>
+            </RespFilterField>
             </Form.Group>
         </Form>
+        <RevealActionButtons id='RevealButtons' >
+            <FilterRevealButton onClick={showFilters}>
+              Show Filters
+            </FilterRevealButton>
+            <RevealLeftSidebarButton onClick={showLeftSideBar}>
+              Statistics
+            </RevealLeftSidebarButton>
+            <RevealRightSidebarButton onClick={showRightSideBar}>
+              Activity
+            </RevealRightSidebarButton>
+        </RevealActionButtons>
+        <FilterHideButton id='hideFilter' onClick={hideFilters}>
+          Hide Filters
+        </FilterHideButton>
       </FilterBar>
-          <LeftSidebar>
+          <LeftSidebar id='leftSideBar'>
+            <HideLeftSidebarButton onClick={hideLeftSideBar}>x</HideLeftSidebarButton>
           {this.state.loading === true ? (
             <EmptyResults>
                <Loader active inline='centered' size='small' />
@@ -507,7 +749,8 @@ class PropertyRequests extends Component {
             )
           }
           </LeftSidebar>
-          <RightSidebar>
+          <RightSidebar id='rightSideBar'>
+            <HideRightSidebarButton onClick={hideRightSideBar}>x</HideRightSidebarButton>
             {this.state.loading === true ? (
               <EmptyResults>
                  <Loader active inline='centered' size='small' />

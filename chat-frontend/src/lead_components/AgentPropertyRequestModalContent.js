@@ -2,7 +2,18 @@ import React, { Component } from 'react'
 import { Tab,Item,Message,Button } from 'semantic-ui-react'
 import axios from "axios";
 import base from '../baseAddress.js';
+import styled from 'styled-components';
 
+const CustomItemGroup = styled(Item.Group)`
+  display:flex;
+  justify-content: flex-start;
+  align-items:top;
+  background-color:#d0f3e969;
+  padding:10px;
+  @media (max-width: 786px){
+    flex-direction: column;
+  }
+`
 
 const authToken = localStorage.getItem("auth_token");
 const tokenUserId = localStorage.getItem("user_id");
@@ -60,8 +71,7 @@ export default class AgentPropertyRequestModalContent extends Component {
         )
       }
           <h4>Basic Information</h4>
-          <Item.Group relaxed='very' style={{'display':'flex', 'justifyContent': 'flex-start',
-          'alignItems':'top','backgroundColor':'#d0f3e969', 'padding':'10px'}}>
+          <CustomItemGroup relaxed='very'>
                 <Item>
                   <Item.Content>
                     <Item.Header style={{'fontSize':'14px'}}>Location</Item.Header>
@@ -95,10 +105,9 @@ export default class AgentPropertyRequestModalContent extends Component {
                     </Item.Meta>
                   </Item.Content>
                 </Item>
-          </Item.Group>
+          </CustomItemGroup>
           <h4>Ownership & Timeline</h4>
-          <Item.Group relaxed='very' style={{'display':'flex', 'justifyContent': 'flex-start',
-          'alignItems':'top','backgroundColor':'#d0f3e969','padding':'10px'}}>
+          <CustomItemGroup relaxed='very'>
                  <Item>
                    <Item.Content>
                      <Item.Header style={{'fontSize':'14px'}}>Nature of ownership.</Item.Header>
@@ -115,10 +124,9 @@ export default class AgentPropertyRequestModalContent extends Component {
                      </Item.Meta>
                    </Item.Content>
                  </Item>
-         </Item.Group>
+         </CustomItemGroup>
          <h4>Property Features</h4>
-          <Item.Group relaxed='very' style={{'display':'flex', 'justifyContent': 'flex-start',
-          'alignItems':'top','backgroundColor':'#d0f3e969','padding':'10px' }}>
+          <CustomItemGroup relaxed='very'>
                   <Item>
                     <Item.Content>
                       <Item.Header style={{'fontSize':'14px'}}>Property Size</Item.Header>
@@ -159,7 +167,7 @@ export default class AgentPropertyRequestModalContent extends Component {
                     </Item.Meta>
                   </Item.Content>
                 </Item>
-          </Item.Group>
+          </CustomItemGroup>
           <h4>Extra Notes from this Agent.</h4>
           <Item.Group relaxed='very' style={{'backgroundColor':'#d0f3e969','padding':'10px'}}>
                 <Item>
@@ -188,7 +196,7 @@ export default class AgentPropertyRequestModalContent extends Component {
              size='tiny'
               warning
               header='This lead has not been Qualified.'
-              content="We are yet to qualify this client. However, that doesn't mean the client is not motivated."
+              content="We are yet to qualify this lead."
             />
           )
         }
@@ -203,8 +211,7 @@ export default class AgentPropertyRequestModalContent extends Component {
           ) : (
             <>
               <h4>Client Names</h4>
-               <Item.Group relaxed='very' style={{'display':'flex', 'justifyContent': 'flex-start',
-               'alignItems':'top','backgroundColor':'#d0f3e969','padding':'10px' }}>
+               <CustomItemGroup relaxed='very'>
                        <Item>
                          <Item.Content>
                            <Item.Header style={{'fontSize':'14px'}}>Name</Item.Header>
@@ -213,10 +220,9 @@ export default class AgentPropertyRequestModalContent extends Component {
                            </Item.Meta>
                          </Item.Content>
                        </Item>
-               </Item.Group>
+               </CustomItemGroup>
                <h4> Phone and Email</h4>
-               <Item.Group relaxed='very' style={{'display':'flex', 'justifyContent': 'flex-start',
-               'alignItems':'top','backgroundColor':'#d0f3e969','padding':'10px' }}>
+               <CustomItemGroup relaxed='very'>
                    <Item>
                      <Item.Content>
                        <Item.Header style={{'fontSize':'14px'}}>Phone</Item.Header>
@@ -233,7 +239,7 @@ export default class AgentPropertyRequestModalContent extends Component {
                        </Item.Meta>
                      </Item.Content>
                    </Item>
-               </Item.Group>
+               </CustomItemGroup>
                </>
              )
            }

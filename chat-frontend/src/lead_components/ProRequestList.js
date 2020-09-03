@@ -53,6 +53,50 @@ const LeftSidebar = styled.div`
   height:100%;
   background-color:transparent;
   float:left;
+  @media (max-width: 786px){
+    display:none;
+    position:absolute;
+    top:0;
+    z-index:1000;
+    width:100%;
+    height:100vh;
+    background:#fff;
+  }
+`
+const RevealLeftSidebarButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:blue;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const HideLeftSidebarButton = styled.button`
+  width:30px;
+  height:30px;
+  line-height:12px;
+  position:absolute;
+  right:10px;
+  top:10px;
+  z-index:10;
+  text-align:center;
+  border:none;
+  background:#00000066;
+  color:#fff;
+  font-family:Lato,Arial;
+  font-size:12px;
+  display:none;
+  border-radius:50%;
+  @media (max-width: 786px){
+    display:block;
+  }
 `
 const RightSidebar = styled.div`
   width:20%;
@@ -60,6 +104,50 @@ const RightSidebar = styled.div`
   height:100%;
   background-color:transparent;
   float:right;
+  @media (max-width: 786px){
+    display:none;
+    position:absolute;
+    top:0;
+    z-index:1000;
+    width:100%;
+    height:100vh;
+    background:#fff;
+  }
+`
+const RevealRightSidebarButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:blue;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const HideRightSidebarButton = styled.button`
+  width:30px;
+  height:30px;
+  line-height:12px;
+  position:absolute;
+  right:10px;
+  top:10px;
+  z-index:10;
+  text-align:center;
+  border:none;
+  background:#00000066;
+  color:#fff;
+  font-family:Lato,Arial;
+  font-size:12px;
+  display:none;
+  border-radius:50%;
+  @media (max-width: 786px){
+    display:block;
+  }
 `
 const CardContainer = styled.div`
   padding:10px;
@@ -67,15 +155,25 @@ const CardContainer = styled.div`
   float:right;
   height:calc(90% - 15px);
   overflow-y:auto;
+  @media (max-width: 786px){
+  width:100%;
+  height:calc(90% - 110px);
+  }
 `
 const StyledCard = styled(Card)`
   display:flex !important;
   flex-direction:row !important;
+  @media (max-width: 786px){
+    flex-direction:column !important;
+  }
 `
 const SectionDivider = styled.div`
   height: 100%;
   width: 10px;
   border-left: 1px solid #2224261a;
+  @media (max-width: 786px){
+    display:none;
+  }
 `
 
 const EmptyResults = styled.div`
@@ -85,13 +183,120 @@ const EmptyResults = styled.div`
   justify-content:center;
   align-items:center;
 `
-
 const FilterBar = styled.div`
-  width:60%;
-  float:right;
-  background-color:transparent;
+  width:100%;
+  height:auto;
   padding: 10px;
+  @media (max-width: 786px){
+    background-color:#fff;
+  }
 `
+const RespFilterField = styled.div`
+width:100%;
+@media (max-width: 786px){
+  display:none;
+}
+`
+const RevealActionButtons = styled.div`
+  display:none;
+  @media (max-width: 786px){
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+`
+const FilterRevealButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:blue;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const FilterHideButton = styled.button`
+  width:100px;
+  height:30px;
+  border:none;
+  background:#ffff;
+  color:#fb5f3d;
+  font-family:Lato,Arial;
+  font-size:14px;
+  display:none;
+  border:1px solid #22242626;
+  border-radius:.28571429rem;
+  @media (max-width: 786px){
+    display:none;
+  }
+`
+const FilterEmptyDiv = styled.div`
+  display:none;
+  margin-top:20px;
+  margin-bottom:10px;
+  @media (max-width: 786px){
+    display:block;
+  }
+`
+const StatsGroup = styled(Statistic.Group)`
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  width:100%;
+`
+const CustomModalActions = styled(Modal.Actions)`
+  @media (max-width: 786px){
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center !important;
+    justify-content:center;
+  }
+`
+
+function showFilters(){
+  var filterField = document.getElementById('respFieldPrT');
+  var revealButtons = document.getElementById('RevealButtons');
+  var hideFilter = document.getElementById('hideFilter');
+
+  filterField.style.display='block';
+  revealButtons.style.display='none';
+  hideFilter.style.display='block';
+};
+
+function hideFilters(){
+  var filterField = document.getElementById('respFieldPrT');
+  var revealButtons = document.getElementById('RevealButtons');
+  var hideFilter = document.getElementById('hideFilter');
+
+  filterField.style.display='none';
+  revealButtons.style.display='flex';
+  hideFilter.style.display='none';
+};
+
+function prRqShowLeftSideBar(){
+  var leftSideBar = document.getElementById('proRequestLeftSideBar');
+  leftSideBar.style.display='block';
+};
+function prRqHideLeftSideBar(){
+  var leftSideBar = document.getElementById('proRequestLeftSideBar');
+  leftSideBar.style.display='none';
+};
+
+function prRqShowRightSideBar(){
+  var rightSideBar = document.getElementById('proRequestRightSideBar');
+  rightSideBar.style.display='block';
+};
+function prRqHideRightSideBar(){
+  var rightSideBar = document.getElementById('proRequestRightSideBar');
+  rightSideBar.style.display='none';
+};
+
 
 const authToken = localStorage.getItem("auth_token");
 const tokenUserId = localStorage.getItem("user_id");
@@ -305,7 +510,7 @@ class ProRequests extends Component {
                 <Card.Content extra textAlign='left' style={{'display':'flex', 'justifyContent': 'flex-start','alignItems':'center', }}>
                       <SectionDivider/>
                       <div style={{'width':'100%'}}>
-                          <Statistic.Group size='mini' widths='two'>
+                          <StatsGroup size='mini'>
                               <Statistic color='green'>
                                 <Statistic.Value>{item.claimer.length}</Statistic.Value>
                                 <Statistic.Label style={{'fontSize':'10px',}}>Claims</Statistic.Label>
@@ -320,7 +525,7 @@ class ProRequests extends Component {
                                 }</Statistic.Value>
                                 <Statistic.Label style={{'fontSize':'10px',}}>Qualified</Statistic.Label>
                               </Statistic>
-                          </Statistic.Group>
+                          </StatsGroup>
                       </div>
                 </Card.Content>
                 <Card.Content extra textAlign='left' style={{'display':'flex', 'justifyContent': 'center','alignItems':'center', }}>
@@ -344,12 +549,11 @@ class ProRequests extends Component {
             <Modal.Content scrolling>
               <ProRequestModalContent details={this.state.activeItem} timeRemaining={diffDays}/>
             </Modal.Content>
-            <Modal.Actions>
+            <CustomModalActions>
               No interested? Perhaps you can refer someone.
-              <Button negative icon='share' content='Refer' onClick={() => this.secondOpenModal()}/>
-                OR
-              <Button icon='check' content='All Done' onClick={() => this.closeModal()}/>
-            </Modal.Actions>
+              <Button negative icon='share' content='Refer' onClick={() => this.secondOpenModal()} style={{'marginTop':'5px'}}/>
+              <Button icon='check' content='All Done' onClick={() => this.closeModal()} style={{'marginTop':'5px'}}/>
+            </CustomModalActions>
                 <Modal open={this.state.secondOpen} size='small' dimmer='inverted'>
                       <Modal.Header>Share on email or social.</Modal.Header>
                       <Modal.Content>
@@ -382,7 +586,7 @@ class ProRequests extends Component {
                         </div>
                       </Modal.Content>
                       <Modal.Actions>
-                        <form onSubmit={this.handleRefer}>
+                        <form onSubmit={this.handleRefer} style={{'margin':'5px'}}>
                           <Button
                             type='submit'
                             icon='check'
@@ -424,7 +628,7 @@ class ProRequests extends Component {
                   </div>
                 </Modal.Content>
                 <Modal.Actions>
-                  <form onSubmit={this.handleRefer}>
+                  <form onSubmit={this.handleRefer} style={{'margin':'5px'}}>
                     <Button
                       type='submit'
                       icon='check'
@@ -439,7 +643,8 @@ class ProRequests extends Component {
 
     return (
       <LeadListWrapper>
-          <LeftSidebar>
+          <LeftSidebar id='proRequestLeftSideBar'>
+            <HideLeftSidebarButton onClick={prRqHideLeftSideBar}>x</HideLeftSidebarButton>
           {this.state.loading === true ? (
             <EmptyResults>
                <Loader active inline='centered' size='small' />
@@ -449,7 +654,8 @@ class ProRequests extends Component {
             )
           }
           </LeftSidebar>
-          <RightSidebar>
+          <RightSidebar id='proRequestRightSideBar'>
+          <HideRightSidebarButton onClick={prRqHideRightSideBar}>x</HideRightSidebarButton>
             {this.state.loading === true ? (
               <EmptyResults>
                  <Loader active inline='centered' size='small' />
@@ -467,10 +673,27 @@ class ProRequests extends Component {
                 <Form.Group inline widths='equal' >
                 <Form.Input fluid placeholder='Enter an address, city or neighborhood'
                 name='location' onChange={this.handleInputChange} value={this.state.location}/>
+                <RespFilterField id='respFieldPrT'>
+                <FilterEmptyDiv/>
                 <Form.Select fluid options={proTypeOptions} placeholder='Pro type'
                 name='proType' onChange={this.handleSelectChange} value={this.state.propertyType}/>
+                </RespFilterField>
                 </Form.Group>
             </Form>
+            <RevealActionButtons id='RevealButtons' >
+                <FilterRevealButton onClick={showFilters}>
+                  Show Filters
+                </FilterRevealButton>
+                <RevealLeftSidebarButton onClick={prRqShowLeftSideBar}>
+                  Statistics
+                </RevealLeftSidebarButton>
+                <RevealRightSidebarButton onClick={prRqShowRightSideBar}>
+                  Activity
+                </RevealRightSidebarButton>
+            </RevealActionButtons>
+            <FilterHideButton id='hideFilter' onClick={hideFilters}>
+              Hide Filters
+            </FilterHideButton>
           </FilterBar>
           <CardContainer>
               {leads.length > 0 ? (

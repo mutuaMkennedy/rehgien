@@ -50,15 +50,16 @@ const MobileNavbarWrapper = styled.div`
   z-index:999;
   display:block;
   position: relative;
-  transition: width 0.5s;
   width:100%;
   background:#fff;
   height:60px;
   @media (max-width: 768px){
     position: fixed;
-    height:30vh;
+    height:auto;
     top:0px;
     display:none;
+    -webkit-box-shadow: 0 1px 3px 0 #00000033, 0 0 0 1px #00000033;
+    box-shadow: 0 1px 3px 0 #00000033, 0 0 0 1px #00000033;
   }
 `
 const NavbarMenu = styled(Menu)`
@@ -74,7 +75,7 @@ const NavbarMenuItems = styled.div`
   display:flex;
   align-items:center;
   @media (max-width: 786px){
-    flex-direction:column;
+    flex-direction:row;
   }
 `
 const NavbarRevealButton = styled.button`
@@ -92,15 +93,17 @@ const NavbarRevealButton = styled.button`
 const NavbarCloseButton = styled.button`
   width:30px;
   height:30px;
+  margin-top:5px;
   border:none;
   text-align:center;
-  font-size:30px;
-  line-height:30px;
-  background:#fff;
+  font-size:15px;
+  line-height:10px;
+  background:#00000033;
+  color:#fff;
   position:relative;
-  left:100%;
-  color:#757575;
-  transform:translate(-100%,0);
+  left:50%;
+  border-radius:50%;
+  transform:translate(-50%,0);
   display:none;
   @media (max-width: 786px){
     display:block;
@@ -132,7 +135,7 @@ const ProjectBase = () => (
           <NavbarCloseButton onClick={closeMobileMenu}>
             x
           </NavbarCloseButton>
-          <NavbarMenu fluid secondary size='large' style={{'margin':'0','marginRight':'20px'}}>
+          <NavbarMenu fluid secondary size='large' style={{'margin':'0','marginRight':'20px','height':'100%'}}>
               <Menu.Menu >
               {isAuthed ? (
                   <NavbarMenuItems>
@@ -165,7 +168,7 @@ const ProjectBase = () => (
                           </Menu.Item>
                     </NavbarMenuItems>
                   ):(
-                      <NavLink  to="/pro/auth/login">
+                      <NavLink  to="/pro/auth/login" style={{'alignSelf':'center'}}>
                         <Menu.Item name='Login'/>
                       </NavLink>
                   )

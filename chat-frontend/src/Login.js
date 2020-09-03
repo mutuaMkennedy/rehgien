@@ -9,6 +9,7 @@ const StLoginRoot = styled.div`
   height:100vh;
   position:absolute;
   background:#fff;
+  z-index:999;
   top:0;
   @media (max-width: 786px) {
     flex-direction:column;
@@ -43,7 +44,7 @@ const StLoginBanner = styled.div`
 const LoginLogo = styled.div`
   width:65px;
   height:65px;
-  background:url('${base}/static/img/logo-fav.png');
+  background:url('${base}/static/img/logo-fav-pro.png');
   background-position:center;
   background-size:contain;
   background-repeat: no-repeat !important;

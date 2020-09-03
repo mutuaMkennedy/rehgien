@@ -7604,7 +7604,7 @@ main {
     width:100px;
     height:60px;
     background-position:center;
-    background-size:cover;
+    background-size:contain;
     background-repeat:no-repeat;
     margin-left:auto;
     margin-right:auto;

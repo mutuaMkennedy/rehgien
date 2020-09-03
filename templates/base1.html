@@ -65,7 +65,7 @@
   <!--<nav class="transparent z-depth-0">-->
     <nav class="teal" role="navigation">
     <div class="nav-wrapper">
-      <a id="logo-wrapper" href="{% url 'listings:homepage'%}" class="brand-logo left" style="height:60px;"><img class="logo" src="{%static 'img/rehgien_logo_r.png'%}"></a>
+      <a id="logo-wrapper" href="{% url 'listings:homepage'%}" class="brand-logo left" style="height:60px;"><img class="logo" src="{%static 'img/rhg_logo1.png'%}"></a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-base1"class="left hide-on-med-and-down">
         <li><a href="{% url 'listings:sale_listings'%}">Buy</a></li>
@@ -200,9 +200,9 @@
           <ul>
             <div class="Mnav-r-svc">
               <h6>Choose a Service</h6>
-              <li><a href="#">Find me a property</a></li>
-              <li><a href="#">Find me a Proffesional</a></li>
-              <li><a href="#">I want something else</a></li>
+              <li><a href="{% url 'markets:property_request'%}">Find me a property</a></li>
+              <li><a href="{% url 'markets:proffesional_request'%}">Find me a Proffesional</a></li>
+              <li><a href="{% url 'markets:other_request'%}">I want something else</a></li>
             </div>
             <div class="Mnav-r-m-svc">
               <h6>Services Coming Soon</h6>
@@ -213,6 +213,7 @@
           </ul>
         </div>
       </li>
+      <li><a href="/pro/home">Rehgien Pro</a></li>
       {% if not request.user.is_authenticated %}
       <ul>
         <div class="Mnav-authWrapper">

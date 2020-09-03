@@ -34,6 +34,9 @@ const LeadDetailWrapper = styled.div`
   height:calc(100vh - 45px);
   padding:10px;
   background:#fff;
+  @media (max-width: 786px){
+    height:calc(100vh - 161px);
+  }
 `
 const LeadElementsBox = styled.div`
   width:70%;
@@ -41,6 +44,10 @@ const LeadElementsBox = styled.div`
   background-color:#fff;
   margin-left:auto;
   margin-right:auto;
+  @media (max-width: 786px){
+    width:100%;
+    height:100%;
+  }
 `
 
 const LeadDetailContainer = styled.div`
@@ -48,6 +55,37 @@ const LeadDetailContainer = styled.div`
   background-color:#fff;
   overflow-y:auto;
   padding:10px;
+`
+const CustomItemGroup = styled(Item.Group)`
+  display:flex;
+  justify-content: flex-start;
+  align-items:top;
+  background-color:#d0f3e969;
+  padding:10px;
+  @media (max-width: 786px){
+    flex-direction: column;
+  }
+`
+const BottomBar = styled.div`
+  padding:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  @media (max-width: 786px){
+    flex-direction: column;
+    justify-content:center;
+    align-items:center;
+  }
+`
+const StatsBar = styled.div`
+  display:flex;
+  justify-content:start;
+  align-items:baseline;
+  @media (max-width: 786px){
+    justify-content:center;
+    align-items:center;
+    width:100%;
+  }
 `
 
 const authToken = localStorage.getItem("auth_token");
@@ -154,13 +192,12 @@ function ProRequestLeadDetail() {
                   size='tiny'
                   warning
                   header='This lead has not been Qualified.'
-                  content="We are yet to qualify this client."
+                  content="We are yet to qualify this lead."
                 />
               )
             }
                 <h4>Basic Information</h4>
-                <Item.Group relaxed='very' style={{'display':'flex', 'justifyContent': 'flex-start',
-                'alignItems':'top','backgroundColor':'#d0f3e969', 'padding':'10px'}}>
+                <CustomItemGroup relaxed='very'>
                       <Item>
                         <Item.Content>
                           <Item.Header style={{'fontSize':'14px'}}>Location</Item.Header>
@@ -177,10 +214,9 @@ function ProRequestLeadDetail() {
                           </Item.Meta>
                         </Item.Content>
                       </Item>
-                </Item.Group>
+                </CustomItemGroup>
                 <h4>Timeline</h4>
-                <Item.Group relaxed='very' style={{'display':'flex', 'justifyContent': 'flex-start',
-                'alignItems':'top','backgroundColor':'#d0f3e969','padding':'10px'}}>
+                <CustomItemGroup relaxed='very'>
                        <Item>
                          <Item.Content>
                            <Item.Header style={{'fontSize':'14px'}}>Pro needed before.</Item.Header>
@@ -189,7 +225,7 @@ function ProRequestLeadDetail() {
                            </Item.Meta>
                          </Item.Content>
                        </Item>
-               </Item.Group>
+               </CustomItemGroup>
                 <h4>Extra Notes from the client.</h4>
                 <Item.Group relaxed='very' style={{'backgroundColor':'#d0f3e969','padding':'10px'}}>
                       <Item>
@@ -218,7 +254,7 @@ function ProRequestLeadDetail() {
                    size='tiny'
                     warning
                     header='This lead has not been Qualified.'
-                    content="We are yet to qualify this client."
+                    content="We are yet to qualify this lead."
                   />
                 )
               }
@@ -233,8 +269,7 @@ function ProRequestLeadDetail() {
                 ) : (
                   <>
                     <h4>Client Names</h4>
-                     <Item.Group relaxed='very' style={{'display':'flex', 'justifyContent': 'flex-start',
-                     'alignItems':'top','backgroundColor':'#d0f3e969','padding':'10px' }}>
+                     <CustomItemGroup relaxed='very'>
                              <Item>
                                <Item.Content>
                                  <Item.Header style={{'fontSize':'14px'}}>Name</Item.Header>
@@ -243,10 +278,9 @@ function ProRequestLeadDetail() {
                                  </Item.Meta>
                                </Item.Content>
                              </Item>
-                     </Item.Group>
+                     </CustomItemGroup>
                      <h4> Phone and Email</h4>
-                     <Item.Group relaxed='very' style={{'display':'flex', 'justifyContent': 'flex-start',
-                     'alignItems':'top','backgroundColor':'#d0f3e969','padding':'10px' }}>
+                     <CustomItemGroup relaxed='very'>
                          <Item>
                            <Item.Content>
                              <Item.Header style={{'fontSize':'14px'}}>Phone</Item.Header>
@@ -263,7 +297,7 @@ function ProRequestLeadDetail() {
                              </Item.Meta>
                            </Item.Content>
                          </Item>
-                     </Item.Group>
+                     </CustomItemGroup>
                      </>
                    )
                  }
@@ -281,8 +315,8 @@ function ProRequestLeadDetail() {
                         <LeadDetailContainer>
                           <Tab menu={{ fluid: true,tabular: false, secondary:true }} panes={panes} defaultActiveIndex={0}/>
                         </LeadDetailContainer>
-                        <div style={{'padding':'10px', 'display':'flex', 'justifyContent':'space-between', 'alignItems':'baseline'}}>
-                          <div style={{'display':'flex', 'justifyContent':'start', 'alignItems':'baseline'}}>
+                        <BottomBar>
+                          <StatsBar>
                                 <Statistic.Group size='mini' >
                                     <Statistic color='green'>
                                       <Statistic.Value>{lead.claimer.length}</Statistic.Value>
@@ -299,11 +333,11 @@ function ProRequestLeadDetail() {
                                       <Statistic.Label style={{'fontSize':'10px',}}>Qualified</Statistic.Label>
                                     </Statistic>
                                 </Statistic.Group>
-                            </div>
+                            </StatsBar>
                           <div style={{'padding':'10px', 'display':'flex', 'justifyContent':'flex-end', 'alignItems':'baseline'}}>
                             <Button  negative icon='share' content='Refer' onClick={() => openModal()}/>
                           </div>
-                        </div>
+                        </BottomBar>
                       </>
                 ):(
                   <LeadNotFound/>
@@ -343,7 +377,7 @@ function ProRequestLeadDetail() {
                   </div>
                 </Modal.Content>
                 <Modal.Actions>
-                <form onSubmit={handleRefer}>
+                <form onSubmit={handleRefer} style={{'margin':'5px'}}>
                   <Button
                     type='submit'
                     icon='check'
