@@ -30,7 +30,7 @@ class PropertyRequestLeadSerializer(serializers.ModelSerializer):
         "PROPERTY_TYPE_CHOICES", "OWNERSHIP", "GENERAL_FEATURES", "PARKING_CHOICES",'pk',
         "property_type", "max_price", "min_price", "max_beds", "min_beds", "property_size",
         "location", "general_features", "parking_choices", "additional_details",
-        "number_of_units", "ownership", "timeline", "name", "phone", "email", "qualified",
+        "number_of_units", "ownership", "timeline", "name", "phone", "email","profile_image", "qualified",
         "active", "owner", "claimer", "referrer", "created_date", "updated_date"
         ]
 
@@ -44,7 +44,7 @@ class ProffesionalRequestLeadSerializer(serializers.ModelSerializer):
         model = ProffesionalRequestLead
         fields = [
         "TYPE", 'pk',"type_of_proffesional", "location", "service_details", "timeline", "name",
-        "phone", "email", "qualified", "active", "owner", "claimer", "referrer", "created_date",
+        "phone", "email", "qualified", "active", "owner","profile_image", "claimer", "referrer", "created_date",
         "updated_date"
         ]
 
@@ -56,7 +56,11 @@ class ClaimReferProRequestLeadSerializer(serializers.ModelSerializer):
 class OtherServiceLeadSerializer(serializers.ModelSerializer):
     class Meta:
         model = OtherServiceLead
-        fields = '__all__'
+        fields = [
+        'pk',"location", "service_details", "timeline", "name", "phone", "email",
+        "profile_image", "qualified", "active", "owner", "claimer", "referrer",
+        "created_date", "updated_date"
+        ]
 
 class ClaimReferOtherServiceLeadSerializer(serializers.ModelSerializer):
     class Meta:
@@ -83,7 +87,7 @@ class AgentLeadRequestSerializer(serializers.ModelSerializer):
         "NEGOTIABLE_CHOICES", 'pk', "property_type", "price", "price_negotiable", "beds",
         "property_size", "location_name", "location", "general_features", "parking_choices",
         "additional_details", "market_value", "number_of_units", "ownership", "timeline",
-        "name", "phone", "email", "qualified", "active", "owner", "claimer", "referrer", "created_date",
+        "name", "phone", "email", "profile_image","qualified", "active", "owner", "claimer", "referrer", "created_date",
         "updated_date"
         ]
 
@@ -110,7 +114,7 @@ class AgentPropertyRequestSerializer(serializers.ModelSerializer):
         "PROPERTY_TYPE_CHOICES", "OWNERSHIP", "GENERAL_FEATURES", "PARKING_CHOICES",'pk',
         "property_type", "max_price", "min_price", "max_beds", "min_beds", "property_size",
         "location_name", "general_features", "parking_choices", "additional_details",
-        "market_value", "number_of_units", "ownership", "timeline", "name", "phone", "email",
+        "market_value", "number_of_units", "ownership", "timeline", "name", "phone", "email","profile_image",
         "qualified", "active", "owner", "claimer", "referrer", "created_date", "updated_date"
         ]
 

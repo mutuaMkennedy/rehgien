@@ -154,8 +154,10 @@
         </div>
       </div>
       <div class="ac-drd-linkItems">
+        {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
         <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
         <li><a href="{% url 'listings:rental_listing_form' %}"> Post a Rental</a></li>
+        {% endif %}
         <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
         <li><a href="{% url 'account_logout' %}">Logout</a></li>
       </div>
@@ -235,8 +237,10 @@
         </div>
         <div class="collapsible-body Mnav-collapsible-body">
           <ul>
+            {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
             <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
             <li><a href="{% url 'listings:rental_listing_form' %}"> Post a Rental</a></li>
+            {% endif %}
             <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
             <li><a href="{% url 'account_logout' %}">Logout</a></li>
           </ul>

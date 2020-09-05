@@ -32,7 +32,7 @@ class NormalUserProfile(models.Model):
     #     return reverse( 'profiles:agent_detail', kwargs={'pk':self.pk})
 
     def __str__(self):
-        return self.user
+        return self.user.first_name
 
     class Meta:
         verbose_name_plural = 'NormalUserProfiles'

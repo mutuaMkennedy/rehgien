@@ -259,35 +259,39 @@ def rental_favourite(request,pk):
 
 @login_required(login_url='account_login')
 def listing_form(request):
-	if request.method =='POST':
-		PropertyForm = forms.ListingForm(request.POST, request.FILES)
-		ImageForm = forms.ImageForm(request.POST, request.FILES)
-		images = request.FILES.getlist('image')#name of field
-		VideoForm = forms.VideoForm(request.POST, request.FILES)
-		videos = request.FILES.getlist('video')#name of field
-		# Authenticate form
-		if PropertyForm.is_valid() and ImageForm.is_valid() and VideoForm.is_valid():
-			instance = PropertyForm.save(commit=False)
-			# Associate listing with user
-			instance.owner = request.user
-			# finally save to db
-			instance.save()
+	if request.user.user_type =='Agent' or request.user.user_type =='PropertyManager':
+		if request.method =='POST':
+				PropertyForm = forms.ListingForm(request.POST, request.FILES)
+				ImageForm = forms.ImageForm(request.POST, request.FILES)
+				images = request.FILES.getlist('image')#name of field
+				VideoForm = forms.VideoForm(request.POST, request.FILES)
+				videos = request.FILES.getlist('video')#name of field
+				# Authenticate form
+				if PropertyForm.is_valid() and ImageForm.is_valid() and VideoForm.is_valid():
+					instance = PropertyForm.save(commit=False)
+					# Associate listing with user
+					instance.owner = request.user
+					# finally save to db
+					instance.save()
 
-			for img in images:
-				file_instance = PropertyForSaleImages(image = img, property=PropertyForSale.objects.get(id=instance.id))
-				file_instance.save()
+					for img in images:
+						file_instance = PropertyForSaleImages(image = img, property=PropertyForSale.objects.get(id=instance.id))
+						file_instance.save()
 
-			for vid in videos:
-				file_instance2 = PropertyForSaleVideos(video = vid, property=PropertyForSale.objects.get(id=instance.id))
-				file_instance2.save()
-			messages.success(request, 'Your Listing has been posted Successfully!')
-			return redirect('profiles:account')
+					for vid in videos:
+						file_instance2 = PropertyForSaleVideos(video = vid, property=PropertyForSale.objects.get(id=instance.id))
+						file_instance2.save()
+					messages.success(request, 'Your Listing has been posted Successfully!')
+					return redirect('profiles:account')
+				else:
+					messages.error(request,'Could not complete request. Try again later.')
 		else:
-			messages.error(request,'Could not complete request. Try again later.')
+			PropertyForm = forms.ListingForm()
+			ImageForm = forms.ImageForm()
+			VideoForm = forms.VideoForm()
 	else:
-		PropertyForm = forms.ListingForm()
-		ImageForm = forms.ImageForm()
-		VideoForm = forms.VideoForm()
+		messages.error(request,'Restricted. This service is for Real Estate Pros only.')
+		return redirect('profiles:account')
 	return render(request, 'listings/sell-listing-form.html', {'PropertyForm': PropertyForm, 'ImageForm': ImageForm, 'VideoForm':VideoForm,})
 
 @login_required(login_url='account_login')
@@ -351,35 +355,39 @@ def for_sale_update(request, pk):
 
 @login_required(login_url='account_login')
 def rental_listing_form(request):
-	if request.method =='POST':
-		PropertyForm = forms.RentalListingForm(request.POST, request.FILES)
-		ImageForm = forms.RentalImageForm(request.POST, request.FILES)
-		images = request.FILES.getlist('image')#name of field
-		VideoForm = forms.RentalVideoForm(request.POST, request.FILES)
-		videos = request.FILES.getlist('video')#name of field
-		# Authenticate form
-		if PropertyForm.is_valid() and ImageForm.is_valid() and VideoForm.is_valid():
-			instance = PropertyForm.save(commit=False)
-			# Associate listing with user
-			instance.owner = request.user
-			# finally save to db
-			instance.save()
+	if request.user.user_type =='Agent' or request.user.user_type =='PropertyManager':
+		if request.method =='POST':
+			PropertyForm = forms.RentalListingForm(request.POST, request.FILES)
+			ImageForm = forms.RentalImageForm(request.POST, request.FILES)
+			images = request.FILES.getlist('image')#name of field
+			VideoForm = forms.RentalVideoForm(request.POST, request.FILES)
+			videos = request.FILES.getlist('video')#name of field
+			# Authenticate form
+			if PropertyForm.is_valid() and ImageForm.is_valid() and VideoForm.is_valid():
+				instance = PropertyForm.save(commit=False)
+				# Associate listing with user
+				instance.owner = request.user
+				# finally save to db
+				instance.save()
 
-			for img in images:
-				file_instance = RentalImages(image = img, property=RentalProperty.objects.get(id=instance.id))
-				file_instance.save()
+				for img in images:
+					file_instance = RentalImages(image = img, property=RentalProperty.objects.get(id=instance.id))
+					file_instance.save()
 
-			for vid in videos:
-				file_instance = RentalVideos(video = vid, property=RentalProperty.objects.get(id=instance.id))
-				file_instance.save()
-			messages.success(request, 'Your Listing has been posted Successfully!')
-			return redirect('profiles:account')
+				for vid in videos:
+					file_instance = RentalVideos(video = vid, property=RentalProperty.objects.get(id=instance.id))
+					file_instance.save()
+				messages.success(request, 'Your Listing has been posted Successfully!')
+				return redirect('profiles:account')
+			else:
+				messages.error(request,'Could not complete request. Try again later!')
 		else:
-			messages.error(request,'Could not complete request. Try again later!')
+			PropertyForm = forms.RentalListingForm()
+			ImageForm = forms.RentalImageForm()
+			VideoForm = forms.RentalVideoForm()
 	else:
-		PropertyForm = forms.RentalListingForm()
-		ImageForm = forms.RentalImageForm()
-		VideoForm = forms.RentalVideoForm()
+		messages.error(request,'Restricted. This service is for Real Estate Pros only.')
+		return redirect('profiles:account')
 	return render(request, 'listings/rent-listing-form.html', {'PropertyForm': PropertyForm, 'ImageForm': ImageForm, 'VideoForm':VideoForm,})
 
 

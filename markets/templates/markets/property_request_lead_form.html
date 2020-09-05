@@ -37,7 +37,7 @@
                       </div>
                     </div>
                     <div class="rq_priceRangeWrapper">
-                      <h4>Specify your budget.</h4>
+                      <h4>Specify your budget in Ksh.</h4>
                       <div class="rq_priceRangeIn">
                         {{form.min_price|as_crispy_field}}
                         {{form.max_price|as_crispy_field}}
@@ -46,7 +46,7 @@
                   </div>
 
                 <div class="RequestFormStep">
-                  <h3>Step 3 of 6 - Beds & Property Size</h3>
+                  <h3>Step 3 of 6 - Beds, Property Size & Number Of Units</h3>
                   <div class="rq_bedsWrapper">
                     <h4>Specify the preffered number of bedrooms.</h4>
                     <div class="rq_bedsIn">
@@ -58,6 +58,12 @@
                     <h4>Provide a desired floor/lot size in m<sup>2</sup></h4>
                     <div class="rq_propertySizeIn">
                       {{form.property_size|as_crispy_field}}
+                    </div>
+                  </div>
+                  <div class="rq_propertySizeWrapper">
+                    <h4>How many units do you need?</h4>
+                    <div class="rq_propertySizeIn">
+                      {{form.number_of_units|as_crispy_field}}
                     </div>
                   </div>
                 </div>

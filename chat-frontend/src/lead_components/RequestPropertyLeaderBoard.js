@@ -3,7 +3,7 @@ import axios from "axios";
 import base from '../baseAddress.js';
 import styled from 'styled-components';
 import {List, Image,Statistic,Loader } from 'semantic-ui-react';
-import avatar from '../static/avatar.jpg';
+import avatar from '../static/avatar.png';
 
 const ContentHeader = styled.h4`
   height: 35px;

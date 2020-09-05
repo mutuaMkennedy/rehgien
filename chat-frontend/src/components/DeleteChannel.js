@@ -109,7 +109,7 @@ class LeaveOrDeleteChannel extends React.Component {
 
   async handleSubmit(event){
     event.preventDefault();
-    const client = new StreamChat("ke9puq24fsgq");
+    const client = new StreamChat("qk4nn7rpcn75");
     await client.setUser(
       {
         id: tokenUserId,

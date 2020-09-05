@@ -8,41 +8,32 @@ import { Popup as SemanticPopup} from 'semantic-ui-react';
 
 
 const SidebarWrapper = styled.div`
-  float: left;
-  height: 100vh;
-  width: 55px;
-  background-color: #ffffff;
+  height:70px;
+  width: 300px;
+  background-color: #fff;
   display: flex;
   justify-content: center;
-  flex-direction: column;
-  margin-left: 5px;
+  align-items:center;
+  border-right: 1px solid rgb(235, 243, 255);
+  border-bottom: 1px solid rgb(235, 243, 255);
 `
+const SidebarText = styled.h1`
+  font-size:23px;
+  width:60%;
+  margin:0;
+  font-family:Ubuntu,Arial;
+  margin-left:10px;
+  color:#141414;
 
+`
 const SidebarButtonsWrapper = styled.div`
   display:flex;
-  flex-direction:column;
+  width:40%;
+  height:100%;
   align-items:center;
-  justify-content: center;
-  background: #13031b;
-  height: fit-content;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
-  padding: 15px;
-`
+  justify-content: space-between;
+  padding:0 10px;
 
-const SidebarButton = styled.button`
-  width:35px;
-  height:35px;
-  border:none;
-  border-radius:50%;
-  margin-bottom:25px;
-  font-size:14px;
-  background-color:transparent;
-  position:relative;
-  :hover {
-    cursor:pointer;
-    transform: scale(1.3);
-  }
 `
 
 const CustomChatSidePanel =  withChatContext(
@@ -51,58 +42,10 @@ const CustomChatSidePanel =  withChatContext(
     render() {
       return (
         <SidebarWrapper>
+            <SidebarText>Chats</SidebarText>
             <SidebarButtonsWrapper>
-            <SemanticPopup
-              trigger={
-                <SidebarButton>
-                <a href='/'>
-                  <Icon name='th large' style={{'color':'#ffffff', 'fontSize':'15px'}}/>
-                  </a>
-                </SidebarButton>
-              }
-              inverted
-              content='Home'
-              position='top left'
-              style={{'borderRadius': '10px'}}
-              />
-              <SemanticPopup
-                trigger={
-                  <SidebarButton>
-                    <a href='/profile/account/'>
-                    <Icon name='user outline' style={{'color':'#ffffff', 'fontSize':'15px'}}/>
-                    </a>
-                  </SidebarButton>
-                }
-                inverted
-                content='Profile'
-                position='top left'
-                style={{'borderRadius': '10px'}}
-                />
                 <GroupChannel/>
                 <DirectMessage/>
-                <SemanticPopup
-                  trigger={
-                    <SidebarButton>
-                      <Icon name='bell outline' style={{'color':'#ffffff', 'fontSize':'15px'}}/>
-                    </SidebarButton>
-                  }
-                  inverted
-                  content='Notifications'
-                  position='top left'
-                  style={{'borderRadius': '10px'}}
-                  />
-
-                  <SemanticPopup
-                    trigger={
-                      <SidebarButton>
-                        <Icon name='question circle outline' style={{'color':'#ffffff','fontSize':'15px'}}/>
-                      </SidebarButton>
-                    }
-                    inverted
-                    content='Help&Support'
-                    position='top left'
-                    style={{'borderRadius': '10px'}}
-                    />
             </SidebarButtonsWrapper>
 
         </SidebarWrapper>

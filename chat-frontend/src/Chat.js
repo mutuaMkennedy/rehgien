@@ -7,7 +7,8 @@ import {
   ChannelPreviewLastMessage,
   Thread,
   Window,
-  ChannelListTeam,
+  // ChannelListTeam,
+  ChannelListMessenger,
   MessageTeam,
   MessageSimple,
 } from "stream-chat-react";
@@ -53,7 +54,7 @@ function closeSideBar(){
 class App extends Component {
   constructor(props) {
     super(props);
-    this.client = new StreamChat("ke9puq24fsgq");
+    this.client = new StreamChat("qk4nn7rpcn75");
 
     const userToken = localStorage.getItem("token");
     const tokenUserId = localStorage.getItem("user_id");
@@ -95,35 +96,36 @@ class App extends Component {
 
   render() {
     return (
-      <Chat client={this.client} theme={"team light"}>
+      <div id="messageView">
+        <Chat client={this.client} theme={"team light"}>
 
-            <div id='ChListSideBarWrapper'>
-                <CustomChatSidePanel/>
+              <div id='ChListSideBarWrapper'>
+                  <CustomChatSidePanel/>
+                    <ChannelList
+                        Preview={ ChannelPreviewLastMessage} options={options}
+                        sort={sort}
+                        List={ChannelListMessenger}
+                        customActiveChannel='general'
+                    />
+                    <button  type='button' className="navclosebtn" onClick={closeSideBar}>x</button>
 
-                  <ChannelList
-                      Preview={ ChannelPreviewLastMessage} options={options}
-                      sort={sort}
-                      List={ChannelListTeam}
-                      customActiveChannel='general'
-                  />
-                  <a href="javascript:void(0)" className="navclosebtn" onClick={closeSideBar}>x</a>
-
-            </div>
-
-            <Channel>
-              <Window>
-              <div style={{ 'display':'flex', 'alignItems':'center', 'width':'100%'}}>
-              <button id="navBtnA" onClick={openSideBar}><Icon id='ChannelListReveal' name='bars' style={{'color':'#e2e2e4', 'fontSize':'24px'}}/></button>
-                <ChatSearchBar style={{'margin':'5px 0px', 'width':'100%'}}/>
               </div>
-                <CustomChannelHeader/>
-                <MessageList Message={MessageSimple} />
-                <MessageInputLarge/>
-              </Window>
-              <Thread  Message={MessageTeam} />
-            </Channel>
 
-      </Chat>
+              <Channel>
+                <Window>
+                <div style={{ 'display':'flex', 'alignItems':'center', 'width':'100%'}}>
+                <button id="navBtnA" onClick={openSideBar}><Icon id='ChannelListReveal' name='chevron right' style={{'color':'blue', 'fontSize':'24px'}}/></button>
+                  <ChatSearchBar style={{'margin':'5px 0px', 'width':'100%'}}/>
+                </div>
+                  <CustomChannelHeader/>
+                  <MessageList Message={MessageTeam} />
+                  <MessageInputLarge/>
+                </Window>
+                <Thread  Message={MessageTeam} />
+              </Channel>
+
+        </Chat>
+      </div>
     );
   }
 }

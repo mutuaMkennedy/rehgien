@@ -28,13 +28,23 @@ const ChHeaderWrapper = styled.div`
 const ChHeadersContent = styled.div`
   margin-left:5px;
   width:70%;
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+`
+const ChHeaderAvatar = styled.img`
+  width:55px;
+  height:55px;
+  object-fit:cover;
+  margin-right:10px;
+  border-radius:50%;
 `
 
 const ChHeaderName = styled.div`
-  font-family:Noto Sans Jp, Arial;
-  color: rgba(0,0,0,0.9);
+  font-family:Ubuntu,Arial;
+  color: #006cff;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom:3px;
 `
 const ChHeaderDesc = styled.div`
@@ -49,13 +59,13 @@ const ChHeaderDesc = styled.div`
 `
 
 const SideBar = styled.div`
-    height:98vh;
+    height:calc(100vh - 60px);
     background:#ffffff;
     width:25%;
     position:fixed;
-    top:0;
+    top:60px;
     right:0;
-    z-index:100;
+    z-index:20;
     transition: 0.5s;
     display:none;
     margin-top:5px;
@@ -98,7 +108,7 @@ function openNav(){
   sidBarInf.style.display='block';
   infoActionBtn.style.border='4px solid #a3caff'
 
-  var root = document.getElementById('root');
+  var root = document.getElementById('messageView');
   root.style.marginRight='25%';
   root.style.transition= 'margin-right 0.5s';
 };
@@ -108,7 +118,7 @@ function closeNav(){
   var infoActionBtn = document.getElementById('infoAbTn');
   sidBarInf.style.display='none';
   infoActionBtn.style.border='none'
-  var root = document.getElementById('root');
+  var root = document.getElementById('messageView');
   root.style.marginRight='0';
   root.style.transition= 'margin-right 0.5s';
 };
@@ -159,12 +169,14 @@ const CustomChannelHeader = withChannelContext(
         console.log(othUserObject);
       }
 
-
+console.log(this.props);
       return (
 
         <div>
             <ChHeaderWrapper>
                 <ChHeadersContent>
+                { this.props.channel.data.image && <ChHeaderAvatar src={this.props.channel.data.image}/>}
+                  <div>
                       <ChHeaderName>
                         {
                           this.props.channel.data.name ? (
@@ -183,11 +195,16 @@ const CustomChannelHeader = withChannelContext(
                             <div style={{ 'marginLeft':'4px'}}>
                                 {this.props.channel.data.member_count}
                             </div>
-                            <span style={{ 'margin':'0 5px','fontSize': '13px'}}>|</span>
-                            <div>
-                              {this.props.channel.data.description && this.props.channel.data.description.slice(0,43) + '...' }
-                            </div>
+                          {this.props.channel.data.description && (
+                            <>
+                              <span style={{ 'margin':'0 5px','fontSize': '13px'}}>|</span>
+                             <div>this.props.channel.data.description.slice(0,43) + '...' </div>
+                            </>
+                           )
+                         }
+
                       </ChHeaderDesc>
+                  </div>
                 </ChHeadersContent>
                 <div style={{'width': '30%', 'display':'flex','alignItems':'center','justifyContent':'flex-end', 'marginRight':'20px'}}>
                     <SemanticPopup
@@ -303,7 +320,7 @@ const CustomChannelHeader = withChannelContext(
                               <div key={member[0].user.id} style ={{'display':'flex','alignItems':'center','flexWrap':'no-wrap'}}>
                                   <div style={{'width':'auto','position':'relative','margin':'5px 10px'}}>
                                   <img src={member[0].user.image} style={{'width':'30px',
-                                  'height':'30px', 'borderRadius':'5px'}}
+                                  'height':'30px', 'borderRadius':'5px','objectFit': 'cover'}}
                                   alt={member[0].user.name}
                                   />
                                   {member[0].user.online === true ? (
@@ -348,7 +365,7 @@ const CustomChannelHeader = withChannelContext(
                                     'height':'80px', 'borderRadius':'5px', 'margin':'5px',
                                     'border':'1px solid #0000001a', 'alignItems':'center', 'position':'relative'
                                     }}>
-                                        <img src= {message.attachments[0].image_url } style={{'width':'90px','borderRadius':'5px','height':'70px','margin':'5px'}} download alt='attachment'/>
+                                        <img src= {message.attachments[0].image_url } style={{'width':'90px','borderRadius':'5px','height':'70px','margin':'5px','objectFit': 'cover'}} download alt='attachment'/>
 
                                         <div style={{'fontFamily':'Noto Sans Jp, Arial','fontWeight':'700',
                                         'marginLeft':'10px','color':'#767676', 'display':'flex', 'flexDirection':'column'}}>

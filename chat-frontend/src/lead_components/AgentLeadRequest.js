@@ -35,7 +35,7 @@ import {
 import axios from "axios";
 import styled from 'styled-components';
 import base from '../baseAddress.js';
-import avatar from '../static/avatar.jpg';
+import avatar from '../static/avatar.png';
 import shocked from '../static/shocked.svg';
 import AgentLeadRequestStats from './AgentLeadRequestStats.js';
 import LeaderPanel from './AgentLeadRequestLeaderboard.js';
@@ -526,7 +526,7 @@ class AgentLeadRequests extends Component {
             <>
             <StyledCard centered key={item.pk}>
                 <Card.Content>
-                      <Image floated='left' size='mini' src={avatar}/>
+                      <Image floated='left' size='mini' src={item.profile_image ? item.profile_image : avatar}/>
                       <Card.Header>{item.name}</Card.Header>
                       <Card.Description>
                       Looking for a {item.ownership}

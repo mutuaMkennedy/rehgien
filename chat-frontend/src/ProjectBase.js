@@ -31,6 +31,7 @@ const Navbar = styled.div`
   position:sticky;
   top:0;
   z-index:999;
+  border-bottom: 1px solid rgb(235, 243, 255);
 `
 const LogoLink = styled(Link)`
   @media (max-width: 786px){
@@ -53,6 +54,7 @@ const MobileNavbarWrapper = styled.div`
   width:100%;
   background:#fff;
   height:60px;
+  border-bottom: 1px solid rgb(235, 243, 255);
   @media (max-width: 768px){
     position: fixed;
     height:auto;

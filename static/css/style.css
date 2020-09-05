@@ -2057,27 +2057,138 @@ main {
     padding: 10px;
     padding-bottom: 0;
 }
+.pfl-page-Sc-1{
+    display:flex;
+    flex-direction:column;
+    height:calc(100vh - 74px);
+    float:left;
+    width:20%;
+    background-color:#fff;
+    border-radius: 10px;
+}
+
+.pfl-d{
+    float:right;
+    width:79%;
+    height:calc(100vh - 74px);
+    background-color:#fff;
+    border-radius: 10px;
+    padding:10px;
+}
 
 #pfl-page-row {
-    width: 90%;
-    background-color: #fff;
+    background-color: #ecfaf6;
     border-radius: 10px;
+    height:calc(100vh - 74px);
+}
+
+.pfl-acct-stg{
+    height:60% !important;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+}
+
+.pfl-acct-ElBox{
+    height:40%;
+}
+.pfl-acct-ElBox p{
+    padding: 0 10px;
+    color: #000;
+    font-size: 15px;
+    font-family: Roboto,Arial;
+}
+
+.pfl-acct-actionBtnsWrp{
+    height:100% !important;
+}
+
+.pfl-acct-BtnsWrps{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:flex-start;
+    height: calc(100% - 70px);
+    overflow-y:auto;
+}
+
+.pfl-acct-actionBtnsWrp{
+    display:flex;
+    align-items:center;
+    width:100%;
+}
+.pfl-acct-actionBtnsDvr{
+    width:1px;
+    height:70%;
+    background-color:#dddddd;
+}
+.pfl-acct-actionBtns,.pfl-acct-ProactionBtns{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    flex-direction:column;
+}
+.pfl-acct-actionBtns img{
+    width:24px;
+    height:24px;
+}
+
+.pfl-acct-actionBtns button,.pfl-acct-ProactionBtns button{
+    width:35px;
+    height:35px;
+    margin:5px;
+    border-radius:50%;
+    border:none;
+    background-color:#fff;
+}
+.pfl-acct-actionBtns button:hover, .pfl-acct-ProactionBtns button:hover{
+   cursor:pointer;
+   opacity:0.9;
+}
+
+.pfl-acct-ProactionBtns a,.pfl-acct-actionBtns a{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    font-size:13px;
+    font-family:Roboto,Arial;
+}
+
+..pfl-acct-ProactionBtns img,.pfl-acct-ProactionBtns img{
+    width:20px;
+    height:20px;
+    object-fit:cover;
 }
 
 .profileDashBanner {
     width: 100%;
-    height: 150px;
+    height: 100%;
     border-radius: 10px;
+    margin: 0;
+    background-position:right;
+    background-repeat:no-repeat;
 }
 
-.profileDashBanner h1 {
-    padding: 10px;
-    font-size: 25px;
-    color: #fff;
-    font-family: Noto Sans Jp,Roboto, Arial;
+.profileDashBanner p {
+    padding:0 10px;
+    font-size: 15px;
+    color: #000;
+    font-family: Roboto, Arial;
+}
+.profileDashBanner p > span {
+    font-size: 15px;
+    color: #1100ff;
+    font-family: Roboto, Arial;
+    font-weight:bold;
 }
 
 @media only screen and (max-width: 768px) {
+    .pfl-acct-stg{
+    width:100%;
+    }
     .profileDashBanner {
         border-radius:0;
     }
@@ -2093,17 +2204,35 @@ main {
     }
 }
 
-.pfl-dtl {
+.pfl-dtl{
     width: 100% !important;
     margin: 0px;
+    height:calc(100% - 50px);
+}
+.pfl-listings{
+    width: 100% !important;
+    height:100%;
 }
 
+#MyListings-switch a{
+    text-transform:capitalize;
+    font-size:15px;
+    color:#000;
+    font-family:Roboto, Arial;
+}
+
+#MyListings-switch a.active{
+  border-bottom:2px solid #13031b;
+  background-color:#fff;
+}
+
+#MySaleListings,#MyRentalListings,
+#MyPropertyRequests{
+    height: calc(100% - 70px);
+}
 #cd-wrap {
     width: 100%;
-    position: relative;
-    bottom: 70px;
     height: auto;
-    border-bottom: 1px solid #ecfaf6;
 }
 
 .profile-sale, .profile-rentals {
@@ -2122,33 +2251,31 @@ main {
 }
 
 .pfl-card-img {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    position: relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:0 10px;
+    flex-direction:column;
 }
 
 .pfl-card-img > img {
     width: 100px;
     height: 100px;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-    margin: 0;
-    border-radius: 50%;
+    border: 2px solid rgb(236 250 246);
+    border-radius: 10px;
     object-fit: cover;
 }
-
-.pfl-card-img > span img {
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    bottom: 0;
-    right: 20px;
-    background-color: #fff;
-    border-radius: 50%;
+.pfl-card-img p{
+    font-size:15px;
+    color:#000;
+    font-family:Roboto, Arial;
+    text-align:center;
 }
 
 .user-details {
-    padding: 10px;
     width: 100%;
 }
 
@@ -2156,26 +2283,32 @@ main {
     width: fit-content;
     width: -moz-fit-content;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    margin-top: 15px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 15px;
+    flex-direction:column;
+    width:100%;
 }
-
-.pfl-act-inf span {
+.pfl-act-inf a{
+    width: 100%;
     display: flex;
-    background-color: #ecfaf6;
-    border-radius: 25px;
-    padding: 0 25px;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 13px;
+    font-family: Roboto,Arial;
+}
+.pfl-act-inf button{
+    width: 35px;
+    height: 35px;
+    margin: 5px;
+    border-radius: 50%;
+    border: none;
+    background-color: #fff;
 }
 
 .pfl-act-inf img {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     object-fit: cover;
-    margin: 0px 10px;
 }
 
 #pfl-d-sw {
@@ -2228,16 +2361,13 @@ main {
 }
 
 .profile-title {
-    background-color: #ecfaf6;
-    padding: 10px;
-    margin-top: 55px;
-    color: #757575;
+    padding: 0 10px;
+    color: #000;
     font-size: 20px;
     z-index: 1;
-    font-weight: 400;
-    font-family: Noto sans Jp,Roboto,Arial;
+    font-family: Roboto,Arial;
     border-radius: 25px;
-    text-align: center;
+    text-transform:capitalize;
 }
 
 #link-del {
@@ -2272,10 +2402,9 @@ main {
 }
 
 .profile-sale,.profile-rentals {
-    height: max-content;
-    margin-bottom: 20px;
-    border-bottom: 5px solid rgb(236 250 246);
+    height: calc(100% - 50px) !important;
     background-color: #fff;
+    overflow-y:scroll;
 }
 
 .profile-sale p {
@@ -2288,19 +2417,164 @@ main {
     text-align: center;
 }
 
-.a-content {
+.requests-sc p{
+   padding: 0 10px;
+    color: #000;
+    font-size: 20px;
+    z-index: 1;
+    font-family: Roboto,Arial;
+    border-radius: 25px;
+    text-transform: capitalize;
+}
+.requests-list{
+    display:flex;
+    flex-wrap:wrap;
+    height: calc(100vh - 250px) !important;
     background-color: #fff;
-    margin-top: 70px;
+    overflow-y: scroll;
+
+}
+.requestCard {
+    width:45%;
+    height:220px;
+    border-radius:10px;
+    margin:5px;
+    margin-bottom:25px;
+    overflow-y:auto;
+}
+.requestCardAcct{
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
 }
 
-.a-content h6 {
-    color: #000000;
-    font-size: 15px;
-    font-weight: lighter;
-    position: relative;
-    left: 37.5%;
-    width: 200px;
-    margin: 0px
+.requestCardAcct > span{
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    padding:10px;
+    width:100%;
+    border-top-right-radius:10px;
+    border-top-left-radius:10px;
+}
+.prop .requestCardAcct > span,
+.ler .requestCardAcct > span{
+   background-color: #5b0088 !important;
+}
+.pro .requestCardAcct > span,
+.agp .requestCardAcct > span{
+   background-color: #880045 !important;
+}
+.oth .requestCardAcct > span{
+   background-color: #008817 !important;
+}
+.requestCardAcct img{
+    width:60px;
+    height:60px;
+    object-fit:cover;
+    border-radius:50%;
+}
+.requestCardDtls{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:start;
+    padding:0 10px;
+    width:100%;
+}
+.requestCardDtls h5{
+    font-size:15px;
+    margin:0;
+    font-weight:700;
+    font-family:Roboto, Arial;
+    text-transform:capitalize;
+    color:#fff;
+}
+.requestCardDtls p{
+    font-size:13px;
+    font-family:Roboto, Arial;
+    padding:0;
+    margin:0;
+    text-transform:capitalize;
+    color:#fff;
+}
+.requestInfoPreVw{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    list-style:none;
+    width:100%;
+}
+.requestInfoPreVw li{
+    padding:0 2px;
+    font-size:11px;
+    font-family:Roboto, Arial;
+    color:#26a69a;
+}
+.requestInfoPreVw span{
+    width:5px;
+    height:5px;
+    margin-right:2px;
+    margin-left:2px;
+    background-color:#9e9e9e;
+    border-radius:50%;
+}
+.rqInteractions{
+    width:100%;
+    height:100px;
+    display:flex;
+    justify-content:center;
+    padding:10px;
+}
+.requestClaims,.requestReferals{
+   width:50%;
+   display:flex;
+   justify-content:center;
+   align-items:center;
+   flex-direction:column;
+   font-size:45px;
+   font-family:Arial;
+}
+.requestClaims{
+    color:lime;
+}
+.requestReferals{
+    color:orange;
+    border-left:1px solid #d1d1d1;
+}
+.requestClaims span,.requestReferals span{
+    font-size:15px;
+    text-transform:uppercase;
+}
+.requestActionBtns{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.requestActionBtns button{
+    width:40px;
+    height:40px;
+    border:none;
+    background-color:#fff;
+    border-radius:50%;
+    margin:5px;
+}
+.requestActionBtns button:hover{
+  cursor:pointer;
+}
+.a-content {
+    background-color: #fff;
+}
+
+.a-content p {
+    padding: 0 10px;
+    color: #000;
+    font-size: 20px;
+    z-index: 1;
+    font-family: Roboto,Arial;
+    border-radius: 25px;
+    text-transform: capitalize;
 }
 
 .a-content img {
@@ -2312,6 +2586,11 @@ main {
 .empty-list {
     display: block;
     text-align: center;
+}
+.empty-list p{
+    font-size:13px;
+    font-family:Arial;
+    color:#b163ff;
 }
 
 .empty-list img {

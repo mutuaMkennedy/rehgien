@@ -4,8 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { StreamChat } from "stream-chat";
 import axios from "axios";
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Popup from "reactjs-popup";
 import { Dropdown,Icon } from 'semantic-ui-react';
 import { Popup as SemanticPopup} from 'semantic-ui-react';
@@ -18,17 +16,21 @@ const GcWrapper = styled.div`
 `
 
 const GcCreateButton = styled.button`
-  width:35px;
-  height:35px;
+  width:40px;
+  height:40px;
   border:none;
   border-radius:50%;
-  margin-bottom:25px;
   font-size:14px;
   background-color:transparent;
   position:relative;
+  background:#f0f2f5;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border:4px solid #a3caff;
   :hover {
     cursor:pointer;
-    transform: scale(1.3);
+    color:blue;
 }
 `
 
@@ -222,7 +224,7 @@ class GroupChannel extends Component {
     const channelAbout = this.state.channelAbout;
 
     //stream client
-    const client = new StreamChat("ke9puq24fsgq");
+    const client = new StreamChat("qk4nn7rpcn75");
 
     await client.setUser(
       {
@@ -289,13 +291,7 @@ class GroupChannel extends Component {
         <SemanticPopup
           trigger={
             <GcCreateButton onClick={this.openModal}>
-              <Icon name='comments outline' style={{'color':'#ffffff','fontSize':'15px'}}/>
-                <FontAwesomeIcon icon={faPlus} style={{
-                      'color':'#ffffff',
-                      'fontSize':'10px',
-                      'position':'absolute',
-                      'background':'a900fd6e',
-                  }}/>
+              <Icon name='comments outline' style={{'color':'#141414','fontSize':'13px', 'margin':'0'}}/>
             </GcCreateButton>
           }
           inverted

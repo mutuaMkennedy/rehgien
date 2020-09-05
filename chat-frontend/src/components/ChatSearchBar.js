@@ -23,7 +23,7 @@ class ChatSearchBar extends Component{
       setTimeout(async () => {
         if (this.state.value.length < 1) return this.setState(initialState)
 
-        const client = new StreamChat("ke9puq24fsgq");
+        const client = new StreamChat("qk4nn7rpcn75");
 
         const filters = { type: 'team', members: { $in: [tokenUserId] } };
 

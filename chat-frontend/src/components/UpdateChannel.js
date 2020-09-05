@@ -166,7 +166,7 @@ class EditGroupChannel extends Component {
     const channelAbout = this.state.channelAbout;
 
     //stream client
-    const client = new StreamChat("ke9puq24fsgq");
+    const client = new StreamChat("qk4nn7rpcn75");
 
     await client.setUser(
       {

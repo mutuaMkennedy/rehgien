@@ -35,7 +35,7 @@ import {
 import axios from "axios";
 import styled from 'styled-components';
 import base from '../baseAddress.js';
-import avatar from '../static/avatar.jpg';
+import avatar from '../static/avatar.png';
 import shocked from '../static/shocked.svg';
 import PropertyRequestStats from './PropertyRequestStats.js';
 import LeaderPanel from './RequestPropertyLeaderBoard.js';
@@ -524,7 +524,7 @@ class PropertyRequests extends Component {
           return(
             <StyledCard centered key={item.pk}>
                 <Card.Content>
-                      <Image floated='left' size='mini' src={avatar}/>
+                      <Image floated='left' size='mini' src={item.profile_image ? item.profile_image : avatar}/>
                       <Card.Header>{item.name}</Card.Header>
                       <Card.Meta>Looking to {item.ownership}</Card.Meta>
                       <Card.Description>

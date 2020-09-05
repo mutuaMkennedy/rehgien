@@ -125,7 +125,7 @@ class RemoveMember extends React.Component {
     const membersID = this.state.membersSelectedID;
 
     //stream client
-    const client = new StreamChat("ke9puq24fsgq");
+    const client = new StreamChat("qk4nn7rpcn75");
 
     await client.setUser(
       {

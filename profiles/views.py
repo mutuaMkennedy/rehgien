@@ -15,6 +15,13 @@ from .models import (
 					DesignAndServiceProProfile,
 					DesignAndServiceProReviews
 					)
+from markets.models import (
+                    PropertyRequestLead,
+                    ProffesionalRequestLead,
+                    OtherServiceLead,
+                    AgentLeadRequest,
+                    AgentPropertyRequest
+                    )
 from django.core.exceptions import PermissionDenied
 from . import forms
 from django.db.models import Avg
@@ -68,9 +75,19 @@ def profile(request):
 	paginator_rentals = Paginator(rental_user_posts, 3) #show the first 3
 	_listing_page = request.GET.get('page')
 	user_rental_posts = paginator_rentals.get_page(_listing_page)
+
+	#requests
+	property_requests = PropertyRequestLead.objects.all().filter(active=True).filter(owner=request.user)
+	proffesional_requests = ProffesionalRequestLead.objects.all().filter(active=True).filter(owner=request.user)
+	other_requests = OtherServiceLead.objects.all().filter(active=True).filter(owner=request.user)
+	ag_lead_requests = AgentLeadRequest.objects.all().filter(active=True).filter(owner=request.user)
+	ag_property_requests = AgentPropertyRequest.objects.all().filter(active=True).filter(owner=request.user)
+
 	return render(request, 'profiles/user_profile.html', {
 	'user': user, 'user_sale_posts':user_sale_posts, 'user_rental_posts':user_rental_posts,
 	'user_sale_favs':user_sale_favs, 'user_rental_favs':user_rental_favs, 'ImageTransformation':ImageTransformation,
+	"property_requests":property_requests,"proffesional_requests":proffesional_requests,
+    "other_requests":other_requests,"ag_lead_requests":ag_lead_requests,"ag_property_requests":ag_property_requests
 	})
 
 def agent_list(request):

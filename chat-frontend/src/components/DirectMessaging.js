@@ -3,8 +3,6 @@ import base from '../baseAddress.js';
 import { StreamChat } from "stream-chat";
 import axios from "axios";
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus} from '@fortawesome/free-solid-svg-icons';
 import Popup from "reactjs-popup";
 import { Dropdown,Icon } from 'semantic-ui-react';
 import { Popup as SemanticPopup} from 'semantic-ui-react';
@@ -17,17 +15,17 @@ const DmWrapper = styled.div`
 `
 
 const DmCreateButton = styled.button`
-  width:35px;
-  height:35px;
+  width:40px;
+  height:40px;
   border:none;
   border-radius:50%;
-  margin-bottom:25px;
   font-size:14px;
   background-color:transparent;
   position:relative;
+  background:#f0f2f5;
+  border:4px solid #a3caff;
   :hover {
     cursor:pointer;
-    transform: scale(1.3);
 }
 `
 
@@ -154,7 +152,7 @@ class DirectMessage extends Component {
     const contactId = this.state.value;
 
     //stream client
-    const client = new StreamChat("ke9puq24fsgq");
+    const client = new StreamChat("qk4nn7rpcn75");
 
     await client.setUser(
       {
@@ -198,13 +196,7 @@ class DirectMessage extends Component {
         <SemanticPopup
           trigger={
             <DmCreateButton onClick={this.openModal}>
-              <Icon name='comment alternate outline' style={{'color':'#ffffff','fontSize':'15px'}}/>
-                <FontAwesomeIcon icon={faPlus} style={{
-                      'color':'#ffffff',
-                      'fontSize':'10px',
-                      'position':'absolute',
-                      'background':'a900fd6e',
-                  }}/>
+              <Icon name='edit outline' style={{'color':'#141414','fontSize':'13px','margin':'0'}}/>
             </DmCreateButton>
           }
           inverted

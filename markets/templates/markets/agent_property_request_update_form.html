@@ -1,0 +1,238 @@
+{% extends 'base.html'%}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+<section class="serviceRQsection">
+      <div class="requestServiceFormWrapper">
+        <div class="rq-BannerImg" style="background-image:linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ),url({%static 'img/coffee_cup.jpg'%})">
+
+          <h1>Save time let other agents find you!</h1>
+        </div>
+          <form class="requestServiceForm" action="{% url 'markets:agent_prop_request_update' request.pk%}" method="post">
+            {% csrf_token %}
+              <div class="rqFormInputFields">
+                <a href="{% url 'listings:homepage'%}">
+                  <div class="rq-logo" style="background-image:url({%static 'img/rhg_logo1.png'%})">
+
+                  </div>
+                </a>
+                <h1>Request Property</h1>
+                  <div class="RequestFormStep">
+                    <h3>Step 1 of 6 - Location</h3>
+                    <div class="rq_propertyLocWrapper">
+                      <h4>Where should this property be located.</h4>
+                      <div class="rq_propertyLocIn">
+                        {{form.location_name|as_crispy_field}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="RequestFormStep">
+                    <h3>Step 2 of 6 - Property Type, Budget & Market Value.</h3>
+                    <div class="rq_propertyTypeWrapper">
+                      <h4>Select the type of property you are looking for.</h4>
+                      <div class="rq_propertyTypeIn">
+                        {{form.property_type|as_crispy_field}}
+
+                      </div>
+                    </div>
+                    <div class="rq_priceRangeWrapper">
+                      <h4>Specify your budget in Ksh.</h4>
+                      <div class="rq_priceRangeIn">
+                        {{form.min_price|as_crispy_field}}
+                        {{form.max_price|as_crispy_field}}
+                      </div>
+                    </div>
+                    <div class="rq_priceRangeWrapper">
+                      <h4>Specify a desired market value in Ksh. Not Sure? Provide an approximate.</h4>
+                      <div class="rq_priceRangeIn">
+                        {{form.market_value|as_crispy_field}}
+                      </div>
+                    </div>
+                  </div>
+
+                <div class="RequestFormStep">
+                  <h3>Step 3 of 6 - Beds, Property Size & Number Of Units</h3>
+                  <div class="rq_bedsWrapper">
+                    <h4>Specify the preffered number of bedrooms.</h4>
+                    <div class="rq_bedsIn">
+                      {{form.min_beds|as_crispy_field}}
+                      {{form.max_beds|as_crispy_field}}
+                    </div>
+                  </div>
+                  <div class="rq_propertySizeWrapper">
+                    <h4>Provide a desired floor/lot size in m<sup>2</sup></h4>
+                    <div class="rq_propertySizeIn">
+                      {{form.property_size|as_crispy_field}}
+                    </div>
+                  </div>
+                  <div class="rq_propertySizeWrapper">
+                    <h4>How many units do you need?</h4>
+                    <div class="rq_propertySizeIn">
+                      {{form.number_of_units|as_crispy_field}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="RequestFormStep">
+                  <h3>Step 4 of 6 - Features.</h3>
+                  <div class="rq_featuresWrapper">
+                    <h4>Specify whether you need this property furnished and/or Serviced.</h4>
+                    <div class="rq_featuresIn">
+                        {{form.general_features|as_crispy_field}}
+                    </div>
+                  </div>
+                  <div class="rq_parkingWrapper">
+                    <h4>What parking options are you considering.</h4>
+                    <div class="rq_parkingIn">
+                      {{form.parking_choices|as_crispy_field}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="RequestFormStep">
+                  <h3>Step 5 of 6 - Ownership & Timeline.</h3>
+                  <div class="rq_ownershipWrapper">
+                    <h4>Do you wish to Rent, Buy or Lease this property?</h4>
+                    <div class="rq_ownershipIn">
+                      {{form.ownership|as_crispy_field}}
+                    </div>
+                  </div>
+                  <div class="rq_timelineWrapper">
+                    <h4>By which date do you need this property.</h4>
+                    <div class="rq_timelineIn">
+                      {{form.timeline|as_crispy_field}}
+                    </div>
+                  </div>
+
+                  <div class="rq_extraDetailsWrapper">
+                    <h4>Add some additional information incase we missed something.</h4>
+                    <div class="rq_extraDetailsIn">
+                      {{form.additional_details|as_crispy_field}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="RequestFormStep">
+                  <h3>Step 6 of 6 - Contact Info.</h3>
+                  <div class="rq_nameWrapper">
+                    <h4>Your name.</h4>
+                    <div class="rq_nameIn">
+                      {{form.name|as_crispy_field}}
+                    </div>
+                  </div>
+                  <div class="rq_phoneWrapper">
+                    <h4>Your phone number.</h4>
+                    <div class="rq_phoneIn">
+                      {{form.phone|as_crispy_field}}
+                    </div>
+                  </div>
+                  <div class="rq_emailWrapper">
+                    <h4>Your email.</h4>
+                    <div class="rq_emailIn">
+                      {{form.email|as_crispy_field}}
+                    </div>
+                  </div>
+                  <div class="rq_serviceSubmit">
+                    <button type="submit" name="button">Submit</button>
+                  </div>
+                  <p>By submiting this form you consent to have read and understood our privacy policy and terms of use. You also agree
+                  that agents shall contact you via electronic means using the information provided above.
+                </p>
+                </div>
+                <div style="overflow:auto;">
+                  <div style="float:right;">
+                    <button type="button" id="prevStepBtn" onclick="nextPrev(-1)">Previous</button>
+                    <button type="button" id="nextStepBtn" onclick="nextPrev(1)">Next</button>
+                  </div>
+                </div>
+                <!-- Circles which indicate the steps of the form: -->
+                <div style="text-align:center;margin-top:40px;">
+                  <span class="StepIndicator"></span>
+                  <span class="StepIndicator"></span>
+                  <span class="StepIndicator"></span>
+                  <span class="StepIndicator"></span>
+                  <span class="StepIndicator"></span>
+                  <span class="StepIndicator"></span>
+                </div>
+              </div>
+          </form>
+      </div>
+</section>
+
+<script type="text/javascript">
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("RequestFormStep");
+  x[n].style.display = "block";
+  //... and fix the Previous/Next buttons:
+  if (n == 0) {
+    document.getElementById("prevStepBtn").style.display = "none";
+  } else {
+    document.getElementById("prevStepBtn").style.display = "inline";
+  }
+  if (n == (x.length - 1)) {
+    document.getElementById("nextStepBtn").style.display = "none";
+  } else {
+    document.getElementById("nextStepBtn").style.display = "inline";
+  }
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("RequestFormStep");
+  // Exit the function if any field in the current tab is invalid:
+  if (n == 1 && !validateForm()) return false;
+  // Hide the current tab:
+  x[currentTab].style.display = "none";
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+  // if you have reached the end of the form...
+  if (currentTab >= x.length) {
+    // ... the form gets submitted:
+    document.getElementsByClassName("requestServiceForm").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function validateForm() {
+  // This function deals with validation of the form fields
+  var x, y, i, valid = true;
+  x = document.getElementsByClassName("RequestFormStep");
+  console.log(x);
+  y = x[currentTab].getElementsByTagName("input");
+  // A loop that checks every input field in the current tab:
+  for (i = 0; i < y.length; i++) {
+    // If a field is empty...
+    if (y[i].value == "") {
+      // add an "invalid" class to the field:
+      y[i].className += " invalid";
+      // and set the current valid status to false
+      valid = false;
+    }
+  }
+  // If the valid status is true, mark the step as finished and valid:
+  if (valid) {
+    document.getElementsByClassName("StepIndicator")[currentTab].className += " finish";
+  }
+  return valid; // return the valid status
+}
+
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("StepIndicator");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class on the current step:
+  x[n].className += " active";
+}
+</script>
+{% endblock %}
