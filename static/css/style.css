@@ -7989,16 +7989,17 @@ main {
 .rq_proffTypeIn .select-wrapper .dropdown-content,
 .rq_featuresIn .select-wrapper .dropdown-content,
 .rq_parkingIn .select-wrapper .dropdown-content {
-   overflow:hidden;
+   overflow:auto;
 }
 
-.rq_propertyTypeIn .select-wrapper ul li span,
-.rq_ownershipIn .select-wrapper ul li span,
-.rq_proffTypeIn .select-wrapper ul li span,
-.rq_featuresIn .select-wrapper ul li span,
-.rq_parkingIn .select-wrapper ul li span{
+.rq_propertyTypeIn .select-wrapper ul li span, li
+.rq_ownershipIn .select-wrapper ul li span, li,
+.rq_proffTypeIn .select-wrapper ul li span, li,
+.rq_featuresIn .select-wrapper ul li span, li,
+.rq_parkingIn .select-wrapper ul li span, li{
     color:#000;
     font-size:14px;
+    height:20px;
 }
 
 .rq_priceRangeIn #div_id_min_price,

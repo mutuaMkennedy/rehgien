@@ -71,7 +71,7 @@ class AgentLeadRequestForm(forms.ModelForm):
         ]
         widgets = {
             'timeline': DateInput(),
-            'location':LeafletWidget()
+            'location':LeafletWidget(),
         }
 
 class AgentPropertyRequestForm(forms.ModelForm):

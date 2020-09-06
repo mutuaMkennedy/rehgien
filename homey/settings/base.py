@@ -249,12 +249,14 @@ CKEDITOR_CONFIGS = {
 }
 
 LEAFLET_CONFIG = {
+    'SPATIAL_EXTENT': (33.8679, -4.816276, 41.97685, 4.629931),
+    # 'TILES': 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
     'DEFAULT_CENTER': (-1.10, 37.01),
     'DEFAULT_ZOOM': 10,
     'MAX_ZOOM':20,
     'MIN_ZOOM':3,
     'SCALE': 'both',
-    'ATTRIBUTION_PREFIX': 'Powered by leaflet, inspired by Rehgien',
+    'ATTRIBUTION_PREFIX': 'Rehgien',
 
 
 }
