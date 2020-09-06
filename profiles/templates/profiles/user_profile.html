@@ -82,8 +82,10 @@
 
                     </div>
                     <div class="pfl-acct-ElBox">
-                        <p>Other Actions.</p>
-                        <div class="pfl-acct-BtnsWrps">
+                      <ul class='collapsible'>
+                        <li>
+                        <p class="collapsible-header" >Other Actions. <i class="fas fa-chevron-right"></i></p>
+                        <div class="pfl-acct-BtnsWrps collapsible-body">
                             <div class="pfl-acct-actionBtnsWrp">
                               <div class="pfl-acct-actionBtns">
                                 {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
@@ -131,6 +133,8 @@
                               </div>
                             </div>
                         </div>
+                        </li>
+                      </ul>
                     </div>
             </div>
             <div class="pfl-d">

@@ -2076,10 +2076,31 @@ main {
     padding:10px;
 }
 
+@media only screen and (max-width:768px){
+ .pfl-page-Sc-1{
+     width:100%;
+     float:none;
+     height:auto;
+     padding-bottom:25px;
+ }
+ .pfl-d{
+     width:100%;
+     float:none;
+     height:auto;
+     padding:0;
+ }
+}
+
 #pfl-page-row {
     background-color: #ecfaf6;
     border-radius: 10px;
     height:calc(100vh - 74px);
+}
+
+@media only screen and (max-width:768px){
+    #pfl-page-row {
+        height:100vh;
+    }
 }
 
 .pfl-acct-stg{
@@ -2093,24 +2114,38 @@ main {
 .pfl-acct-ElBox{
     height:40%;
 }
+.pfl-acct-ElBox .collapsible, li{
+    height:100%;
+    margin:0;
+    box-shadow:none;
+    border:none;
+}
+
 .pfl-acct-ElBox p{
     padding: 0 10px;
     color: #000;
     font-size: 15px;
     font-family: Roboto,Arial;
+    margin:0;
+    border:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    color:blue;
 }
 
+.pfl-acct-ElBox li.active p > svg{
+    transform:rotate(90deg);
+    color:#ee6e73;
+}
 .pfl-acct-actionBtnsWrp{
     height:100% !important;
 }
 
 .pfl-acct-BtnsWrps{
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-    align-items:flex-start;
-    height: calc(100% - 70px);
+    height:calc(100% - 23px) !important;
     overflow-y:auto;
+    padding:0;
 }
 
 .pfl-acct-actionBtnsWrp{
@@ -2175,12 +2210,12 @@ main {
 .profileDashBanner p {
     padding:0 10px;
     font-size: 15px;
-    color: #000;
+    color: blue;
     font-family: Roboto, Arial;
 }
 .profileDashBanner p > span {
     font-size: 15px;
-    color: #1100ff;
+    color: #ee6e73;
     font-family: Roboto, Arial;
     font-weight:bold;
 }
@@ -2229,6 +2264,12 @@ main {
 #MySaleListings,#MyRentalListings,
 #MyPropertyRequests{
     height: calc(100% - 70px);
+}
+@media only screen and (max-width:768px){
+    #MySaleListings,#MyRentalListings,
+    #MyPropertyRequests{
+        padding:0 !important;
+    }
 }
 #cd-wrap {
     width: 100%;
@@ -2407,6 +2448,18 @@ main {
     overflow-y:scroll;
 }
 
+@media only screen and (max-width:768px){
+    .profile-sale,.profile-rentals {
+        height:100%;
+        padding:0;
+    }
+    #pfl-sal > div{
+        padding:0;
+    }
+     .profile-rentals .row > div{
+        padding:0;
+    }
+}
 .profile-sale p {
     color: #000000;
     text-align: center;
@@ -2442,6 +2495,7 @@ main {
     margin-bottom:25px;
     overflow-y:auto;
 }
+
 .requestCardAcct{
     display:flex;
     justify-content:flex-start;
@@ -2457,6 +2511,22 @@ main {
     border-top-right-radius:10px;
     border-top-left-radius:10px;
 }
+
+@media only screen and (max-width:768px){
+    .requests-list{
+        height:100%;
+    }
+    .requestCard {
+        width:100%;
+        margin-left:0;
+        margin-right:0;
+        border-radius:0;
+    }
+    .requestCardAcct > span{
+        border-radius:0;
+    }
+}
+
 .prop .requestCardAcct > span,
 .ler .requestCardAcct > span{
    background-color: #5b0088 !important;
@@ -2763,6 +2833,11 @@ main {
     object-fit: cover;
 }
 
+@media only screen and (max-width:768px){
+    #rec-img img {
+        border-radius:0;
+    }
+}
 #rec-img img:hover {
     opacity: 0.9;
 }
