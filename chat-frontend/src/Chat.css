@@ -1,6 +1,16 @@
+#messageView{
+  /* position: fixed; */
+  top:0;
+  left:0;
+  /* width:100%; */
+  height:calc(100vh - 60px);
+  z-index: 1000;
+  background: #fff;
+  /* overflow:hidden; */
+}
 #navBtnA{
     border:none;
-    background: #ffffff;
+    background: transparent;
     display:none;
 }
 
@@ -12,17 +22,17 @@
 
 .navclosebtn{
   color:#111;
-  margin:10px;
+  margin:0px;
   font-size:15px;
   position:absolute;
   top: 5px;
-  right: 0;
+  right: 5px;
   width: 40px;
   height: 40px;
   border-radius:50%;
   text-align:center;
   padding:2px;
-  z-index: 100;
+  z-index: 150;
   display:none;
   border:none;
 }
@@ -60,18 +70,20 @@
 }
 
 .str-chat-channel-list{
-  height:calc(100vh - 140px) !important;
-  background-color:#ffffff;
+  height:calc(100% - 46px) !important;
+  background-color:#13031b !important;
   width:300px;
  }
  @media screen and (max-width: 960px){
    .str-chat-channel-list{
-     width:100% !important;
+     width:auto !important;
+     min-height:0px !important;
    }
  }
 .str-chat__channel-list-messenger{
   height:100%;
-  background-color:#fff;
+  width:300px;
+  background-color:#13031b;
 }
 .str-chat-channel-list .str-chat__channel-list-messenger__main {
     padding: 0 !important;
@@ -82,8 +94,7 @@
 .str-chat__channel-list-team{
    overflow-x:hidden;
    overflow-y:scroll;
-   border-right:1px solid #ebf3ff;
-   width:230px;
+   width:300px;
  }
 
  #ChListSideBarWrapper{
@@ -93,8 +104,8 @@
    float:left;
    transition: width 0.5s;
    width:300px;
-   height:auto;
-   background:#ffffff;
+   height:100%;
+   background:#13031b;
  }
 
  @media screen and (max-width: 960px){
@@ -135,21 +146,23 @@
 
 .str-chat__channel-list-team__main{
   width:100%;
-  background: #ffffff !important;
+  background: #13031b !important;
+
 }
 
 .str-chat__channel-list-team__header{
-  width: 230px;
+  width: 300px;
   height: 70px;
   /* box-shadow: none; */
   position: sticky;
   top: 0px;
-  background: #ffffff;
+  background: #13031b;
   z-index: 2;
+  border-bottom: 1px solid rgb(191 191 191);
 }
 
 .str-chat__channel-list-team__header--title{
-  color:#141414;
+  color:#fff;
   font-family: Arial;
   width: 90px;
   height: 19px;
@@ -174,6 +187,7 @@
 
 .str-chat__channel-preview button {
   border:none;
+  background-color: transparent !important;
 }
 
 .str-chat__channel-preview :hover {
@@ -185,14 +199,14 @@
 }
 
 .str-chat__channel-preview  .str-chat__channel-preview-title {
-  color: #006cff;
+  color: rgb(191 191 191);
   font-family: Ubuntu,Roboto,Arial;
   font-size: 14px;
   font-weight: 600;
 }
 
 .str-chat__channel-preview .str-chat__channel-preview-last-message {
-  color: #141414;
+  color: rgb(153 153 153);
   font-weight:100;
   font-size:12px;
 }
@@ -228,7 +242,7 @@
 .str-chat__channel-preview--active .str-chat__avatar-fallback{
   width:5px;
   height:5px;
-  background-color:green;
+  background-color:lime;
   border-radius:50%;
   object-fit: cover;
   text-align: center;
@@ -244,12 +258,11 @@
 
 .str-chat{
   background-color:#ffffff;
-  height:calc(100vh - 70px);
+  height:100%;
 }
 
 .str-chat__main-panel{
   background-color:#ffffff;
-  margin:5px;
   margin-left:0;
 }
 
@@ -386,4 +399,10 @@
 }
 .str-chat__list .str-chat__avatar{
   border-radius:5px !important;
+}
+
+@media screen and (min-width: 768px){
+.str-chat__send-button {
+    display: block !important;
+}
 }

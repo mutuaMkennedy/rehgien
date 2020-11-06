@@ -3,27 +3,25 @@ import {withChatContext} from "stream-chat-react";
 import styled from 'styled-components';
 import DirectMessage from "./DirectMessaging";
 import GroupChannel from "./GroupChannel";
-import { Icon } from 'semantic-ui-react';
-import { Popup as SemanticPopup} from 'semantic-ui-react';
 
 
 const SidebarWrapper = styled.div`
-  height:70px;
+  height:40px;
   width: 300px;
-  background-color: #fff;
+  background-color: #13031b;
   display: flex;
   justify-content: center;
   align-items:center;
-  border-right: 1px solid rgb(235, 243, 255);
-  border-bottom: 1px solid rgb(235, 243, 255);
+  /* border-right: 1px solid rgb(235, 243, 255); */
+  /* border-bottom: 1px solid rgb(235, 243, 255); */
 `
 const SidebarText = styled.h1`
-  font-size:23px;
+  font-size:20px;
   width:60%;
   margin:0;
   font-family:Ubuntu,Arial;
   margin-left:10px;
-  color:#141414;
+  color:#fff;
 
 `
 const SidebarButtonsWrapper = styled.div`

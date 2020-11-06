@@ -21,13 +21,12 @@ const GcCreateButton = styled.button`
   border:none;
   border-radius:50%;
   font-size:14px;
-  background-color:transparent;
   position:relative;
-  background:#f0f2f5;
+  background:transparent;
   display:flex;
   justify-content:center;
   align-items:center;
-  border:4px solid #a3caff;
+  border:none;
   :hover {
     cursor:pointer;
     color:blue;
@@ -35,9 +34,13 @@ const GcCreateButton = styled.button`
 `
 
 const GcModal = styled(Popup)`
+    z-index:1002 !important;
+    @media (max-width:768px) {
+      width:100% !important;
+      height:auto !important;
+    };
     &-content {
-      height:auto;
-      border-radius:10px;
+      /* border-radius:10px; */
       width:500px !important;
       height:auto !important;
     }
@@ -224,7 +227,7 @@ class GroupChannel extends Component {
     const channelAbout = this.state.channelAbout;
 
     //stream client
-    const client = new StreamChat("qk4nn7rpcn75");
+    const client = new StreamChat("krfpqyntmyk8");
 
     await client.setUser(
       {
@@ -291,7 +294,7 @@ class GroupChannel extends Component {
         <SemanticPopup
           trigger={
             <GcCreateButton onClick={this.openModal}>
-              <Icon name='comments outline' style={{'color':'#141414','fontSize':'13px', 'margin':'0'}}/>
+              <Icon name='comments outline' style={{'color':'#fff','fontSize':'13px', 'margin':'0'}}/>
             </GcCreateButton>
           }
           inverted
@@ -305,6 +308,7 @@ class GroupChannel extends Component {
           open={this.state.open}
           closeOnDocumentClick
           onClose={this.closeModal}
+          className='GchannelModal'
         >
           <div className="DmModal">
             <GcModalClose className="close" onClick={this.closeModal}>

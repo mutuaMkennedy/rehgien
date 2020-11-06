@@ -24,7 +24,6 @@ const ChatActionButton= styled.button`
 const DeleteChannelModal = styled(Popup)`
     &-content {
       height:auto;
-      border-radius:10px;
       width:500px !important;
     }
 `
@@ -109,7 +108,7 @@ class LeaveOrDeleteChannel extends React.Component {
 
   async handleSubmit(event){
     event.preventDefault();
-    const client = new StreamChat("qk4nn7rpcn75");
+    const client = new StreamChat("krfpqyntmyk8");
     await client.setUser(
       {
         id: tokenUserId,

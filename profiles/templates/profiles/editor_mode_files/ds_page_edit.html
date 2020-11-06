@@ -1,0 +1,1319 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% load cloudinary %}
+{% block content %}
+{% load leaflet_tags %}
+{% leaflet_js plugins="forms" %}
+{% leaflet_css plugins="forms" %}
+<script src="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.js'%}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+      <script type="text/javascript">
+
+        $(document).ready(function(event){
+          $(".owl-carousel").owlCarousel({
+              // loop:true,
+              margin:10,
+              nav:true,
+              responsiveClass:true,
+              responsive:{
+                 0:{
+                     items:2,
+                     nav:true
+                 },
+                 480:{
+                     items:2,
+                     nav:true
+                 },
+                 768:{
+                     items:2,
+                     nav:true,
+                 }
+             }
+            });
+        });
+</script>
+
+<div id="_proile_editor_view" class="ag-dtl-wrapper">
+  <div class="bs-pfl-swc-wrp">
+    <ul id="bs-pfl-switch" class="tabs">
+        <li class="tab col s3"><a href="#ag-about-vw">Posts</a></li>
+    </ul>
+    {% if user_1 == user_2 %} <a href="{{agent.get_absolute_url}}"><button type="button" name="button">View page a visitor</button></a>{%endif %}
+  </div>
+<section>
+  <div class="container" style="width:95%">
+    <div class="row">
+      <div class="_pfPgWrapper col s12" style="padding:0;">
+          <div class="ag-d-left-content">
+            <div id="ag-d-card" class="card">
+                <div class="card-header">
+                  <div class="bsPCoverOverlay">
+                      <div class="img-rv-wrapper">
+                        <div id="__ag-Pf-img" class="ag-d-img">
+                              {%include 'profiles/editor_mode_files/page_profile_image.html'%}
+                        </div>
+                        <div class="ag-d-details">
+                          <div class="ag-rLr-box">
+                              <div class="agNm-Ratings">
+                                  <div class="b-dtls-wrp">
+                                      <div class="b-dtls">
+                                        <h5> {{agent.user.get_full_name}}</h5>
+                                      </div>
+                                      <div class="ag-rating">
+                                        {% if average_rating.rating__avg %}
+                                            {% if average_rating.rating__avg  > 4.5  and average_rating.rating__avg <= 5 %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                                            {%elif average_rating.rating__avg > 3.5 and average_rating.rating__avg <= 4.5 %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                                            {% elif average_rating.rating__avg > 2.5 and average_rating.rating__avg <= 3.5 %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                            {% elif average_rating.rating__avg > 1.5 and average_rating.rating__avg <= 2.5 %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                            {% elif average_rating.rating__avg > 0 and average_rating.rating__avg <= 1.5 %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                            {% else %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                            {% endif %}
+                                        {% endif %}
+                                      </div>
+                                      <h6><span class="material-icons">location_on</span> {{agent.address}}</h6>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="_actionToolBar">
+                    <div class="_aCTA-btns">
+                      <div class="g-lst-svf-box">
+                          <div class="ag-d-lst">
+                            <a href="#">
+                              <span>{{agent.saves.count}}</span>
+                              <h6>Saves</h6>
+                            </a>
+                            <a href="#">
+                              <span>{{agent.followers.count}}</span>
+                              <h6>Followers</h6>
+                            </a>
+                            <a href="#">
+                              <span>{{pro_teammates.count}}</span>
+                              <h6>Connections</h6>
+                            </a>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="proffesional-dtls card">
+              <div id="ag-o-d">
+                {%include 'profiles/editor_mode_files/page_info.html'%}
+              </div>
+              <div class="_edit_page_info">
+                  <a href="#e_profilePgInfo-Modal" class="modal-trigger"><span class="material-icons">create</span>Edit page info</a>
+              </div>
+            </div>
+          </div>
+          <div class="ag-d-second-content">
+              <div  class="Pr-about-vw" id='ag-about-vw'>
+                <div class="ag_featuredListings">
+                  <div class="_pf_sectionHeader">
+                    <h1>Featured listings  <a href="#"><span class="material-icons">add</span></a></h1>
+                  </div>
+                  <div class="{% if agent%}owl-carousel{% endif %} ag_featuredCarousel">
+                      {% if agent%}
+                        <div class="_pf_FeaturedItem card">
+
+                            <div class="_pf_FeaturedItemImg">
+                              <img src="{%static 'img/place1.jpg'%}">
+                            </div>
+                            <div class="_pf_FeaturedCtOvy">
+                              <div class="_pf_FeaturedItemDt">
+                                <h5>Bream View townhouse</h5>
+                                <h3>Ksh: 25,000,000</h3>
+                                <h4>3ba 5bd 120sqm <span>Muthaiga, Nairobi, Kenya</span></h4>
+                              </div>
+                          </div>
+                        </div>
+                        <div class="_pf_FeaturedItem card">
+                            <div class="_pf_FeaturedItemImg">
+                              <img src="{%static 'img/place2.jpg'%}">
+                            </div>
+                            <div class="_pf_FeaturedCtOvy">
+                              <div class="_pf_FeaturedItemDt">
+                                <h5>Bream View townhouse</h5>
+                                <h3>Ksh: 25,000,000</h3>
+                                <h4>3ba 5bd 120sqm <span>Muthaiga, Nairobi, Kenya</span></h4>
+                              </div>
+                          </div>
+                        </div>
+                        <div class="_pf_FeaturedItem card">
+                            <div class="_pf_FeaturedItemImg">
+                              <img src="{%static 'img/place3.jpg'%}">
+                            </div>
+                            <div class="_pf_FeaturedCtOvy">
+                              <div class="_pf_FeaturedItemDt">
+                                <h5>Bream View townhouse</h5>
+                                <h3>Ksh: 25,000,000</h3>
+                                <h4>3ba 5bd 120sqm <span>Muthaiga, Nairobi, Kenya</span></h4>
+                              </div>
+                          </div>
+                        </div>
+                      {%else%}
+                          <div class="pflpages-no-results">
+                            <img src="{%static 'img/note.svg'%}" alt="empty">
+                            <p>Nothing yet. <br> Featured listings will appear here</p>
+                          </div>
+                      {%endif%}
+                  </div>
+                </div>
+                <div class="ag-about ">
+                  <div class="_pf_sectionHeader">
+                    <h1>Who we are</h1>
+                  </div>
+                  <div class="_ag-about-sc">
+                    <h2><div><span class="material-icons">assignment</span> Overview</div><a href="#e_profileOverview-Modal" id="_trigOVW" class="modal-trigger"><span class="material-icons">create</span></a></h2>
+                    <div id="_editor_mode_about">
+                      {%include 'profiles/editor_mode_files/about.html'%}
+                    </div>
+                  </div>
+                  <div class="_ag-about-sc">
+                    <h2><div><span class="material-icons">verified</span> Services</div><a href="#e_profileServices-Modal" class="modal-trigger"><span class="material-icons">create</span></a></h2>
+                    <div id="_editor_mode_services" class="_ag-skillBtns">
+                      {%include 'profiles/editor_mode_files/services.html'%}
+                    </div>
+                  </div>
+                  <div class="_ag-about-sc">
+                    <h2><div><span class="material-icons">group</span> Our top clients</div><a href="#e_topClients-Modal" class="modal-trigger"><span class="material-icons">create</span></a></h2>
+                    <div id="_editor_mode_clients">
+                      {%include 'profiles/editor_mode_files/top_clients.html'%}
+                    </div>
+                  </div>
+                  <div class="_ag-about-sc">
+                    <h2><div><span class="material-icons">pin_drop</span> Service areas</div><a href="#e_profileServiceAreas-Modal" class="modal-trigger"><span class="material-icons">create</span></a></h2>
+                    <div id="_editor_mode_service_areas" class="_ag-serviceAreas">
+                      {%include 'profiles/editor_mode_files/service_areas.html'%}
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="ag-d-right-content">
+            <div class="_ag-connections card">
+              <div class="_ag-connectionsHeader">
+                <h1>Connections <span>{{pro_teammates.count}}</span></h1>
+                <a href="{% url 'profiles:user_connections'%}">Manage</a>
+              </div>
+              <div class="_ag-cns-content">
+                {% if pro_teammates %}
+                    {% for connection in pro_teammates%}
+                      {% if agent.user == connection.requestor %}
+                      <div class="_ag-cns-user">
+                        <div class="_ag-cns-imgWrp">
+                            <img src="{{connection.receiver.profile_image.url}}">
+                        </div>
+                        <div class="_ag-cns-Dtls">
+                            <h5>{% if connection.receiver.get_full_name %}{{connection.receiver.get_full_name}} {% else %} {{connection.receiver.username}}{% endif %}</h5>
+                            <h6>{{connection.receiver.user_type}}</h6>
+                        </div>
+                        <div class="_ag-cns-Cta">
+                          <a href="
+                            {% if connection.receiver.user_type == 'Agent' %}
+                                {% url 'profiles:agent_detail' connection.receiver.agent_profile.pk %}
+                            {% elif connection.receiver.user_type == 'PropertyManager' %}
+                                {% url 'profiles:pm_detail' connection.receiver.pm_profile.pk %}
+                            {% elif connection.receiver.user_type == 'Design&servicePro' %}
+                                {% url 'profiles:d_service_detail' connection.receiver.DService_profile.pk %}
+                            {% elif connection.receiver.user_type == 'Company' %}
+                                {% url 'profiles:business_detail' connection.receiver.company_profile.pk %}
+                            {% endif %}
+                          ">
+                          <span class="material-icons" style="border:1px solid #ddd">chevron_right</span>
+                        </a>
+                        </div>
+                      </div>
+                      {% elif agent.user == connection.receiver%}
+                      <div class="_ag-cns-user">
+                        <div class="_ag-cns-imgWrp">
+                            <img src="{{connection.requestor.profile_image.url}}">
+                        </div>
+                        <div class="_ag-cns-Dtls">
+                            <h5>{% if connection.requestor.get_full_name %}{{connection.requestor.get_full_name}} {% else %} {{connection.requestor.username}}{% endif %}</h5>
+                            <h6>{{connection.requestor.user_type}}</h6>
+                        </div>
+                        <div class="_ag-cns-Cta">
+                          <a href="
+                            {% if connection.requestor.user_type == 'Agent' %}
+                                {% url 'profiles:agent_detail' connection.requestor.agent_profile.pk %}
+                            {% elif connection.requestor.user_type == 'PropertyManager' %}
+                                {% url 'profiles:pm_detail' connection.requestor.pm_profile.pk %}
+                            {% elif connection.requestor.user_type == 'Design&servicePro' %}
+                                {% url 'profiles:d_service_detail' connection.requestor.DService_profile.pk %}
+                            {% elif connection.requestor.user_type == 'Company' %}
+                                {% url 'profiles:business_detail' connection.requestor.company_profile.pk %}
+                            {% endif %}
+                          ">
+                          <span class="material-icons" style="border:1px solid #ddd">chevron_right</span>
+                        </a>
+                        </div>
+                      </div>
+                      {% endif %}
+                    {% endfor %}
+                {% else %}
+                  <div class="pflpages-no-results">
+                    <p>Nothing yet.</p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <br>
+            <br>
+            <div class="_ag-connections card">
+              <div class="_ag-connectionsHeader">
+                <h1>Reviews <span>{{reviews_count}}</span></h1>
+                <a href="#" class='modal-trigger' >Manage</a>
+              </div>
+              <div class="_ag-cns-ratingWrp">
+                <div class="_ag-cns-OvRt">
+                  Overal Rating
+                  <div class="_ag-cns-OvRtScore">
+                    {% if average_rating.rating__avg %}
+                      <span>{{average_rating.rating__avg|floatformat}}</span>/5
+                    {% else %}
+                      <span>0</span>/5
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="_ag-cns-rating">
+                  {% if average_rating.rating__avg %}
+                      {% if average_rating.rating__avg  > 4.5  and average_rating.rating__avg <= 5 %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                      {%elif average_rating.rating__avg > 3.5 and average_rating.rating__avg <= 4.5 %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                      {% elif average_rating.rating__avg > 2.5 and average_rating.rating__avg <= 3.5 %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                      {% elif average_rating.rating__avg > 1.5 and average_rating.rating__avg <= 2.5 %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                      {% elif average_rating.rating__avg > 0 and average_rating.rating__avg <= 1.5 %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                      {% else %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                      {% endif %}
+                  {% endif %}
+                </div>
+              </div>
+              <div class="_ag-cns-content">
+                {% if agent_reviews %}
+                {% for review in agent_reviews%}
+                  <div class="_ag-cns-user">
+                    <div class="_ag-cns-imgWrp">
+                        <img src="{% if review.user.profile_image %}{{review.user.profile_image.url}}{% else %} {% static 'img/avatar.png' %}{% endif %}">
+                    </div>
+                    <div class="_ag-cns-Dtls">
+                        <h5>{% if review.user.get_full_name %}{{review.user.get_full_name}} {% else %} {{review.user.username}}{% endif %}</h5>
+                        <h6>{% if review.user.user_type == 'NormalUser' %}Rehgien User {%else%}{{review.user.user_type}}{%endif%}</h6>
+                    </div>
+                    <div class="_ag-cns-Cta">
+                      <button type="button" name="button">
+                        <span class="material-icons">star_rate</span>{{review.rating}}
+                      </button>
+                    </div>
+                  </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="pflpages-no-results">
+                    <p>Nothing yet.</p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<div id="e_profileImg-Modal" class="modal e_profileImg-Modal">
+  <div id="_epImg_reponse_msg" class="_EdMdsuccessMessage_">
+  </div>
+  <div id="_epPaImg_reponse_msg_err" class="_EdMderrorMessage_">
+  </div>
+  <div class="_bs_profile_form_box">
+    <div class="_bs_profile_form_wrap">
+      <div class="_bs_profile_form_header">
+        <h5>Update profile picture</h5>
+        <button type="button" class="modal-close">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form id="page_Pimage_form" class="_bs_profile_form" autocomplete="off" action="{% url 'profiles:ds_profile_update' pk=agent.pk slug='profile-picture'%}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="_bs_pFm_FieldsWrapper">
+          {{profile_image_form.media}}
+          <div class="_bs_pFm_fields">
+              <div class="_bs_pFm_tabContentVw">
+                    <div class="u_bsF-Cover_image">
+                      {% if profile_image_form.instance.banner_image%}
+                      <img id="__currentImg" class="__currentImg" src="{{profile_image_form.instance.banner_image.url}}" alt="{{agent.user.first_name}}" style="width:150px;height:150px;object-fit:cover;">
+                      {% else %}
+                      <img id="__currentImg" class="__currentImg" src="{%static 'img/avatar.png'%}" alt="{{agent.user.first_name}}" style="width:150px;height:150px;object-fit:cover;">
+                      {% endif %}
+                      <div class="u_bsF-Cover_imageIFLD">
+                          {{profile_image_form.banner_image}}
+                      </div>
+                      <div id="__selectedImageWrp">
+                        <img id="__selectedImage" src="" alt="New Image">
+                      </div>
+
+                    </div>
+              </div>
+          </div>
+        </div>
+        <div class="s-prof">
+          <button id="updatePageProfile" type="submit" name="button">
+            <img src="{% static 'img/ajax-loader.gif'%}" alt="Saving">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function(event){
+          var loaderImg = $('#updatePageProfile img');
+              loaderImg.hide();
+          $('#page_Pimage_form').on('submit', function(event){
+             event.preventDefault();
+             var formData = new FormData(this);
+
+             loaderImg.show();
+             var saveBtn = $('#updatePageProfile');
+              saveBtn.attr('disabled', 'disabled');
+              saveBtn.css({'background': '#fff', 'color':'#eee'});
+
+             $.ajax({
+               type : $(this).attr('method'),
+               url : $(this).attr('action'),
+               data :formData,
+               cache: false,
+               contentType: false,
+               processData: false,
+               // success
+               success: function(response) {
+                 $('#__ag-Pf-img').html(response['page_section']);
+                 let msgBody = $('#_epImg_reponse_msg');
+
+                 $('#__selectedImageWrp')
+                   .css('display','none');
+
+                 $('#__currentImg')
+                   .attr('src', $("#__selectedImage").attr('src'))
+
+
+                 msgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                 msgBody.css('display', 'flex');
+                 setTimeout(function(){
+                    msgBody.css('display', 'none');
+                 }, 6000);
+
+                 loaderImg.hide();
+                 saveBtn.removeAttr('disabled');
+                 saveBtn.css({'background': '#eee', 'color':'#000'});
+
+               },
+               error: function(rs,e){
+                 $('#_epPaImg_reponse_msg_err').html("<span class='material-icons'>error_outline</span>" + response['message']);
+
+                 $('#_epPaImg_reponse_msg_err').css('display', 'flex');
+                 setTimeout(function(){
+                    $('#_epPaImg_reponse_msg_err').css('display', 'none');
+                 }, 6000);
+
+                 loaderImg.hide();
+                 saveBtn.removeAttr('disabled');
+                 saveBtn.css({'background': '#eee', 'color':'#000'});
+
+               },
+             });
+          });
+
+          $('#id_banner_image').change(function () {
+          if ($(this)[0].files && $(this)[0].files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              $('#__selectedImage')
+                .attr('src', e.target.result)
+                .width(70)
+                .height(70);
+
+              $('#__selectedImageWrp')
+              .css('display','flex');
+            };
+            reader.readAsDataURL($(this)[0].files[0]);
+          }
+        });
+    });
+  </script>
+</div>
+
+<div id="e_profilePgInfo-Modal" class="modal e_profileImg-Modal">
+
+  <div id="_epPaInf_reponse_msg" class="_EdMdsuccessMessage_">
+  </div>
+
+  <div id="_epPaInf_reponse_msg_err" class="_EdMderrorMessage_">
+  </div>
+  <div class="_bs_profile_form_box">
+    <div class="_bs_profile_form_wrap">
+      <div class="_bs_profile_form_header">
+        <h5>Update page info</h5>
+        <button type="button" class="modal-close">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form id="page_info_form" class="_bs_profile_form" autocomplete="off" action="{% url 'profiles:ds_profile_update' pk=agent.pk slug='page-info'%}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="_bs_pfFm_Switch">
+          <ul class="tabs _bs_pfFm_Switch_tabs">
+              <li class="tab col s3"><a href="#_bs_pFm_Contact"><span class='material-icons'>contact_page</span>Contact</a></li>
+              <li class="tab col s3"><a href="#_bs_pFm_Location"><span class='material-icons'>navigation</span>Location</a></li>
+              <li class="tab col s3"><a href="#_bs_pFm_Hours"><span class='material-icons'>watch_later</span>Hours</a></li>
+              <li class="tab col s3"><a href="#_bs_pFm_LiCer"><span class='material-icons'>fact_check</span>Licenses & Certfications</a></li>
+          </ul>
+        </div>
+        <div class="_bs_pFm_FieldsWrapper">
+          {{page_info_form.media}}
+          <div class="_bs_pFm_fields">
+            <div id="_bs_pFm_Contact" class="_bs_pFm_tabContentVw">
+              <h5>Contact Info</h5>
+              <div class="u_bsF-phone">
+                <p>Phone number.</p>
+                {{page_info_form.phone}}
+                <span class="_field_helper_text">
+                  Adding a phone number makes it easier for clients to
+                  reach you also we use your phone number to send you notifications.
+                </span>
+              </div>
+              <div class="u_bsF-website_link">
+                <p>Website</p>
+                {{page_info_form.website_link}}
+                <span class="_field_helper_text">
+                  Help clients learn more about your business by adding your website.
+                </span>
+              </div>
+              <div class="u_bsF-email">
+                <p>Email</p>
+                <input type="email" name="" value="">
+                <span class="_field_helper_text">
+                  An email address helps pottential clients reach out to you. We use
+                  this email in all your contact forms.
+                </span>
+              </div>
+              <h5>Social Media Pages</h5>
+                  <div class="u-pf-facebook_link">
+                    <p>Facebook page.</p>
+                    {{page_info_form.facebook_link}}
+                    <span class="_field_helper_text">
+                      Grow your following on facebook by adding your page.
+                    </span>
+                  </div>
+                  <div class="u-pf-twitter_link">
+                    <p>Twitter page.</p>
+                    {{page_info_form.twitter_link}}
+                    <span class="_field_helper_text">
+                      Grow your following on twitter by adding your page.
+                    </span>
+                  </div>
+                  <div class="u-pf-linkedin_link">
+                    <p>Linkedin page.</p>
+                    {{page_info_form.linkedin_link}}
+                    <span class="_field_helper_text">
+                      Grow your following on linkedin by adding your page.
+                    </span>
+                  </div>
+                  <div class="u-pf-instagram">
+                    <p>Instagram page.</p>
+                    {{page_info_form.instagram_link}}
+                    <span class="_field_helper_text">
+                      Grow your following on instagram by adding your page.
+                    </span>
+                  </div>
+
+            </div>
+            <div id="_bs_pFm_Hours" class="_bs_pFm_tabContentVw">
+              <h5>Business Hours</h5>
+              <div class="u-pf-address">
+                <p>Set the week's opening and closing times using the 24/hr format</p>
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <thead>
+                      <th>Day</th>
+                      <th>Opening</th>
+                      <th>Closing</th>
+                      <th></th>
+                      <th hidden></th>
+                    </thead>
+                    <tbody>
+                        {% for form in ds_hours_formset.forms %}
+                        <tr class="hours-form-set">
+                          <td>{{ form.weekday}}</td>
+                           <td>{{ form.from_hour }}</td>
+                           <td>{{ form.to_hour }}</td>
+                           <td hidden>
+                             {{form.id}}
+                             {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                           </td>
+                           <td></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <span class="_field_helper_text">
+                  Tell people when you are open for business, you can add different hours for the same day.<br>
+                  Choose a opening and closing times from the dropdown or type them in your prefered way and we will format it as close as we can.
+                </span>
+                {{ds_hours_formset.management_form}}
+              </div>
+            </div>
+            <div id="_bs_pFm_Location" class="_bs_pFm_tabContentVw">
+              <h5>Location</h5>
+              <div class="u-pf-address">
+                <p>Address.</p>
+                {{page_info_form.address}}
+                <span class="_field_helper_text">
+                  Tell people where to find you. An address can be a street name or
+                  immediate neighborhood.
+                </span>
+              </div>
+              <div class="u-pf-location">
+                {{page_info_form.location}}
+              </div>
+            </div>
+
+            <div id="_bs_pFm_LiCer" class="_bs_pFm_tabContentVw">
+                <h5>Licenses</h5>
+                <div class="u-pf-license_number">
+                  <p>Real estate licenses</p>
+                  {{page_info_form.license_number}}
+                  <span class="_field_helper_text">
+                    By adding your real estate licenses you tell people you are licensed to work in your profession.
+                  </span>
+                </div>
+                <div class="u-pf-license_number">
+                  <p>Other licenses</p>
+                </div>
+                <h5>Certifications</h5>
+                <!-- <p>Adding certifications to your profile that you've earned is a great way to show off your skills and qualifications.</p> -->
+                <div class="u-pf-license_number">
+                  <p>Add certificate </p>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="s-prof">
+          <button id="updatePageInfo" type="submit" name="button">
+            <img src="{% static 'img/ajax-loader.gif'%}" alt="Saving">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function(event){
+      $('.hours-form-set').formset({
+        prefix: '{{ ds_hours_formset.prefix }}'
+      });
+
+      $('.hours-form-set input[type=text]').timepicker({
+        timeFormat: 'HH:mm',
+        interval: 60,
+        minTime: '12:00am',
+        maxTime: '23:00pm',
+        dynamic: true,
+        dropdown: true,
+        scrollbar: true
+      }); //disabled materialize timepicker which was overriding this plugin
+
+          var loaderImg = $('#updatePageInfo img');
+              loaderImg.hide();
+
+          $('#page_info_form').on('submit', function(event){
+             event.preventDefault();
+             var serializedData = $(this).serialize();
+
+             loaderImg.show();
+             var saveBtn = $('#updatePageInfo');
+              saveBtn.attr('disabled', 'disabled');
+              saveBtn.css({'background': '#fff', 'color':'#eee'});
+
+             $.ajax({
+               type : $(this).attr('method'),
+               url : $(this).attr('action'),
+               data :serializedData,
+               dataType: 'json',
+               // success
+               success: function(response) {
+                 $('#ag-o-d').html(response['page_section']);
+                 var msgBody = $('#_epPaInf_reponse_msg');
+                 console.log("1 " + msgBody.html());
+                 msgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message']);
+                 msgBody.css('display', 'flex');
+                 console.log("2 " + msgBody.html());
+                 setTimeout(function(){
+                    msgBody.css('display', 'none');
+                 }, 6000);
+
+                 loaderImg.hide();
+                 saveBtn.removeAttr('disabled');
+                 saveBtn.css({'background': '#eee', 'color':'#000'});
+
+               },
+               error: function(rs,e){
+                 $('#_epPaInf_reponse_msg_err').html("<span class='material-icons'>error_outline</span>" + response['message']);
+                 $('#_epPaInf_reponse_msg_err').css('display', 'flex');
+                 setTimeout(function(){
+                    $('#_epPaInf_reponse_msg_err').css('display', 'none');
+                 }, 6000);
+
+                 loaderImg.hide();
+                 saveBtn.removeAttr('disabled');
+                 saveBtn.css({'background': '#eee', 'color':'#000'});
+               },
+             });
+          });
+    });
+  </script>
+</div>
+
+<div id="e_profileOverview-Modal" class="modal e_profileImg-Modal" >
+  <div id="_epabt_reponse_msg" class="_EdMdsuccessMessage_">
+  </div>
+  <div id="_epabt_reponse_msg_err" class="_EdMderrorMessage_">
+    <span class='material-icons'>error_outline</span>
+  </div>
+  <div class="_bs_profile_form_box">
+    <div class="_bs_profile_form_wrap">
+      <div class="_bs_profile_form_header">
+        <h5>Update overview</h5>
+        <button type="button" class="modal-close">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form id="about_us_form" class="_bs_profile_form" autocomplete="off" action="{% url 'profiles:ds_profile_update' pk=agent.pk slug='about-us'%}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="_bs_pFm_FieldsWrapper">
+          {{about_form.media}}
+          <div class="_bs_pFm_fields">
+                <div class="_bs_pFm_tabContentVw">
+                  <h5>Overview</h5>
+                  <div class="u_bsF-about">
+                    <p>
+                      Set a tone to your profile and your business by telling people what you do.
+                      Use the editor tools to format your bio.
+                    </p>
+                    {{about_form.about}}
+                    <span>
+                      Note: Self-promotion material is not allowed. Adding content that doesn't comply with this may
+                      result in your account being suspended.
+                    </span>
+                  </div>
+                </div>
+          </div>
+        </div>
+        <div class="s-prof">
+          <button id="updateAbout" type="submit" name="button">
+            <img src="{% static 'img/ajax-loader.gif'%}" alt="Saving">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function(event){
+          var loaderImg = $('#updateAbout img');
+              loaderImg.hide();
+          $('#about_us_form').on('submit', function(event){
+              event.preventDefault();
+               for ( instance in CKEDITOR.instances ) {
+                     CKEDITOR.instances.id_about.updateElement();
+                 };
+               var serializedData = $(this).serialize();
+
+               loaderImg.show();
+               var saveBtn = $('#updateAbout');
+                saveBtn.attr('disabled', 'disabled');
+                saveBtn.css({'background': '#fff', 'color':'#eee'});
+
+               $.ajax({
+                 type : $(this).attr('method'),
+                 url : $(this).attr('action'),
+                 data :serializedData,
+                 dataType: 'json',
+                 // success
+                 success: function(response) {
+                   $('#_editor_mode_about').html(response['page_section']);
+                   let msgBody = $('#_epabt_reponse_msg');
+                   msgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                   msgBody.css('display', 'flex');
+                   setTimeout(function(){
+                      msgBody.css('display', 'none');
+                   }, 6000);
+
+                   loaderImg.hide();
+                   saveBtn.removeAttr('disabled');
+                   saveBtn.css({'background': '#eee', 'color':'#000'});
+                 },
+                 error: function(rs,e){
+                   $('#_epabt_reponse_msg_err').html("<span class='material-icons'>error_outline</span>" + response['message']);
+                   $('#_epabt_reponse_msg_err').css('display', 'flex');
+                   setTimeout(function(){
+                      $('#_epabt_reponse_msg_err').css('display', 'none');
+                   }, 6000);
+
+                   loaderImg.hide();
+                   saveBtn.removeAttr('disabled');
+                   saveBtn.css({'background': '#eee', 'color':'#000'});
+                 },
+               });
+          });
+    });
+  </script>
+</div>
+
+<div id="e_profileServices-Modal" class="modal e_profileImg-Modal">
+  <div id="_epsvcs_reponse_msg" class="_EdMdsuccessMessage_">
+  </div>
+  <div id="_epsvcs_reponse_msg_err" class="_EdMderrorMessage_">
+  </div>
+  <div class="_bs_profile_form_box">
+    <div class="_bs_profile_form_wrap">
+      <div class="_bs_profile_form_header">
+        <h5>Update services</h5>
+        <button type="button" class="modal-close">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form id="our_services_form" class="_bs_profile_form" autocomplete="off" action="{% url 'profiles:ds_profile_update' pk=agent.pk slug='our-services'%}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="_bs_pFm_FieldsWrapper">
+          {{services_form.media}}
+          <div class="_bs_pFm_fields">
+                <div class="_bs_pFm_tabContentVw">
+                  <h5>Service Categories</h5>
+                    <div class="u_bsF-speciality">
+                      <p>Select services you offer.</p>
+                      {{services_form.pro_speciality}}
+                      <span class="_field_helper_text">
+                        We use services to connect you with the right people.
+                        Giving wrong information will result in poor job deliverly and a bad reputation
+                      </span>
+                    </div>
+                </div>
+          </div>
+        </div>
+        <div class="s-prof">
+          <button id="updateServices" type="submit" name="button">
+            <img src="{% static 'img/ajax-loader.gif'%}" alt="Saving">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function(event){
+          var loaderImg = $('#updateServices img');
+              loaderImg.hide();
+          $('#our_services_form').on('submit', function(event){
+             event.preventDefault();
+             var serializedData = $(this).serialize();
+
+             loaderImg.show();
+             var saveBtn = $('#updateServices');
+              saveBtn.attr('disabled', 'disabled');
+              saveBtn.css({'background': '#fff', 'color':'#eee'});
+             $.ajax({
+               type : $(this).attr('method'),
+               url : $(this).attr('action'),
+               data : serializedData,
+               dataType: 'json',
+               // success
+               success: function(response) {
+                 $('#_editor_mode_services').html(response['page_section']);
+
+                 let msgBody = $('#_epsvcs_reponse_msg');
+                 msgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                 msgBody.css('display', 'flex');
+                 setTimeout(function(){
+                    msgBody.css('display', 'none');
+                 }, 6000);
+
+                 loaderImg.hide();
+                 saveBtn.removeAttr('disabled');
+                 saveBtn.css({'background': '#eee', 'color':'#000'});
+               },
+               error: function(rs,e){
+                 $('#_epsvcs_reponse_msg_err').html("<span class='material-icons'>error_outline</span>" + response['message']);
+                 $('#_epsvcs_reponse_msg_err').css('display', 'flex');
+                 setTimeout(function(){
+                    $('#_epsvcs_reponse_msg_err').css('display', 'none');
+                 }, 6000);
+
+                 loaderImg.hide();
+                 saveBtn.removeAttr('disabled');
+                 saveBtn.css({'background': '#eee', 'color':'#000'});
+               },
+             });
+          });
+    });
+  </script>
+
+</div>
+
+<div id="e_topClients-Modal" class="modal e_profileImg-Modal">
+  <div id="_eptcs_reponse_msg" class="_EdMdsuccessMessage_">
+  </div>
+  <div id="_eptcs_reponse_msg_err" class="_EdMderrorMessage_">
+  </div>
+  <div class="_bs_profile_form_box">
+    <div class="_bs_profile_form_wrap">
+      <div class="_bs_profile_form_header">
+        <h5>Update top client list</h5>
+        <button type="button" class="modal-close">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form id="our_clients_form" class="_bs_profile_form" autocomplete="off" action="{% url 'profiles:ds_profile_update' pk=agent.pk slug='top-clients'%}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="_bs_pFm_FieldsWrapper">
+          <div class="_bs_pFm_fields">
+                <div class="_bs_pFm_tabContentVw">
+                  <h5>Showcase your Business clients</h5>
+                    <div class="u_bsF-clients">
+                      <p>Worked with business clients? Add them here.</p>
+                      <table border="0" cellpadding="0" cellspacing="0">
+                          <thead>
+                            <th>Logo</th>
+                            <th>Name</th>
+                            <th>Business category <br> <span>(Finance Institution, NGO, Construction Company)</span></th>
+                            <th></th>
+                            <th hidden></th>
+                          </thead>
+                          <tbody>
+                              {% for form in ds_client_formset.forms %}
+                              <tr class="client-form-set">
+                                <td>
+                                  <div class="client-form-set_lg">
+                                    <div id="__logoPlaceHolderWrp">
+                                      {% if form.instance.client_logo%}
+                                      <img src="{{form.instance.client_logo.url}}" alt="logo">
+                                      {% else %}
+                                      <span class="material-icons" id="__logoPlaceHolder">photo</span>
+                                      {% endif %}
+                                    </div>
+                                    {{ form.client_logo }}
+                                  </div>
+                                </td>
+                                 <td>{{ form.client_name }}</td>
+                                 <td>{{ form.business_category }}</td>
+                                 <td hidden>
+                                   {{form.id}}
+                                   {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                                 </td>
+                                 <td></td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                      {{ds_client_formset.management_form}}
+                      <span class="_field_helper_text" style='display:block;'>
+                        Adding Business clients is a great way of showing people
+                        your experience and qualification.
+                      </span>
+                    </div>
+                </div>
+          </div>
+        </div>
+        <div class="s-prof">
+          <button id="addTopClients" type="submit" name="button">
+            <img src="{% static 'img/ajax-loader.gif'%}" alt="Saving">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="text/javascript">
+      $(document).on('change','#id_ds_top_clients-0-client_logo', function () {
+          var placeholder = $(this).prev('div');
+            if ($(this)[0].files && $(this)[0].files[0]) {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                placeholder.html(
+                  "<img src='" + e.target.result + "' alt='logo'>"
+                   )
+              };
+              reader.readAsDataURL($(this)[0].files[0]);
+            }
+          });
+      $(document).on('change','#id_ds_top_clients-1-client_logo', function () {
+          var placeholder = $(this).prev('div');
+          if ($(this)[0].files && $(this)[0].files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              placeholder.html(
+                "<img src='" + e.target.result + "' alt='logo'>"
+                 )
+            };
+            reader.readAsDataURL($(this)[0].files[0]);
+          }
+        });
+      $(document).on('change','#id_ds_top_clients-2-client_logo', function () {
+        var placeholder = $(this).prev('div');
+        if ($(this)[0].files && $(this)[0].files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            placeholder.html(
+              "<img src='" + e.target.result + "' alt='logo'>"
+               )
+          };
+          reader.readAsDataURL($(this)[0].files[0]);
+        }
+      });
+      $(document).on('change','#id_ds_top_clients-3-client_logo', function () {
+        var placeholder = $(this).prev('div');
+      if ($(this)[0].files && $(this)[0].files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          placeholder.html(
+            "<img src='" + e.target.result + "' alt='logo'>"
+             )
+        };
+        reader.readAsDataURL($(this)[0].files[0]);
+      }
+    });
+      $(document).on('change','#id_ds_top_clients-4-client_logo', function () {
+    var placeholder = $(this).prev('div');
+    if ($(this)[0].files && $(this)[0].files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        placeholder.html(
+          "<img src='" + e.target.result + "' alt='logo'>"
+           )
+      };
+      reader.readAsDataURL($(this)[0].files[0]);
+    }
+  });
+      $(document).ready(function(event){
+          $('.client-form-set').formset({
+            prefix: '{{ ds_client_formset.prefix }}'
+          });
+
+          var loaderImg = $('#addTopClients img');
+              loaderImg.hide();
+
+          $('#our_clients_form').on('submit', function(event){
+             event.preventDefault();
+             var formData = new FormData(this);
+
+
+             loaderImg.show();
+             var saveBtn = $('#addTopClients');
+              saveBtn.attr('disabled', 'disabled');
+              saveBtn.css({'background': '#fff', 'color':'#eee'});
+
+             $.ajax({
+               type : $(this).attr('method'),
+               url : $(this).attr('action'),
+               data : formData,
+               dataType: 'json',
+               processData: false,
+               contentType: false,
+               // success
+               success: function(response) {
+                 $('#_editor_mode_clients').html(response['page_section']);
+
+                 let msgBody = $('#_eptcs_reponse_msg');
+                 msgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                 msgBody.css('display', 'flex');
+                 setTimeout(function(){
+                    msgBody.css('display', 'none');
+                 }, 6000);
+
+                 loaderImg.hide();
+                 saveBtn.removeAttr('disabled');
+                 saveBtn.css({'background': '#eee', 'color':'#000'});
+
+                 //Reinitialze owl-carousel
+
+                 $(".owl-carousel").owlCarousel({
+                     // loop:true,
+                     margin:10,
+                     nav:true,
+                     responsiveClass:true,
+                     responsive:{
+                        0:{
+                            items:2,
+                            nav:true
+                        },
+                        480:{
+                            items:2,
+                            nav:true
+                        },
+                        768:{
+                            items:2,
+                            nav:true,
+                        }
+                    }
+                   });
+
+               },
+               error: function(rs,e){
+                 $('#_eptcs_reponse_msg_err').html("<span class='material-icons'>error_outline</span>" + response['message']);
+                 $('#_eptcs_reponse_msg_err').css('display', 'flex');
+                 setTimeout(function(){
+                    $('#_eptcs_reponse_msg_err').css('display', 'none');
+                 }, 6000);
+
+                 loaderImg.hide();
+                 saveBtn.removeAttr('disabled');
+                 saveBtn.css({'background': '#eee', 'color':'#000'});
+
+                 //Reinitialze owl-carousel
+
+                 $(".owl-carousel").owlCarousel({
+                     // loop:true,
+                     margin:10,
+                     nav:true,
+                     responsiveClass:true,
+                     responsive:{
+                        0:{
+                            items:2,
+                            nav:true
+                        },
+                        480:{
+                            items:2,
+                            nav:true
+                        },
+                        768:{
+                            items:2,
+                            nav:true,
+                        }
+                    }
+                   });
+
+               },
+
+             });
+          });
+
+    });
+  </script>
+
+</div>
+
+<div id="e_profileServiceAreas-Modal" class="modal e_profileImg-Modal">
+  <div id="_epsa_reponse_msg" class="_EdMdsuccessMessage_">
+  </div>
+  <div id="_epsa_reponse_msg_err" class="_EdMderrorMessage_">
+  </div>
+  <div class="_bs_profile_form_box">
+    <div class="_bs_profile_form_wrap">
+      <div class="_bs_profile_form_header">
+        <h5>Update service areas</h5>
+        <button type="button" class="modal-close">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form id="pf_service_area_form" class="_bs_profile_form" autocomplete="off" action="{% url 'profiles:ds_profile_update' pk=agent.pk slug='service-areas'%}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="_bs_pFm_FieldsWrapper">
+          {{service_areas_form.media}}
+          <div class="_bs_pFm_fields">
+                <div class="_bs_pFm_tabContentVw">
+                  <h5>Service Areas</h5>
+                    <div class="u_bsF-speciality">
+                      <p>Add areas you serve.<br></p>
+                      {{service_areas_form.service_areas}}
+                      <span class="_field_helper_text">
+                        Adding service areas helps people in your area easily find you.<br>
+                        <span>Note: Use a comma to add a new area and backspace to remove an area</span>
+                      </span>
+                      <script type="text/javascript">
+                        $(document).ready(function(event){
+                              $('#id_service_areas').tagsInput({
+                              // min/max number of characters
+                              minChars: 0,
+                              maxChars:null,
+                              // max number of tags
+                              limit:null,
+                              // RegExp
+                              validationPattern:null,
+                              // duplicate validation
+                              unique:true,
+
+                              // // allows new tags
+                              interactive: true,
+                              // // custom placeholder
+                              placeholder: 'Add a service area',
+                              // // width/height
+                              width: 'auto',
+                              height: 'auto',
+                              // // hides the regular input field
+                              hide: true,
+                              // // custom delimiter
+                              delimiter: ',',
+                              // // removes tags with backspace
+                              removeWithBackspace: true,
+                              // // an array of whitelisted values
+                              whitelist: null,
+                              // //autocomplete disabled for now
+                              // // 'autocomplete': {
+                              // //   source: [
+                              // //     'jQuery',
+                              // //     'Script',
+                              // //     'Net',
+                              // //     'Demo'
+                              // //   ]
+                              // // }
+
+                              onAddTag: ()=>{
+                                let tags = document.getElementsByClassName('tag-text');
+                                var tagsArray = [];
+                                $.each(tags, function( index, tag ) {
+                                  tagsArray.push(tag.innerHTML);
+                                });
+                                $('#id_service_areas').attr('value', tagsArray.toString().replace(/[\[\]']+/g,''));
+                              },
+                             onRemoveTag: ()=>{
+                               let tags = document.getElementsByClassName('tag-text');
+                               var tagsArray = [];
+                               $.each(tags, function( index, tag ) {
+                                 tagsArray.push(tag.innerHTML);
+                               });
+                               $('#id_service_areas').attr('value', tagsArray.toString().replace(/[\[\]']+/g,''));
+                             },
+                             onChange: ()=>{
+                                 let tags = document.getElementsByClassName('tag-text');
+                                 var tagsArray = [];
+                                 $.each(tags, function( index, tag ) {
+                                   tagsArray.push(tag.innerHTML);
+                                 });
+                                 $('#id_service_areas').attr('value', tagsArray.toString().replace(/[\[\]']+/g,''));
+                              }
+                              });
+                        });
+
+                      </script>
+                    </div>
+                </div>
+          </div>
+        </div>
+        <div class="s-prof">
+          <button id="updateServiceAreas" type="submit" name="button">
+            <img src="{% static 'img/ajax-loader.gif'%}" alt="Saving">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function(event){
+          var loaderImg = $('#updateServiceAreas img');
+          loaderImg.hide();
+          $('#pf_service_area_form').on('submit', function(event){
+             event.preventDefault();
+             var serializedData = $(this).serialize();
+
+             loaderImg.show();
+             var saveBtn = $('#updateServiceAreas');
+                saveBtn.attr('disabled', 'disabled');
+                saveBtn.css({'background': '#fff', 'color':'#eee'});
+
+             $.ajax({
+               type : $(this).attr('method'),
+               url : $(this).attr('action'),
+               data : serializedData,
+               dataType: 'json',
+               // success
+               success: function(response) {
+                 $('#_editor_mode_service_areas').html(response['page_section']);
+                 let msgBody = $('#_epsa_reponse_msg');
+                 msgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                 msgBody.css('display', 'flex');
+                 setTimeout(function(){
+                    $('#_epsa_reponse_msg').css('display', 'none');
+                 }, 6000);
+
+                 loaderImg.hide();
+                 saveBtn.removeAttr('disabled');
+                 saveBtn.css({'background': '#eee', 'color':'#000'});
+               },
+               error: function(rs,e){
+                 $('#_epsa_reponse_msg_err').html("<span class='material-icons'>error_outline</span>" + response['message']);
+                 $('#_epsa_reponse_msg_err').css('display', 'flex');
+                 setTimeout(function(){
+                    $('#_epsa_reponse_msg_err').css('display', 'none');
+                 }, 6000);
+
+                 loaderImg.hide();
+                 saveBtn.removeAttr('disabled');
+                 saveBtn.css({'background': '#eee', 'color':'#000'});
+               },
+             });
+          });
+    });
+  </script>
+</div>
+</div>
+
+<script type="text/javascript">
+  //removes conflict causing tabindex in OVERVIEW Modal
+  $('#_trigOVW').on('click', function(){
+      $('#e_profileOverview-Modal').attr('tabindex', '');
+  });
+
+</script>
+{% endblock %}
+{% block footer %}
+<footer >
+<section id="footer" class="section section-follow black-text" style='background-image:none;
+    background: #f1f9f1;'>
+  <div class="container">
+    <div class="row">
+      <div class="f-details center">
+        <a href="#"> Privacy Policy</a>
+        <a href="#"> Terms & Conditions</a>
+        <a href="#"> Advertise</a>
+        <a href="#"> Contact Us</a>
+        <a href="{% url 'contact:about_us'%}"> About Us</a>
+      </div>
+      <div id="footer-details" class="col s12 center">
+        <a href="#" class="black-text">
+          <i class="fab fa-facebook fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-twitter fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-linkedin fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-instagram fa-2x"></i>
+        </a>
+      </div>
+      <p class="flow-text black-text center" id="c-year"></p>
+      <script type="text/javascript">
+        var d = new Date();
+        document.getElementById("c-year").innerHTML= 'While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright '+ d.getFullYear();
+      </script>
+    </div>
+  </div>
+</section>
+
+</footer>
+{% endblock%}

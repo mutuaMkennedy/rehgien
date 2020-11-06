@@ -154,7 +154,7 @@ class AddMember extends React.Component {
     event.preventDefault();
     const members = this.state.usersSelected;
     //stream client
-    const client = new StreamChat("qk4nn7rpcn75");
+    const client = new StreamChat("krfpqyntmyk8");
 
     await client.setUser(
       {

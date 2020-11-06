@@ -12,6 +12,22 @@ $(document).ready(function(){
    $('.prev').click(function(){
      $('.carousel').carousel('prev');
    });
+   //tooltip initialization
+     $('.tooltipped').tooltip();
+
+    //custome helper text initialization
+    _helperTextTrigger.addEventListener( 'click', function(){
+       document.getElementById("_helperTextTrigger").style.color='#1100ff';
+       var helperText = document.getElementById('_helperText');
+        helperText.style.display= 'block';
+        helperText.style.transform= 'translateY(5px)';
+     });
+     _helperTextHide.addEventListener( 'click', function(){
+       document.getElementById("_helperTextTrigger").style.color='#000';
+        var helperText = document.getElementById('_helperText');
+        helperText.style.display= "none";
+        helperText.style.transform= 'translateY(0px)';
+      });
 });
 
 document.addEventListener('DOMContentLoaded', function() {

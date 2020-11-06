@@ -7,7 +7,7 @@ import {
   ChannelPreviewLastMessage,
   Thread,
   Window,
-  // ChannelListTeam,
+  ChannelListTeam,
   ChannelListMessenger,
   MessageTeam,
   MessageSimple,
@@ -54,7 +54,7 @@ function closeSideBar(){
 class App extends Component {
   constructor(props) {
     super(props);
-    this.client = new StreamChat("qk4nn7rpcn75");
+    this.client = new StreamChat("krfpqyntmyk8");
 
     const userToken = localStorage.getItem("token");
     const tokenUserId = localStorage.getItem("user_id");
@@ -97,7 +97,7 @@ class App extends Component {
   render() {
     return (
       <div id="messageView">
-        <Chat client={this.client} theme={"team light"}>
+        <Chat client={this.client} theme={"team light"} id="chatView">
 
               <div id='ChListSideBarWrapper'>
                   <CustomChatSidePanel/>
@@ -111,9 +111,9 @@ class App extends Component {
 
               </div>
 
-              <Channel>
+              <Channel id='chatChannelView'>
                 <Window>
-                <div style={{ 'display':'flex', 'alignItems':'center', 'width':'100%'}}>
+                <div style={{ 'display':'flex', 'alignItems':'center', 'width':'100%', 'background':'#fff'}}>
                 <button id="navBtnA" onClick={openSideBar}><Icon id='ChannelListReveal' name='chevron right' style={{'color':'blue', 'fontSize':'24px'}}/></button>
                   <ChatSearchBar style={{'margin':'5px 0px', 'width':'100%'}}/>
                 </div>

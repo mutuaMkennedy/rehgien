@@ -31,7 +31,6 @@ const GcCreateButton = styled.button`
 const GcModal = styled(Popup)`
     &-content {
       height:auto;
-      border-radius:10px;
       width:500px !important;
       height:auto !important;
     }
@@ -166,7 +165,7 @@ class EditGroupChannel extends Component {
     const channelAbout = this.state.channelAbout;
 
     //stream client
-    const client = new StreamChat("qk4nn7rpcn75");
+    const client = new StreamChat("krfpqyntmyk8");
 
     await client.setUser(
       {

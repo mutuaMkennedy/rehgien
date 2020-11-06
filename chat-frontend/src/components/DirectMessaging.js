@@ -20,20 +20,25 @@ const DmCreateButton = styled.button`
   border:none;
   border-radius:50%;
   font-size:14px;
-  background-color:transparent;
   position:relative;
-  background:#f0f2f5;
-  border:4px solid #a3caff;
+  background:transparent;
+  border:none;
   :hover {
     cursor:pointer;
 }
 `
 
 const DmModal = styled(Popup)`
+    z-index:1002 !important;
+    @media (max-width:768px) {
+      width:100% !important;
+      height:auto !important;
+    };
     &-content {
       height:auto;
       border-radius:10px;
     }
+
 `
 const DmModalClose = styled.a`
   height:35px;
@@ -152,7 +157,7 @@ class DirectMessage extends Component {
     const contactId = this.state.value;
 
     //stream client
-    const client = new StreamChat("qk4nn7rpcn75");
+    const client = new StreamChat("krfpqyntmyk8");
 
     await client.setUser(
       {
@@ -196,7 +201,7 @@ class DirectMessage extends Component {
         <SemanticPopup
           trigger={
             <DmCreateButton onClick={this.openModal}>
-              <Icon name='edit outline' style={{'color':'#141414','fontSize':'13px','margin':'0'}}/>
+              <Icon name='edit outline' style={{'color':'#fff','fontSize':'13px','margin':'0'}}/>
             </DmCreateButton>
           }
           inverted
@@ -211,6 +216,7 @@ class DirectMessage extends Component {
           open={this.state.open}
           closeOnDocumentClick
           onClose={this.closeModal}
+          className='DmChModal'
         >
           <div className="DmModal">
             <DmModalClose className="close" onClick={this.closeModal}>

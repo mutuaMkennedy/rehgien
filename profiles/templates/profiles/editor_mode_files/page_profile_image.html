@@ -1,0 +1,8 @@
+{% load static %}
+
+{% if agent.banner_image%}
+<img src="{{agent.banner_image.url}}" alt="{{agent.user.first_name}}" style="width:150px;height:150px;object-fit:cover;">
+{% else %}
+<img src="{%static 'img/avatar.png'%}" alt="{{agent.user.first_name}}" style="width:150px;height:150px;object-fit:cover;">
+{% endif %}
+<a href="#e_profileImg-Modal" class="modal-trigger"><span class="material-icons">photo_camera</span></a>

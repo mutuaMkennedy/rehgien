@@ -1,0 +1,9 @@
+{% load static %}
+{% if agent.about %}
+  <p>{{agent.about|safe}}</p>
+{% else %}
+  <div class="pflpages-no-results">
+    <img src="{%static 'img/note.svg'%}" alt="empty">
+    <p>Nothing yet</p>
+  </div>
+{% endif %}

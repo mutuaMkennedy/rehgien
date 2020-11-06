@@ -38,16 +38,10 @@ def request_list(request):
 def property_request_lead(request):
     if request.method =='POST':
         if request.user.user_type =='NormalUser' or request.user.user_type =='Design&servicePro':
-            if request.user.user_type =='NormalUser':
-                if request.user.n_user_profile.profile_image:
-                    profile_image = request.user.n_user_profile.profile_image.url
-                else:
-                    profile_image = '/static/img/avatar.png'
-            if request.user.user_type =='Design&servicePro':
-                if request.DService_profile.profile_image:
-                    profile_image = request.DService_profile.profile_image.url
-                else:
-                    profile_image = '/static/img/avatar.png'
+            if request.user.profile_image:
+                profile_image = request.user.profile_image.url
+            else:
+                profile_image = '/static/img/avatar.png'
             property_request_form = RequestPropertyForm(request.POST)
             # Authenticate form
             if property_request_form.is_valid():
@@ -71,16 +65,11 @@ def property_request_lead(request):
 def proffesional_request_lead(request):
     if request.method =='POST':
         if request.user.user_type =='NormalUser' or request.user.user_type =='Design&servicePro':
-            if request.user.user_type =='NormalUser':
-                if request.user.n_user_profile.profile_image:
-                    profile_image = request.user.n_user_profile.profile_image.url
-                else:
-                    profile_image = '/static/img/avatar.png'
-            if request.user.user_type =='Design&servicePro':
-                if request.DService_profile.profile_image:
-                    profile_image = request.DService_profile.profile_image.url
-                else:
-                    profile_image = '/static/img/avatar.png'
+            if request.user.profile_image:
+                profile_image = request.user.profile_image.url
+            else:
+                profile_image = '/static/img/avatar.png'
+
             proffesional_request_form = RequestProffesionalForm(request.POST)
             # Authenticate form
             if proffesional_request_form.is_valid():
@@ -104,16 +93,11 @@ def proffesional_request_lead(request):
 def other_request_lead(request):
     if request.method =='POST':
         if request.user.user_type =='NormalUser' or request.user.user_type =='Design&servicePro':
-            if request.user.user_type =='NormalUser':
-                if request.user.n_user_profile.profile_image:
-                    profile_image = request.user.n_user_profile.profile_image.url
-                else:
-                    profile_image = '/static/img/avatar.png'
-            if request.user.user_type =='Design&servicePro':
-                if request.DService_profile.profile_image:
-                    profile_image = request.DService_profile.profile_image.url
-                else:
-                    profile_image = '/static/img/avatar.png'
+            if request.user.profile_image:
+                profile_image = request.user.profile_image.url
+            else:
+                profile_image = '/static/img/avatar.png'
+
             other_request_form = OtherRequestForm(request.POST)
             # Authenticate form
             if other_request_form.is_valid():
@@ -137,16 +121,11 @@ def other_request_lead(request):
 def agent_lead_request(request):
     if request.method =='POST':
         if request.user.user_type =='Agent' or request.user.user_type =='PropertyManager':
-            if request.user.user_type =='Agent':
-                if request.user.agent_profile.profile_image:
-                    profile_image = request.user.agent_profile.profile_image.url
-                else:
-                    profile_image = '/static/img/avatar.png'
-            if request.user.user_type =='PropertyManager':
-                if request.user.pm_profile.profile_image:
-                    profile_image = request.user.pm_profile.profile_image.url
-                else:
-                    profile_image = '/static/img/avatar.png'
+            if request.user.profile_image:
+                profile_image = request.user.profile_image.url
+            else:
+                profile_image = '/static/img/avatar.png'
+
             agent_lead_request_form = AgentLeadRequestForm(request.POST)
             # Authenticate form
             if agent_lead_request_form.is_valid():
@@ -170,21 +149,17 @@ def agent_lead_request(request):
 def agent_property_request(request):
     if request.method =='POST':
         if request.user.user_type =='Agent' or request.user.user_type =='PropertyManager':
-            if request.user.user_type =='Agent':
-                if request.user.agent_profile.profile_image:
-                    profile_image = request.user.agent_profile.profile_image.url
-                else:
-                    profile_image = '/static/img/avatar.png'
-            if request.user.user_type =='PropertyManager':
-                if request.user.pm_profile.profile_image:
-                    profile_image = request.user.pm_profile.profile_image.url
-                else:
-                    profile_image = '/static/img/avatar.png'
+            if request.user.profile_image:
+                profile_image = request.user.profile_image.url
+            else:
+                profile_image = '/static/img/avatar.png'
+
             ag_prop_request_form = AgentPropertyRequestForm(request.POST)
             # Authenticate form
             if ag_prop_request_form.is_valid():
                 instance = ag_prop_request_form.save(commit=False)
                 instance.owner = request.user
+                instance.profile_image = request.build_absolute_uri(profile_image)
                 instance.save()
 
                 messages.success(request, 'Your request has been posted Successfully!')
@@ -206,16 +181,11 @@ def property_request_lead_update(request,pk):
     if request.user == property_request.owner:
         if request.method =='POST':
             if request.user.user_type =='NormalUser' or request.user.user_type =='Design&servicePro':
-                if request.user.user_type =='NormalUser':
-                    if request.user.n_user_profile.profile_image:
-                        profile_image = request.user.n_user_profile.profile_image.url
-                    else:
-                        profile_image = '/static/img/avatar.png'
-                if request.user.user_type =='Design&servicePro':
-                    if request.DService_profile.profile_image:
-                        profile_image = request.DService_profile.profile_image.url
-                    else:
-                        profile_image = '/static/img/avatar.png'
+                if request.user.profile_image:
+                    profile_image = request.user.profile_image.url
+                else:
+                    profile_image = '/static/img/avatar.png'
+
                 property_request_form = RequestPropertyForm(request.POST, instance=property_request)
                 # Authenticate form
                 if property_request_form.is_valid():
@@ -243,16 +213,11 @@ def proffesional_request_lead_update(request,pk):
     if request.user == pro_request.owner:
         if request.method =='POST':
             if request.user.user_type =='NormalUser' or request.user.user_type =='Design&servicePro':
-                if request.user.user_type =='NormalUser':
-                    if request.user.n_user_profile.profile_image:
-                        profile_image = request.user.n_user_profile.profile_image.url
-                    else:
-                        profile_image = '/static/img/avatar.png'
-                if request.user.user_type =='Design&servicePro':
-                    if request.DService_profile.profile_image:
-                        profile_image = request.DService_profile.profile_image.url
-                    else:
-                        profile_image = '/static/img/avatar.png'
+                if request.user.profile_image:
+                    profile_image = request.user.profile_image.url
+                else:
+                    profile_image = '/static/img/avatar.png'
+
                 pro_request_form = RequestProffesionalForm(request.POST, instance=pro_request)
                 # Authenticate form
                 if pro_request_form.is_valid():
@@ -280,16 +245,11 @@ def other_request_lead_update(request,pk):
     if request.user == o_request.owner:
         if request.method =='POST':
             if request.user.user_type =='NormalUser' or request.user.user_type =='Design&servicePro':
-                if request.user.user_type =='NormalUser':
-                    if request.user.n_user_profile.profile_image:
-                        profile_image = request.user.n_user_profile.profile_image.url
-                    else:
-                        profile_image = '/static/img/avatar.png'
-                if request.user.user_type =='Design&servicePro':
-                    if request.DService_profile.profile_image:
-                        profile_image = request.DService_profile.profile_image.url
-                    else:
-                        profile_image = '/static/img/avatar.png'
+                if request.user.profile_image:
+                    profile_image = request.user.profile_image.url
+                else:
+                    profile_image = '/static/img/avatar.png'
+
                 o_request_form = OtherRequestForm(request.POST, instance=o_request)
                 # Authenticate form
                 if o_request_form.is_valid():
@@ -317,16 +277,11 @@ def agent_lead_request_update(request,pk):
     if request.user == agent_lead_request.owner:
         if request.method =='POST':
             if request.user.user_type =='Agent' or request.user.user_type =='PropertyManager':
-                if request.user.user_type =='Agent':
-                    if request.user.agent_profile.profile_image:
-                        profile_image = request.user.agent_profile.profile_image.url
-                    else:
-                        profile_image = '/static/img/avatar.png'
-                if request.user.user_type =='PropertyManager':
-                    if request.user.pm_profile.profile_image:
-                        profile_image = request.user.pm_profile.profile_image.url
-                    else:
-                        profile_image = '/static/img/avatar.png'
+                if request.user.profile_image:
+                    profile_image = request.user.profile_image.url
+                else:
+                    profile_image = '/static/img/avatar.png'
+
                 agent_lead_request_form = AgentLeadRequestForm(request.POST, instance=agent_lead_request)
                 # Authenticate form
                 if agent_lead_request_form.is_valid():
@@ -354,16 +309,11 @@ def agent_property_request_update(request,pk):
     if request.user == agent_prop_request.owner:
         if request.method =='POST':
             if request.user.user_type =='Agent' or request.user.user_type =='PropertyManager':
-                if request.user.user_type =='Agent':
-                    if request.user.agent_profile.profile_image:
-                        profile_image = request.user.agent_profile.profile_image.url
-                    else:
-                        profile_image = '/static/img/avatar.png'
-                if request.user.user_type =='PropertyManager':
-                    if request.user.pm_profile.profile_image:
-                        profile_image = request.user.pm_profile.profile_image.url
-                    else:
-                        profile_image = '/static/img/avatar.png'
+                if request.user.profile_image:
+                    profile_image = request.user.profile_image.url
+                else:
+                    profile_image = '/static/img/avatar.png'
+
                 agent_prop_request_form = AgentPropertyRequestForm(request.POST, instance=agent_prop_request)
                 # Authenticate form
                 if agent_prop_request_form.is_valid():

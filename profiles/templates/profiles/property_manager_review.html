@@ -23,8 +23,8 @@
 
           </div>
           <div class="rvw-p-img-box">
-            {% if agent.profile_image%}
-            <img src="{{agent.profile_image.url}}" alt="{{agent.get_full_name}}" style="width:100px; height:100px;object-fit:cover;" class="circle">
+            {% if agent.user.profile_image%}
+            <img src="{{agent.user.profile_image.url}}" alt="{{agent.get_full_name}}" style="width:100px; height:100px;object-fit:cover;" class="circle">
             {% else %}
             <img src="{%static 'img/avatar.png'%}" alt="{{agent.get_full_name}}" style="width:100px; height:100px;object-fit:cover;" class="circle">
             {% endif %}
@@ -32,7 +32,7 @@
           <div class="rvw-p-dtls-box">
             <li>{{agent.user.get_full_name}}</li>
             <li><i class="far fa-star" style='color:#1BFF00;'></i>{{average_rating.rating__avg|floatformat}}/5 <a href="#reviews">({{reviews_count}} reviews)</a></li>
-            <li><a href="#"><span style="font-weight:300;">View Profile</span></a></li>
+            <li><a href="{% url 'profiles:pm_detail' agent.pk%}"><span style="font-weight:300;">View Profile</span></a></li>
           </div>
         </div>
       </div>

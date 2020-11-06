@@ -94,7 +94,7 @@ class ForSaleListApi(ListAPIView):
 class ForSaleCreateApi(CreateAPIView):
     queryset = PropertyForSale.objects.all()
     serializer_class = PropertyForSaleSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(owner=self.request.user)
 
@@ -107,7 +107,7 @@ class ForSaleDetailApi(RetrieveAPIView):
 class ForSaleUpdateApi(RetrieveUpdateAPIView):
     queryset = PropertyForSale.objects.all()
     serializer_class = PropertyForSaleSerializer
-    permission_classes = [IsOwnerOrReadOnly,IsAdminUser]
+    permission_classes = [IsOwnerOrReadOnly]
 
 class FavouriteForSaleUpdateApi(RetrieveUpdateAPIView):
     queryset = PropertyForSale.objects.all()
@@ -118,7 +118,7 @@ class FavouriteForSaleUpdateApi(RetrieveUpdateAPIView):
 class ForSaleDeleteApi(DestroyAPIView):
     queryset = PropertyForSale.objects.all()
     serializer_class = PropertyForSaleSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 #RENTALS APIS
 #listing all for rent property
@@ -139,7 +139,7 @@ class ForRentListApi(ListAPIView):
 class ForRentCreateApi(CreateAPIView):
     queryset = RentalProperty.objects.all()
     serializer_class = RentalPropertySerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(owner=self.request.user)
 
@@ -152,7 +152,7 @@ class ForRentDetailApi(RetrieveAPIView):
 class ForRentUpdateApi(RetrieveUpdateAPIView):
     queryset = RentalProperty.objects.all()
     serializer_class = RentalPropertySerializer
-    permission_classes = [IsOwnerOrReadOnly,IsAdminUser]
+    permission_classes = [IsOwnerOrReadOnly]
 
 class FavouriteForRentUpdateApi(RetrieveUpdateAPIView):
     queryset = RentalProperty.objects.all()
@@ -163,4 +163,4 @@ class FavouriteForRentUpdateApi(RetrieveUpdateAPIView):
 class ForRentDeleteApi(DestroyAPIView):
     queryset = RentalProperty.objects.all()
     serializer_class = RentalPropertySerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]

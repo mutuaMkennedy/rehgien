@@ -22,6 +22,9 @@
   <link href="{%static 'css/style.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link rel="stylesheet" href="{% static 'OwlCarousel/assets/owl.carousel.min.css'%}">
   <link rel="stylesheet" href="{% static 'OwlCarousel/assets/owl.theme.default.min.css'%}">
+  <link rel="stylesheet" href="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.css'%}">
+  <link rel="stylesheet" href="{% static 'JqueryTimepicker/css/jquery.timepicker.css'%}">
+
   <script src="https://use.fontawesome.com/a8e276a1a5.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
@@ -30,8 +33,10 @@
   <link href="https://fonts.googleapis.com/css2?family=MuseoModerno&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
 </head>
 <body>
   <script>
@@ -70,7 +75,8 @@
       <ul id="nav-base1"class="left hide-on-med-and-down">
         <li><a href="{% url 'listings:sale_listings'%}">Buy</a></li>
         <li><a href="{% url 'listings:rental_listings'%}">Rent</a></li>
-        <li><a href="#" id='ag-trigger' class="dropdown-trigger" data-target='ag-dropdown'>Find a pro</a></li>
+        <li><a href="{% url 'profiles:business_list' %}">Business Finder</a></li>
+        <li><a href="#" id='ag-trigger' class="dropdown-trigger" data-target='ag-dropdown'>Pro Finder</a></li>
         <li><a href="#" id='svc-trigger' class="dropdown-trigger" data-target='svc-dropdown'>Request Service</a></li>
 
       </ul>
@@ -132,7 +138,10 @@
         <li>or</li>
         <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
         {% else %}
-        <li><a id='ac-trigger'><i class="far fa-user-circle fa-lg" style="color:green;"></i> {{request.user.first_name|make_list|first|upper}} {{request.user.last_name|make_list|first|upper}}</a>
+        <li><a id='ac-trigger'><i class="far fa-user-circle fa-lg" style="color:green;"></i>
+           {{request.user.username|make_list|first|upper}}
+           <i class="fas fa-chevron-down fa-sm" style='color:black'></i>
+         </a>
       </li>
 
       </ul>
@@ -143,8 +152,8 @@
       <button id="acDropdownClose" type="button" style="background-image:url({%static 'img/close.svg' %});"></button>
       <div class="ac-drd-img valign-wrapper" style="background-image:linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ),url({%static 'img/b2.jpg' %});">
       <div class="ac-drd-img-wrapper">
-        {% if request.user.agent_profile.profile_image%}
-        <img src="{{request.user.agent_profile.profile_image.url}}" alt="profile.img" style="width:40px">
+        {% if request.user.profile_image%}
+        <img src="{{request.user.profile_image.url}}" alt="profile.img" style="width:40px">
         {% else %}
         <img src="{% static 'img/avatar.png'%}" alt="avatar.png"style="width:40px">
         {% endif %}
@@ -165,13 +174,14 @@
 
   <ul id="mobile-nav" class="sidenav">
     <ul class="Mnav-logoUl">
-      <li><a href="{% url 'listings:homepage'%}" class="brand-logo center Mnav-logoWrapper"><img class="logo" src="{%static 'img/rhg_logo1.png'%}"></a>
+      <li><a href="{% url 'listings:homepage'%}" class="brand-logo center Mnav-logoWrapper"><img class="logo" src="{%static 'img/logo-fav.png'%}"></a>
       </li>
     </ul>
     <ul class="Mnav-UlItems collapsible">
       <li><a href="{%url 'listings:homepage'%}">Home</a></li>
       <li><a href="{% url 'listings:sale_listings' %}">Buy</a></li>
       <li><a href="{% url 'listings:rental_listings'%}">Rent</a></li>
+      <li><a href="{% url 'profiles:business_list' %}">Business Finder</a></li>
       <li>
         <div class="collapsible-header Mnav-collapsible-header">Find a pro<i class="fas fa-chevron-right"></i></div>
         <div class="collapsible-body Mnav-collapsible-body">
@@ -305,6 +315,7 @@
   <!--  Scripts-->
   <script src="{% static 'js/jquery.min.js' %}"></script>
   <script src="{% static 'OwlCarousel/owl.carousel.min.js'%}"></script>
+  <script src="{% static 'JqueryTimepicker/js/jquery.timepicker.js'%}"></script>
   <script src="{% static 'js/materialize.js' %}"></script>
   <script src="{% static 'js/init.js' %}"></script>
   <script src="{% static 'js/gall.js' %}"></script>
@@ -312,6 +323,10 @@
   <script src="{% static 'js/jquery.autocomplete.js' %}"></script>
   <script src="{% static 'js/our_search_code.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/js/all.min.js' %}"></script>
+  <script src="{% static 'progressBar/progressbar.js'%}"></script>
+  <script src="{% static 'progressBar/progressbar.min.js'%}"></script>
+  <script src="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.js'%}"></script>
+  <script src="{% static 'dynamic_formsets_src/jquery.formset.js'%}"></script>
   <script src="https://media.twiliocdn.com/sdk/js/chat/v3.3/twilio-chat.min.js"></script>
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script type="text/javascript">

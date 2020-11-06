@@ -123,6 +123,7 @@ def rental_listings_results(request):
 	return render(request, 'listings/rental-listings.html', {'listings':listings,'listings_count':listings_count,
 	 "location_address":location_address, "ImageTransformation":ImageTransformation})
 
+@login_required(login_url='account_login')
 def onsale_detail(request, pk):
 	ImageTransformation = dict(
 	format = "jpeg",
@@ -214,6 +215,7 @@ def ajxrental_favourite(request):
 			html = render_to_string('listings/rental-fav-section.html', context, request=request)
 			return JsonResponse({'form':html})
 
+@login_required(login_url='account_login')
 def rental_detail(request, pk):
 	ImageTransformation = dict(
 	format = "jpeg",
@@ -389,7 +391,6 @@ def rental_listing_form(request):
 		messages.error(request,'Restricted. This service is for Real Estate Pros only.')
 		return redirect('profiles:account')
 	return render(request, 'listings/rent-listing-form.html', {'PropertyForm': PropertyForm, 'ImageForm': ImageForm, 'VideoForm':VideoForm,})
-
 
 @login_required(login_url='account_login')
 def for_rent_update(request, pk):

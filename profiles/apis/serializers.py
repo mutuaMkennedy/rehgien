@@ -3,25 +3,28 @@ from drf_writable_nested.serializers import WritableNestedModelSerializer
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from profiles.models import (
-                            NormalUserProfile,
+                            CompanyProfile,
+                            CompanyReviews,
                             AgentProfile,
                             AgentReviews,
                             PropertyManagerProfile,
                             PropertyManagerReviews,
                             DesignAndServiceProProfile,
-                            DesignAndServiceProReviews
+                            DesignAndServiceProReviews,
+                            PMPortfolio,
+                            PMPortfolioImages,
+                            DesignAndServiceProProjects,
+                            DSProProjectImages,
+                            TeammateConnection,
                             )
 
+from profiles import models
 from listings.models import PropertyForSale, RentalProperty
 
 # referencing the custom user model
 User = get_user_model()
 
-class UserAccountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'user_type_choices','user_type']
-
+#serializing usermodel + their Listings
 class UserSerializer(serializers.ModelSerializer):
     sale_property = serializers.PrimaryKeyRelatedField(many=True, queryset=PropertyForSale.objects.all())
     rent_property = serializers.PrimaryKeyRelatedField(many=True, queryset=RentalProperty.objects.all())
@@ -29,48 +32,56 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email','user_type','sale_property','rent_property']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email','user_type',
+        'profile_image','sale_property','rent_property'
+        ]
 
-class NormalUserProfileSerializer(serializers.ModelSerializer):
+
+class CompanyReviewsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = NormalUserProfile
-        fields = '__all__'
+        model = CompanyReviews
+        fields = [
+        'pk','rating_choices','responsive_rating_choices','knowledge_rating_choices',
+        'negotiation_rating_choices','professionalism_rating_choices',
+        'service_choices','profile','rating','responsive_rating',
+        'knowledge_rating','negotiation_rating','professionalism_rating',
+        'service','comment','date_of_service','user','review_date'
+        ]
 
-class AgentProfileSerializer(serializers.ModelSerializer):
+class CompanyTopClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CompanyTopClient
+        fields =[
+        "pk", "profile", "client_logo", "client_name", "business_category",
+        "created_at"
+        ]
+
+class CompanyBusinessHoursSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CompanyBusinessHours
+        fields =[
+        "WEEKDAYS","pk","user","weekday","from_hour","to_hour",
+        ]
+
+class CompanyProfileSerializer(WritableNestedModelSerializer):
     speciality_choices = (
-        ('1', 'Buying and Selling of houses'),
-        ('2', 'Renting houses'),
-        ('3', 'Leasing office spaces'),
-        ('4', 'Buying and selling of land'),
+    ('Property Management', 'Property Management'),
+    ('Agency', 'Agency'),
+    ('Consultancy', 'Consultancy')
     )
-    speciality_choices = serializers.MultipleChoiceField(choices=speciality_choices, required=False)
+    speciality = serializers.MultipleChoiceField(choices=speciality_choices, required=False)
+    co_top_clients = CompanyTopClientSerializer(many=True)
+    co_business_hours = CompanyBusinessHoursSerializer(many=True)
+    company_review = CompanyReviewsSerializer(many=True)
     class Meta:
-        model = AgentProfile
+        model = CompanyProfile
         fields = [
-        'pk','user','profile_image','phone','license_number','address','website_link',
-        'facebook_link','twitter_link','linkedin_link','location','speciality_choices',
-        'speciality','about','member_since','account_type_choices','account_type',
-        'featured_agent'
+        'pk',"user", "banner_image", "speciality",'speciality_choices', "phone", "license_number",
+        "address", "website_link", "facebook_link", "twitter_link", "linkedin_link",
+        "location", "about", "service_areas","saves", "followers", "member_since", "account_type_choices",
+        "account_type","featured_business","co_top_clients","co_business_hours","company_review"
         ]
 
-class PropertyManagerProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PropertyManagerProfile
-        fields = [
-        'pk','user','profile_image','phone','license_number','address','website_link',
-        'facebook_link','twitter_link','linkedin_link','location','about',
-        'member_since','account_type_choices','account_type','featured_agent'
-        ]
-
-class DesignAndServiceProProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DesignAndServiceProProfile
-        fields = [
-        'pk','user','profile_image','phone','address','website_link','instagram_link',
-        'facebook_link','twitter_link','linkedin_link','location','about',
-        'member_since','account_type_choices','account_type','pro_speciality','pro_speciality',
-        'featured_pro'
-        ]
 
 class AgentReviewsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -83,6 +94,42 @@ class AgentReviewsSerializer(serializers.ModelSerializer):
         'service','comment','date_of_service','user','review_date'
         ]
 
+class AgentTopClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AgentTopClient
+        fields =[
+        "pk", "profile", "client_logo", "client_name", "business_category",
+        "created_at"
+        ]
+
+class AgentBusinessHoursSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AgentBusinessHours
+        fields =[
+        "WEEKDAYS","pk","user","weekday","from_hour","to_hour",
+        ]
+
+class AgentProfileSerializer(WritableNestedModelSerializer):
+    speciality_choices = (
+        ('1', 'Buying and Selling of houses'),
+        ('2', 'Renting houses'),
+        ('3', 'Leasing office spaces'),
+        ('4', 'Buying and selling of land'),
+    )
+    speciality = serializers.MultipleChoiceField(choices=speciality_choices, required=False)
+    ag_top_clients = AgentTopClientSerializer(many=True)
+    ag_business_hours = AgentBusinessHoursSerializer(many=True)
+    agent_review = AgentReviewsSerializer(many=True)
+    class Meta:
+        model = AgentProfile
+        fields = [
+        'pk','user','phone','license_number','address','website_link',
+        'facebook_link','twitter_link','linkedin_link','location','speciality_choices',
+        'speciality','about','service_areas','saves','followers', 'member_since','account_type_choices','account_type',
+        'featured_agent',"ag_top_clients","ag_business_hours","agent_review"
+        ]
+
+
 class PropertyManagerReviewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PropertyManagerReviews
@@ -94,6 +141,35 @@ class PropertyManagerReviewsSerializer(serializers.ModelSerializer):
             'user','review_date'
         ]
 
+class PropertyManagerTopClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PropertyManagerTopClient
+        fields =[
+        "pk", "profile", "client_logo", "client_name", "business_category",
+        "created_at"
+        ]
+
+class PropertyManagerBusinessHoursSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PropertyManagerBusinessHours
+        fields =[
+        "WEEKDAYS","pk","user","weekday","from_hour","to_hour",
+        ]
+
+class PropertyManagerProfileSerializer(WritableNestedModelSerializer):
+    pm_top_clients = PropertyManagerTopClientSerializer(many=True)
+    pm_business_hours = PropertyManagerBusinessHoursSerializer(many=True)
+    pm_review = PropertyManagerReviewsSerializer(many=True)
+    class Meta:
+        model = PropertyManagerProfile
+        fields = [
+        'pk','user','phone','license_number','address','website_link',
+        'facebook_link','twitter_link','linkedin_link','location','about','service_areas',
+        'saves','followers','member_since','account_type_choices','account_type',
+        'featured_agent',"pm_top_clients","pm_business_hours","pm_review"
+        ]
+
+
 class DesignAndServiceProReviewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = DesignAndServiceProReviews
@@ -102,4 +178,95 @@ class DesignAndServiceProReviewsSerializer(serializers.ModelSerializer):
             'attention_to_detail_choices','profile','rating',
             'quality_rating','creativity_rating','attention_to_detail',
             'comment','user','review_date'
+        ]
+
+class DSTopClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PropertyManagerTopClient
+        fields =[
+        "pk", "profile", "client_logo", "client_name", "business_category",
+        "created_at"
+        ]
+
+class DSBusinessHoursSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PropertyManagerBusinessHours
+        fields =[
+        "WEEKDAYS","pk","user","weekday","from_hour","to_hour",
+        ]
+
+class DesignAndServiceProProfileSerializer(WritableNestedModelSerializer):
+    ds_top_clients = DSTopClientSerializer(many=True)
+    DS_business_hours = DSBusinessHoursSerializer(many=True)
+    DService_review = DesignAndServiceProReviewsSerializer(many=True)
+
+    class Meta:
+        model = DesignAndServiceProProfile
+        fields = [
+        'pk','user','phone','address','website_link','instagram_link',
+        'facebook_link','twitter_link','linkedin_link','location','about', 'service_areas','saves','followers',
+        'member_since','account_type_choices','account_type','pro_speciality',
+        'featured_pro',"ds_top_clients","DS_business_hours","DService_review"
+        ]
+
+
+
+class PMPortfolioImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=PMPortfolioImages
+        fields=['property_image']
+
+class PMPortfolioSerializer(WritableNestedModelSerializer):
+    PM_porfolio_Images= PMPortfolioImagesSerializer(many=True)
+    class Meta:
+        model = PMPortfolio
+        fields = [
+        "pk", "property_name","property_market_value", "property_location", "property_map_point","current_manager_choices",
+        "currently_managing","PM_porfolio_Images", "created_at", "created_by"
+        ]
+
+
+
+class DSProProjectImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=DSProProjectImages
+        fields=['project_image']
+
+class DesignAndServiceProProjectsSerializer(WritableNestedModelSerializer):
+    DS_project_Images= DSProProjectImagesSerializer(many=True)
+    class Meta:
+        model = DesignAndServiceProProjects
+        fields = [
+        "pk", "project_name", "project_cost", "project_description", "project_video","DS_project_Images",
+        "project_location", "project_map_point", "project_year", "created_at","created_by"
+        ]
+
+
+
+class TeammateConnectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeammateConnection
+        fields = [
+        'pk',"requestor", "receiver", "accepted_choices","receiver_accepted", "starred"
+        ]
+
+
+
+class UserAccountSerializer(WritableNestedModelSerializer):
+    company_profile = CompanyProfileSerializer(many=False)
+    agent_profile = AgentProfileSerializer(many=False)
+    pm_profile = PropertyManagerProfileSerializer(many=False)
+    DService_profile = DesignAndServiceProProfileSerializer(many=False)
+    PM_portfolio_ls_creator = PMPortfolioSerializer(many=True)
+    DS_project_ls_creator = DesignAndServiceProProjectsSerializer(many=True)
+    join_team_requestor = TeammateConnectionSerializer(many=True)
+    join_team_request_receiver = TeammateConnectionSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = [
+        'id', 'username', 'first_name', 'last_name', 'email', 'user_type_choices',
+        'user_type','profile_image', "company_profile", "agent_profile", "pm_profile",
+        "DService_profile", "PM_portfolio_ls_creator", "DS_project_ls_creator",
+        "join_team_requestor", "join_team_request_receiver"
         ]

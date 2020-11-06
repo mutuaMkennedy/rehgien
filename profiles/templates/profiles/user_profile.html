@@ -1,154 +1,534 @@
-{% extends 'base1.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {%load cloudinary %}
 {% block content %}
+{% load leaflet_tags %}
+{% leaflet_js plugins="forms" %}
+{% leaflet_css plugins="forms" %}
+{% load crispy_forms_tags%}
+
 <section>
   <div id="pfl-pg-cont" class="container">
-        <div id="pfl-page-row">
-            <div class="pfl-page-Sc-1">
-                    <div class="pfl-acct-stg">
-                        <div class="profileDashBanner">
-                          <div id='cd-wrap'>
-                            <div id="profile-view" class="card">
-                                  <div class="pfl-card-img">
-                                    {% if request.user.user_type == 'Agent'%}
-                                      <img src="
-                                      {% if user.agent_profile.profile_image%}
-                                        {{ user.agent_profile.profile_image.url}}
-                                      {% else %}
-                                        {% static 'img/avatar.png'%}
-                                      {% endif %}
-                                      " alt="{{user.last_name}}">
-                                    {% elif request.user.user_type == 'PropertyManager' %}
-                                        <img src="
-                                        {% if user.pm_profile.profile_image%}
-                                          {{ user.pm_profile.profile_image.url}}
-                                        {% else %}
-                                          {% static 'img/avatar.png'%}
-                                        {% endif %}
-                                        " alt="{{user.last_name}}">
-                                    {% elif request.user.user_type == 'NormalUser' %}
-                                        <img src="
-                                        {% if user.n_user_profile.profile_image%}
-                                          {{ user.n_user_profile.profile_image.url}}
-                                        {% else %}
-                                          {% static 'img/avatar.png'%}
-                                        {% endif %}
-                                        " alt="{{user.last_name}}">
-                                    {% elif request.user.user_type == 'Design&servicePro' %}
-                                      <img src="
-                                      {% if user.DService_profile.profile_image%}
-                                        {{ user.DService_profile.profile_image.url}}
-                                      {% else %}
-                                        {% static 'img/avatar.png'%}
-                                      {% endif %}
-                                      " alt="{{user.last_name}}">
-                                    {% else%}
-                                    <img src="{% static 'img/avatar.png'%}" alt="{{user.last_name}}">
-                                    {% endif %}
-                                    <p>Hello <br><span>{{user.username}}</span></p>
-                                  </div>
+    <div id="pfl-page-row">
+        <div class="pfl-page-Sc-1" >
+            <div class="ptfl-page-Sc-Overlay">
+              <div class="pfl-acct-ElBox">
+                  <div class="_pfl-acct-ElpflOv">
+                      <div class="_pfl-acct-ElpFImg">
+                        <img src="
+                        {% if request.user.profile_image%}
+                          {{ request.user.profile_image.url}}
+                        {% else %}
+                          {% static 'img/avatar.png'%}
+                        {% endif %}
+                        " alt="{{user.username}}">
+                      </div>
+                      <div class="_pfl-acct-ElpSnap">
+                        <h3>{% if user.get_full_name %}{{user.get_full_name}}{%else%}{{user.username}}{% endif %}</h3>
+                        <h5>
+                        {% if user.user_type == 'Agent' %}
+                          Agent
+                        {% elif user.user_type == 'PropertyManager' %}
+                          Property Manager
+                        {% elif user.user_type == 'Company' %}
+                          Company
+                        {% elif user.user_type == 'Design&servicePro' %}
+                          Design and Service Pro
+                        {% elif user.user_type == 'NormalUser'%}
+                          Regular User
+                        {% endif %}
+                        </h5>
+                      </div>
+                  </div>
+                  <div class="pfl-acct-BtnsWrps">
+                      <div class="pfl-acct-actionBtnsWrp">
+                          <div class="pfl-acct-actionBtns">
+                                <a href="{% url 'listings:homepage'%}">
+                                  <span class="material-icons">home</span>&nbsp &nbsp
+                                  Home
+                                </a>
+                                <a href="#" class="dashboardTabLink">
+                                  <span class="material-icons">dashboard</span>&nbsp &nbsp
+                                  Dashboard
+                                </a>
+                                <a href="#" class="dashboardTabLink" onclick="openPage(event, '_dashbordListings')">
+                                  <span class="material-icons">list_alt</span>&nbsp &nbsp
+                                  Listings
+                                </a>
+                                <a href="#"  id="defaultOpen" class="dashboardTabLink" onclick="openPage(event, '_dashbordAccount')">
+                                  <span class="material-icons">account_circle</span>&nbsp &nbsp
+                                  Account
+                                </a>
+                                <a href="#" class="dashboardTabLink" onclick="openPage(event, '_dashbordAdvertise')">
+                                  <span class="material-icons">business_center</span>&nbsp &nbsp
+                                  Rehgien Pro
+                                </a>
+                                <!-- <a href="#" class="dashboardTabLink" onclick="openPage(event, '_dashbordAdvertise')">
+                                  <span class="material-icons">campaign</span>&nbsp &nbsp
+                                  Advertising
+                                </a>
+                                <a href="/pro/messaging">
+                                  <span class="material-icons">chat_bubble_outline</span>&nbsp &nbsp
+                                  Chat
+                                </a>
+                                <a href="/pro/markets/leads/property_requests">
+                                  <span class="material-icons">storefront</span>&nbsp &nbsp
+                                  Lead Marketplace
+                                </a> -->
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="pfl-d">
+          <div class="pfl-acct-stg">
+              <div class="profileDashHeader">
+                  <div class='pflDashHdLeft'>
+                    <div class="_uAcc_logo">
+                      <button type="button" name="button"><span class='material-icons'>dehaze</span></button>
+                      &nbsp &nbsp
+                      <a href="{% url 'listings:homepage'%}">
+                        <img src="{% static 'img/rehgien_logo_r.png' %}" alt="rehgien-logo">
+                      </a>
+                    </div>
+                  </div>
+                  <div class="pflDashHdRight">
+                      <div class="notificationsTab">
+                        <span class="material-icons">group</span>
+                        <span class="material-icons">notifications</span>
+                      </div>
+                      <div class="accountTab">
+                        <div class="pfl-card-img">
+                            <img src="
+                            {% if request.user.profile_image%}
+                              {{ request.user.profile_image.url}}
+                            {% else %}
+                              {% static 'img/avatar.png'%}
+                            {% endif %}
+                            " alt="{{user.username}}">
+                        </div>
+                        <div class="dab-links-wrapper">
+                            Hi, {{user.username}}
+                        </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div id="_dashbordAccount" class="_dashboardTabContent">
+            <h1>Your account <sup>{%if request.user.user_type != 'NormalUser'%}PRO {% else %}REGULAR{% endif %}</sup></h1>
+            <div class="_AccountovDbox">
+              <div class="_accCardsWrapper">
+                  <div class="_accCardsWrapperL">
+                    <div class="card _accCard">
+                        <h3><span class="material-icons">person</span>Profile</h3>
 
-                                    <div class="user-details">
-                                      <p>Account Actions.</p>
-                                      <div class="pfl-act-inf">
-                                          <a
-                                          {% if request.user.user_type == 'Agent' %}
-                                            href="{% url 'profiles:edit_ag_profile'%}"
-                                          {% elif request.user.user_type == 'PropertyManager' %}
-                                            href="{% url 'profiles:edit_pm_profile'%}"
-                                          {% elif request.user.user_type == 'Design&servicePro' %}
-                                            href="{% url 'profiles:edit_ds_profile'%}"
-                                          {% elif request.user.user_type == 'NormalUser' %}
-                                              href="{% url 'profiles:edit_n_user_profile'%}"
-                                          {% endif %}
-                                          >
-                                            <button type="button" name="button">
-                                              <img src="{% static 'img/e_person.svg'%}" alt="edit profile">
-                                            </button>
-                                            Edit profile
-                                          </a>
-                                          <a href="{% url 'account_change_password' %}">
-                                            <button type="button" name="button">
-                                              <img src="{% static 'img/edit_password.svg'%}" alt="change password">
-                                            </button>
-                                            Change password
-                                          </a>
+                        <div class="_userProfileMiddle">
+                              <div class="_userProfileImgNw">
+                                <div id="_uProgress">
+                                  <div class="_userProfileImg">
+                                    <img src="
+                                      {% if request.user.profile_image %}
+                                        {{ request.user.profile_image.url}}
+                                      {% else %}
+                                        {% static 'img/avatar.png' %}
+                                      {% endif %}" alt="avatar">
+                                      <div class="_userProfileCompletion">
+                                        <h5>{{user.percentage_complete}} <sup>%</sup></h5>
                                       </div>
-                                    </div>
-                            </div>
+                                  </div>
+                                </div>
+                                <h5>{% if user.get_full_name %} {{user.get_full_name}}{% else %} {{user.username}}{%endif%}<span class="material-icons">verified</span></h5>
+                                <div class="_userProfileEnd">
+                                  <a href="#e-profile-Modal" class="modal-trigger"><button type="button" name="button">Update profile</button></a>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                      <div class="card _accCard">
+                        {% if request.user.user_type == 'NormalUser' %}
+                        <div class="disabledCardOverlay">
+                          <div class="_diabledHelperTxt">
+                              Pro feature! <br>
+                              If you are a pro please request an upgrade!<br>
+                              <button type="button" name="button">Request Upgrade</button>
+                              <a href="#"><u>Learn more about pros</u></a> <br>
                           </div>
                         </div>
-
-                    </div>
-                    <div class="pfl-acct-ElBox">
-                      <ul class='collapsible'>
-                        <li>
-                        <p class="collapsible-header" >Other Actions. <i class="fas fa-chevron-right"></i></p>
-                        <div class="pfl-acct-BtnsWrps collapsible-body">
-                            <div class="pfl-acct-actionBtnsWrp">
-                              <div class="pfl-acct-actionBtns">
-                                {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
-                                <a href="{% url 'listings:rental_listing_form'%}"><button type="button" name="button">
-                                  <img src="{% static 'img/key.svg'%}">
-                                </button>List a rental</a>
-                                <a href="{% url 'listings:sell_listing_form'%}"><button type="button" name="button">
-                                  <img src="{% static 'img/sell.svg'%}">
-                                </button>Sell</a>
-                                <a href="{% url 'markets:agent_lead_request'%}"><button type="button" name="button">
-                                  <img src="{% static 'img/time.svg'%}">
-                                </button>Request a lead</a>
-                                <a href="{% url 'markets:agent_property_request'%}"><button type="button" name="button">
-                                  <img src="{% static 'img/business.svg'%}">
-                                </button>Request a property</a>
-                                {% else %}
-                                <a href="{% url 'profiles:agent_list'%}"><button type="button" name="button">
-                                  <img src="{% static 'img/location_city.svg'%}">
-                                </button>List with an agent</a>
-                                <a href="{% url 'markets:property_request'%}"><button type="button" name="button">
-                                <img src="{% static 'img/time.svg'%}">
-                                </button>Request a property</a>
-                                <a href="{% url 'markets:proffesional_request'%}"><button type="button" name="button"></button>Request a pro</a>
-                                <a href="{% url 'markets:other_request'%}"><button type="button" name="button"></button>Other requests</a>
-                                {% endif %}
+                        {%endif%}
+                          <h3><span class="material-icons">assignment_ind</span>Business Profile</h3>
+                          <div class="_bsProfileMiddle">
+                              <div id="_bspProgress">
+                                <div class="_bsProfileCompletion">
+                                  <h5>
+                                    {% if user.user_type == 'Agent'%}
+                                      {{user.agent_profile.percentage_complete}}
+                                    {% elif user.user_type == 'PropertyManager'%}
+                                      {{user.pm_profile.percentage_complete}}
+                                    {% elif user.user_type == 'Design&servicePro'%}
+                                      {{user.DService_profile.percentage_complete}}
+                                    {% elif user.user_type == 'Company'%}
+                                      {{user.company_profile.percentage_complete}}
+                                    {% else %}
+                                      0
+                                    {% endif %}
+                                    <sup>%</sup>
+                                  </h5>
+                                  <h6>Complete</h6>
+                                </div>
                               </div>
-                            </div>
-                            <div class="pfl-acct-actionBtnsWrp">
-                              <div class="pfl-acct-ProactionBtns">
-                                {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
-                                <a href="/pro/home"><button type="button" name="button">
-                                  <img src="{% static 'img/work.svg'%}">
-                                </button> Rehgien Pro</a>
-                                <a href="/pro/messaging"><button type="button" name="button">
-                                  <img src="{% static 'img/forum.svg'%}">
-                                </button>Messaging</a>
-                                <a href="/pro/markets/leads/property_requests"><button type="button" name="button">
-                                  <img src="{% static 'img/ishow_chart.svg'%}">
-                                </button>Leads</a>
-                                <a href="#"><button type="button" name="button">
-                                  <img src="{% static 'img/edit.svg'%}">
-                                </button> Edit business profile</a>
-                                {% else %}
+                              <a href="
+                                {% if user.user_type == 'Agent'%}
+                                  {{user.agent_profile.get_absolute_url}}
+                                {% elif user.user_type == 'PropertyManager'%}
+                                  {{user.pm_profile.get_absolute_url}}
+                                {% elif user.user_type == 'Design&servicePro'%}
+                                  {{user.DService_profile.get_absolute_url}}
+                                {% elif user.user_type == 'Company'%}
+                                  {{user.company_profile.get_absolute_url}}
                                 {%endif%}
-                              </div>
-                            </div>
+                              ">
+                                <h5>Go to business page &nbsp<span class="material-icons">east</span></h5>
+                              </a>
+                          </div>
+                          <div class="_userProfileEnd">
+                            <a {% if request.user.user_type != 'NormalUser' %}
+                               href="
+                               {% if user.user_type == 'Agent'%}
+                                {% url 'profiles:ag_profile_edit_mode' user.agent_profile.pk%}
+                               {% elif user.user_type == 'PropertyManager'%}
+                                 {% url 'profiles:pm_profile_edit_mode' user.pm_profile.pk%}
+                               {% elif user.user_type == 'Design&servicePro'%}
+                                 {% url 'profiles:ds_profile_edit_mode' user.DService_profile.pk%}
+                               {% elif user.user_type == 'Company'%}
+                                 {% url 'profiles:co_profile_edit_mode' user.company_profile.pk%}
+                               {%endif%}
+
+                              "
+                              class="modal-trigger"
+                            {% endif %}>
+                            <button type="button" name="button">Update profile</button>
+                          </a>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="_accCardsWrapperR">
+                    <div class="_accCardsWrapScal">
+                      <div class="card _accCard">
+                        {% if request.user.user_type == 'NormalUser' %}
+                        <div class="disabledCardOverlay">
+                          <div class="_diabledHelperTxt">
+                              Pro feature! <br>
+                              If you are a pro please request an upgrade! <br>
+                              <button type="button" name="button">Request Upgrade</button>
+                              <a href="#"><u>Learn more about pros</u></a> <br>
+                          </div>
                         </div>
-                        </li>
-                      </ul>
+                        {%endif%}
+                          <h3><span class="material-icons">groups</span>Connections</h3>
+                          <div class="_bsProfileMiddle">
+                                <div class="_userConnections">
+                                  <h5>{{user_connections.count}}</h5>
+                                  <h6>Connections</h6>
+                                </div>
+                                <div class="_userConnectionsAvatars">
+                                  {% if user_connections %}
+                                    {% for connection in user_connections|slice:":3"%}
+                                      {% if request.user == connection.requestor %}
+                                        <div class="_userCAvImg{{forloop.counter}}">
+                                          <img src="
+                                          {% if connection.receiver.profile_image %}
+                                            {{connection.receiver.profile_image.url}}
+                                          {% else %}
+                                            {%static 'img/av1.jpg'%}
+                                          {% endif %}
+                                          " alt="avatar">
+                                        </div>
+                                      {% elif request.user == connection.receiver %}
+                                        <div class="_userCAvImg{{forloop.counter}}">
+                                          <img src="
+                                          {% if connection.requestor.profile_image %}
+                                            {{connection.requestor.profile_image.url}}
+                                          {% else %}
+                                            {%static 'img/av1.jpg'%}
+                                          {% endif %}
+                                          " alt="avatar">
+                                        </div>
+                                      {% endif %}
+                                    {%endfor%}
+                                    {% if user_connections|length > 3 %}
+                                      <div class="_userCAvImgExtra">
+                                        +{{ user_connections|length|add:"-3" }} <span>more</span>
+                                      </div>
+                                    {% else %}
+                                      <div class="_userCAvImgExtra">
+
+                                      </div>
+                                    {% endif %}
+                                  {%endif%}
+                                </div>
+                          </div>
+                          <div class="_userProfileEnd">
+                            <a {% if request.user.user_type != 'NormalUser' %} href="{% url 'profiles:user_connections'%}" {% endif %}><button type="button" name="button">Manage Connections</button></a>
+                          </div>
+                      </div>
+                      <div class="card _accCard">
+                          <h3><span class="material-icons">how_to_reg</span>
+                            {% if request.user.user_type == 'NormalUser' %}
+                              Following
+                            {% else %}
+                              Followers
+                            {% endif %}
+                          </h3>
+
+                          <div class="_bsProfileMiddle">
+                            {% if request.user.user_type == 'NormalUser'%} <!-- Use following instead of followers -->
+                                <div class="_userConnections">
+                                    <h5>
+                                      {{following|length}}
+                                    </h5>
+                                    <h6>Following</h6>
+                                </div>
+                                <div class="_userConnectionsAvatars">
+                                      {% if following %}
+                                          {% for following in following %}
+                                            <div class="_userCAvImg{{forloop.counter}}">
+                                              <img src="
+                                                {% if following.profile_image %}
+                                                  {{following.profile_image.url}}
+                                                {% else %}
+                                                  {%static 'img/avatar.png'%}
+                                                {% endif %}
+                                              " alt="avatar">
+                                            </div>
+                                          {% endfor %}
+                                          {% if following|length > 3 %}
+                                            <div class="_userCAvImgExtra">
+                                              +{{ following|length|add:"-3" }} <span>more</span>
+                                            </div>
+                                          {% else %}
+                                            <div class="_userCAvImgExtra">
+                                            </div>
+                                          {% endif %}
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <div class="_userConnections">
+                                    <h5>
+                                      {% if request.user.user_type == 'Agent'%}
+                                        {{user.agent_profile.followers.all.count}}
+                                      {% elif request.user.user_type == 'PropertyManager' %}
+                                        {{user.pm_profile.followers.all.count}}
+                                      {% elif request.user.user_type == 'Design&servicePro' %}
+                                        {{user.DService_profile.followers.all.count}}
+                                      {% elif request.user.user_type == 'Company' %}
+                                        {{user.company_profile.followers.all.count}}
+                                      {% endif %}
+                                    </h5>
+                                    <h6>Followers</h6>
+                                </div>
+                                <div class="_userConnectionsAvatars">
+                                    {% if request.user.user_type == 'Agent'%}
+                                      {% if user.agent_profile.followers%}
+                                          {% for follower in user.agent_profile.followers.all %}
+                                            <div class="_userCAvImg{{forloop.counter}}">
+                                              <img src="
+                                                {% if follower.profile_image %}
+                                                  {{follower.profile_image.url}}
+                                                {% else %}
+                                                  {%static 'img/avatar.png'%}
+                                                {% endif %}
+                                              " alt="avatar">
+                                            </div>
+                                          {% endfor %}
+                                          {% if user.agent_profile.followers|length > 3 %}
+                                            <div class="_userCAvImgExtra">
+                                              +{{ user.agent_profile.followers|length|add:"-3" }} <span>more</span>
+                                            </div>
+                                          {% else %}
+                                            <div class="_userCAvImgExtra">
+                                            </div>
+                                          {% endif %}
+                                    {% endif %}
+                                  {% elif request.user.user_type == 'PropertyManager' %}
+                                      {% if user.pm_profile.followers %}
+                                            {% for follower in user.pm_profile.followers.all %}
+                                              <div class="_userCAvImg{{forloop.counter}}">
+                                                <img src="
+                                                  {% if follower.profile_image %}
+                                                    {{follower.profile_image.url}}
+                                                  {% else %}
+                                                    {%static 'img/avatar.png'%}
+                                                  {% endif %}
+                                                " alt="avatar">
+                                              </div>
+                                            {% endfor %}
+                                            {% if user.pm_profile.followers|length > 3 %}
+                                              <div class="_userCAvImgExtra">
+                                                +{{ user.pm_profile.followers|length|add:"-3" }}
+                                              </div>
+                                            {% else %}
+                                              <div class="_userCAvImgExtra">
+                                              </div>
+                                            {% endif %}
+                                      {% endif %}
+                                  {% elif request.user.user_type == 'Design&servicePro' %}
+                                      {% if user.DService_profile.followers%}
+                                            {% for follower in user.DService_profile.followers.all %}
+                                              <div class="_userCAvImg{{forloop.counter}}">
+                                                <img src="
+                                                  {% if follower.profile_image %}
+                                                    {{follower.profile_image.url}}
+                                                  {% else %}
+                                                    {%static 'img/avatar.png'%}
+                                                  {% endif %}
+                                                " alt="avatar">
+                                              </div>
+                                            {% endfor %}
+                                            {% if user.DService_profile.followers|length > 3 %}
+                                              <div class="_userCAvImgExtra">
+                                                +{{ user.DService_profile.followers|length|add:"-3" }}
+                                              </div>
+                                            {% else %}
+                                              <div class="_userCAvImgExtra">
+                                              </div>
+                                            {% endif %}
+                                      {% endif %}
+                                  {% elif request.user.user_type == 'Company' %}
+                                      {% if user.company_profile.followers %}
+                                            {% for follower in user.company_profile.followers.all %}
+                                              <div class="_userCAvImg{{forloop.counter}}">
+                                                <img src="
+                                                  {% if follower.profile_image %}
+                                                    {{follower.profile_image.url}}
+                                                  {% else %}
+                                                    {%static 'img/avatar.png'%}
+                                                  {% endif %}
+                                                " alt="avatar">
+                                              </div>
+                                            {% endfor %}
+                                            {% if user.company_profile.followers|length > 3 %}
+                                              <div class="_userCAvImgExtra">
+                                                +{{ user.company_profile.followers|length|add:"-3" }}
+                                              </div>
+                                            {% else %}
+                                              <div class="_userCAvImgExtra">
+                                              </div>
+                                            {% endif %}
+                                      {% endif %}
+                                  {% endif %}
+                                </div>
+                              {% endif %}
+                          </div>
+                          <div class="_userProfileEnd">
+                            <a href="{% url 'profiles:user_followers' %}"><button type="button" name="button">Manage Followers</button></a>
+                          </div>
+                      </div>
                     </div>
+                    <div id="_activityAccCard" class="card _accCard">
+                        <h3><span class="material-icons">timeline</span>Activity Log</h3>
+
+                        <div class="_accActivityMiddle">
+                              <div class="_accActivityCard card">
+                                  <h3>1 august 2020</h3>
+                                  <div class="_accAcCardBody">
+                                    <div class="_accAcCardUserDtls">
+                                      <img src="{%static 'img/av2.jpg'%}" alt="avatar">
+                                      <h4>rehgienAdmin (You)</h4>
+                                    </div>
+                                    <div class="_accAccDesc">
+                                      Created a new property Listing
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="_accActivityCard card">
+                                  <h3>1 august 2020</h3>
+                                  <div class="_accAcCardBody">
+                                    <div class="_accAcCardUserDtls">
+                                      <img src="{%static 'img/av2.jpg'%}" alt="avatar">
+                                      <h4>rehgienAdmin (You)</h4>
+                                    </div>
+                                    <div class="_accAccDesc">
+                                      Created a new property Listing
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="_accActivityCard card">
+                                  <h3>1 august 2020</h3>
+                                  <div class="_accAcCardBody">
+                                    <div class="_accAcCardUserDtls">
+                                      <img src="{%static 'img/av4.jpg'%}" alt="avatar">
+                                      <h4>rehgienAdmin (You)</h4>
+                                    </div>
+                                    <div class="_accAccDesc">
+                                      Saved a property Listing
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="_accActivityCard card">
+                                  <h3>1 august 2020</h3>
+                                  <div class="_accAcCardBody">
+                                    <div class="_accAcCardUserDtls">
+                                      <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                      <h4>rehgienAdmin (You)</h4>
+                                    </div>
+                                    <div class="_accAccDesc">
+                                      Followed an agent
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="_accActivityCard card">
+                                  <h3>1 august 2020</h3>
+                                  <div class="_accAcCardBody">
+                                    <div class="_accAcCardUserDtls">
+                                      <img src="{%static 'img/av3.jpg'%}" alt="avatar">
+                                      <h4>rehgienAdmin (You)</h4>
+                                    </div>
+                                    <div class="_accAccDesc">
+                                      Created a new property Listing
+                                    </div>
+                                  </div>
+                              </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="_accSgCardsWrapper">
+                    <div class="card _accSgCard">
+                        <h3><span class="material-icons">admin_panel_settings</span>Sign in & Security</h3>
+                        <div class="_accSgCardMiddle">
+                          <p>Manage your sign in options, security options and passwords.</p>
+                        </div>
+                        <div class="_accSgCardEnd">
+                          <a href="#" class="modal-trigger"><button type="button" name="button">Manage Options</button></a>
+                        </div>
+                    </div>
+                    <div class="card _accSgCard">
+                        <h3><span class="material-icons">settings</span>Privacy & Account settings</h3>
+                        <div class="_accSgCardMiddle">
+                            <p>Deactivate your account or manage your privacy settings. </p>
+                        </div>
+                        <div class="_accSgCardEnd">
+                          <a href="#e-profile-Modal" class="modal-trigger"><button type="button" name="button">Manage Settings</button></a>
+                        </div>
+                    </div>
+                  </div>
+              </div>
             </div>
-            <div class="pfl-d">
+          </div>
+          <div id="_dashbordListings" class="_dashboardTabContent">
               <div  id="pfl-d-sw">
-                <ul id="pfl-pg-switch" class="tabs tabs-fixed-width">
-                    <li class="tab col s3"><a href="#MyListings"><i class="fas fa-home" style="color:#5b0088"></i></a></li>
-                    <li class="tab col s3"><a href="#MyFavs"><i class="fas fa-heart fa-lg" style="color:#5b0088"></i></a></li>
-                    <li class="tab col s3"><a href="#Requests"><i class="far fa-chart-bar" style="color:#5b0088"></i></a></li>
-                    <li class="tab col s3"><a href="#AdInteractions"><i class="fas fa-chart-line" style="color:#5b0088"></i></a></li>
-                    <li class="tab col s3"><a href="#Advertise"><i class="fas fa-bullhorn" style="color:#5b0088"></i></a></li>
+                <ul id="pfl-pg-switch" class="tabs">
+                    <li class="tab col s3"><a href="#_dashMyListings">Property</a></li>
+                    <li class="tab col s3"><a href="#_dashRequests">Requests</a></li>
+                    <li class="tab col s3"><a href="#_dashMyFavs">Saved Property</a></li>
+                    {% if request.user.user_type == 'PropertyManager' or request.user.user_type == 'Company' or request.user.user_type == 'Design&servicePro'%}
+                      <li class="tab col s3"><a href="#_dashMyPortfolio">Portfolio</a></li>
+                    {% endif %}
                 </ul>
               </div>
               <div class="pfl-dtl">
-                  <div id="MyListings" class="pfl-listings">
+                <div id="_dashMyListings" class="pfl-listings">
+                    {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' or request.user.user_type == 'Company'%}
                       <div  id="MyListingsSwWr">
                         <ul id="MyListings-switch" class="tabs">
                             <li class="tab col s3"><a href="#MySaleListings">For sale</a></li>
@@ -156,223 +536,344 @@
                         </ul>
                       </div>
                       <div id="MySaleListings">
-                          <p class="profile-title">Active for sale listings</p>
-                          <div class="profile-sale">
-                              <div id="pfl-sal" class="row">
-                                    {% if user_sale_posts%}
-                                    {% for onsale_listings in user_sale_posts %}
-
-                                      <div class="col s12 md6 l6 xl4">
-                                        <div id="rec-card" class="card">
-                                          <div id="rec-img" class="card-image">
-                                            <a href="{% url 'listings:onsale_detail' onsale_listings.id %}">{% cloudinary onsale_listings.thumb ImageTransformation %}</a>
-                                            <span id="rec-date" class="card-title"><p>{{onsale_listings.publishdate.date}}</p></span>
-
-                                          </div>
-                                          <div id="rec-content" class="card-content">
-                                            <ol>
-                                              <li class="rec-h-price">Ksh: {{onsale_listings.price}}</li>
-                                              <li class="rec-h-features"> <i class="fas fa-shower"></i>{{onsale_listings.bathrooms}} ba| <i class="fas fa-bed"></i>{{onsale_listings.bedrooms}} bds| <i class="fas fa-ruler-combined"></i>{{onsale_listings.floor_area}} {{onsale_listings.size_units}}</li>
-                                              <li class="rec-h-name">{{onsale_listings.property_name}}</li>
-                                              <li class="rec-h-location">{{onsale_listings.location_name}}</li>
-                                            </ol>
-                                          </div>
-
-                                          <div class="card-links">
-                                            <a href="{% url 'listings:s_delete' onsale_listings.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
-                                            <a href="{% url 'listings:update' onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
-
-                                          </div>
-                                          </div>
-                                        </div>
-
-                            {% endfor %}
-                        {% else %}
-                        <div class="empty-list">
-                          <p>No active for sale listings for <b>{{user}}</b>. Posts you list will appear here.</p>
-                          <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
+                        <div class="MyLsgHd">
+                          <p>My Properties <span>Showing {{user_sale_posts.count}} results</span></p>
+                          <a href="{% url 'listings:sell_listing_form'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new property</button></a>
                         </div>
-                        {% endif%}
-                    </div>
-                      <!-- paginator for onsale listings-->
-                      {% include 'profiles/pagination.html' with listings=user_sale_posts %}
+                          <div class="profile-sale">
+                                  {% if user_sale_posts%}
+                                    <div id="pfl-sal">
+                                      <table>
+                                        <thead>
+                                          <tr>
+                                            <th>Property</th>
+                                            <th>Leads</th>
+                                            <th>Stats</th>
+                                            <th>Posted on</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                          </tr>
+                                        </thead>
+                                        {% for onsale_listings in user_sale_posts %}
+                                        <tr>
+                                            <td>
+                                                <div id="rec-card" class="card">
+                                                <div id="rec-img" class="card-image">
+                                                  <a href="{% url 'listings:onsale_detail' onsale_listings.id %}">{% cloudinary onsale_listings.thumb ImageTransformation %}</a>
+                                                </div>
+                                                <div id="rec-content" class="card-content">
+                                                  <ol>
+                                                    <li class="rec-h-name">{{onsale_listings.property_name}}</li>
+                                                    <li class="rec-h-location">{{onsale_listings.location_name}}</li>
+                                                    <li class="rec-h-features">{{onsale_listings.bathrooms}} ba| {{onsale_listings.bedrooms}} bds| {{onsale_listings.floor_area}} {{onsale_listings.size_units}}</li>
+                                                    <li class="rec-h-price">Ksh: {{onsale_listings.price}}</li>
+                                                  </ol>
+                                                </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                              <div class="_dashlistingLeads">
+                                                20 till now
+                                                <div class="_dashLsgLdUsers">
+                                                  <div class="_dashLsgLdUserImg1">
+                                                    <img src="{% static 'img/av1.jpg'%}" alt="">
+                                                  </div>
+                                                  <div class="_dashLsgLdUserImg2">
+                                                    <img src="{% static 'img/av2.jpg'%}" alt="">
+                                                  </div>
+                                                  <div class="_dashLsgLdUserImg3">
+                                                    <img src="{% static 'img/av3.jpg'%}" alt="">
+                                                  </div>
+                                                  <div class="_dashLsgLdUserImg4">
+                                                    <img src="{% static 'img/av4.jpg'%}" alt="">
+                                                  </div>
+                                                  <div class="_dashLsgLdUserExtra">
+                                                    +20
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <div class="_dashLsgAcStats">
+                                                  <span class="material-icons">trending_up</span>
+                                                  <div class="_dashLsgAcStd">
+                                                    <h4>300 &nbsp + &nbsp<span>12</span></h4>
+                                                    <h5>Total Views</h5>
+                                                  </div>
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <span id="rec-date" class="card-title"><p>{{onsale_listings.publishdate.date}}</p></span>
+                                            </td>
+                                            <td>
+                                              <div class="_dashLsgAcStatus">
+                                                  <span>Active</span>
+                                                  Till to 15, June
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <div class="card-links">
+                                                <a href="{% url 'listings:s_delete' onsale_listings.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
+                                                <a href="{% url 'listings:update' onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
 
+                                              </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                      </table>
+                                    </div>
+                                  {% else %}
+                                    <div class="empty-list">
+                                      <p>No active for sale properties. Properties you list will appear here.</p>
+                                    </div>
+                                  {% endif%}
                           </div>
                       </div>
                       <div id="MyRentalListings">
-                        <p class="profile-title">Active Rental Listings</p>
+                        <div class="MyLsgHd">
+                          <p>My Properties <span>Showing {{user_sale_posts.count}} results</span></p>
+                          <a href="{% url 'listings:rental_listing_form'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new property</button></a>
+                        </div>
                         <div class="profile-rentals">
-                            <div class="row">
                               {% if user_rental_posts%}
-                              {% for rentals in user_rental_posts %}
-                              <div class="col s12 md6 l6 xl4">
-
-                                    <div id="rec-card" class="card" name="rec-card">
-                                      <div id="rec-img" class="card-image">
-                                        <a href="{% url 'listings:rental_detail' rentals.id %}">{% cloudinary rentals.thumb ImageTransformation %}</a>
-                                        <span id="rec-date" class="card-title"><p>{{rentals.publishdate.date}}</p></span>
-
-                                      </div>
-                                      <div id="rec-content" class="card-content">
-                                        <ol>
-                                          <li class="rec-h-price">Ksh: {{rentals.price}} p/m</li>
-                                          <li class="rec-h-features"> <i class="fas fa-shower"></i>{{rentals.bathrooms}} ba| <i class="fas fa-bed"></i>{{rentals.bedrooms}} bds| <i class="fas fa-ruler-combined"></i>{{rentals.floor_area}} {{rentals.size_units}}</li>
-                                          <li class="rec-h-name">{{rentals.property_name}}</li>
-                                          <li class="rec-h-location">{{rentals.location_name}}</li>
-                                        </ol>
-                                      </div>
-
-                                      <div class="card-links">
-                                        <a href="{% url 'listings:r_delete' rentals.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
-                                        <a href="{% url 'listings:rental_update' rentals.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
-
-                                      </div>
-                                    </div>
-                              </div>
-
-                              {% endfor%}
-
-                              {% else %}
-                              <div class="empty-list">
-                                <p>No active rentals for <b>{{user}}</b>. Rentals you list will appear here.</p>
-                                <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
-                              </div>
-                              {%endif%}
-                            </div>
-                              <!-- paginator for rental listings-->
-                              {% include 'profiles/pagination.html' with listings=user_rental_posts %}
-
-                        </div>
-                      </div>
-                  </div>
-                  <div id="MyFavs" class="favourites-sc">
-                    <div class="pfl-listings">
-                        <div  id="MyListingsSwWr">
-                          <ul id="MyListings-switch" class="tabs">
-                              <li class="tab col s3"><a href="#MyFavSaleListings">For sale</a></li>
-                              <li class="tab col s3"><a href="#MyFavRentalListings">For Rent</a></li>
-                          </ul>
-                        </div>
-                        <div id="MyFavSaleListings">
-                          <p class="profile-title">Favourite For Sale Listings</p>
-                          <div class="profile-sale">
-                                <div id="pfl-sal" class="row">
-                                      {% if user_sale_favs %}
-                                      {% for favs in user_sale_favs %}
-
-                                        <div class="col s12 md6 l6 xl4">
-                                          <div id="rec-card" class="card">
+                                <div id="pfl-sal">
+                                  <table>
+                                    <thead>
+                                      <tr>
+                                        <th>Property</th>
+                                        <th>Leads</th>
+                                        <th>Stats</th>
+                                        <th>Posted on</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                      </tr>
+                                    </thead>
+                                    {% for rentals in user_rental_posts %}
+                                    <tr>
+                                        <td>
+                                            <div id="rec-card" class="card">
                                             <div id="rec-img" class="card-image">
-                                              <a href="{% url 'listings:onsale_detail' favs.id %}">
-                                              {% cloudinary favs.thumb ImageTransformation %}
-                                              <div class="fav-button">
-                                                <a href="{% url 'listings:s_favourite' favs.pk%}"><i class="material-icons right" style="color:red;">favorite_border</i></a>
-                                              </div>
-                                            </a>
-                                              <span id="rec-date" class="card-title"><p>{{favs.publishdate.date}}</p></span>
-
+                                              <a href="{% url 'listings:rental_detail' rentals.id %}">{% cloudinary rentals.thumb ImageTransformation %}</a>
                                             </div>
                                             <div id="rec-content" class="card-content">
                                               <ol>
-                                                <li class="rec-h-price">Ksh: {{favs.price}}</li>
-                                                <li class="rec-h-features"> {{favs.bathrooms}} ba| {{favs.bedrooms}} bds| {{favs.floor_area}} {{favs.size_units}}</li>
-                                                <li class="rec-h-name">{{favs.property_name}}</li>
-                                                <li class="rec-h-location">{{favs.location_name}}</li>
+                                                <li class="rec-h-name">{{rentals.property_name}}</li>
+                                                <li class="rec-h-location">{{rentals.location_name}}</li>
+                                                <li class="rec-h-features">{{rentals.bathrooms}} ba| {{rentals.bedrooms}} bds| {{rentals.floor_area}} {{rentals.size_units}}</li>
+                                                <li class="rec-h-price">Ksh: {{rentals.price}}</li>
                                               </ol>
                                             </div>
                                             </div>
+                                        </td>
+                                        <td>
+                                          <div class="_dashlistingLeads">
+                                            20 till now
+                                            <div class="_dashLsgLdUsers">
+                                              <div class="_dashLsgLdUserImg1">
+                                                <img src="{% static 'img/av1.jpg'%}" alt="">
+                                              </div>
+                                              <div class="_dashLsgLdUserImg2">
+                                                <img src="{% static 'img/av2.jpg'%}" alt="">
+                                              </div>
+                                              <div class="_dashLsgLdUserImg3">
+                                                <img src="{% static 'img/av3.jpg'%}" alt="">
+                                              </div>
+                                              <div class="_dashLsgLdUserImg4">
+                                                <img src="{% static 'img/av4.jpg'%}" alt="">
+                                              </div>
+                                              <div class="_dashLsgLdUserExtra">
+                                                +20
+                                              </div>
+                                            </div>
                                           </div>
-
-                                  {% endfor %}
-                              {% else %}
-                              <div class="empty-list">
-                                <p>No favourites for <b>{{user}}</b>. Favourites you add will appear here.</p>
-                                <img src="{% static 'img/no_data.svg'%}" alt="No favourites">
-                              </div>
-                              {% endif%}
-                          </div>
-                              <!-- paginator for onsale listings-->
-                              <div id="profile-paginator" class="pagination">
-                                  <span class="step-links">
-                                      {% if user_sale_favs.has_previous %}
-                                      <a href="?page=1">&laquo; first</a>
-                                      <a href="?page={{ user_sale_favs.previous_page_number }}">previous</a>
-                                      {% endif %}
-                                      <span class="current">
-                                      Page {{ user_sale_favs.number }} of {{ user_sale_favs.paginator.num_pages }}.
-                                      </span>
-                                      {% if user_sale_favs.has_next %}
-                                      <a href="?page={{ user_sale_favs.next_page_number }}">next</a>
-                                      <a href="?page={{ user_sale_favs.paginator.num_pages }}">last &raquo;</a>
-                                      {% endif %}
-                                  </span>
-                              </div>
-
-                          </div>
-                        </div>
-                        <div id="MyFavRentalListings">
-                          <p class="profile-title">Favourite Rental Listings</p>
-                          <div class="profile-rentals">
-                              <div class="row">
-                                {% if user_rental_favs %}
-                                {% for rentals in user_rental_favs %}
-                                <div class="col s12 md6 l6 xl4">
-
-                                      <div id="rec-card" class="card" name="rec-card">
-                                        <div id="rec-img" class="card-image">
-                                          <a href="{% url 'listings:rental_detail' rentals.id %}">{% cloudinary rentals.thumb ImageTransformation %}</a>
-                                          <span id="rec-date" class="card-title"><p>{{rentals.publishdate}}</p></span>
-                                          <div class="fav-button">
-                                            <a href="{% url 'listings:r_favourite' rentals.pk%}"><i class="material-icons right" style="color:red;">favorite_border</i></a>
+                                        </td>
+                                        <td>
+                                          <div class="_dashLsgAcStats">
+                                              <span class="material-icons">trending_up</span>
+                                              <div class="_dashLsgAcStd">
+                                                <h4>300 &nbsp + &nbsp<span>12</span></h4>
+                                                <h5>Total Views</h5>
+                                              </div>
                                           </div>
+                                        </td>
+                                        <td>
+                                          <span id="rec-date" class="card-title"><p>{{rentals.publishdate.date}}</p></span>
+                                        </td>
+                                        <td>
+                                          <div class="_dashLsgAcStatus">
+                                              <span>Active</span>
+                                              Till to 15, June
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <div class="card-links">
+                                            <a href="{% url 'listings:r_delete' rentals.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
+                                            <a href="{% url 'listings:rental_update' rentals.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
 
-                                        </div>
-                                        <div id="rec-content" class="card-content">
-                                          <ol>
-                                            <li class="rec-h-price">Ksh: {{rentals.price}} p/m</li>
-                                            <li class="rec-h-features"> {{rentals.bathrooms}} ba| {{rentals.bedrooms}} bds| {{rentals.floor_area}} {{rentals.size_units}}</li>
-                                            <li class="rec-h-name">{{rentals.property_name}}</li>
-                                            <li class="rec-h-location">{{rentals.location_name}}</li>
-                                          </ol>
-                                        </div>
-                                      </div>
+                                          </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                  </table>
                                 </div>
-
-                                {% endfor%}
-
+                              {% else %}
+                                <div class="empty-list">
+                                  <p>No active rental properties. Properties you list will appear here.</p>
+                                </div>
+                              {%endif%}
+                        </div>
+                      </div>
+                    {% else %}
+                      <div class="empty-list">
+                        <p>You are not allowed to have property posts.
+                          <br> We currently do not allow FSBO properties. To list find a <a href="{% url 'profiles:agent_list' %}"><u>Agent</u></a> or <a href="{% url 'profiles:pm_list' %}"><u>Property Manager</u></a><br>
+                           Want to learn more <a href="#"><u>Visit here.</u></a>
+                         </p>
+                      </div>
+                    {% endif %}
+                </div>
+                <div id="_dashMyFavs" class="favourites-sc">
+                  <div class="pfl-listings">
+                      <div  id="MyListingsSwWr">
+                        <ul id="MyListings-switch" class="tabs">
+                            <li class="tab col s3"><a href="#MyFavSaleListings">For sale</a></li>
+                            <li class="tab col s3"><a href="#MyFavRentalListings">For Rent</a></li>
+                        </ul>
+                      </div>
+                      <div id="MyFavSaleListings">
+                        <div class="MyLsgHd">
+                          <p>Saved Properties <span>Showing {{user_sale_favs.count}} results.</span></p>
+                        </div>
+                        <div class="profile-sale">
+                                {% if user_sale_favs %}
+                                <div id="pfl-sal" >
+                                    <table>
+                                      <thead>
+                                        <tr>
+                                          <th>Property</th>
+                                          <th>Stats</th>
+                                          <th>Posted on</th>
+                                          <th>Actions</th>
+                                        </tr>
+                                      </thead>
+                                      {% for favs in user_sale_favs %}
+                                      <tr>
+                                          <td>
+                                              <div id="rec-card" class="card">
+                                              <div id="rec-img" class="card-image">
+                                                <a href="{% url 'listings:onsale_detail' favs.id %}">{% cloudinary favs.thumb ImageTransformation %}</a>
+                                              </div>
+                                              <div id="rec-content" class="card-content">
+                                                <ol>
+                                                  <li class="rec-h-name">{{favs.property_name}}</li>
+                                                  <li class="rec-h-location">{{favs.location_name}}</li>
+                                                  <li class="rec-h-features">{{favs.bathrooms}} ba| {{favs.bedrooms}} bds| {{favs.floor_area}} {{favs.size_units}}</li>
+                                                  <li class="rec-h-price">Ksh: {{favs.price}}</li>
+                                                </ol>
+                                              </div>
+                                              </div>
+                                          </td>
+                                          <td>
+                                            <div class="_dashLsgAcStats">
+                                                <span class="material-icons">trending_up</span>
+                                                <div class="_dashLsgAcStd">
+                                                  <h4>300 &nbsp + &nbsp<span>12</span></h4>
+                                                  <h5>Total Saves</h5>
+                                                </div>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <span id="rec-date" class="card-title"><p>{{favs.publishdate.date}}</p></span>
+                                          </td>
+                                          <td>
+                                            <div class="fav-button">
+                                              <a href="{% url 'listings:s_favourite' favs.pk%}">
+                                                <button type="button" name="button"><i class="material-icons right" style="color:red;">favorite_border</i></button>
+                                              </a>
+                                            </div>
+                                          </td>
+                                      </tr>
+                                      {% endfor %}
+                                    </table>
+                                </div>
                                 {% else %}
                                 <div class="empty-list">
-                                  <p>No favourites for <b>{{user}}</b>. Favourites you add will appear here.</p>
-                                  <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
+                                  <p>No saves. Properties you save will appear here.</p>
                                 </div>
-                                {%endif%}
-                              </div>
-                              <!-- paginator for rentals-->
-                              <div id="profile-paginator" class="pagination">
-                                  <span class="step-links">
-                                      {% if user_rental_favs.has_previous %}
-                                      <a href="?page=1">&laquo; first</a>
-                                      <a href="?page={{ user_rental_favs.previous_page_number }}">previous</a>
-                                      {% endif %}
-                                      <span class="current">
-                                      Page {{ user_rental_favs.number }} of {{ user_rental_favs.paginator.num_pages }}.
-                                      </span>
-                                      {% if user_rental_favs.has_next %}
-                                      <a href="?page={{ user_rental_favs.next_page_number }}">next</a>
-                                      <a href="?page={{ user_rental_favs.paginator.num_pages }}">last &raquo;</a>
-                                      {% endif %}
-                                  </span>
-                            </div>
-                          </div>
+                                {% endif%}
                         </div>
-                    </div>
+                      </div>
+                      <div id="MyFavRentalListings">
+                        <div class="MyLsgHd">
+                          <p>Saved Properties <span>Showing {{user_rental_favs.count}} results.</span></p>
+                        </div>
+                        <div class="profile-rentals">
+                              {% if user_rental_favs %}
+                                  <div id="pfl-sal">
+                                      <table>
+                                        <thead>
+                                          <tr>
+                                            <th>Property</th>
+                                            <th>Stats</th>
+                                            <th>Posted on</th>
+                                            <th>Actions</th>
+                                          </tr>
+                                        </thead>
+                                        {% for favs in user_rental_favs %}
+                                        <tr>
+                                            <td>
+                                                <div id="rec-card" class="card">
+                                                <div id="rec-img" class="card-image">
+                                                  <a href="{% url 'listings:rental_detail' favs.id %}">{% cloudinary favs.thumb ImageTransformation %}</a>
+                                                </div>
+                                                <div id="rec-content" class="card-content">
+                                                  <ol>
+                                                    <li class="rec-h-name">{{favs.property_name}}</li>
+                                                    <li class="rec-h-location">{{favs.location_name}}</li>
+                                                    <li class="rec-h-features">{{favs.bathrooms}} ba| {{favs.bedrooms}} bds| {{favs.floor_area}} {{favs.size_units}}</li>
+                                                    <li class="rec-h-price">Ksh: {{favs.price}} p/m</li>
+                                                  </ol>
+                                                </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                              <div class="_dashLsgAcStats">
+                                                  <span class="material-icons">trending_up</span>
+                                                  <div class="_dashLsgAcStd">
+                                                    <h4>300 &nbsp + &nbsp<span>12</span></h4>
+                                                    <h5>Total Saves</h5>
+                                                  </div>
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <span id="rec-date" class="card-title"><p>{{favs.publishdate.date}}</p></span>
+                                            </td>
+                                            <td>
+                                              <div class="fav-button">
+                                                <a href="{% url 'listings:r_favourite' favs.pk%}">
+                                                  <button type="button" name="button"><i class="material-icons right" style="color:red;">favorite_border</i></button>
+                                                </a>
+                                              </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                      </table>
+                                  </div>
+                              {% else %}
+                              <div class="empty-list">
+                                <p>No saves. Properties you save will appear here.</p>
+                              </div>
+                              {%endif%}
+                        </div>
+                      </div>
                   </div>
-                  <div id="Requests" class="requests-sc">
+                </div>
+                <div id="_dashRequests" class="requests-sc">
                       <div  id="MyListingsSwWr">
                         <ul id="MyListings-switch" class="tabs">
                           {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
-                              <li class="tab col s3"><a href="#MyLeadRequests">Agent Lead Requests</a></li>
-                              <li class="tab col s3"><a href="#MyAgentPropertyRequests">Agent Property Request</a></li>
+                              <li class="tab col s3"><a href="#MyLeadRequests">Lead Requests</a></li>
+                              <li class="tab col s3"><a href="#MyAgentPropertyRequests">Property Request</a></li>
                           {% else %}
                               <li class="tab col s3"><a href="#MyPropertyRequests">Property Requests</a></li>
                               <li class="tab col s3"><a href="#MyProRequests">Pro Requests</a></li>
@@ -382,11 +883,17 @@
                       </div>
                       {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
                             <div id="MyLeadRequests">
-                              <p>Active lead requests</p>
+                              <div class="MyLsgHd">
+                                <p>My Lead Requests <span>Showing {{ag_lead_requests.count}} results.</span></p>
+                                <a href="{% url 'markets:agent_lead_request'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new request</button></a>
+                              </div>
                               <div class="requests-list ler">
                                 {% if ag_lead_requests %}
                                     {% for ag_lead_requests in ag_lead_requests %}
                                       <div class="requestCard card">
+                                        <div class="_rqVerified">
+                                          <span class="material-icons" style="color:green;">done_all</span>
+                                        </div>
                                         <div class="requestCardAcct">
                                           <span>
                                             {% if ag_lead_requests.profile_image%}
@@ -398,317 +905,716 @@
                                               <h5>{{ag_lead_requests.name}}</h5>
                                               <p>Looking for a {{ag_lead_requests.ownership}}</p>
                                             </div>
-                                              <div class="requestActionBtns">
-                                                  <form action="{% url 'markets:agent_lead_request_deactivate' ag_lead_requests.pk%}" method="post">
-                                                    {% csrf_token %}
-                                                    <button type="submit" name="button">
-                                                      <i class="fas fa-power-off fa-lg" style="color:red"></i>
-                                                    </button>
-                                                  </form>
-                                                <a href="{% url 'markets:agent_lead_request_update' ag_lead_requests.pk%}">
-                                                  <button type="button" name="button">
-                                                    <i class="far fa-edit fa-lg" style="color:blue"></i>
-                                                  </button>
-                                                </a>
-                                              </div>
                                           </span>
                                         </div>
                                         <div class="requestCardAcct">
-                                          <div class="rqInteractions">
-                                            <div class="requestClaims">
-                                              {{ag_lead_requests.claimer|length}}
-                                              <span>Claims</span>
+                                            <div class="requestInfoPreVw">
+                                              Looking for a buyer for (a) {{ag_lead_requests.property_type}} located
+                                              in {{ag_lead_requests.location_name}}. Request active till {{ag_lead_requests.timeline}}.
                                             </div>
-                                            <div class="requestReferals">
-                                              {{ag_lead_requests.referrer|length}}
-                                              <span>Referals</span>
-                                            </div>
-                                          </div>
                                         </div>
                                         <div class="requestCardAcct">
-                                            <div class="requestInfoPreVw">
-                                              <li>{{ag_lead_requests.property_type}}</li>
-                                              <span></span>
-                                              <li>{{ag_lead_requests.location_name}}</li>
-                                              <span></span>
-                                              <li>Expiring in {{ag_lead_requests.timeline}}</li>
-                                            </div>
+                                          <div class="rqInteractions">
+                                              <div class="requestClaimsImgW">
+                                                  <div class="requestClaimsImg1">
+                                                    <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                  </div>
+                                                  <div class="requestClaimsImg2">
+                                                    <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                  </div>
+                                                  <div class="requestClaimsImg3">
+                                                    <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                  </div>
+                                                  <div class="requestClaimsImg4">
+                                                    <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                  </div>
+                                                  <div class="requestClaimsImg5">
+                                                    <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                  </div>
+                                              </div>
+                                              <div class="_rCrRW">
+                                                  <div class="requestClaims">
+                                                    + {{ag_lead_requests.claimer|length}}
+                                                    <span>Claims</span>
+                                                  </div>
+                                                  <div class="requestReferals">
+                                                    + {{ag_lead_requests.referrer|length}}
+                                                    <span>Referals</span>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                        </div>
+                                        <div class="requestActionBtns">
+                                            <form action="{% url 'markets:agent_lead_request_deactivate' ag_lead_requests.pk%}" method="post">
+                                              {% csrf_token %}
+                                              <button type="submit" name="button">
+                                                <i class="fas fa-power-off fa-lg" style="color:red"></i>
+                                                Turn Off
+                                              </button>
+                                            </form>
+                                          <a href="{% url 'markets:agent_lead_request_update' ag_lead_requests.pk%}">
+                                            <button type="button" name="button">
+                                              <i class="far fa-edit fa-lg" style="color:blue"></i>
+                                                Update
+                                            </button>
+                                          </a>
                                         </div>
                                       </div>
                                     {% endfor %}
                                 {% else %}
                                 <div class="empty-list">
-                                  <p>You currently dont have any requests. Request you list will appear here.</p>
-                                  <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
+                                  <p>You currently dont have any requests. Requests you post will appear here.</p>
                                 </div>
                                 {%endif%}
                               </div>
                             </div>
                             <div id="MyAgentPropertyRequests">
-                              <p>Active agent property requests</p>
+                              <div class="MyLsgHd">
+                                <p>My Property Requests <span>Showing {{ag_property_requests.count}} results.</span></p>
+                                <a href="{% url 'markets:agent_property_request'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new request</button></a>
+                              </div>
                               <div class="requests-list agp">
                                 {% if ag_property_requests %}
                                     {% for ag_property_requests in ag_property_requests %}
-                                      <div class="requestCard card">
-                                        <div class="requestCardAcct">
-                                          <span>
-                                            {% if ag_property_requests.profile_image%}
-                                            <img src="{{ag_property_requests.profile_image}}" alt="avatar">
-                                            {% else %}
-                                            <img src="{% static 'img/avatar.png'%}" alt="avatar">
-                                            {% endif %}
-                                            <div class="requestCardDtls">
-                                              <h5>{{ag_property_requests.name}}</h5>
-                                              <p>Looking to {{ag_property_requests.ownership}}</p>
-                                            </div>
-                                              <div class="requestActionBtns">
-                                                <a href="{% url 'markets:agent_prop_request_deactivate' ag_property_requests.pk %}">
-                                                  <button type="button" name="button">
-                                                    <i class="fas fa-power-off fa-lg" style="color:red"></i>
-                                                  </button>
-                                                </a>
-                                                <a href="{% url 'markets:agent_prop_request_update' ag_property_requests.pk%}">
-                                                  <button type="button" name="button">
-                                                    <i class="far fa-edit fa-lg" style="color:blue"></i>
-                                                  </button>
-                                                </a>
-                                              </div>
-                                          </span>
-                                        </div>
-                                        <div class="requestCardAcct">
-                                          <div class="rqInteractions">
-                                            <div class="requestClaims">
-                                              {{ag_property_requests.claimer|length}}
-                                              <span>Claims</span>
-                                            </div>
-                                            <div class="requestReferals">
-                                              {{ag_property_requests.referrer|length}}
-                                              <span>Referals</span>
-                                            </div>
+                                    <div class="requestCard card">
+                                      <div class="_rqVerified">
+                                        <span class="material-icons" style="color:green;">done_all</span>
+                                      </div>
+                                      <div class="requestCardAcct">
+                                        <span>
+                                          {% if ag_property_requests.profile_image%}
+                                          <img src="{{ag_property_requests.profile_image}}" alt="avatar">
+                                          {% else %}
+                                          <img src="{% static 'img/avatar.png'%}" alt="avatar">
+                                          {% endif %}
+                                          <div class="requestCardDtls">
+                                            <h5>{{ag_property_requests.name}}</h5>
+                                            <p>Looking to {{ag_property_requests.ownership}}</p>
                                           </div>
-                                        </div>
-                                        <div class="requestCardAcct">
-                                            <div class="requestInfoPreVw">
-                                              <li>{{ag_property_requests.property_type}}</li>
-                                              <span></span>
-                                              <li>{{ag_property_requests.location_name}}</li>
-                                              <span></span>
-                                              <li>Expiring in {{ag_property_requests.timeline}}</li>
+                                        </span>
+                                      </div>
+                                      <div class="requestCardAcct">
+                                          <div class="requestInfoPreVw">
+                                            Looking for (a) {{ag_property_requests.property_type}}
+                                            in {{ag_property_requests.location_name}}. Request active till {{ag_property_requests.timeline}}.
+                                          </div>
+                                      </div>
+                                      <div class="requestCardAcct">
+                                        <div class="rqInteractions">
+                                            <div class="requestClaimsImgW">
+                                                <div class="requestClaimsImg1">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg2">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg3">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg4">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg5">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                            </div>
+                                            <div class="_rCrRW">
+                                                <div class="requestClaims">
+                                                  + {{ag_property_requests.claimer|length}}
+                                                  <span>Claims</span>
+                                                </div>
+                                                <div class="requestReferals">
+                                                  + {{ag_property_requests.referrer|length}}
+                                                  <span>Referals</span>
+                                                </div>
                                             </div>
                                         </div>
                                       </div>
+                                      <div class="requestActionBtns">
+                                        <a href="{% url 'markets:agent_prop_request_deactivate' ag_property_requests.pk %}">
+                                          <button type="button" name="button">
+                                            <i class="fas fa-power-off fa-lg"></i>
+                                            Turn Off
+                                          </button>
+                                        </a>
+                                        <a href="{% url 'markets:agent_prop_request_update' ag_property_requests.pk%}">
+                                          <button type="button" name="button">
+                                            <i class="far fa-edit fa-lg"></i>
+                                              Update
+                                          </button>
+                                        </a>
+                                      </div>
+                                    </div>
+
                                     {% endfor %}
                                 {% else %}
                                 <div class="empty-list">
-                                  <p>You currently dont have any requests. Request you list will appear here.</p>
-                                  <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
+                                  <p>You currently dont have any requests. Requests you post will appear here.</p>
                                 </div>
                                 {%endif%}
                               </div>
                             </div>
                       {% else %}
                             <div id="MyPropertyRequests">
-                              <p>Active property requests</p>
+                              <div class="MyLsgHd">
+                                <p>My Property Requests <span>Showing {{property_requests.count}} results.</span></p>
+                                <a href="{% url 'markets:property_request'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new request</button></a>
+                              </div>
                               <div class="requests-list prop">
                                 {% if property_requests %}
                                   {% for property_requests in property_requests %}
-                                    <div class="requestCard card">
-                                      <div class="requestCardAcct">
-                                        <span>
-                                          {% if property_requests.profile_image%}
-                                          <img src="{{property_requests.profile_image}}" alt="avatar">
-                                          {% else %}
-                                          <img src="{% static 'img/avatar.png'%}" alt="avatar">
-                                          {% endif %}
-                                          <div class="requestCardDtls">
-                                            <h5>{{property_requests.name}}</h5>
-                                            <p>Looking to {{property_requests.ownership}}</p>
-                                          </div>
-                                            <div class="requestActionBtns">
-                                              <a href="{% url 'markets:property_request_deactivate' property_requests.pk %}">
-                                                <button type="button" name="button">
-                                                  <i class="fas fa-power-off fa-lg" style="color:red"></i>
-                                                </button>
-                                              </a>
-                                              <a href="{% url 'markets:property_request_update' property_requests.pk %}">
-                                                <button type="button" name="button">
-                                                  <i class="far fa-edit fa-lg" style="color:blue"></i>
-                                                </button>
-                                              </a>
-                                            </div>
-                                        </span>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                        <div class="rqInteractions">
-                                          <div class="requestClaims">
-                                            {{property_requests.claimer|length}}
-                                            <span>Claims</span>
-                                          </div>
-                                          <div class="requestReferals">
-                                            {{property_requests.referrer|length}}
-                                            <span>Referals</span>
-                                          </div>
+                                  <div class="requestCard card">
+                                    <div class="_rqVerified">
+                                      <span class="material-icons" style="color:green;">done_all</span>
+                                    </div>
+                                    <div class="requestCardAcct">
+                                      <span>
+                                        {% if property_requests.profile_image%}
+                                        <img src="{{property_requests.profile_image}}" alt="avatar">
+                                        {% else %}
+                                        <img src="{% static 'img/avatar.png'%}" alt="avatar">
+                                        {% endif %}
+                                        <div class="requestCardDtls">
+                                          <h5>{{property_requests.name}}</h5>
+                                          <p>Looking to {{property_requests.ownership}}</p>
                                         </div>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                          <div class="requestInfoPreVw">
-                                            <li>{{property_requests.property_type}}</li>
-                                            <span></span>
-                                            <li>{{property_requests.location}}</li>
-                                            <span></span>
-                                            <li>Expiring on {{property_requests.timeline}}</li>
+                                      </span>
+                                    </div>
+                                    <div class="requestCardAcct">
+                                        <div class="requestInfoPreVw">
+                                          Looking for (a) {{property_requests.property_type}}
+                                          in {{property_requests.location}}. Request active till {{property_requests.timeline}}.
+                                        </div>
+                                    </div>
+                                    <div class="requestCardAcct">
+                                      <div class="rqInteractions">
+                                          <div class="requestClaimsImgW">
+                                              <div class="requestClaimsImg1">
+                                                <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                              </div>
+                                              <div class="requestClaimsImg2">
+                                                <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                              </div>
+                                              <div class="requestClaimsImg3">
+                                                <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                              </div>
+                                              <div class="requestClaimsImg4">
+                                                <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                              </div>
+                                              <div class="requestClaimsImg5">
+                                                <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                              </div>
+                                          </div>
+                                          <div class="_rCrRW">
+                                              <div class="requestClaims">
+                                                + {{property_requests.claimer|length}}
+                                                <span>Claims</span>
+                                              </div>
+                                              <div class="requestReferals">
+                                                + {{property_requests.referrer|length}}
+                                                <span>Referals</span>
+                                              </div>
                                           </div>
                                       </div>
                                     </div>
+                                    <div class="requestActionBtns">
+                                      <a href="{% url 'markets:property_request_deactivate' property_requests.pk %}">
+                                        <button type="button" name="button">
+                                          <i class="fas fa-power-off fa-lg"></i>
+                                          Turn Off
+                                        </button>
+                                      </a>
+                                      <a href="{% url 'markets:property_request_update' property_requests.pk %}">
+                                        <button type="button" name="button">
+                                          <i class="far fa-edit fa-lg"></i>
+                                            Update
+                                        </button>
+                                      </a>
+                                    </div>
+                                  </div>
                                   {% endfor%}
                                 {% else %}
                                 <div class="empty-list">
-                                  <p>You currently dont have any requests. Request you list will appear here.</p>
-                                  <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
+                                  <p>You currently dont have any requests. Requests you post will appear here.</p>
                                 </div>
                                 {%endif%}
                               </div>
                             </div>
                             <div id="MyProRequests">
-                              <p>Active pro requests</p>
+                              <div class="MyLsgHd">
+                                <p>My Pro Requests <span>Showing {{proffesional_requests.count}} results.</span></p>
+                                <a href="{% url 'markets:proffesional_request'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new request</button></a>
+                              </div>
                               <div class="requests-list pro">
                                 {% if proffesional_requests %}
                                     {% for proffesional_requests in proffesional_requests %}
-                                      <div class="requestCard card">
-                                        <div class="requestCardAcct">
-                                          <span>
-                                            {% if proffesional_requests.profile_image%}
-                                            <img src="{{proffesional_requests.profile_image}}" alt="avatar">
-                                            {% else %}
-                                            <img src="{% static 'img/avatar.png'%}" alt="avatar">
-                                            {% endif %}
-                                            <div class="requestCardDtls">
-                                              <h5>{{proffesional_requests.name}}</h5>
-                                              <p>Looking for a {{proffesional_requests.type_of_proffesional}}</p>
-                                            </div>
-                                              <div class="requestActionBtns">
-                                                <a href="{% url 'markets:pro_request_deactivate' proffesional_requests.pk %}">
-                                                  <button type="button" name="button">
-                                                    <i class="fas fa-power-off fa-lg" style="color:red"></i>
-                                                  </button>
-                                                </a>
-                                                <a href="{% url 'markets:pro_request_update' proffesional_requests.pk%}">
-                                                  <button type="button" name="button">
-                                                    <i class="far fa-edit fa-lg" style="color:blue"></i>
-                                                  </button>
-                                                </a>
-                                              </div>
-                                          </span>
-                                        </div>
-                                        <div class="requestCardAcct">
-                                          <div class="rqInteractions">
-                                            <div class="requestClaims">
-                                              {{proffesional_requests.claimer|length}}
-                                              <span>Claims</span>
-                                            </div>
-                                            <div class="requestReferals">
-                                              {{proffesional_requests.referrer|length}}
-                                              <span>Referals</span>
-                                            </div>
+                                    <div class="requestCard card">
+                                      <div class="_rqVerified">
+                                        <span class="material-icons" style="color:green;">done_all</span>
+                                      </div>
+                                      <div class="requestCardAcct">
+                                        <span>
+                                          {% if proffesional_requests.profile_image%}
+                                          <img src="{{proffesional_requests.profile_image}}" alt="avatar">
+                                          {% else %}
+                                          <img src="{% static 'img/avatar.png'%}" alt="avatar">
+                                          {% endif %}
+                                          <div class="requestCardDtls">
+                                            <h5>{{proffesional_requests.name}}</h5>
+                                            <p>Looking for a {{proffesional_requests.type_of_proffesional}}</p>
                                           </div>
-                                        </div>
-                                        <div class="requestCardAcct">
-                                            <div class="requestInfoPreVw">
-                                              <li>{{proffesional_requests.property_type}}</li>
-                                              <span></span>
-                                              <li>{{proffesional_requests.location}}</li>
-                                              <span></span>
-                                              <li>Expiring in {{proffesional_requests.timeline}}</li>
+                                        </span>
+                                      </div>
+                                      <div class="requestCardAcct">
+                                          <div class="requestInfoPreVw">
+                                            Looking for (a) {{proffesional_requests.type_of_proffesional}}
+                                            in {{proffesional_requests.location}}. Request active till {{proffesional_requests.timeline}}.
+                                          </div>
+                                      </div>
+                                      <div class="requestCardAcct">
+                                        <div class="rqInteractions">
+                                            <div class="requestClaimsImgW">
+                                                <div class="requestClaimsImg1">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg2">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg3">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg4">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg5">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                            </div>
+                                            <div class="_rCrRW">
+                                                <div class="requestClaims">
+                                                  + {{proffesional_requests.claimer|length}}
+                                                  <span>Claims</span>
+                                                </div>
+                                                <div class="requestReferals">
+                                                  + {{proffesional_requests.referrer|length}}
+                                                  <span>Referals</span>
+                                                </div>
                                             </div>
                                         </div>
                                       </div>
+                                      <div class="requestActionBtns">
+                                        <a href="{% url 'markets:pro_request_deactivate' proffesional_requests.pk %}">
+                                          <button type="button" name="button">
+                                            <i class="fas fa-power-off fa-lg"></i>
+                                            Turn Off
+                                          </button>
+                                        </a>
+                                        <a href="{% url 'markets:pro_request_update' proffesional_requests.pk%}">
+                                          <button type="button" name="button">
+                                            <i class="far fa-edit fa-lg"></i>
+                                              Update
+                                          </button>
+                                        </a>
+                                      </div>
+                                    </div>
                                     {% endfor %}
                                 {% else %}
                                 <div class="empty-list">
-                                  <p>You currently dont have any requests. Request you list will appear here.</p>
-                                  <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
+                                  <p>You currently dont have any requests. Requests you post will appear here.</p>
                                 </div>
                                 {%endif%}
                               </div>
                             </div>
                             <div id="MyOtherRequests">
-                              <p>Active other requests</p>
+                              <div class="MyLsgHd">
+                                <p>Other Requests <span>Showing {{other_requests.count}} results.</span></p>
+                                <a href="{% url 'markets:other_request'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new request</button></a>
+                              </div>
                               <div class="requests-list oth">
                                 {% if other_requests %}
                                     {% for other_requests in other_requests %}
-                                      <div class="requestCard card">
-                                        <div class="requestCardAcct">
-                                          <span>
-                                            {% if other_requests.profile_image%}
-                                            <img src="{{other_requests.profile_image}}" alt="avatar">
-                                            {% else %}
-                                            <img src="{% static 'img/avatar.png'%}" alt="avatar">
-                                            {% endif %}
-                                            <div class="requestCardDtls">
-                                              <h5>{{other_requests.name}}</h5>
-                                            </div>
-                                              <div class="requestActionBtns">
-                                                <a href="{% url 'markets:other_request_deactivate' other_requests.pk %}">
-                                                  <button type="button" name="button">
-                                                    <i class="fas fa-power-off fa-lg" style="color:red"></i>
-                                                  </button>
-                                                </a>
-                                                <a href="{% url 'markets:other_request_update' other_requests.pk %}">
-                                                  <button type="button" name="button">
-                                                    <i class="far fa-edit fa-lg" style="color:blue"></i>
-                                                  </button>
-                                                </a>
-                                              </div>
-                                          </span>
-                                        </div>
-                                        <div class="requestCardAcct">
-                                          <div class="rqInteractions">
-                                            <div class="requestClaims">
-                                              {{other_requests.claimer|length}}
-                                              <span>Claims</span>
-                                            </div>
-                                            <div class="requestReferals">
-                                              {{other_requests.referrer|length}}
-                                              <span>Referals</span>
-                                            </div>
+                                    <div class="requestCard card">
+                                      <div class="_rqVerified">
+                                        <span class="material-icons" style="color:green;">done_all</span>
+                                      </div>
+                                      <div class="requestCardAcct">
+                                        <span>
+                                          {% if other_requests.profile_image%}
+                                          <img src="{{other_requests.profile_image}}" alt="avatar">
+                                          {% else %}
+                                          <img src="{% static 'img/avatar.png'%}" alt="avatar">
+                                          {% endif %}
+                                          <div class="requestCardDtls">
+                                            <h5>{{other_requests.name}}</h5>
                                           </div>
-                                        </div>
-                                        <div class="requestCardAcct">
-                                            <div class="requestInfoPreVw">
-                                              <li>{{other_requests.location}}</li>
-                                              <span></span>
-                                              <li>Expiring in {{other_requests.timeline}}</li>
+                                        </span>
+                                      </div>
+                                      <div class="requestCardAcct">
+                                          <div class="requestInfoPreVw">
+                                            {{other_requests.service_details|truncatechars:70}}
+                                            in {{proffesional_requests.location}}. Request active till {{proffesional_requests.timeline}}.
+                                          </div>
+                                      </div>
+                                      <div class="requestCardAcct">
+                                        <div class="rqInteractions">
+                                            <div class="requestClaimsImgW">
+                                                <div class="requestClaimsImg1">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg2">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg3">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg4">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                                <div class="requestClaimsImg5">
+                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                                </div>
+                                            </div>
+                                            <div class="_rCrRW">
+                                                <div class="requestClaims">
+                                                  + {{other_requests.claimer|length}}
+                                                  <span>Claims</span>
+                                                </div>
+                                                <div class="requestReferals">
+                                                  + {{other_requests.referrer|length}}
+                                                  <span>Referals</span>
+                                                </div>
                                             </div>
                                         </div>
                                       </div>
+                                      <div class="requestActionBtns">
+                                        <a href="{% url 'markets:other_request_deactivate' other_requests.pk %}">
+                                          <button type="button" name="button">
+                                            <i class="fas fa-power-off fa-lg"></i>
+                                            Turn Off
+                                          </button>
+                                        </a>
+                                        <a href="{% url 'markets:other_request_update' other_requests.pk %}">
+                                          <button type="button" name="button">
+                                            <i class="far fa-edit fa-lg"></i>
+                                              Update
+                                          </button>
+                                        </a>
+                                      </div>
+                                    </div>
                                     {% endfor %}
                                 {% else %}
-                                <div class="empty-list">
-                                  <p>You currently dont have any requests. Request you list will appear here.</p>
-                                  <img src="{% static 'img/no_data.svg'%}" alt="No rentals">
-                                </div>
+                                    <div class="empty-list">
+                                      <p>You currently dont have any requests. Requests you post will appear here.</p>
+                                    </div>
                                 {%endif%}
                               </div>
                             </div>
                       {% endif %}
-              </div>
-              <div id="Advertise" class="advertising-sc">
-                <div class="a-content">
-                  <p><b>Under Construction</b></p>
-                  <img src="{%static 'img/under_construction.svg'%}" alt="under_construction">
                 </div>
-              </div>
-              <div id="AdInteractions" class="adInt-sc">
-                <div class="a-content">
-                  <p><b>Under Construction</b></p>
-                  <img src="{%static 'img/under_construction.svg'%}" alt="under_construction">
+                {% if request.user.user_type == 'PropertyManager' or request.user.user_type == 'Company' or request.user.user_type == 'Design&servicePro'%}
+                <div id="_dashMyPortfolio">
+                  <div class="MyLsgHd">
+                    {% if request.user.user_type == 'PropertyManager' or request.user.user_type == 'Company'%}
+                      <p>My management portfolio <span>Showing {{pm_portfolio.count}} results</span></p>
+                      <a href="#c-portfolio-Modal" class="modal-trigger"><button type="button" name="button"><span class="material-icons">add</span>Add new property</button></a>
+                    {% elif request.user.user_type == 'Design&servicePro'%}
+                      <p>My projects <span>Showing {{project_portfolio.count}} results</span></p>
+                      <a href="#c-portfolio-Modal" class="modal-trigger"><button type="button" name="button"><span class="material-icons">add</span>Add new project</button></a>
+                    {% endif %}
+                  </div>
+                  <div id="pfl-sal">
+                    {% if request.user.user_type == 'PropertyManager' or request.user.user_type == 'Company'%}
+                      {% if pm_portfolio %}
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Property</th>
+                              <th>Stats</th>
+                              <th>Posted on</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          {% for property in pm_portfolio %}
+                          <tr>
+                              <td>
+                                  <div id="rec-card" class="card">
+                                    <div id="rec-img" class="card-image">
+                                      {% for thumb in property.PM_porfolio_Images.all%}
+                                        {% if forloop.last %}
+                                          <a href="#">{% cloudinary thumb.property_image ImageTransformation %}</a>
+                                        {% endif %}
+                                      {% endfor %}
+                                    </div>
+                                    <div id="rec-content" class="card-content">
+                                      <ol>
+                                        <li class="rec-h-name">{{property.property_name}}</li>
+                                        <li class="rec-h-location">{{property.property_location}}</li>
+                                        <li class="rec-h-price">Market Value:<br>Ksh {{property.property_market_value}}</li>
+                                      </ol>
+                                    </div>
+                                  </div>
+                              </td>
+                              <td>
+                                <div class="_dashLsgAcStats">
+                                    <span class="material-icons">trending_up</span>
+                                    <div class="_dashLsgAcStd">
+                                      <h4>300 &nbsp + &nbsp<span>12</span></h4>
+                                      <h5>Total Views</h5>
+                                    </div>
+                                </div>
+                              </td>
+                              <td>
+                                <span id="rec-date" class="card-title"><p>{{property.created_at.date}}</p></span>
+                              </td>
+                              <td>
+                                <div class="card-links">
+                                  <a href="#"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
+                                  <a href="{% url 'profiles:pm_portfolio_update' property.pk %}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
+                                </div>
+                              </td>
+                          </tr>
+                          {% endfor %}
+                        </table>
+                      {% else %}
+                        <div class="empty-list">
+                          <p>You currently dont have any properties. Properties you add will appear here.</p>
+                        </div>
+                      {% endif %}
+                    {% elif request.user.user_type == 'Design&servicePro'%}
+                      {% if project_portfolio %}
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Project</th>
+                              <th>Project Year</th>
+                              <th>Stats</th>
+                              <th>Posted on</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          {% for project in project_portfolio %}
+                          <tr>
+                              <td>
+                                  <div id="rec-card" class="card">
+                                    <div id="rec-img" class="card-image">
+                                      {% for thumb in project.DS_project_Images.all%}
+                                        {% if forloop.last %}
+                                          <a href="#">{% cloudinary thumb.project_image ImageTransformation %}</a>
+                                        {% endif %}
+                                      {% endfor %}
+                                    </div>
+                                    <div id="rec-content" class="card-content">
+                                      <ol>
+                                        <li class="rec-h-name">{{project.project_name}}</li>
+                                        <li class="rec-h-location">{{project.project_location}}</li>
+                                        <li class="rec-h-price">Project Cost:<br>Ksh {{project.project_cost}}</li>
+                                      </ol>
+                                    </div>
+                                  </div>
+                              </td>
+                              <td>
+                                <span   id="rec-date" class="card-title"><p>{{project.project_year}}</p></span>
+                              </td>
+                              <td>
+                                <div class="_dashLsgAcStats">
+                                    <span class="material-icons">trending_up</span>
+                                    <div class="_dashLsgAcStd">
+                                      <h4>300 &nbsp + &nbsp<span>12</span></h4>
+                                      <h5>Total Views</h5>
+                                    </div>
+                                </div>
+                              </td>
+                              <td>
+                                <span id="rec-date" class="card-title"><p>{{project.created_at.date}}</p></span>
+                              </td>
+                              <td>
+                                <div class="card-links">
+                                  <a href="#"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
+                                  <a href="{% url 'profiles:DS_project_update' project.pk %}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
+                                </div>
+                              </td>
+                          </tr>
+                          {% endfor %}
+                        </table>
+                      {% else %}
+                        <div class="empty-list">
+                          <p>You currently dont have any properties. Properties you add will appear here.</p>
+                        </div>
+                      {% endif %}
+                    {% endif %}
+                  </div>
                 </div>
+                {% endif %}
               </div>
+          </div>
+          <div id="_dashbordAdvertise" class="advertising-sc _dashboardTabContent">
+            <div class="a-content">
+              <p>under construction stay tuned! <br>
+                Advertise like a PRO. <br>
+                Can't wait? Sign up to our Rehgien Insider Programme and have access to new features first.
+              </p>
+              <button type="button" name="button">Join Insider Programme</button>
             </div>
-
+          </div>
         </div>
 
+    </div>
+</section>
+
+<section class="_userPfPageModals">
+  <div id="e-profile-Modal" class="modal">
+      <section class="ed_profile_section">
+        <div class="ed_profile_cont">
+          <div class="ed_profile_row">
+              <form class="user-pf-form" action="{% url 'profiles:edit_basic_profile' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="u-pf-details">
+                  <div class="upf-header">
+                    <h5>Update your account details</h5>
+                    <button type="button" class="modal-close">
+                      <span class="material-icons">close</span>
+                    </button>
+                  </div>
+                  <div class="upf-fieldWrappers row">
+                    <div class="upf-start-box col s12 md4 l4 xl4">
+                        <div class="upf-username">
+                          <p>Your username</p>
+                          {{basic_form.username}}
+                        </div>
+                    </div>
+                    <div class="upf-middle-box col s12 md4 l4 xl4">
+                        <div class="upf-first_name">
+                          <p>Your first name</p>
+                          {{basic_form.first_name}}
+                        </div>
+                        <div class="upf-last_name">
+                          <p>Your last name</p>
+                          {{basic_form.last_name}}
+                        </div>
+                        <div class="upf-email">
+                          <p>Your email</p>
+                          {{basic_form.email}}
+                        </div>
+                    </div>
+                    <div class="upf-end-box col s12 md4 l4 xl4">
+                        <div class="upf-profile_image">
+                          <p>Your profile image</p>
+                          {{basic_form.profile_image}}
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="s-prof">
+                  <button type="submit" name="button">Save Changes</button>
+                </div>
+              </form>
+          </div>
+
+        </div>
+      </section>
+  </div>
+
+  <div id="e-business-profile-Modal" class="modal">
+  </div>
+
+  <div id="c-portfolio-Modal" class="modal">
+    <div class="c-portfolio-helper">
+      <div class="upf-header">
+        <div class="">
+
+        </div>
+        <button type="button" class="modal-close">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <h1>Showcase your portfolio</h1>
+        <div class="c-portfolio-hp-t">
+            {% if request.user.user_type == 'Company' or request.user.user_type == 'PropertyManager' %}
+              Tell potential clients you are the person they are looking for.<br>
+              Showcase your property management portfolio by adding properties you are managing.<br>
+              <b>We show your portfolio on your business page</b>
+            {% elif request.user.user_type == 'Design&servicePro' %}
+              Tell potential clients you are the person they are looking for.
+              Showcase your project portfolio by adding ongoing or completed projects.<br>
+              <b>We show your portfolio on your business page</b>
+            {% endif %}
+        </div>
+        {% if request.user.user_type == 'Company' or request.user.user_type == 'PropertyManager' %}
+          <a href="{% url 'profiles:pm_portfolio_create'%}">
+            <button type="button" name="button">
+                Add a property
+            </button>
+          </a>
+        {% elif request.user.user_type == 'Design&servicePro' %}
+          <a href="{% url 'profiles:DS_project_create'%}">
+            <button type="button" name="button">
+                Add a project
+            </button>
+          </a>
+        {% endif %}
+    </div>
   </div>
 </section>
+
+<script src="{% static 'progressBar/progressbar.js'%}"></script>
+<script src="{% static 'progressBar/progressbar.min.js'%}"></script>
+<script>
+function openPage(event,pageName) {
+  var i, dashboardTabContent, dashboardTabLinks;
+  dashboardTabContent = document.getElementsByClassName("_dashboardTabContent");
+  for (i = 0; i < dashboardTabContent.length; i++) {
+    dashboardTabContent[i].style.display = "none";
+  }
+  dashboardTabLinks = document.getElementsByClassName("dashboardTabLink");
+  for (i = 0; i < dashboardTabLinks.length; i++) {
+    dashboardTabLinks[i].className = dashboardTabLinks[i].className.replace(" active", "");
+  }
+  document.getElementById(pageName).style.display = "block";
+   event.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+
+//progress bar
+var profilePercentComplete = {{user.percentage_complete}}/100;
+function showProfileProgress(){
+  var bar = new ProgressBar.Circle(_uProgress, {
+    strokeWidth: 7,
+    easing: 'easeInOut',
+    duration: 1400,
+    color: 'rgb(44 178 234 / 90%)',
+    trailColor: 'rgb(44 178 234 / 40%)',
+    trailWidth: 7,
+    svgStyle: null
+  });
+
+  bar.animate(profilePercentComplete,{
+    duration: 3000
+  }); // Number from 0.0 to 1.0
+};
+
+var bsProfilePercentComplete = {% if user.user_type == 'Agent'%}{{user.agent_profile.percentage_complete}}{% elif user.user_type == 'PropertyManager'%}{{user.pm_profile.percentage_complete}}{% elif user.user_type == 'Design&servicePro' %}{{user.DService_profile.percentage_complete}}{% elif user.user_type == 'Company'%}{{user.company_profile.percentage_complete}}{%else%}0{% endif %};
+
+
+function showBsProfileProgress(){
+  var bar = new ProgressBar.Circle(_bspProgress, {
+    strokeWidth: 7,
+    easing: 'easeInOut',
+    duration: 1400,
+    color: 'rgb(44 178 234 / 90%)',
+    trailColor: 'rgb(44 178 234 / 40%)',
+    trailWidth: 7,
+    svgStyle: null
+  });
+
+  bar.animate(bsProfilePercentComplete/100,{
+    duration: 3500
+  }); // Number from 0.0 to 1.0
+};
+
+showProfileProgress();
+showBsProfileProgress();
+</script>
 
 {% endblock %}

@@ -3,12 +3,25 @@
 <html>
   <head>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css' type='text/css' />
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
     <link rel="shortcut icon" type="image/png" href="{%static 'img/logo-fav.png'%}">
     <link href="{%static 'css/style.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link rel="stylesheet" type="text/css" href="{%static 'css/material-icons.css'%}">
     <link href="{%static 'css/materialize.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="{%static 'css/css/all.min.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="{%static 'css/style.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="stylesheet" type="text/css" href="{%static 'css/material-icons.css'%}">
+    <link href="{%static 'css/materialize.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="{%static 'css/css/all.min.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="{%static 'css/style.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="stylesheet" href="{% static 'OwlCarousel/assets/owl.carousel.min.css'%}">
+    <link rel="stylesheet" href="{% static 'OwlCarousel/assets/owl.theme.default.min.css'%}">
+    <link rel="stylesheet" href="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.css'%}">
+  <link rel="stylesheet" href="{% static 'JqueryTimepicker/css/jquery.timepicker.css'%}">
+
 
     <script src="https://use.fontawesome.com/a8e276a1a5.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
@@ -16,6 +29,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Libre+Baskerville&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=MuseoModerno&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
     <title>{% block head_title %}{% endblock %}</title>
     {% block extra_head %}
@@ -64,6 +80,7 @@
   }, 6000);
   </script>
   <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'JqueryTimepicker/js/jquery.timepicker.js'%}"></script>
   <script src="{% static 'js/materialize.js' %}"></script>
   <script src="{% static 'js/init.js' %}"></script>
   <script src="{% static 'js/gall.js' %}"></script>
@@ -71,5 +88,9 @@
   <script src="{% static 'js/jquery.autocomplete.js' %}"></script>
   <script src="{% static 'js/our_search_code.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/js/all.min.js' %}"></script>
+  <script src="{% static 'progressBar/progressbar.js'%}"></script>
+  <script src="{% static 'progressBar/progressbar.min.js'%}"></script>
+  <script src="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.js'%}"></script>
+
   </body>
 </html>

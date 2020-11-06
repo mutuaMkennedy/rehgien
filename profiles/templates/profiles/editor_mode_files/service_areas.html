@@ -1,0 +1,63 @@
+{% load static %}
+
+{% if request.user.user_type == 'Agent'%}
+    {% if agent.service_areas %}
+      {% for service_area in agent.service_areas%}
+        <form class="_ag-svcAreafORM" action="{% url 'profiles:agent_list' %}" method="get">
+          {%csrf_token%}
+            <button type="submit" name="ag-location" value="{{service_area}}">{{service_area}}</button>
+        </form>
+
+      {% endfor %}
+    {% else %}
+        <div class="pflpages-no-results">
+          <img src="{%static 'img/note.svg'%}" alt="empty">
+          <p>Nothing Yet</p>
+        </div>
+    {% endif %}
+{% elif request.user.user_type == 'PropertyManager'%}
+    {% if agent.service_areas %}
+      {% for service_area in agent.service_areas%}
+        <form class="_ag-svcAreafORM" action="{% url 'profiles:pm_list' %}" method="get">
+          {%csrf_token%}
+            <button type="submit" name="ag-location" value="{{service_area}}">{{service_area}}</button>
+        </form>
+
+      {% endfor %}
+    {% else %}
+        <div class="pflpages-no-results">
+          <img src="{%static 'img/note.svg'%}" alt="empty">
+          <p>Nothing Yet</p>
+        </div>
+    {% endif %}
+{% elif request.user.user_type == 'Design&servicePro'%}
+    {% if agent.service_areas %}
+      {% for service_area in agent.service_areas%}
+        <form class="_ag-svcAreafORM" action="{% url 'profiles:d_service_list' %}" method="get">
+          {%csrf_token%}
+            <button type="submit" name="ag-location" value="{{service_area}}">{{service_area}}</button>
+        </form>
+
+      {% endfor %}
+    {% else %}
+        <div class="pflpages-no-results">
+          <img src="{%static 'img/note.svg'%}" alt="empty">
+          <p>Nothing Yet</p>
+        </div>
+    {% endif %}
+{% elif request.user.user_type == 'Company'%}
+    {% if agent.service_areas %}
+      {% for service_area in agent.service_areas%}
+        <form class="_ag-svcAreafORM" action="{% url 'profiles:business_list' %}" method="get">
+          {%csrf_token%}
+            <button type="submit" name="ag-location" value="{{service_area}}">{{service_area}}</button>
+        </form>
+
+      {% endfor %}
+    {% else %}
+        <div class="pflpages-no-results">
+          <img src="{%static 'img/note.svg'%}" alt="empty">
+          <p>Nothing Yet</p>
+        </div>
+    {% endif %}
+{%endif%}

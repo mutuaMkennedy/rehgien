@@ -45,7 +45,7 @@ class PropertyRequestLeadApi(ListAPIView):
 class PropertyRequestLeadCreateApi(CreateAPIView):
     queryset = PropertyRequestLead.objects.all()
     serializer_class = PropertyRequestLeadSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(owner=self.request.user)
 
@@ -56,7 +56,7 @@ class PropertyRequestLeadDetailApi(RetrieveAPIView):
 class PropertyRequestLeadUpdateApi(RetrieveUpdateAPIView):
     queryset = PropertyRequestLead.objects.all()
     serializer_class = PropertyRequestLeadSerializer
-    permission_classes = [IsOwnerOrReadOnly,IsAdminUser]
+    permission_classes = [IsOwnerOrReadOnly]
 
 class ClaimReferPropertyRequestLeadApi(RetrieveUpdateAPIView):
     queryset = PropertyRequestLead.objects.all()
@@ -66,7 +66,7 @@ class ClaimReferPropertyRequestLeadApi(RetrieveUpdateAPIView):
 class PropertyRequestLeadDeleteApi(DestroyAPIView):
     queryset = PropertyRequestLead.objects.all()
     serializer_class = PropertyRequestLeadSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 # proffesional Request CRUD
 class ProffesionalRequestLeadApi(ListAPIView):
@@ -76,7 +76,7 @@ class ProffesionalRequestLeadApi(ListAPIView):
 class ProffesionalRequestLeadCreateApi(CreateAPIView):
     queryset = ProffesionalRequestLead.objects.all()
     serializer_class = ProffesionalRequestLeadSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(owner=self.request.user)
 
@@ -87,7 +87,7 @@ class ProffesionalRequestLeadDetailApi(RetrieveAPIView):
 class ProffesionalRequestLeadUpdateApi(RetrieveUpdateAPIView):
     queryset = ProffesionalRequestLead.objects.all()
     serializer_class = ProffesionalRequestLeadSerializer
-    permission_classes = [IsOwnerOrReadOnly,IsAdminUser]
+    permission_classes = [IsOwnerOrReadOnly]
 
 class ClaimReferProRequestLeadApi(RetrieveUpdateAPIView):
     queryset = ProffesionalRequestLead.objects.all()
@@ -97,7 +97,7 @@ class ClaimReferProRequestLeadApi(RetrieveUpdateAPIView):
 class ProffesionalRequestLeadDeleteApi(DestroyAPIView):
     queryset = ProffesionalRequestLead.objects.all()
     serializer_class = ProffesionalRequestLeadSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 #OtherServiceLead CRUD
 class OtherServiceLeadApi(ListAPIView):
@@ -107,7 +107,7 @@ class OtherServiceLeadApi(ListAPIView):
 class OtherServiceLeadCreateApi(CreateAPIView):
     queryset = OtherServiceLead.objects.all()
     serializer_class = OtherServiceLeadSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(owner=self.request.user)
 
@@ -118,7 +118,7 @@ class OtherServiceLeadDetailApi(RetrieveAPIView):
 class OtherServiceLeadUpdateApi(RetrieveUpdateAPIView):
     queryset = OtherServiceLead.objects.all()
     serializer_class = OtherServiceLeadSerializer
-    permission_classes = [IsOwnerOrReadOnly,IsAdminUser]
+    permission_classes = [IsOwnerOrReadOnly]
 
 class ClaimReferOtherServiceLeadApi(RetrieveUpdateAPIView):
     queryset = OtherServiceLead.objects.all()
@@ -128,7 +128,7 @@ class ClaimReferOtherServiceLeadApi(RetrieveUpdateAPIView):
 class OtherServiceLeadDeleteApi(DestroyAPIView):
     queryset = OtherServiceLead.objects.all()
     serializer_class = OtherServiceLeadSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 #AgentLeadRequest CRUD
 class AgentLeadRequestApi(ListAPIView):
@@ -138,7 +138,7 @@ class AgentLeadRequestApi(ListAPIView):
 class AgentLeadRequestCreateApi(CreateAPIView):
     queryset = AgentLeadRequest.objects.all()
     serializer_class = AgentLeadRequestSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(owner=self.request.user)
 
@@ -149,7 +149,7 @@ class AgentLeadRequestDetailApi(RetrieveAPIView):
 class AgentLeadRequestUpdateApi(RetrieveUpdateAPIView):
     queryset = AgentLeadRequest.objects.all()
     serializer_class = AgentLeadRequestSerializer
-    permission_classes = [IsOwnerOrReadOnly,IsAdminUser]
+    permission_classes = [IsOwnerOrReadOnly]
 
 class ClaimReferAgentLeadRequestApi(RetrieveUpdateAPIView):
     queryset = AgentLeadRequest.objects.all()
@@ -159,7 +159,7 @@ class ClaimReferAgentLeadRequestApi(RetrieveUpdateAPIView):
 class AgentLeadRequestDeleteApi(DestroyAPIView):
     queryset = AgentLeadRequest.objects.all()
     serializer_class = AgentLeadRequestSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 #AgentPropertyRequest CRUD
 class AgentPropertyRequestApi(ListAPIView):
@@ -169,7 +169,7 @@ class AgentPropertyRequestApi(ListAPIView):
 class AgentPropertyRequestCreateApi(CreateAPIView):
     queryset = AgentPropertyRequest.objects.all()
     serializer_class = AgentPropertyRequestSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(owner=self.request.user)
 
@@ -180,7 +180,7 @@ class AgentPropertyRequestDetailApi(RetrieveAPIView):
 class AgentPropertyRequestUpdateApi(RetrieveUpdateAPIView):
     queryset = AgentPropertyRequest.objects.all()
     serializer_class = AgentPropertyRequestSerializer
-    permission_classes = [IsOwnerOrReadOnly,IsAdminUser]
+    permission_classes = [IsOwnerOrReadOnly]
 
 class ClaimReferAgentPropertyRequestApi(RetrieveUpdateAPIView):
     queryset = AgentPropertyRequest.objects.all()
@@ -190,4 +190,4 @@ class ClaimReferAgentPropertyRequestApi(RetrieveUpdateAPIView):
 class AgentPropertyRequestDeleteApi(DestroyAPIView):
     queryset = AgentPropertyRequest.objects.all()
     serializer_class = AgentPropertyRequestSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated]

@@ -8,6 +8,7 @@ from django.template import Context
 from django.http import HttpResponse, HttpResponseRedirect
 from twilio.base.exceptions import TwilioRestException
 from .services.twilio_service import TwilioService
+from . import models
 
 
 def about_us(request):
@@ -187,3 +188,84 @@ def share_listing(request):
     else:
         messages.error(request,"Ooops! something went wrong. Make sure all fields are entered and valid.")
         return redirect(property_absoluteUrl)
+
+#Problem Reports
+
+def check_valid(item):
+    return item !=''
+
+def page_report(request):
+    if request.method == 'POST':
+        subject_user_id = request.POST.get('rFo-Sub-user-pk')
+        subject_page_url = request.POST.get('rFo-current-path')
+        problem = request.POST.get('rFo-Problem')
+        email = request.POST.get('rFo-Email')
+        details = request.POST.get('rFo-Details')
+
+        if check_valid(subject_user_id) and check_valid(subject_page_url) \
+        and check_valid(problem) and check_valid(email):
+            problem = models.PageReport.objects.create(
+                        problem = str(problem),
+                        email = email,
+                        details = str(details),
+                        subject_user_id = int(subject_user_id)
+                        )
+            messages.success(request, 'Problem Submited. Thank you!')
+            return redirect(subject_page_url)
+        else:
+            messages.success(request, 'Invalid entry. Try again later!')
+            return redirect(subject_page_url)
+    else:
+        return redirect('listings:homepage')
+
+def p_p_report(request):
+    if request.method == 'POST':
+        subject_user_id = request.POST.get('rFo-Sub-user-pk')
+        subject_p_id = request.POST.get('rFo-Sub-project-pk')
+        subject_page_url = request.POST.get('rFo-current-path')
+        problem = request.POST.get('rFo-Problem')
+        email = request.POST.get('rFo-Email')
+        details = request.POST.get('rFo-Details')
+
+        if check_valid(subject_user_id) and check_valid(subject_page_url) and check_valid(subject_p_id)\
+        and check_valid(problem) and check_valid(email):
+            problem = models.ProjectsPortfolioReport.objects.create(
+                        problem = str(problem),
+                        email = email,
+                        details = str(details),
+                        subject_user_id = int(subject_user_id),
+                        subject_item_id = int(subject_p_id)
+                        )
+            messages.success(request, 'Problem Submited. Thank you!')
+            return redirect(subject_page_url)
+        else:
+            messages.success(request, 'Invalid entry. Try again later!')
+            return redirect(subject_page_url)
+    else:
+        return redirect('listings:homepage')
+
+def review_report(request):
+    if request.method == 'POST':
+        subject_user_id = request.POST.get('rFo-Sub-user-pk')
+        subject_item_id = request.POST.get('rFo-Sub-review-pk')
+        subject_page_url = request.POST.get('rFo-current-path')
+        problem = request.POST.get('rFo-Problem')
+        email = request.POST.get('rFo-Email')
+        details = request.POST.get('rFo-Details')
+
+        if check_valid(subject_user_id) and check_valid(subject_page_url) and check_valid(subject_item_id)\
+        and check_valid(problem) and check_valid(email):
+            problem = models.ReviewReport.objects.create(
+                        problem = str(problem),
+                        email = email,
+                        details = str(details),
+                        subject_user_id = int(subject_user_id),
+                        subject_item_id = int(subject_item_id)
+                        )
+            messages.success(request, 'Problem Submited. Thank you!')
+            return redirect(subject_page_url)
+        else:
+            messages.success(request, 'Invalid entry. Try again later!')
+            return redirect(subject_page_url)
+    else:
+        return redirect('listings:homepage')

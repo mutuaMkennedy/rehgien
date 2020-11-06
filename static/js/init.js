@@ -13,16 +13,5 @@
     $('.parallax').parallax();
     $('.materialboxed').materialbox();
 
-
-   // $('.autocomplete').autocomplete({
-    	//data: {
-    	//	"Juja": null;
-    	//	"Kisumu": null;
-    	//	"Machakos": null;
-    	//	"Mombasa": null;
-    	//	"Nairobi": null;
-    	//}
-   // });
-
   }); // end of document ready
 })(jQuery); // end of jQuery name space

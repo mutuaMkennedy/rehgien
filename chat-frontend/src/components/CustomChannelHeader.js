@@ -23,6 +23,7 @@ const ChHeaderWrapper = styled.div`
   height: 70px;
   display:flex;
   align-items:center;
+  position:relative;
 `
 
 const ChHeadersContent = styled.div`
@@ -59,7 +60,7 @@ const ChHeaderDesc = styled.div`
 `
 
 const SideBar = styled.div`
-    height:calc(100vh - 60px);
+    height:100%;
     background:#ffffff;
     width:25%;
     position:fixed;
@@ -68,7 +69,7 @@ const SideBar = styled.div`
     z-index:20;
     transition: 0.5s;
     display:none;
-    margin-top:5px;
+    /* margin-top:5px; */
     overflow-y:scroll;
     overflow-x:hidden;
     border-left: 1px solid #ebf3ff;
@@ -119,7 +120,7 @@ function closeNav(){
   sidBarInf.style.display='none';
   infoActionBtn.style.border='none'
   var root = document.getElementById('messageView');
-  root.style.marginRight='0';
+  root.style.marginRight='0%';
   root.style.transition= 'margin-right 0.5s';
 };
 
@@ -166,10 +167,8 @@ const CustomChannelHeader = withChannelContext(
       var othUserObject;
       if (newMembersArray.length < 3 ){
         othUserObject = newMembersArray.find(o => o.user.id !== tokenUserId);
-        console.log(othUserObject);
       }
 
-console.log(this.props);
       return (
 
         <div>
@@ -198,7 +197,7 @@ console.log(this.props);
                           {this.props.channel.data.description && (
                             <>
                               <span style={{ 'margin':'0 5px','fontSize': '13px'}}>|</span>
-                             <div>this.props.channel.data.description.slice(0,43) + '...' </div>
+                             <div>{this.props.channel.data.description.slice(0,43) + '...' }</div>
                             </>
                            )
                          }

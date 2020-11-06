@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load leaflet_tags %}
+{% leaflet_js plugins="forms" %}
+{% leaflet_css plugins="forms" %}
+{% load crispy_forms_tags%}
+<div id="porfolio-form-Box">
+    <div class="porfolio-form-Logo">
+      <img src="{% static 'img/rehgien_logo_r.png'%}" alt="rehgien-home">
+      {% if request.user.user_type == 'Company' or request.user.user_type == 'PropertyManager' %}
+        <h1>Add property to portfolio.</h1>
+      {% elif request.user.user_type == 'Design&servicePro'%}
+        <h1>Add project to portfolio.</h1>
+      {% endif %}
+    </div>
+  <div class="_portfolio_form_Elm">
+    {% if request.user.user_type == 'Company' or request.user.user_type == 'PropertyManager' %}
+          <div class="_portfolio_form_header">
+            <a href="{% url 'profiles:account'%}">
+              <button type="button" class="modal-close">
+                <span class="material-icons">west</span> &nbsp
+                Back to account
+              </button>
+            </a>
+          </div>
+          <form class="_portfolio_form_" autocomplete='off' action="{% url 'profiles:pm_portfolio_create' %}" method="post" enctype="multipart/form-data">
+
+            <div class="_portfolio_form_details">
+              {{PortfolioForm.media}}
+              <div class="_pf-fieldWrappers">
+                <div class="_pf-list-step">
+                    <h5>General</h5>
+                    <div class="_pf-property_name">
+                      <p>Provide a name identity for this property.<span>*</span></p>
+                      {{PortfolioForm.property_name}}
+                    </div>
+                </div>
+                <div class="_pf-list-step">
+                  <h5>Value Estimate</h5>
+                  <div class="_pf-property_market_value">
+                    <p>At what market value is this property estimated at in KSH?  <span>*</span></p>
+                    {{PortfolioForm.property_market_value}}
+                  </div>
+                </div>
+                <div class="_pf-list-step">
+                    <h5>Location</h5>
+                    <div class="_pf-property_location">
+                      <p>Provide an address for this property i.e the street name or immediate neighborhood.<span>*</span></p>
+                      {{PortfolioForm.property_location}}
+                    </div>
+                    <div class="_pf-address">
+                      {{PortfolioForm.property_map_point}}
+                    </div>
+                 </div>
+                 <div class="_pf-list-step">
+                   <h5>Photos</h5>
+                    <div class="_pf-property_image">
+                      <p>Choose some nice photos of this property. <span>*</span></p>
+                      {{PoImageForm.property_image}}
+                    </div>
+                </div>
+                <div class="_pf-list-step">
+                  <h5>Manager State</h5>
+                  <div class="_pf-currently_managing">
+                    <p>Are you the currrent manager? <span>*</span></p>
+                    {{PortfolioForm.currently_managing}}
+                  </div>
+                  <div class="s-prof">
+                    <button type="submit" name="button">Add Property</button>
+                  </div>
+                </div>
+              </div>
+                <div class="_pf-StepBtns">
+                  <button type="button" id="_pf-prevStepBtn" onclick="nextPrev(-1)">Previous</button>
+                  <button type="button" id="_pf-nextStepBtn" onclick="nextPrev(1)">Next</button>
+                </div>
+            </div>
+            <!-- Circles which indicate the steps of the form: -->
+            <div class="_pf-StepIndicators">
+              <span class="_pf-StepIndicator">
+                <div class="_pf-StepIndicatorElm">
+                  <span class="material-icons _pf-StepIcon">fact_check</span>
+                  <div class="_pf-BgStepIndicatorStrike"></div>
+                </div>
+                <h5>
+                  <span class="material-icons _stepInprogress">donut_large</span>
+                  <span class="material-icons _stepDone">check_circle</span>
+                   &nbsp General</h5>
+              </span>
+              <span class="_pf-StepIndicator">
+                <div class="_pf-StepIndicatorElm">
+                  <span class="material-icons _pf-StepIcon">local_offer</span>
+                  <div class="_pf-StepIndicatorStrike"></div>
+                </div>
+                <h5>
+                  <span class="material-icons _stepInprogress">donut_large</span>
+                  <span class="material-icons _stepDone">check_circle</span>
+                   &nbsp Market Value</h5>
+              </span>
+              <span class="_pf-StepIndicator">
+                <div class="_pf-StepIndicatorElm">
+                  <span class="material-icons _pf-StepIcon">edit_location</span>
+                  <div class="_pf-StepIndicatorStrike"></div>
+                </div>
+                <h5>
+                  <span class="material-icons _stepInprogress">donut_large</span>
+                  <span class="material-icons _stepDone">check_circle</span>
+                   &nbsp Location</h5>
+              </span>
+              <span class="_pf-StepIndicator">
+                <div class="_pf-StepIndicatorElm">
+                  <span class="material-icons _pf-StepIcon">add_photo_alternate</span>
+                  <div class="_pf-StepIndicatorStrike"></div>
+                </div>
+                <h5>
+                  <span class="material-icons _stepInprogress">donut_large</span>
+                  <span class="material-icons _stepDone">check_circle</span>
+                   &nbsp Photos</h5>
+              </span>
+              <span class="_pf-StepIndicator">
+                <div class="_pf-StepIndicatorElm">
+                  <span class="material-icons _pf-StepIcon">pending_actions</span>
+                  <div class="_pf-EnStepIndicatorStrike"></div>
+                </div>
+                <h5>
+                  <span class="material-icons _stepInprogress">donut_large</span>
+                  <span class="material-icons _stepDone">check_circle</span>
+                   &nbsp Manager Status</h5>
+              </span>
+            </div>
+          </form>
+    {% elif request.user.user_type == 'Design&servicePro'%}
+          <div class="_portfolio_form_header">
+            <a href="{% url 'profiles:account'%}">
+              <button type="button" class="modal-close">
+                <span class="material-icons">west</span> &nbsp
+                Back to account
+              </button>
+            </a>
+          </div>
+          <form class="_portfolio_form_" autocomplete='off' action="{% url 'profiles:DS_project_create' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="_portfolio_form_details">
+              {{ProjectForm.media}}
+              <div class="_pf-fieldWrappers">
+                  <div class="_pf-list-step">
+                    <h5>General</h5>
+                    <div class="_pf-project_name">
+                      <p>Provide the a name for the project. <span>*</span></p>
+                      {{ProjectForm.project_name}}
+                    </div>
+                    <div class="_pf-project_year">
+                      <p>What year was the project done? <span>*</span></p>
+                      {{ProjectForm.project_year}}
+                    </div>
+                  </div>
+                  <div class="_pf-list-step">
+                    <h5>About Project</h5>
+                    <div class="_pf-project_description">
+                      <p>Say something about the project. <span>*</span></p>
+                      {{ProjectForm.project_description}}
+                    </div>
+                  </div>
+                  <div class="_pf-list-step">
+                    <div class="_pf-project_cost">
+                      <p>What was the project cost in Ksh? <span>*</span></p>
+                      {{ProjectForm.project_cost}}
+                    </div>
+                  </div>
+                  <div class="_pf-list-step">
+                    <h5>Location</h5>
+                      <div class="_pf-project_location">
+                        <p>Provide an address for this project i.e the street name or immediate neighborhood. <span>*</span></p>
+                        {{ProjectForm.project_location}}
+                      </div>
+                      <div class="_pf-project_map_point">
+                        {{ProjectForm.project_map_point}}
+                      </div>
+                  </div>
+                  <div class="_pf-list-step">
+                    <h5>Media</h5>
+                    <div class="_pf-project_image">
+                      <p>Choose some nice photos of this project. <span>*</span></p>
+                      {{ProjectImageForm.project_image}}
+                    </div>
+                    <div class="_pf-project_video">
+                      <p>Have a video? Paste the youtube link here. Click share button from the youtube video and copy the url.</p>
+                      {{ProjectForm.project_video}}
+                    </div>
+                    <div class="s-prof">
+                      <button type="submit" name="button">Post project</button>
+                    </div>
+                  </div>
+              </div>
+              <div class="_pf-StepBtns">
+                <button type="button" id="_pf-prevStepBtn" onclick="nextPrev(-1)">Previous</button>
+                <button type="button" id="_pf-nextStepBtn" onclick="nextPrev(1)">Next</button>
+              </div>
+            </div>
+            <!-- Circles which indicate the steps of the form: -->
+            <div class="_pf-StepIndicators">
+              <span class="_pf-StepIndicator">
+                <div class="_pf-StepIndicatorElm">
+                  <span class="material-icons _pf-StepIcon">fact_check</span>
+                  <div class="_pf-BgStepIndicatorStrike"></div>
+                </div>
+                <h5>
+                  <span class="material-icons _stepInprogress">donut_large</span>
+                  <span class="material-icons _stepDone">check_circle</span>
+                   &nbsp General</h5>
+              </span>
+              <span class="_pf-StepIndicator">
+                <div class="_pf-StepIndicatorElm">
+                  <span class="material-icons _pf-StepIcon">description</span>
+                  <div class="_pf-StepIndicatorStrike"></div>
+                </div>
+                <h5>
+                  <span class="material-icons _stepInprogress">donut_large</span>
+                  <span class="material-icons _stepDone">check_circle</span>
+                   &nbsp Description</h5>
+              </span>
+              <span class="_pf-StepIndicator">
+                <div class="_pf-StepIndicatorElm">
+                  <span class="material-icons _pf-StepIcon">local_offer</span>
+                  <div class="_pf-StepIndicatorStrike"></div>
+                </div>
+                <h5>
+                  <span class="material-icons _stepInprogress">donut_large</span>
+                  <span class="material-icons _stepDone">check_circle</span>
+                   &nbsp Project Cost</h5>
+              </span>
+              <span class="_pf-StepIndicator">
+                <div class="_pf-StepIndicatorElm">
+                  <span class="material-icons _pf-StepIcon">edit_location</span>
+                  <div class="_pf-StepIndicatorStrike"></div>
+                </div>
+                <h5>
+                  <span class="material-icons _stepInprogress">donut_large</span>
+                  <span class="material-icons _stepDone">check_circle</span>
+                   &nbsp Location</h5>
+              </span>
+              <span class="_pf-StepIndicator">
+                <div class="_pf-StepIndicatorElm">
+                  <span class="material-icons _pf-StepIcon">add_photo_alternate</span>
+                  <div class="_pf-EnStepIndicatorStrike"></div>
+                </div>
+                <h5>
+                  <span class="material-icons _stepInprogress">donut_large</span>
+                  <span class="material-icons _stepDone">check_circle</span>
+                   &nbsp Media</h5>
+              </span>
+            </div>
+          </form>
+    {%endif%}
+  </div>
+</div>
+
+<script>
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("_pf-list-step");
+  x[n].style.display = "block";
+  //... and fix the Previous/Next buttons:
+  if (n == 0) {
+    document.getElementById("_pf-prevStepBtn").style.display = "none";
+  } else {
+    document.getElementById("_pf-prevStepBtn").style.display = "inline";
+  }
+  if (n == (x.length - 1)) {
+    document.getElementById("_pf-nextStepBtn").style.display = "none";
+  } else {
+    document.getElementById("_pf-nextStepBtn").style.display = "inline";
+  }
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("_pf-list-step");
+  // Exit the function if any field in the current tab is invalid:
+  if (n == 1 && !validateForm()) return false;
+  // Hide the current tab:
+  x[currentTab].style.display = "none";
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+  // if you have reached the end of the form...
+  if (currentTab >= x.length) {
+    // ... the form gets submitted:
+    document.getElementsByClassName("_portfolio_form_").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function validateForm() {
+  // This function deals with validation of the form fields
+  var x, y, i, valid = true;
+  x = document.getElementsByClassName("_pf-list-step");
+  y = x[currentTab].getElementsByTagName("input");
+  // A loop that checks every input field in the current tab:
+  for (i = 0; i < y.length; i++) {
+    // If a field is empty...
+    if (y[i].value == "") {
+      // add an "invalid" class to the field:
+      y[i].className += " invalid";
+      // and set the current valid status to false
+      valid = false;
+    }
+  }
+  // If the valid status is true, mark the step as finished and valid:
+  if (valid) {
+    document.getElementsByClassName("_pf-StepIndicator")[currentTab].className += " finish";
+  }
+  return valid; // return the valid status
+}
+
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("_pf-StepIndicator");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class on the current step:
+  x[n].className += " active";
+}
+</script>
+
+{% endblock %}

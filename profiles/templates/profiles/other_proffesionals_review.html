@@ -23,8 +23,8 @@
 
           </div>
           <div class="rvw-p-img-box">
-            {% if pro.profile_image%}
-            <img src="{{pro.profile_image.url}}" alt="{{pro.get_full_name}}" style="width:100px; height:100px;object-fit:cover;" class="circle">
+            {% if pro.user.profile_image%}
+            <img src="{{pro.user.profile_image.url}}" alt="{{pro.get_full_name}}" style="width:100px; height:100px;object-fit:cover;" class="circle">
             {% else %}
             <img src="{%static 'img/avatar.png'%}" alt="{{pro.get_full_name}}" style="width:100px; height:100px;object-fit:cover;" class="circle">
             {% endif %}

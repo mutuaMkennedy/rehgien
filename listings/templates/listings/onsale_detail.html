@@ -96,8 +96,8 @@
         <div id="contact-form1" class="col s12 md4 l4 xl4">
               <div id="cont-card" class="card horizontal">
                 <div id="c-img" class="card-image">
-                  {%if listing.owner.agent_profile.profile_image %}
-                  <img src="{{listing.owner.agent_profile.profile_image.url}}" alt="{{listing.owner.first_name}}">
+                  {%if listing.owner.profile_image %}
+                  <img src="{{listing.owner.profile_image.url}}" alt="{{listing.owner.first_name}}">
                   {% else %}
                   <img src="{% static 'img/avatar.png'%}" alt="avatar.png">
                   {% endif %}

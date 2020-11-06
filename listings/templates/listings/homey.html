@@ -2,48 +2,44 @@
 {%load static%}
 {%block content%}
 
-<!--banner-->
+    <div class="HomePgBanner" style="background-image:url({%static 'img/b8.jpg' %});">
+        <div class="HmBannerOverlay">
+          <h3>Find your dream Home</h3>
+          <div id="search-section" class="container">
+            <div class="row">
+                <form class="HomeSearchBar" action="{% url 'listings:sale_listings'%}" method="GET">
+                  <div id="s_geocoder">
 
-    <div class="HomePgBanner" style="background-image:linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ),url({%static 'img/b2.jpg' %});">
-      <h3>Find your dream Home</h3>
-      <div id="search-section" class="container">
-        <div class="row">
-            <form class="HomeSearchBar" action="{% url 'listings:sale_listings'%}" method="GET">
-              <div id="s_geocoder">
-
-              </div>
-              <button type="submit"><i class="fas fa-search fa-lg" style="color:grey;"></i></button>
-            </form>
+                  </div>
+                  <button type="submit"><img src="{% static 'img/search.svg'%}" alt="search"></button>
+                </form>
+            </div>
         </div>
-
       </div>
       <i id="down-arrow" class="material-icons">keyboard_arrow_down</i>
       <i id="down-arrow2" class="material-icons">keyboard_arrow_down</i>
     </div>
-<section style="background-color:#4caf5014;;">
-    <div id="svgCardsContainer" class="container" style="background-color:#ffffff; padding:10px; border-radius:10px; width:100%;">
-        <div  id="svgRow" class="row">
+<section>
+    <div class="svgCardsContainer container">
+        <div class="svgRow row">
           <div class="HmPgTdsc">
-            <h4 id="svg-title" class="center">
-               Do more on Rehgien
-             </h4>
-             <p>Get more value by using Rehgien. We have solutions for both proffesionals and home buyers. </p>
+            <div style='width:2px;height:50px;background:#fb5f3d;border-radius:25px'></div>
+            <h1 class="svg-title center">
+               Do more on rehgien
+             </h1>
           </div>
-          <div class="col s12">
-            <div id="svg-cards" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="false" data-aos-duration="1000">
+          <div class="svg-cardsWrp col s12 md4 l4">
+            <div class="svg-card card">
               <div class="s-c-wrp">
-                        <img id="forSaleSvg"src="{%static 'img/browsing.jpg'%}" alt="looking for a house?">
+                <img src="{%static 'img/4241603.png'%}" alt="looking for a house?">
               </div>
               <div class="s-c-cnt">
-                <div style='width:50px;height:15px;background:#fb5f3d;border-radius:25px'>
+                <div style='width:30px;height:10px;background:#fb5f3d;border-radius:25px'>
                 </div>
-                <h6 class="svg-title">Your next home is a few <br/>clicks away</h6>
-                <p class="svg-prg">
-                  Buying or renting? Find your next home fast.
-                  Choose from two ways to get the property you want:
-                  <span><i class="far fa-check-circle"></i>Browse listings.</span>
-                  <span><i class="far fa-check-circle"></i>Request the property.</span>
-                  Whatever way you choose we have made it easy for you to make the best decision.
+                <h6>Find your next home in a <br>few clicks</h6>
+                <p>
+                  Choose from two ways to get the property you want.
+                  We have made it easy for you to make the best decision
                 </p>
                 <div class='hm-CtA-bWrap'>
                   <a href="{% url 'listings:sale_listings'%}">
@@ -60,37 +56,140 @@
               </div>
             </div>
           </div>
-          <div class="col s12">
-            <div id="svg-card2" class="card" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-once="false" data-aos-duration="1000">
+          <div class="svg-cardsWrp col s12 md4 l4">
+            <div class="svg-card card">
+              <div class="s-c-wrp">
+                <img src="{%static 'img/58068.png'%}" alt="pros">
+              </div>
               <div class="s-c-cnt">
-                <div style='width:50px;height:15px;background:#fb5f3d;border-radius:25px'>
+                <div style='width:30px;height:10px;background:#fb5f3d;border-radius:25px'>
                 </div>
-                <h6 class="svg-title2">Selling or Renting doesn't have to be hard.</h6>
-                <p class="svg-prg2">
-                  Sell faster by listing your property with one of our agents.
-                  <br/>
-                  <br/>
-                  When you sell with our agents you get an interactive 3D video walkthrough so that buyers can tour your home without leaving theirs.
-                   <br><br>Want to know more head over to our: <a href="#" style="color:blue;">FAQ Section.</a>
+                <h6>Find qualified proffesionals <br> the easy way</h6>
+                <p>
+                  We are making the real estate network smaller by allowing you to easily find
+                  verified pros to work with
+                <div class='hm-CtA-bWrap'>
+                  <a href="{% url 'markets:proffesional_request'%}">
+                    <button class="hm-CtA-findAg" type="button" name="button">
+                      Make a Request
+                    </button>
+                  </a>
+                  <a href="{% url 'profiles:agent_list'%}">
+                    <button class="hm-CtA-learnMore" type="button" name="button">
+                      Browse agents
+                    </button>
+                  </a>
+                </div>
+              </div>
+          </div>
+
+          </div>
+          <div class="svg-cardsWrp col s12 md4 l4">
+            <div class="svg-card card">
+              <div class="s-c-wrp">
+                <img src="{%static 'img/virtual-tour.png'%}" alt="vr1">
+              </div>
+              <div class="s-c-cnt">
+                <div style='width:30px;height:10px;background:#fb5f3d;border-radius:25px'>
+                </div>
+                <h6>Selling or Renting doesn't <br> have to be hard</h6>
+                <p>
+                  Let people visit your home without leaving theirs.
+                  Get an interactive 3D video walkthrough when you list with our agents
                 </p>
                 <div class='hm-CtA-bWrap'>
                   <a href="{% url 'profiles:agent_list'%}">
-                  <button class="hm-CtA-request" type="button" name="button">
+                  <button class="hm-CtA-findAg" type="button" name="button">
                     Find an agent
                   </button>
                   </a>
                 </div>
               </div>
-              <div class="s-c-wrp-2">
-                <img id="forSaleSvg-3"src="{%static 'img/vr-1.png'%}" alt="vr1">
-                <img id="forSaleSvg-4"src="{%static 'img/vr-2.png'%}" alt="vr2">
-
-              </div>
-            </div>
           </div>
 
+          </div>
+    </div>
+</section>
+<section>
+  <div class="HmPg-neighborhoods" style="background-image:url({%static 'img/4306898.png' %});">
+    <div class="HmPg-nh-contentWrp">
+      <div class="Hm-nh-TextContent">
+        <h1>Rehgien neighbourhoods</h1>
+        <div style='width:100px;height:10px;background:#fb5f3d;border-radius:25px'></div>
+        <p>
+          Getting to know an area before moving is a very important step in real estate.
+          Thats why we are investing heavily on building the home search experience around unlocking information about locations
+          first.<br>
+          <span><b>Why neighbourhoods:-</b></span><br>
+          <span><i class="fas fa-chevron-right"></i>See what people have said about an area.</span><br>
+          <span><i class="fas fa-chevron-right"></i>See various metrics like the crime rate, proximity to schools e.t.c.</span><br>
+          <span><i class="fas fa-chevron-right"></i>Understand property values in an area.
+          </span><br>
+          <span><i class="fas fa-chevron-right"></i>Basically, make your decisions out of facts not speculation.</span>
+        </p>
+      </div>
+      <div class="hm-nh-ActBtns">
+          <button type="button" name="button">See our road map <i class="fas fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="HmPg-Pros">
+    <div class="HmPg-pros-contentWrp">
+      <div class="Hm-pros-TextContent">
+        <h1>Rehgien proffesionals</h1>
+        <div style='width:100px;height:10px;background:#fb5f3d;border-radius:25px'></div>
+          <p>
+          We are focussed on offering a credible and quality service experience accross our entire platform. That's why our process is built for and backed by verified real estate proffesionals.
+
+        </p>
+        <div class="hmpg-pros-ActBtns">
+            <a href="/pro/home"><button type="button" name="button">Rehgien Pro <i class="fas fa-arrow-right"></i></button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="getApp-card-row row">
+        <div class="getApp-card card col s12 md6 l6">
+            <div class="getappImgWrp">
+                <img src="{% static 'img/6532.png'%}" alt="phone">
+            </div>
+            <h1>Get more flexibility</h1>
+            <p>Do more on the go. Get our features customized for your phone.</p>
+            <div class="appStoreBadges">
+                <a href="#">
+                  <button type="button" name="button">
+                    <img src="{%static 'img/apple-store-badge.png'%}" alt="applestore">
+                  </button>
+                </a>
+                <a href="#">
+                  <button type="button" name="button">
+                    <img src="{%static 'img/google-play-badge.png'%}" alt="googleplay">
+                  </button>
+                </a>
+            </div>
+        </div>
+        <div class="getApp-card card col s12 md6 l6">
+            <div class="getappImgWrp">
+                <img src="{% static 'img/call-center.png'%}" alt="call-center">
+            </div>
+            <h1>Reach out to us</h1>
+            <p>We are always happy to hear from you.</p>
+            <div class="appStoreBadges">
+                <a href="#">
+                  <button type="button" name="button">
+                    +254 12 345 678
+                  </button>
+                </a>
+            </div>
         </div>
     </div>
+  </div>
 </section>
 <script type="text/javascript">
 mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';

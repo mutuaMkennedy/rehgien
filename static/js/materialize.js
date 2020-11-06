@@ -10259,7 +10259,7 @@ $jscomp.polyfill = function (e, r, p, m) {
   M.Timepicker = Timepicker;
 
   if (M.jQueryLoaded) {
-    M.initializeJqueryWrapper(Timepicker, 'timepicker', 'M_Timepicker');
+    // M.initializeJqueryWrapper(Timepicker, 'timepicker', 'M_Timepicker');
   }
 })(cash);
 ;(function ($) {

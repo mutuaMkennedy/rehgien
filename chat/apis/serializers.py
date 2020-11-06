@@ -31,28 +31,7 @@ class StreamTokenSerializer(serializers.ModelSerializer):
 
     def get_user_avatar(self, obj):
         default_avatar = '/static/img/avatar.png'
-        if obj.user.user_type =='NormalUser':
-            if obj.user.n_user_profile.profile_image:
-                return obj.user.n_user_profile.profile_image.url
-            else:
-                return default_avatar
-        if obj.user.user_type =='Agent':
-            if obj.user.agent_profile.profile_image:
-                return obj.user.agent_profile.profile_image.url
-            else:
-                return default_avatar
-        if obj.user.user_type =='PropertyManager':
-            if obj.user.pm_profile.profile_image:
-                return obj.user.pm_profile.profile_image.url
-            else:
-                return default_avatar
-        if obj.user.user_type =='Design&servicePro':
-            if obj.user.DService_profile.profile_image:
-                return obj.user.DService_profile.profile_image.url
-            else:
-                return default_avatar
-        if obj.user.user_type =='Admin':
-            if obj.user.agent_profile.profile_image:
-                return obj.user.agent_profile.profile_image.url
-            else:
-                return default_avatar
+        if obj.user.profile_image:
+            return obj.user.profile_image.url
+        else:
+            return default_avatar

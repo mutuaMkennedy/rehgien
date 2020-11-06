@@ -1,0 +1,96 @@
+{% load static%}
+<form class="ProFollowForm{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}"  action="{% url 'profiles:pro_follow'%}" method="post">
+  {% csrf_token %}
+<!--
+ Checking which template loop is being accessed. This is necessary  so as to
+ allow modificaton of some attributes to match how my followers and who i am
+ following loops are being rendered and avoid conflicts
+-->
+  {% if follower %}
+
+        {% if follower.user_type == 'Agent'%}
+              {% if request.user in follower.agent_profile.followers.all %}
+                  <button id="proFollow{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{follower.user_type}}" value="{{follower.agent_profile.pk}}">
+                    <div class="_FwDefaultT"><span class="material-icons">check</span>Following</div>
+                    <div class="_FwHoverT"><span class="material-icons">remove</span>Unfollow</div>
+                  </button>
+              {% else %}
+                  <button id="proFollow{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{follower.user_type}}" value="{{follower.agent_profile.pk}}">
+                   <span class="material-icons" >add</span>Follow
+                  </button>
+              {% endif %}
+        {% elif follower.user_type == 'PropertyManager'%}
+              {% if request.user in follower.pm_profile.followers.all %}
+                  <button id="proFollow{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{follower.user_type}}" value="{{follower.pm_profile.pk}}">
+                    <div class="_FwDefaultT"><span class="material-icons">check</span>Following</div>
+                    <div class="_FwHoverT"><span class="material-icons">remove</span>Unfollow</div>
+                  </button>
+              {% else %}
+                  <button id="proFollow{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{follower.user_type}}" value="{{follower.pm_profile.pk}}">
+                   <span class="material-icons" >add</span>Follow
+                  </button>
+              {% endif %}
+        {% elif follower.user_type == 'Design&servicePro'%}
+              {% if request.user in follower.DService_profile.followers.all %}
+                  <button id="proFollow{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{follower.user_type}}" value="{{follower.DService_profile.pk}}">
+                    <div class="_FwDefaultT"><span class="material-icons">check</span>Following</div>
+                    <div class="_FwHoverT"><span class="material-icons">remove</span>Unfollow</div>
+                  </button>
+              {% else %}
+                  <button id="proFollow{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{follower.user_type}}" value="{{follower.DService_profile.pk}}">
+                   <span class="material-icons" >add</span>Follow
+                  </button>
+              {% endif %}
+        {% elif follower.user_type == 'Company'%}
+              {% if request.user in follower.company_profile.followers.all %}
+                  <button id="proFollow{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{follower.user_type}}" value="{{follower.company_profile.pk}}">
+                    <div class="_FwDefaultT"><span class="material-icons">check</span>Following</div>
+                    <div class="_FwHoverT"><span class="material-icons">remove</span>Unfollow</div>
+                  </button>
+              {% else %}
+                  <button id="proFollow{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{follower.user_type}}" value="{{follower.company_profile.pk}}">
+                   <span class="material-icons" >add</span>Follow
+                  </button>
+              {% endif %}
+        {% elif follower.user_type == 'NormalUser' %}
+                  <button  id="dsproFollow{{forloop.counter}}" data-user-type="{{follower.user_type}}" value="{{follower}}" class='_fwDisabled' type="button" disabled name="button"><span class="material-icons">highlight_off</span>Follow</button>
+        {% endif %}
+
+  {% elif following %}
+
+        {% if following.user.user_type == 'Agent'%}
+              {% if request.user in following.user.agent_profile.followers.all %}
+                  <button onclick="hideUnfollowedUser('_uMyFollowingcard{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}')" id="proFollowing{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{following.user.user_type}}" value="{{following.user.agent_profile.pk}}">
+                    <div class="_FwDefaultT"><span class="material-icons">check</span>Following</div>
+                    <div class="_FwHoverT"><span class="material-icons">remove</span>Unfollow</div>
+                  </button>
+              {%endif%}
+        {% elif following.user.user_type == 'PropertyManager'%}
+              {% if request.user in following.user.pm_profile.followers.all %}
+                  <button onclick="hideUnfollowedUser('_uMyFollowingcard{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}')" id="proFollowing{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{following.user.user_type}}" value="{{following.user.pm_profile.pk}}">
+                    <div class="_FwDefaultT"><span class="material-icons">check</span>Following</div>
+                    <div class="_FwHoverT"><span class="material-icons">remove</span>Unfollow</div>
+                  </button>
+              {% endif %}
+        {% elif following.user.user_type == 'Design&servicePro'%}
+              {% if request.user in following.user.DService_profile.followers.all %}
+                  <button onclick="hideUnfollowedUser('_uMyFollowingcard{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}')" id="proFollowing{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{following.user.user_type}}" value="{{following.user.DService_profile.pk}}">
+                    <div class="_FwDefaultT"><span class="material-icons">check</span>Following</div>
+                    <div class="_FwHoverT"><span class="material-icons">remove</span>Unfollow</div>
+                  </button>
+              {% endif %}
+        {% elif following.user.user_type == 'Company'%}
+              {% if request.user in following.user.company_profile.followers.all %}
+                  <button onclick="hideUnfollowedUser('_uMyFollowingcard{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}')" id="proFollowing{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" type="submit" data-loop-index="{% if userLoopIndex %}{{userLoopIndex}}{%else%}{{forloop.counter}}{%endif%}" data-user-type="{{following.user.user_type}}" value="{{following.user.company_profile.pk}}">
+                    <div class="_FwDefaultT"><span class="material-icons">check</span>Following</div>
+                    <div class="_FwHoverT"><span class="material-icons">remove</span>Unfollow</div>
+                  </button>
+              {% endif %}
+        {% endif %}
+        <script type="text/javascript">
+             function hideUnfollowedUser(userCard){
+               document.getElementById(userCard).style.display='none';
+             }
+        </script>
+  {% endif %}
+</form>

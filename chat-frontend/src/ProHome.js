@@ -447,6 +447,7 @@ const PageLinksImageBox = styled.div`
   align-items:center;
   @media (max-width: 786px){
   width:100%;
+  flex-wrap:wrap;
   }
 `
 const  PageFooter = styled.div`

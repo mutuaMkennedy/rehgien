@@ -26,7 +26,6 @@ const ChatActionButton= styled.button`
 const RemoveMemberModal = styled(Popup)`
     &-content {
       height:auto;
-      border-radius:10px;
       border:1px solid red;
       width:500px !important;
     }
@@ -125,7 +124,7 @@ class RemoveMember extends React.Component {
     const membersID = this.state.membersSelectedID;
 
     //stream client
-    const client = new StreamChat("qk4nn7rpcn75");
+    const client = new StreamChat("krfpqyntmyk8");
 
     await client.setUser(
       {

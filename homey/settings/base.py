@@ -62,7 +62,8 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'corsheaders',
     'django_social_share',
-    'markets'
+    'markets',
+    'embed_video',
     #'haystack',
     # 'tastypie',
 ]
@@ -185,7 +186,8 @@ CKEDITOR_ALLOW_NONIMAGE_FILES = False
 CKEDITOR_CONFIGS = {
     'agent_profile': {
         'skin': 'n1theme',
-        'removePlugins':'elementspath',
+        'removePlugins':['elementspath', 'iframe'],
+        'allowedContent': True,
         # 'skin': 'office2013',
         # 'toolbar_Basic': [
         #     ['Source', '-', 'Bold', 'Italic']
@@ -271,8 +273,8 @@ cloudinary.config(
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
     )
 }
 
@@ -308,5 +310,5 @@ TWILIO_API_SECRET = 'qDSWimtxgzelWceywCF2Sbcslr7s1o7P'
 TWILIO_CHAT_SERVICE_SID = 'ISe0ef1fd1e4f444aba9ccc09b28047ab5'
 TWILIO_AUTH_TOKEN = '7f70419841a1632045d657089acd65c1'
 
-STREAM_API_KEY = 'qk4nn7rpcn75'
-STREAM_API_SECRET = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiSm9obiIsImlhdCI6MTU0ODI5ODUxN30.hyonbQnOLuFsr15mdmc_JF4sBOm2SURK4eBvTOx3ZIg'
+STREAM_API_KEY = 'krfpqyntmyk8'
+STREAM_API_SECRET = 'ynfguub9ds3qufavnzkdnvetrzrftqvs9punjq6zu7jwavcncshceyc8byp93kyq'
