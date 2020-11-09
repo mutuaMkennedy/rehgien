@@ -49,7 +49,7 @@ def homepage(request):
 	rentals_reversed = reversed(rentals_recent)
 	return render(request, 'listings/homey.html', {'onsale_reversed': onsale_reversed, 'rentals_reversed': rentals_reversed})
 
-def sale_listings_results(request):
+def property_listings_results(request, slug):
 	ImageTransformation = dict(
 	format = "jpg",
 	transformation = [
@@ -57,44 +57,16 @@ def sale_listings_results(request):
 		 format="auto", dpr="auto", fl="progressive"),
 			]
 		)
-	listings = PropertyForSale.objects.all()
-	loc_input_q = request.GET.get('location')
-	min_price = request.GET.get('min_price')
-	max_price = request.GET.get('max_price')
-	property_type= request.GET.get('property_type')
-	bedrooms = request.GET.get('bedrooms')
-	bathrooms = request.GET.get('bathrooms')
-	if check_q_valid(loc_input_q):
-		loc_icontains = loc_input_q.split(',')
-		listings = listings.filter(location_name__icontains = loc_icontains[0])
-		location_address = loc_input_q
-	if check_q_valid(min_price) and check_q_valid(max_price):
-		listings = listings.filter(price__range = (min_price,max_price))
-	if check_q_valid(property_type):
-		listings = listings.filter(type__iexact=property_type)
-	if check_q_valid(bedrooms):
-		listings = listings.filter(bedrooms__gte=bedrooms)
-	if check_q_valid(bathrooms):
-		listings = listings.filter(bathrooms__gte=bathrooms)
-	else:
-		listings = listings.filter(location_name__icontains= 'Nairobi')
-		location_address = 'Nairobi,Kenya'
-	listings_count = listings.count()
-	paginator = Paginator(listings, 10)
-	page = request.GET.get('page')
-	listings = paginator.get_page(page)
-	return render(request, 'listings/for-sale-listings.html', {'listings':listings, 'listings_count':listings_count,
-			"location_address":location_address, "ImageTransformation":ImageTransformation})
 
-def rental_listings_results(request):
-	ImageTransformation = dict(
-	format = "jpg",
-	transformation = [
-		dict(height=333, width=500, crop="fill",quality="auto", gravity="center",
-		 format="auto", dpr="auto",fl="progressive"),
-			]
-		)
-	listings = RentalProperty.objects.all()
+	listings = ''
+	if slug == 'for-sale':
+		listings = PropertyForSale.objects.all()
+	elif slug ==  'for-rent':
+		listings = RentalProperty.objects.all()
+	else:
+		messages.error(request, 'The path you requested is invalid!')
+		return redirect('listings:homepage')
+
 	loc_input_q = request.GET.get('location')
 	min_price = request.GET.get('min_price')
 	max_price = request.GET.get('max_price')
@@ -117,11 +89,20 @@ def rental_listings_results(request):
 		listings = listings.filter(location_name__icontains= 'Nairobi')
 		location_address = 'Nairobi,Kenya'
 	listings_count = listings.count()
+
 	paginator = Paginator(listings, 10)
 	page = request.GET.get('page')
 	listings = paginator.get_page(page)
-	return render(request, 'listings/rental-listings.html', {'listings':listings,'listings_count':listings_count,
-	 "location_address":location_address, "ImageTransformation":ImageTransformation})
+
+	filter_fields = {
+		"min_price":min_price,
+		"max_price":max_price,
+		"property_type":property_type,
+		"bedrooms":bedrooms,
+		"bathrooms":bathrooms,
+	}
+	return render(request, 'listings/property-listing-page.html', {'listings':listings, 'listings_count':listings_count,
+			"location_address":location_address, "ImageTransformation":ImageTransformation ,"slug":slug, "filter_fields":filter_fields})
 
 @login_required(login_url='account_login')
 def onsale_detail(request, pk):

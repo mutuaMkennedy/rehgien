@@ -20,6 +20,7 @@ from profiles.models import (
 
 from profiles import models
 from listings.models import PropertyForSale, RentalProperty
+from listings.apis import serializers as ls_serializers
 
 # referencing the custom user model
 User = get_user_model()
@@ -123,7 +124,7 @@ class AgentProfileSerializer(WritableNestedModelSerializer):
     class Meta:
         model = AgentProfile
         fields = [
-        'pk','user','phone','license_number','address','website_link',
+        'pk','user','banner_image','phone','license_number','address','website_link',
         'facebook_link','twitter_link','linkedin_link','location','speciality_choices',
         'speciality','about','service_areas','saves','followers', 'member_since','account_type_choices','account_type',
         'featured_agent',"ag_top_clients","ag_business_hours","agent_review"
@@ -163,7 +164,7 @@ class PropertyManagerProfileSerializer(WritableNestedModelSerializer):
     class Meta:
         model = PropertyManagerProfile
         fields = [
-        'pk','user','phone','license_number','address','website_link',
+        'pk','user','banner_image','phone','license_number','address','website_link',
         'facebook_link','twitter_link','linkedin_link','location','about','service_areas',
         'saves','followers','member_since','account_type_choices','account_type',
         'featured_agent',"pm_top_clients","pm_business_hours","pm_review"
@@ -203,7 +204,7 @@ class DesignAndServiceProProfileSerializer(WritableNestedModelSerializer):
     class Meta:
         model = DesignAndServiceProProfile
         fields = [
-        'pk','user','phone','address','website_link','instagram_link',
+        'pk','user','banner_image','phone','address','website_link','instagram_link',
         'facebook_link','twitter_link','linkedin_link','location','about', 'service_areas','saves','followers',
         'member_since','account_type_choices','account_type','pro_speciality',
         'featured_pro',"ds_top_clients","DS_business_hours","DService_review"
@@ -261,12 +262,14 @@ class UserAccountSerializer(WritableNestedModelSerializer):
     DS_project_ls_creator = DesignAndServiceProProjectsSerializer(many=True)
     join_team_requestor = TeammateConnectionSerializer(many=True)
     join_team_request_receiver = TeammateConnectionSerializer(many=True)
-
+    sale_property = ls_serializers.PropertyForSaleSerializer(many=True)
+    rent_property = ls_serializers.RentalPropertySerializer(many=True)
     class Meta:
         model = User
         fields = [
         'id', 'username', 'first_name', 'last_name', 'email', 'user_type_choices',
         'user_type','profile_image', "company_profile", "agent_profile", "pm_profile",
         "DService_profile", "PM_portfolio_ls_creator", "DS_project_ls_creator",
-        "join_team_requestor", "join_team_request_receiver"
+        "join_team_requestor", "join_team_request_receiver", "sale_property",
+        "rent_property"
         ]

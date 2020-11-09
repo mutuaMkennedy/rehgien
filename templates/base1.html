@@ -6,8 +6,8 @@
 <html lang="en">
 <head>
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-  <script src='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
-  <link href='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
   <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css' type='text/css' />
   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
   <link rel="shortcut icon" type="image/png" href="{%static 'img/logo-fav.png'%}">
@@ -70,11 +70,11 @@
   <!--<nav class="transparent z-depth-0">-->
     <nav class="teal" role="navigation">
     <div class="nav-wrapper">
-      <a id="logo-wrapper" href="{% url 'listings:homepage'%}" class="brand-logo left" style="height:60px;"><img class="logo" src="{%static 'img/rhg_logo1.png'%}"></a>
+      <a id="logo-wrapper" href="{% url 'listings:homepage'%}" class="brand-logo left" style="height:60px;"><img class="logo" src="{%static 'img/rehgien_logo_r.png'%}"></a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-base1"class="left hide-on-med-and-down">
-        <li><a href="{% url 'listings:sale_listings'%}">Buy</a></li>
-        <li><a href="{% url 'listings:rental_listings'%}">Rent</a></li>
+        <li><a href="{% url 'listings:property-listings' slug='for-sale'%}">Buy</a></li>
+        <li><a href="{% url 'listings:property-listings' slug='for-rent'%}">Rent</a></li>
         <li><a href="{% url 'profiles:business_list' %}">Business Finder</a></li>
         <li><a href="#" id='ag-trigger' class="dropdown-trigger" data-target='ag-dropdown'>Pro Finder</a></li>
         <li><a href="#" id='svc-trigger' class="dropdown-trigger" data-target='svc-dropdown'>Request Service</a></li>
@@ -179,8 +179,8 @@
     </ul>
     <ul class="Mnav-UlItems collapsible">
       <li><a href="{%url 'listings:homepage'%}">Home</a></li>
-      <li><a href="{% url 'listings:sale_listings' %}">Buy</a></li>
-      <li><a href="{% url 'listings:rental_listings'%}">Rent</a></li>
+      <li><a href="{% url 'listings:property-listings' slug='for-sale'%}">Buy</a></li>
+      <li><a href="{% url 'listings:property-listings' slug='for-rent'%}">Rent</a></li>
       <li><a href="{% url 'profiles:business_list' %}">Business Finder</a></li>
       <li>
         <div class="collapsible-header Mnav-collapsible-header">Find a pro<i class="fas fa-chevron-right"></i></div>

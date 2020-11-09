@@ -7,7 +7,7 @@
           <h3>Find your dream Home</h3>
           <div id="search-section" class="container">
             <div class="row">
-                <form class="HomeSearchBar" action="{% url 'listings:sale_listings'%}" method="GET">
+                <form class="HomeSearchBar" action="{% url 'listings:property-listings' slug='for-sale'%}" method="GET">
                   <div id="s_geocoder">
 
                   </div>
@@ -42,7 +42,7 @@
                   We have made it easy for you to make the best decision
                 </p>
                 <div class='hm-CtA-bWrap'>
-                  <a href="{% url 'listings:sale_listings'%}">
+                  <a href="{% url 'listings:property-listings' slug='for-sale'%}">
                     <button class="hm-CtA-browse" type="button" name="button">
                       Browse
                     </button>
