@@ -1,4 +1,1281 @@
 {% extends 'base1.html' %}
+{% load static %}
+{% load cloudinary %}
+
 {% block content%}
-  {% include 'listings/listing-page-section.html'%}
+
+<section>
+  <div class="ListingsMapWrapper">
+    <div id="asCont" class="container">
+        <div id="filter-cont" class="container">
+          <fieldset id="fieldset">
+                <form class="ResultsFilterBar" action="
+                      {% if slug == 'for-sale' %}
+                        {% url 'listings:property-listings' slug='for-sale'%}
+                      {% else %}
+                        {% url 'listings:property-listings' slug='for-rent'%}
+                      {% endif %}
+                      "
+                method="GET" >
+                  <div class="_ResultsFilterBarFWr">
+                      <div class="_ResultsFilterFld" style='width:auto; padding:0;'>
+                        <div id='geocoder' class='geocoder'></div>
+                      </div>
+                      <div class="_ResultsFilterFld">
+                        <ul class="collapsible">
+                          <li>
+                            <button class="collapsible-header" type="button" name="button">Price</button>
+                            <div class="collapsible-body">
+                              <div style='width:auto; padding:0;'>
+                                <h6 class="fltr-h-helper">Select a price range</h6>
+                                {% if slug == 'for-sale' %}
+                                  <div id="price-slider">
+                                    <div id="price-from" class="input-field">
+                                     <select name='min_price'>
+                                       <option value="" disabled selected>Price From</option>
+                                       <option value="1000000" selected>1M</option>
+                                       <option value="2000000">2M</option>
+                                       <option value="3000000">3M</option>
+                                       <option value="4000000">4M</option>
+                                       <option value="6000000">6M</option>
+                                       <option value="10000000">10M</option>
+                                       <option value="15000000">15M</option>
+                                       <option value="30000000">30M</option>
+                                       <option value="60000000">60M</option>
+                                       <option value="100000000">100M</option>
+                                     </select>
+                                   </div>
+                                   <div class="dash-separator">
+                                     -
+                                   </div>
+                                   <div id="price-to" class="input-field col s12">
+                                    <select name='max_price'>
+                                      <option value="" disabled selected>Price To</option>
+                                      <option value="1000000">1M</option>
+                                      <option value="2000000">2M</option>
+                                      <option value="3000000">3M</option>
+                                      <option value="4000000">4M</option>
+                                      <option value="6000000">6M</option>
+                                      <option value="10000000" selected>10M</option>
+                                      <option value="15000000">15M</option>
+                                      <option value="30000000">30M</option>
+                                      <option value="60000000">60M</option>
+                                      <option value="100000000">100M</option>
+                                    </select>
+                                  </div>
+                                  </div>
+                                {% else %}
+                                  <div id="price-slider">
+                                    <div id="price-from" class="input-field col s12">
+                                     <select name='min_price'>
+                                       <option value="" disabled selected>Price From</option>
+                                       <option value="0" selected>0</option>
+                                       <option value="50000">5K</option>
+                                       <option value="10000">10K</option>
+                                       <option value="20000">10K</option>
+                                       <option value="50000">50K</option>
+                                       <option value="100000">100K</option>
+                                       <option value="150000">150K</option>
+                                       <option value="300000">30K</option>
+                                       <option value="600000">600K</option>
+                                       <option value="1000000">1M</option>
+                                      <option value="10000000">10M</option>
+                                     </select>
+                                   </div>
+                                   <div class="dash-separator">
+                                     -
+                                   </div>
+                                   <div id="price-to" class="input-field col s12">
+                                    <select name='max_price'>
+                                      <option value="" disabled selected>Price To</option>
+                                      <option value="50000">5K</option>
+                                      <option value="10000">10K</option>
+                                      <option value="20000">10K</option>
+                                      <option value="50000">50K</option>
+                                      <option value="100000">100K</option>
+                                      <option value="150000" selected>150K</option>
+                                      <option value="300000">300K</option>
+                                      <option value="600000">600K</option>
+                                      <option value="1000000">1M</option>
+                                      <option value="10000000">10M</option>
+                                    </select>
+                                  </div>
+                                  </div>
+                                {% endif %}
+
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="_ResultsFilterFld" style='width:auto; padding:0;'>
+                        <div id="type-filter" class="input-field">
+                           <select name="property_type">
+                             <option value="" disabled selected>Type</option>
+                             <option value="Apartment" selected>Apartment</option>
+                             <option value="Bungalow">Bungalow</option>
+                             <option value="Singlefamily">Single family</option>
+                             <option value="Townhouse">Townhouse</option>
+                             <option value="Condominium">Condo</option>
+                             <option value="Duplex">Duplex</option>
+                             <option value="Dormitory">Dormitory</option>
+                             <option value="Terraced">Terraced</option>
+                             <option value="Mansion">Mansion</option>
+                             <option value="Other">Other</option>
+                           </select>
+                         </div>
+                      </div>
+                      <div class="_ResultsFilterFld" style='width:auto; padding:0;'>
+                        <ul class='collapsible'>
+                            <li>
+                                <button class='collapsible-header' name="button" type='button'> filters</button>
+                                <div class="collapsible-body">
+                                     <div style='width:auto; padding:0;'>
+                                       <h6 class="fltr-h-helper">Beds and baths</h6>
+                                       <div class="bdba-input">
+                                         <div id="beds" class="input-field">
+                                           <span>bedrooms</span>
+                                          <select name='bedrooms'>
+                                            <option value="" disabled selected>Beds</option>
+                                            <option value="1" selected>1+</option>
+                                            <option value="2">2+</option>
+                                            <option value="3">3+</option>
+                                          </select>
+                                        </div>
+                                        <div id="baths" class="input-field">
+                                          <span>Bathrooms</span>
+                                         <select name='bathrooms'>
+                                           <option value="" disabled selected>Baths</option>
+                                           <option value="1" selected>1+</option>
+                                           <option value="2">2+</option>
+                                           <option value="3">3+</option>
+                                         </select>
+                                       </div>
+                                       </div>
+                                     </div>
+                                </div>
+                            </li>
+                        </ul>
+                      </div>
+                      <div class="_ResultsFilterSbt" style="width:auto; padding:0;">
+                        <button id="submit_f_button" type="submit" name="search"> Search</button>
+                      </div>
+                  </div>
+                </form>
+          </fieldset>
+        </div>
+
+        <button  id='revealMap' class='show-map-btn show-on-medium-and-down'>
+          Map
+        </button>
+      <div class='all-content'>
+          <!-- <div id='feature-listing' class='container'> -->
+
+            <div id="all-row2" class="row">
+                {% if listings %}
+                <div id="page-head" class="page-head col s12">
+                  <h2>Real Estate for {% if slug == 'for-sale' %} sale {% else %} rent {% endif %} in {{location_address}}.</h2>
+                    <h3>{{listings_count}} results.</h3>
+                </div>
+
+                <div class="_listingsVwSummary col s12">
+                  <div class="_listingsVS_ct">
+                    <div class="ls_inStsHpr">
+                        <span class="material-icons">help</span>
+                        <div class="ls_inStsHpr-Txt">
+                          This insights are based on public listings in our database which
+                          offer a significant reflection of the areas activity.
+                          <b>Note:</b> The trendlines are global and do not change
+                          when filtering results with the map.
+                        </div>
+                    </div>
+                    <h5><span class="material-icons">insights</span> &nbsp Area insights.</h5>
+                    <p id="_listingsVS_ctTxt"></p>
+                    <div class="_listingsVS_Bxs">
+                        <div class="_ls_Bx1">
+                          1+ &nbsp bed
+                          <div id="_ls_Bx1Stats" class="_ls_BxStats">
+                            <p id="_ls_Bx1StatsPg"></p>
+                            {% if insight_stats.onebd_plus_price_trend > 0 %}
+                              <span class='material-icons'>trending_up</span>
+                            {% elif insight_stats.onebd_plus_price_trend == 0%}
+                              <span class='material-icons'>trending_flat</span>
+                            {% else %}
+                              <span class='material-icons'>trending_down</span>
+                            {% endif %}
+                          </div>
+                        </div>
+                        <div class="_ls_BxS-dr"></div>
+                        <div class="_ls_Bx2">
+                          2+ &nbsp beds
+                          <div id="_ls_Bx2Stats" class="_ls_BxStats">
+                            <p id="_ls_Bx2StatsPg"></p>
+                            {% if insight_stats.twobd_plus_price_trend > 0 %}
+                              <span class='material-icons'>trending_up</span>
+                            {% elif insight_stats.twobd_plus_price_trend == 0%}
+                              <span class='material-icons'>trending_flat</span>
+                            {% else %}
+                              <span class='material-icons'>trending_down</span>
+                            {% endif %}
+                          </div>
+                        </div>
+                          <div class="_ls_BxS-dr"></div>
+                        <div class="_ls_Bx3">
+                          3+ &nbsp beds
+                          <div id="_ls_Bx3pStats" class="_ls_BxStats">
+                            <p id="_ls_Bx3StatsPg"></p>
+                            {% if insight_stats.threebd_plus_price_trend > 0 %}
+                              <span class='material-icons'>trending_up</span>
+                            {% elif insight_stats.threebd_plus_price_trend == 0%}
+                              <span class='material-icons'>trending_flat</span>
+                            {% else %}
+                              <span class='material-icons'>trending_down</span>
+                            {% endif %}
+                          </div>
+                        </div>
+                          <div class="_ls_BxS-dr"></div>
+                        <div class="_ls_Bx4">
+                          All
+                          <div id="_ls_BxAllStats" class="_ls_BxStats">
+                            <p id="_ls_BxAllStatsPg"></p>
+                            {% if insight_stats.all_prices_trend > 0 %}
+                              <span class='material-icons'>trending_up</span>
+                            {% elif insight_stats.all_prices_trend == 0%}
+                              <span class='material-icons'>trending_flat</span>
+                            {% else %}
+                              <span class='material-icons'>trending_down</span>
+                            {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col s12" style="display:flex;">
+                  <div id="sort-input" class="input-field col s12">
+                   <select>
+                     <option value="" disabled selected>Sort by</option>
+                     <option value="1">Newer</option>
+                     <option value="2">Older</option>
+                     <option value="3">Priced Highest</option>
+                     <option value="4">Beds</option>
+                     <option value="5">Baths</option>
+                     <option value="6">Area</option>
+                   </select>
+                 </div>
+                </div>
+                <div id="_listingItemsBox" class="_listingItemsBox col s12">
+                    <img id="_listingItemsLoading" src="{%static 'img/ajax-loader.gif'%}" alt="loading..">
+                    <div id="obj" class="col s12 md6 l6 xl4">
+
+                    </div>
+                </div>
+              {% else %}
+              <div id="page-head" class="page-head col s12">
+                <h2>No matching results for {{location_address}}.</h2>
+                  <h3>Try another location or refine your search.</h3>
+              </div>
+              {% endif %}
+            </div>
+          <!-- </div> -->
+              <!-- start -->
+              {% include 'listings/pagination.html' with listings=listings %}
+              <!-- end -->
+      </div>
+      <footer class="listings-footer">
+        <div class="container" style="width:100%; margin:0px;">
+          <div class="footer-content center">
+            <div class="row">
+              <div class="f-details center">
+                <a href="#"> Privacy Policy</a>
+                <a href="#"> Terms & Conditions</a>
+                <a href="#"> Advertise</a>
+                <a href="#"> Mobile App</a>
+                <a href="#"> FAQ'S</a>
+                <a href="#"> Contact Us</a>
+                <a href="{% url 'contact:about_us'%}"> About Us</a>
+              </div>
+              <div id="footer-details" class="col s12 center">
+                <a href="#" class="black-text">
+                  <i class="fab fa-facebook fa-2x"></i>
+                </a>
+                <a href="#" class="black-text">
+                  <i class="fab fa-twitter fa-2x"></i>
+                </a>
+                <a href="#" class="black-text">
+                  <i class="fab fa-linkedin fa-2x"></i>
+                </a>
+                <a href="#" class="black-text">
+                  <i class="fab fa-instagram fa-2x"></i>
+                </a>
+                <p>While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy.</p>
+              </div>
+              <p class="flow-text black-text center" id="c-year"></p>
+              <script type="text/javascript">
+                var d = new Date();
+                document.getElementById("c-year").innerHTML= 'Copyright '+ d.getFullYear();
+              </script>
+            </div>
+          </div>
+        </div>
+        <div class="ft-bk-sl">
+          <img src="{% static 'img/nairobi-skyline.png'%}">
+        </div>
+      </footer>
+    </div>
+    <div class="container" id="map-container">
+      <div id='map'>
+          <button type="button" id="hideMapbtn"  class="show-on-medium-and-down" style="background-image:url({%static 'img/close.svg' %});"></button>
+          <!-- Dropdown Trigger -->
+          <a id='map-btn' class='dropdown-trigger btn-small blue' href='#' data-target='map-dropdown'><i class="small material-icons">school</i></a>
+
+          <ul id='map-dropdown' class='dropdown-content'>
+            <li id="menu-items"></li>
+          </ul>
+          <div id="mapResultshelp-text1" class="help-text1 center" >
+            <img src="{%static 'img/ajax-loader.gif'%}" alt="loading..">
+          </div>
+          <div id="_MapsMenu">
+                <ul class="collapsible">
+                  <li>
+                      <button class="collapsible-header" type="button" name="button">Map</button>
+                      <div class="collapsible-body">
+                          <label for="ckh7o1zaj16uf19livwuytxlq">
+                              <input id="ckh7o1zaj16uf19livwuytxlq" type="radio" name="rtoggle" value="streets" checked="checked"/>
+                              <span>streets</span>
+                          </label>
+                          <label for="ckh9k2ug82cxr19mv54mrosin">
+                              <input id="ckh9k2ug82cxr19mv54mrosin" type="radio" name="rtoggle" value="satellite" />
+                              <span>satellite</span>
+                          </label>
+                      </div>
+                  </li>
+                </ul>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+if (!mapboxgl.supported()) {
+  alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
+  } else {
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/reykennedy/ckh7o1zaj16uf19livwuytxlq',
+        minZoom: 6.2,
+        maxZoom:18,
+        center: [37.01, -1.10]
+  });
+}
+
+//geocoder
+var geocoder = new MapboxGeocoder({
+accessToken: mapboxgl.accessToken,
+types: 'country,region,place,postcode,locality,neighborhood',
+countries:'KE',
+});
+
+geocoder.addTo('#geocoder');
+// disable map rotation using right click + drag
+map.dragRotate.disable();
+
+// disable map rotation using touch rotation gesture
+map.touchZoomRotate.disableRotation();
+// Adds zoom and rotation controls to the map.
+map.addControl(new mapboxgl.NavigationControl());
+
+
+//from Here code for adding features to the map
+// Holds visible listings features for filtering
+var homes = [];
+
+// Create a popup, but don't add it to the map yet.
+var popup = new mapboxgl.Popup({
+    closeButton: false
+});
+
+var geojson = {
+type: 'FeatureCollection',
+features: [
+{% for loc in listings %}
+    {
+    type: 'Feature',
+    geometry: {
+        type: 'Point',
+        coordinates: [{{ loc.location.x }}, {{ loc.location.y }}]
+    },
+    properties: {
+        pk: '{{ loc.pk }}',
+        title: '{{ loc.property_name }}',
+        thumb:'{% cloudinary_url loc.thumb ImageTransformation %}',
+        location_name:'{{loc.location_name}}',
+        price:'{{loc.price}}',
+        bathrooms: '{{loc.bathrooms}}',
+        bedrooms: '{{loc.bedrooms}}',
+        floor_area: '{{loc.floor_area}}',
+        size_units : '{{loc.size_units}}',
+        detail_page_url : "{% if slug == 'for-sale' %}{% url 'listings:onsale_detail' loc.pk%} {%else%} {% url 'listings:rental_detail' loc.pk%}{%endif%}",
+        created_date:"{{loc.publishdate.date}}"
+    }
+    },
+{% endfor %}
+]
+};
+
+var bounds = new mapboxgl.LngLatBounds();
+
+  geojson.features.forEach(function(feature) {
+      bounds.extend(feature.geometry.coordinates);
+  });
+
+map.fitBounds(bounds, {padding:50});
+
+var loader = document.getElementById('_listingItemsLoading');
+var listingEl = document.getElementById('obj');
+
+//price formatter
+function mFormatter(price) {
+  return Math.abs(price) > 999999 ? Math.sign(price)*((Math.abs(price)/1000000).toFixed(1)) + 'm'
+       : Math.abs(price) < 1000000 ? Math.sign(price)*((Math.abs(price)/1000).toFixed(1)) + 'k'
+       : Math.sign(price)*Math.abs(price)
+}
+
+//median function
+function median(numbers) {
+    const sorted = numbers.slice().sort((a, b) => a - b);
+    const middle = Math.floor(sorted.length / 2);
+
+    if (sorted.length % 2 === 0) {
+        return (sorted[middle - 1] + sorted[middle]) / 2;
+    }
+
+    return sorted[middle];
+}
+
+//helper function for creating new price array to be used in finding median price
+function createPriceArray(propertiesArray, emptyArray){
+  for (var i = 0; i < propertiesArray.length; i++) {
+    emptyArray.push(parseInt(propertiesArray[i].properties.price))
+  }
+}
+
+
+function renderListings(features) {
+    loader.style.display='none';
+    listingEl.innerHTML = '';
+    if (features.length) {
+          features.forEach(function(feature) {
+              var prop = feature.properties;
+              var card = document.createElement('div');
+              card.className = 'card';
+              card.id = 'all-card2';
+
+              var cardOverlay = document.createElement('div');
+              cardOverlay.className = 'all-card-overlay';
+
+              var name = document.createElement('h5');
+              name.className='all-h-name';
+              name.textContent = prop.title;
+
+              var locSpan = document.createElement('span');
+                  locSpan.textContent = prop.location_name
+
+              var location = document.createElement('h4');
+              location.target = '_blank';
+              location.className = 'all-h-features';
+              location.textContent = prop.bathrooms +'ba' + ' ' + prop.bedrooms + 'bds' + ' ' + prop.floor_area + ' '+ prop.size_units ;
+
+              var allDtls = document.createElement('div');
+                  allDtls.className='_all_d_wrp_bx';
+
+              var price = document.createElement('h3');
+              price.target = '_blank';
+              price.className = 'all-h-price';
+              price.textContent = "Ksh: " + prop.price;
+
+              var date = document.createElement('h6');
+              date.target = '_blank';
+              date.className = 'all-a-date';
+              date.textContent = 'Last update on: ' + prop.created_date;
+
+              var image = document.createElement("img");
+              image.src = prop.thumb;
+              image.id = 'all-image2';
+
+              var detailsLink = document.createElement('a');
+              detailsLink.id= 'detailsLink';
+              detailsLink.href = prop.detail_page_url;
+              detailsLink.target='_blank';
+
+
+
+              card.addEventListener('mouseover', function() {
+                  // Highlight corresponding feature on the map
+                  popup.setLngLat(feature.geometry.coordinates)
+                  .setHTML(
+                  '<div id="popup" class="popup" style="z-index: 10;">' +
+                    '<img '+ 'src=' + feature.properties.thumb + '>' +
+                    '<ul class="list-group">' +
+                    '<li class="list-group-item price">' +"Ksh:" + mFormatter(parseInt(feature.properties.price)) +" </li>" +
+                    '<li class="list-group-item features">' +
+                        feature.properties.bathrooms +'ba' + ' ' + feature.properties.bedrooms + 'bds'
+                        + '<br>' + feature.properties.floor_area + ' '+ feature.properties.size_units +"</li>"
+
+                 )
+                  .addTo(map);
+              });
+
+              card.addEventListener('mouseleave', function() {
+                  map.getCanvas().style.cursor = '';
+                  popup.remove();
+              });
+
+              listingEl.appendChild(card);
+              detailsLink.appendChild(image);
+              detailsLink.appendChild(date);
+              detailsLink.appendChild(cardOverlay);
+              allDtls.appendChild(name);
+              allDtls.appendChild(price);
+              location.appendChild(locSpan);
+              allDtls.appendChild(location);
+              cardOverlay.appendChild(allDtls)
+              card.appendChild(detailsLink);
+
+
+
+          });
+          var pageHead = document.getElementById("page-head");
+           pageHead.style.display='block';
+
+           var ls_pagination = document.getElementById("sort-input");
+              ls_pagination.style.display='block';
+
+          var ls_pagination = document.getElementById("ls_pagination");
+           ls_pagination.style.display='block';
+    }
+
+    else {
+       var pageHead = document.getElementById("page-head");
+        pageHead.style.display='none';
+
+      var ls_pagination = document.getElementById("sort-input");
+         ls_pagination.style.display='none';
+
+       var ls_pagination = document.getElementById("ls_pagination");
+        ls_pagination.style.display='none';
+
+        var help1 = document.createElement("p");
+        help1.id = 'help-text0';
+        help1.className = 'center';
+        help1.textContent = 'No matching results.Try Refining your search.';
+
+        listingEl.appendChild(help1);
+        }
+}
+
+function normalize(string) {
+    return string.trim().toLowerCase();
+}
+
+function getUniqueFeatures(array, comparatorProperty) {
+    var existingFeatureKeys = {};
+    // Because features come from tiled vector data, feature geometries may be split
+    // or duplicated across tile boundaries and, as a result, features may appear
+    // multiple times in query results.
+    var uniqueFeatures = array.filter(function(el) {
+        if (existingFeatureKeys[el.properties[comparatorProperty]]) {
+          return false;
+        } else {
+          existingFeatureKeys[el.properties[comparatorProperty]] = true;
+          return true;
+        }
+    });
+
+
+    return uniqueFeatures;
+}
+
+map.on('style.load', function(){
+    map.addSource('property',{
+      "type": "geojson",
+      "data": geojson
+    });
+    map.addLayer({
+    "id": "points",
+    "source": 'property',
+    "type": "circle",
+  });
+
+  //Function updates the results in listings container
+  //Listens to points visible on the map viewport and updates the container accordingly
+  map.on('moveend',function() {
+      var features = map.queryRenderedFeatures({layers: ['points']});
+
+      if (features) {
+        var uniqueFeatures = getUniqueFeatures(features, "pk");
+        // Populate features for the listing overlay.
+        renderListings(uniqueFeatures);
+
+        // Store the current features in `homes` variable to
+        // later use for filtering on `keyup`.
+        homes = uniqueFeatures;
+      }
+  });
+
+  map.on('render',function() {
+      var features = map.queryRenderedFeatures({layers: ['points']});
+      if (features) {
+        var uniqueFeatures = getUniqueFeatures(features, "pk");
+
+        //helper function for filtering properties with specified beds no.
+        function filterByBeds( properties, bedNumber){
+          return properties.filter(property => parseInt(property.properties.bedrooms) >= parseInt(bedNumber));
+        }
+
+        //if price is Median is NaN return 0
+        function checkNan(medianPrice){
+          return isNaN(medianPrice) ? '0' : mFormatter(medianPrice)
+        }
+
+        // all prices array
+        var allPrices = []
+        createPriceArray(uniqueFeatures,allPrices)
+        var allMedianPrice = median(allPrices);
+
+        //1+ bedroom prices array
+        var onePsBdArray = filterByBeds(uniqueFeatures, 1);
+        var onePsBdPricesArray = []
+        createPriceArray(onePsBdArray,onePsBdPricesArray)
+        var onePsBdMedianPrice = median(onePsBdPricesArray);
+
+        //2+ bedroom prices array
+        var twoPsBdArray = filterByBeds(uniqueFeatures, 2);
+        var twoPsBdPricesArray = []
+        createPriceArray(twoPsBdArray,twoPsBdPricesArray)
+        var twoBdPsMedianPrice = median(twoPsBdPricesArray);
+
+        //3+ bedroom prices array
+        var threePsBdArray = filterByBeds(uniqueFeatures, 3);
+        var threePsBdPricesArray = []
+        createPriceArray(threePsBdArray,threePsBdPricesArray)
+        var threePsBMedianPrice = median(threePsBdPricesArray);
+
+        //Updates the results count text on the map on each render
+        var helpText1 = document.getElementById('mapResultshelp-text1');
+            helpText1.innerHTML = '<p>'+ 'Showing ' + uniqueFeatures.length + ' of ' +
+                                  {{listings_count}} + ' results in this area.' +
+                                  '<span>Pan or zoom the map to filter</span>' + '</p>';
+
+        //Updates the result insights section
+
+          var nBedsMedianPrice = {{insight_stats.n_bds_median_price}}
+
+          var insightText = document.getElementById('_listingsVS_ctTxt');
+              if ('{{filter_fields.property_type}}' != 'None') {
+                  insightText.textContent =
+                      "The median " + {% if listing_type == 'for-sale' %}"price"{%else%} "rent"{% endif %} +
+                      " for a {{filter_fields.bedrooms}} bedroom {{filter_fields.property_type}} " +
+                      "in this area is " + checkNan(nBedsMedianPrice) + " while the median " +
+                      {% if listing_type == 'for-sale' %}"price"{%else%}"rent"{% endif %} +
+                      " for a 3 bedroom plus house is " + checkNan(threePsBMedianPrice) +".";
+                }else {
+                  insightText.textContent =
+                      "The median " + {% if listing_type == 'for-sale' %}"price"{%else%}"rent"{% endif %} +
+                      " for a 1 bedroom plus house in this area is " + checkNan(onePsBdMedianPrice) +
+                      " while the median " + {% if listing_type == 'for-sale' %}"price"{%else%} "rent"{% endif %} +
+                      " for a 3 bedroom plus house is " + checkNan(threePsBMedianPrice) +".";
+                };
+
+          var _1bdStatPg = document.getElementById('_ls_Bx1StatsPg');
+              _1bdStatPg.textContent = checkNan(onePsBdMedianPrice)
+
+
+          var _2bdStatPg = document.getElementById('_ls_Bx2StatsPg');
+              _2bdStatPg.textContent = checkNan(twoBdPsMedianPrice)
+
+
+          var _3bdStatPg = document.getElementById('_ls_Bx3StatsPg');
+              _3bdStatPg.textContent = checkNan(threePsBMedianPrice)
+
+
+          var _allStatsPg = document.getElementById('_ls_BxAllStatsPg');
+              _allStatsPg.textContent = checkNan(allMedianPrice)
+      }
+  });
+
+  map.on('render', 'points', function(e) {
+
+      var features = e.features;
+       features.forEach(function(marker) {
+
+             var el = document.createElement('button');
+             el.className = 'customMapMarker';
+             el.innerHTML = "<span>Ksh</span>" + mFormatter(parseInt(marker.properties.price))
+
+             // make a marker for each feature and add to the map
+             new mapboxgl.Marker(el)
+               .setLngLat(marker.geometry.coordinates)
+               .addTo(map);
+
+            //add a popup to each feature
+            el.addEventListener('mousemove', function(){
+              map.getCanvas().style.cursor = 'pointer';
+              popup.setLngLat(marker.geometry.coordinates)
+              .setHTML(
+              '<div id="popup" class="popup" style="z-index: 10;">' +
+                '<img '+ 'src=' + marker.properties.thumb + '>' +
+                '<ul class="list-group">' +
+                '<li class="list-group-item price">' +"Ksh:" + mFormatter(parseInt(marker.properties.price)) +" </li>" +
+                '<li class="list-group-item features">' +
+                    marker.properties.bathrooms +'ba' + ' ' + marker.properties.bedrooms + 'bds'
+                    + '<br>' + marker.properties.floor_area + ' '+ marker.properties.size_units +"</li>"
+
+             )
+              .addTo(map);
+            })
+
+            //remove the popup
+            el.addEventListener('mouseleave', function() {
+                map.getCanvas().style.cursor = '';
+                popup.remove();
+            });
+       });
+  });
+
+});
+
+// Call this function on initialization
+// passing an innitial array from the server
+
+renderListings(geojson.features);
+
+//changes the mapStyle on style toggle
+var layerList = document.getElementById('_MapsMenu');
+var layerChoices = layerList.getElementsByTagName('input');
+
+function switchLayer(layer) {
+  var layerId = layer.target.id;
+  map.setStyle('mapbox://styles/reykennedy/' + layerId);
+}
+
+for (var i = 0; i < layerChoices.length; i++) {
+  layerChoices[i].onclick = switchLayer;
+}
+
+//adding primary schools data points
+map.on('style.load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('primary_sch', image);
+      map.addSource('primary_schools',{
+        "type": "geojson",
+        "data": "{%url 'location:primary_schools_data'%}"
+        });
+        map.addLayer({
+        "id": "Primary Schools",
+        "type": "symbol",
+        "source":"primary_schools",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "primary_sch",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Primary Schools', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name_of_sc;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Primary Schools', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Primary Schools', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding polytechnics schools data points
+map.on('style.load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('polytechnics', image);
+      map.addSource('polytechnics_schools',{
+        "type": "geojson",
+        "data": "{%url 'location:polytechnics_data'%}"
+        });
+        map.addLayer({
+        "id": "Technicals",
+        "type": "symbol",
+        "source":"polytechnics_schools",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "polytechnics",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Technicals', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Technicals', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Technicals', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding private colleges data points
+map.on('style.load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('private_coll', image);
+      map.addSource('private_colleges',{
+        "type": "geojson",
+        "data": "{%url 'location:private_colleges_data'%}"
+        });
+        map.addLayer({
+        "id": "Private Colleges",
+        "type": "symbol",
+        "source":"private_colleges",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "private_coll",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Private Colleges', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Private Colleges', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Private Colleges', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding private universities data points
+map.on('style.load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('private_uni', image);
+      map.addSource('private_universities',{
+        "type": "geojson",
+        "data": "{%url 'location:private_universities_data'%}"
+        });
+        map.addLayer({
+        "id": "Private Universities",
+        "type": "symbol",
+        "source":"private_universities",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "private_uni",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Private Universities', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Private Universities', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Private Universities', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding public colleges data points
+map.on('style.load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('public_coll', image);
+      map.addSource('public_colleges',{
+        "type": "geojson",
+        "data": "{%url 'location:public_colleges_data'%}"
+        });
+        map.addLayer({
+        "id": "Public Colleges",
+        "type": "symbol",
+        "source":"public_colleges",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "public_coll",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Public Colleges', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Public Colleges', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Public Colleges', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding university colleges data points
+map.on('style.load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('university_coll', image);
+      map.addSource('university_colleges',{
+        "type": "geojson",
+        "data": "{%url 'location:university_colleges_data'%}"
+        });
+        map.addLayer({
+        "id": "University Colleges",
+        "type": "symbol",
+        "source":"university_colleges",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "university_coll",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'University Colleges', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'University Colleges', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'University Colleges', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding secondary schools data points
+map.on('style.load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('secondary_sch', image);
+      map.addSource('secondary_schools',{
+        "type": "geojson",
+        "data": "{%url 'location:secondary_schools_data'%}"
+        });
+        map.addLayer({
+        "id": "Secondary Schools",
+        "type": "symbol",
+        "source":"secondary_schools",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "secondary_sch",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Secondary Schools', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.institute;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Secondary Schools', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Secondary Schools', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding university data points
+map.on('style.load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('university', image);
+      map.addSource('universities',{
+        "type": "geojson",
+        "data": "{%url 'location:universities_data'%}"
+        });
+        map.addLayer({
+        "id": "Main Universities",
+        "type": "symbol",
+        "source":"universities",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "university",
+        "icon-size": 0.25
+        }
+      });
+    });
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Main Universities', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Main Universities', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Main Universities', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//adding teachers training colleges data points
+map.on('style.load', function() {
+    map.loadImage("{% static 'icons/ic_school_black_48dp.png'%}", function(error, image) {
+    if (error) throw error;
+    map.addImage('teachers_training', image);
+      map.addSource('teachers_training_coll',{
+        "type": "geojson",
+        "data": "{%url 'location:teachers_training_data'%}"
+        });
+        map.addLayer({
+        "id": "Teachers Colleges",
+        "type": "symbol",
+        "source":"teachers_training_coll",
+        "layout": {
+        "visibility":"none",
+        "icon-image": "teachers_training",
+        "icon-size": 0.25
+        }
+      });
+    });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  map.on('click', 'Teachers Colleges', function (e) {
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var name = e.features[0].properties.name;
+
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(name)
+  .addTo(map);
+  });
+
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  map.on('mouseenter', 'Teachers Colleges', function () {
+  map.getCanvas().style.cursor = 'pointer';
+  });
+
+  // Change it back to a pointer when it leaves.
+  map.on('mouseleave', 'Teachers Colleges', function () {
+  map.getCanvas().style.cursor = '';
+  });
+});
+
+//turn layers on and off
+var toggleableLayerIds = [ 'Primary Schools', 'Secondary Schools','Technicals',
+                            'Private Colleges','Private Universities', 'Private Colleges',
+                            'University Colleges', 'Main Universities', 'Teachers Colleges'
+                          ];
+
+for (var i = 0; i < toggleableLayerIds.length; i++) {
+    var id = toggleableLayerIds[i];
+
+    var schoolCheckBox = document.createElement('a');
+      schoolCheckBox.href = '#';
+      schoolCheckBox.className = '';
+      schoolCheckBox.textContent = id;
+
+    schoolCheckBox.onclick = function (e) {
+        var clickedLayer = this.textContent;
+          e.preventDefault();
+          e.stopPropagation();
+
+        var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+        if (visibility === 'visible') {
+        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+        this.className = '';
+        } else {
+        this.className = 'active';
+        map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+        }
+    };
+
+    var layers = document.getElementById('menu-items');
+    layers.appendChild(schoolCheckBox);
+}
+
+</script>
+<script type="text/javascript">
+    document.querySelector(".mapboxgl-ctrl-geocoder--input").value="{{location_address}}";
+    document.querySelector(".mapboxgl-ctrl-geocoder--input").name="location";
+    var openMapBtn = document.getElementById('revealMap');
+    var closeMapBtn = document.getElementById('hideMapbtn');
+
+    openMapBtn.addEventListener('click',function() {
+        var mapContainer = document.getElementById("map-container");
+            mapContainer.style.position="fixed";
+            mapContainer.style.width="100%";
+            mapContainer.style.height="100vh";
+            mapContainer.style.background="#fff";
+        });
+
+    closeMapBtn.addEventListener('click', function(){
+        console.log('close');
+        var mapContainer = document.getElementById("map-container");
+            mapContainer.style.width="0";
+            mapContainer.style.height="0";
+      });
+</script>
+
+
 {% endblock %}

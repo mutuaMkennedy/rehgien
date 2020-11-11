@@ -32,6 +32,8 @@ try:
 except ImportError:
 	import json
 from django.core.paginator import Paginator
+import statistics
+from .regression import trendline as trend
 #from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 #from haystack.query import SearchQuerySet
 
@@ -49,6 +51,7 @@ def homepage(request):
 	rentals_reversed = reversed(rentals_recent)
 	return render(request, 'listings/homey.html', {'onsale_reversed': onsale_reversed, 'rentals_reversed': rentals_reversed})
 
+
 def property_listings_results(request, slug):
 	ImageTransformation = dict(
 	format = "jpg",
@@ -59,13 +62,19 @@ def property_listings_results(request, slug):
 		)
 
 	listings = ''
+	listing_type= ''
+
 	if slug == 'for-sale':
-		listings = PropertyForSale.objects.all()
+		listings = PropertyForSale.objects.all().order_by('-publishdate')
+		listing_type = 'for-sale'
 	elif slug ==  'for-rent':
-		listings = RentalProperty.objects.all()
+		listings = RentalProperty.objects.all().order_by('-publishdate')
+		listing_type = 'for-rent'
 	else:
 		messages.error(request, 'The path you requested is invalid!')
 		return redirect('listings:homepage')
+
+	n_bds_median_price = 0
 
 	loc_input_q = request.GET.get('location')
 	min_price = request.GET.get('min_price')
@@ -82,14 +91,57 @@ def property_listings_results(request, slug):
 	if check_q_valid(property_type):
 		listings = listings.filter(type__iexact=property_type)
 	if check_q_valid(bedrooms):
+		#filter with beds submitted by user
 		listings = listings.filter(bedrooms__gte=bedrooms)
+		#returns prices array for properties based after filter by beds above
+		n_bds_median_price = 0
+		if listings:
+			n_bds_prices = listings.values_list('price', flat=True).distinct()
+			#Getting the median n_bds_prices
+			n_bds_median_price = statistics.median(n_bds_prices)
 	if check_q_valid(bathrooms):
 		listings = listings.filter(bathrooms__gte=bathrooms)
 	else:
 		listings = listings.filter(location_name__icontains= 'Nairobi')
 		location_address = 'Nairobi,Kenya'
-	listings_count = listings.count()
 
+	#Stats placeholders if no listings
+	all_prices_median = 0
+	all_prices_trend = 0
+	_1bd_plus_median_price = 0
+	_1bd_plus_price_trend = 0
+	_2bd_plus_median_price = 0
+	_2bd_plus_price_trend = 0
+	_3bd_plus_median_price = 0
+	_3bd_plus_price_trend = 0
+
+	# Check if there are listings and then do the stats anylysis
+	if listings:
+		all_prices = listings.values_list('price', flat=True).distinct()
+		all_prices_median = statistics.median(all_prices)
+		all_prices_index = list(range(1,len(all_prices)+1)) #adding 1 extra index to compensate for starting range at 1
+		all_prices_trend = trend(all_prices_index , all_prices)
+
+		_1bd_plus_price = listings.filter(bedrooms__gte = 1).values_list('price', flat=True).distinct()
+		if _1bd_plus_price:
+			_1bd_plus_median_price = statistics.median(_1bd_plus_price)
+			_1bd_plus_price_index = list(range(1,len(_1bd_plus_price)+1))
+			_1bd_plus_price_trend = trend(_1bd_plus_price_index , _1bd_plus_price)
+
+		_2bd_plus_price = listings.filter(bedrooms__gte = 2).values_list('price', flat=True).distinct()
+		if _2bd_plus_price:
+			_2bd_plus_median_price = statistics.median(_2bd_plus_price)
+			_2bd_plus_price_index = list(range(1,len(_2bd_plus_price)+1))
+			_2bd_plus_price_trend = trend(_2bd_plus_price_index , _2bd_plus_price)
+
+		_3bd_plus_price = listings.filter(bedrooms__gte = 3).values_list('price', flat=True).distinct()
+		if _3bd_plus_price:
+			_3bd_plus_median_price = statistics.median(_3bd_plus_price)
+			_3bd_plus_price_index = list(range(1,len(_3bd_plus_price)+1))
+			print(_3bd_plus_price_index,_3bd_plus_price)
+			_3bd_plus_price_trend = trend(_3bd_plus_price_index , _3bd_plus_price)
+
+	listings_count = listings.count()
 	paginator = Paginator(listings, 10)
 	page = request.GET.get('page')
 	listings = paginator.get_page(page)
@@ -101,8 +153,20 @@ def property_listings_results(request, slug):
 		"bedrooms":bedrooms,
 		"bathrooms":bathrooms,
 	}
+	insight_stats = {
+		"Onebd_plus_median_price":_1bd_plus_median_price,
+		"Twobd_plus_median_price":_2bd_plus_median_price,
+		"Threebd_plus_median_price":_3bd_plus_median_price,
+		"n_bds_median_price":n_bds_median_price,
+		"onebd_plus_price_trend":_1bd_plus_price_trend,
+		"twobd_plus_price_trend":_2bd_plus_price_trend,
+		"threebd_plus_price_trend":_3bd_plus_price_trend,
+		"all_prices_trend":all_prices_trend
+	}
 	return render(request, 'listings/property-listing-page.html', {'listings':listings, 'listings_count':listings_count,
-			"location_address":location_address, "ImageTransformation":ImageTransformation ,"slug":slug, "filter_fields":filter_fields})
+			"location_address":location_address, "ImageTransformation":ImageTransformation ,"slug":slug, "filter_fields":filter_fields,
+			"insight_stats":insight_stats, "listing_type":listing_type
+			})
 
 @login_required(login_url='account_login')
 def onsale_detail(request, pk):
