@@ -34,6 +34,7 @@ except ImportError:
 from django.core.paginator import Paginator
 import statistics
 from .regression import trendline as trend
+from django.core.serializers import serialize
 #from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 #from haystack.query import SearchQuerySet
 
@@ -122,13 +123,13 @@ def property_listings_results(request, slug):
 		all_prices_index = list(range(1,len(all_prices)+1)) #adding 1 extra index to compensate for starting range at 1
 		all_prices_trend = trend(all_prices_index , all_prices)
 
-		_1bd_plus_price = listings.filter(bedrooms__gte = 1).values_list('price', flat=True).distinct()
+		_1bd_plus_price = listings.filter(bedrooms = 1).values_list('price', flat=True).distinct()
 		if _1bd_plus_price:
 			_1bd_plus_median_price = statistics.median(_1bd_plus_price)
 			_1bd_plus_price_index = list(range(1,len(_1bd_plus_price)+1))
 			_1bd_plus_price_trend = trend(_1bd_plus_price_index , _1bd_plus_price)
 
-		_2bd_plus_price = listings.filter(bedrooms__gte = 2).values_list('price', flat=True).distinct()
+		_2bd_plus_price = listings.filter(bedrooms = 2).values_list('price', flat=True).distinct()
 		if _2bd_plus_price:
 			_2bd_plus_median_price = statistics.median(_2bd_plus_price)
 			_2bd_plus_price_index = list(range(1,len(_2bd_plus_price)+1))
@@ -138,14 +139,9 @@ def property_listings_results(request, slug):
 		if _3bd_plus_price:
 			_3bd_plus_median_price = statistics.median(_3bd_plus_price)
 			_3bd_plus_price_index = list(range(1,len(_3bd_plus_price)+1))
-			print(_3bd_plus_price_index,_3bd_plus_price)
 			_3bd_plus_price_trend = trend(_3bd_plus_price_index , _3bd_plus_price)
 
-	listings_count = listings.count()
-	paginator = Paginator(listings, 10)
-	page = request.GET.get('page')
-	listings = paginator.get_page(page)
-
+	# Grouped context data
 	filter_fields = {
 		"min_price":min_price,
 		"max_price":max_price,
@@ -163,7 +159,34 @@ def property_listings_results(request, slug):
 		"threebd_plus_price_trend":_3bd_plus_price_trend,
 		"all_prices_trend":all_prices_trend
 	}
-	return render(request, 'listings/property-listing-page.html', {'listings':listings, 'listings_count':listings_count,
+
+	# Ajax call filter sent each time the map is panned or zoomed by user
+	if request.method == 'POST':
+		array_of_pks = request.POST.getlist('pk_array[]')
+		array_of_pks = list(map(int, array_of_pks))
+		listings = listings.filter(id__in = array_of_pks)
+		listings_count = listings.count()
+		all_listings = listings
+		# Main pagination
+		# Used for all subsequent requests after the innitial page load
+		paginator = Paginator(listings, 20)
+		page = request.POST.get('page')
+		listings = paginator.get_page(page)
+		return render(request, 'listings/property-listing-page.html', {
+				"all_listings":all_listings,'listings':listings, 'listings_count':listings_count,
+				"location_address":location_address, "ImageTransformation":ImageTransformation ,
+				"slug":slug, "listing_type":listing_type,"insight_stats":insight_stats,
+					})
+
+	# Innitial pagination on page load
+	# Used only when the page laods the first time
+	listings_count = listings.count()
+	all_listings = listings
+	paginator = Paginator(listings, 20)
+	page = request.GET.get('page')
+	listings = paginator.get_page(page)
+
+	return render(request, 'listings/property-listing-page.html', {"all_listings":all_listings,'listings':listings, 'listings_count':listings_count,
 			"location_address":location_address, "ImageTransformation":ImageTransformation ,"slug":slug, "filter_fields":filter_fields,
 			"insight_stats":insight_stats, "listing_type":listing_type
 			})

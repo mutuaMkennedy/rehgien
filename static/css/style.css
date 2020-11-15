@@ -4075,13 +4075,17 @@ _dashbordAccount{
     margin-top:20px;
 }
 
+#all-row2{
+    position:relative;
+}
+
 @media all and (max-width: 768px) {
     .all-content {
         width: 100%;
     }
 }
 
-#all-card2 {
+#all-card2, .pLsPlaceholderCard {
     width: auto;
     height: auto;
     padding: 0px;
@@ -4091,7 +4095,22 @@ _dashbordAccount{
     position:relative;
 }
 
-#all-image2 {
+.pLsPlaceholderCard{
+    border-radius:5px;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-name: placeholderAnimate;
+    background: linear-gradient(to right, #eee 2%, #ddd 38%, #eee 30%);
+    background-size: 3000px;
+}
+@keyframes placeholderAnimate {
+    0%{ background-position: -650px 0; }
+    100%{ background-position: 650px 0; }
+}
+
+#all-image2, .img_placeholder {
     height: 200px;
     width: 100%;
     object-fit: cover;
@@ -4132,8 +4151,21 @@ _dashbordAccount{
 #all-card2 .all-h-price{
     font-size:18px;
     font-weight:500;
-    margin:0;
+    margin:2px 0;
     text-transform:uppercase;
+}
+
+.pLsPlaceholderBx > .all-h-price{
+    height:18px;
+    margin: 0;
+    display:flex;
+   justify-content:flex-end;
+   border-top:3px solid #fff;
+}
+
+.pLsPlaceholderBx > .all-h-price span{
+    background-color:#fff;
+    width:50%;
 }
 
 #all-card2 .all-h-features{
@@ -4146,9 +4178,25 @@ _dashbordAccount{
      color:#747474;
 }
 
+.pLsPlaceholderBx > .all-h-features{
+    height:18px;
+    margin:0;
+    display:flex;
+   justify-content:flex-end;
+   border-top:3px solid #fff;
+}
+
 #all-card2 .all-h-features span{
     margin-left:10px;
 }
+
+.pLsPlaceholderBx > .all-h-features span{
+  width:60% !important;
+/*   background-color:#fff; */
+   border-left:10px solid #fff;
+   border-right:80px solid #fff;
+}
+
 #all-card2 .all-h-name{
     text-transform:uppercase;
 }
@@ -4156,6 +4204,19 @@ _dashbordAccount{
 #all-card2 .all-h-name{
     font-size:12px;
     margin:2px 0;
+}
+
+.pLsPlaceholderBx > .all-h-name{
+    height:18px;
+    margin:0;
+    display:flex;
+   justify-content:flex-end;
+   border-top:3px solid #fff;
+}
+
+.pLsPlaceholderBx > .all-h-name span{
+    width:70%;
+    background-color:#fff;
 }
 
 .all-content fieldset {
@@ -4185,12 +4246,11 @@ _dashbordAccount{
     margin: 0;
     width: 100%;
     display: inline-flex;
-    z-index: 3;
     font-family:Open Sans, Arial;
     position:sticky;
-    top:64px;
+    top: 64px;
     background-color:#fff;
-    z-index:10;
+    z-index:15;
 }
 
 #geocoder {
@@ -4543,7 +4603,7 @@ _dashbordAccount{
 }
 
 ._listingsVS_ct{
-   padding:20px;
+   padding:5px 20px;
    border-radius:10px;
    box-shadow: 0 0px 10px 0px #eee;
    position:relative;
@@ -4599,7 +4659,8 @@ _dashbordAccount{
 }
 
 ._listingsVS_ct p{
-    font-size:13px;
+    font-size:12px;
+    margin:0;
     color:#757575;
 }
 
@@ -4610,8 +4671,9 @@ _dashbordAccount{
 }
 
 ._listingsVS_Bxs {
-    font-size:14px;
-    height:70px;
+    font-size:12px;
+    height:auto;
+    padding:10px 0;
     color:#747474;
     border-top:2px solid #eee;
 }
@@ -4677,21 +4739,33 @@ _dashbordAccount{
     display:flex;
     flex-direction:column;
     align-items:center;
+    position:relative;
 }
 
-#obj {
-    width: 100%;
+#obj, .pLsPlaceholder {
+    width: 100% !important;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     grid-gap: 15px;
     padding:15px 25px;
 }
 
-#_listingItemsLoading{
-    width:30px;
-    height:30px;
-    margin-left:auto;
-    margin-right:auto;
+.pLsPlaceholder{
+    height:100%;
+    /* overflow-y:hidden; */
+}
+
+#_listingItemsLoading {
+    width:100%;
+    background-color:#fff;
+    display:flex;
+    flex-direction:column;
+}
+
+#_listingItemsLoading img{
+    width:25px;
+    height:25px;
+    margin-top:50px;
 }
 
 #popup {
@@ -4807,10 +4881,15 @@ _dashbordAccount{
 }
 
 #help-text0 {
-    font-weight: 500;
-    font-size: 15px;
-    padding: 0px;
-    text-align:start;
+    font-size: 13px;
+    padding: 25px 0px;
+}
+
+#help-text0 span{
+    display:block;
+    font-size:20px;
+    font-weight:bold;
+
 }
 
 #agentContactForm {
@@ -5136,9 +5215,9 @@ _dashbordAccount{
 }
 
 #asCont {
+    height:100%;
     float:left;
     width:60%;
-    height: 100%;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
@@ -5396,13 +5475,13 @@ _dashbordAccount{
 }
 
 .customMapMarker{
-   min-width:60px;
+   min-width:30px;
    height:25px;
    border-radius:20px;
    border:1px solid #ddd;
    background-color:#fff;
    cursor:pointer;
-   font-size:13px;
+   font-size:10px;
    font-weight:500;
    font-family:Open sans, Arial;
    transition:width 0.2s, height 0.2s;
@@ -5416,6 +5495,7 @@ _dashbordAccount{
     display:flex;
     font-weight:bold;
     margin-right:3px;
+    display:none;
 }
 
 .customMapMarker:hover{
@@ -10206,7 +10286,9 @@ _dashbordAccount{
 }
 
 .ls_pagination {
-    text-align: center;
+    display:flex !important;
+    justify-content:center;
+    align-items:center;
     margin-top: 1.5em;
     margin-bottom: 2.0em;
 }
@@ -10518,26 +10600,52 @@ _dashbordAccount{
     color: red;
 }
 
-.pagination-number {
-    padding: 0.4em 0.5em;
-    color: #000000;
-    font-family: Arial;
+
+.pagination-number, .pagination-current {
+    display:inline-flex;
+    width:40px;
+    height:40px;
+    justify-content:center;
+    align-items:center;
+    border-radius:50%;
 }
 
-.pagination-number:hover, .pagination-current {
-    border-bottom: 1.5px solid #000000;
+.pagination-number{
+    color:#000;
+    font-weight:bold;
 }
 
+.pagination-number:hover{
+    background-color:#eee;
+}
+
+.pagination-current{
+   color:#fff;
+   background-color:#747474;
+}
+
+.pagination-current:hover{
+   color:#fff;
+   background-color:#747474;
+}
 .pagination-action {
     margin: 0 0.1em;
-    display: inline-block;
-    padding: 0.5em 0.5em;
-    color: #5b0088;
-    font-size: 1.3em;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+    border:1px solid #d1d1d1;
 }
 
-.pagination-action:hover, .pagination-previous, .pagination-next {
-    color: #02149c;
+.pagination-action span{
+    font-size:20px;
+    color:#000;
+}
+
+.pagination-action:hover{
+    background-color:#eee;
 }
 
 .pagination-total {
@@ -10546,7 +10654,7 @@ _dashbordAccount{
 }
 
 .pagination-of {
-    color: #B9B9B9;
+    color: #d1d1d1;
     padding: 0 1em;
 }
 

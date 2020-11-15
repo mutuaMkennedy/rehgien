@@ -199,6 +199,7 @@ class PropertyForSale(models.Model):
 	#def save(self, *args, **kwargs):
 		#self.slug = slugify(self.name)
 		#super(PropertyForSale, self).save(*args, **kwargs)
+
 	@property
 	def longitude(self):
 		return self.location.x
