@@ -66,15 +66,16 @@ def property_listings_results(request, slug):
 	listing_type= ''
 
 	if slug == 'for-sale':
-		listings = PropertyForSale.objects.all().order_by('-publishdate')
+		listings = PropertyForSale.objects.all().order_by('-publishdate', 'price')
 		listing_type = 'for-sale'
 	elif slug ==  'for-rent':
-		listings = RentalProperty.objects.all().order_by('-publishdate')
+		listings = RentalProperty.objects.all().order_by('-publishdate', 'price')
 		listing_type = 'for-rent'
 	else:
 		messages.error(request, 'The path you requested is invalid!')
 		return redirect('listings:homepage')
 
+	# listings = listings.order_by('-price')
 	n_bds_median_price = 0
 
 	loc_input_q = request.GET.get('location')
@@ -162,15 +163,44 @@ def property_listings_results(request, slug):
 
 	# Ajax call filter sent each time the map is panned or zoomed by user
 	if request.method == 'POST':
+		# Request.post values are always bundled in every post request from the client
+		# so that we have a consisent base order on how items are being requested
+		page = request.POST.get('page')
+
+		sortValue = str(request.POST.get('sort'))
+
 		array_of_pks = request.POST.getlist('pk_array[]')
 		array_of_pks = list(map(int, array_of_pks))
+
 		listings = listings.filter(id__in = array_of_pks)
+
+		#default sort with our chosen params
+		if sortValue == 'jfy':
+			listings = listings.order_by('-publishdate', 'price')
+		#descending sort
+		elif sortValue == 'newer':
+			listings = listings.order_by('-publishdate')
+		elif sortValue == 'pricehl':
+			listings = listings.order_by('-price')
+		#ascending sort
+		elif sortValue == 'older':
+			listings = listings.order_by('publishdate')
+		elif sortValue == 'pricelh':
+			listings = listings.order_by('price')
+		elif sortValue == 'beds':
+			listings = listings.order_by('bedrooms')
+		elif sortValue == 'baths':
+			listings = listings.order_by('bathrooms')
+		elif sortValue == 'sqft':
+			listings = listings.order_by('floor_area')
+		else:
+			listings = listings.order_by('-publishdate')
+
 		listings_count = listings.count()
 		all_listings = listings
 		# Main pagination
 		# Used for all subsequent requests after the innitial page load
 		paginator = Paginator(listings, 20)
-		page = request.POST.get('page')
 		listings = paginator.get_page(page)
 		return render(request, 'listings/property-listing-page.html', {
 				"all_listings":all_listings,'listings':listings, 'listings_count':listings_count,

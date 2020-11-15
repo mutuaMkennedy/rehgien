@@ -252,15 +252,19 @@
                     </div>
                   </div>
                   <div id="sort-input" class="input-field">
+                    <div class="sortItemWrpr">
+                    <span>Sort by:</span>
                      <select>
-                       <option value="" disabled selected>Sort by</option>
-                       <option value="1">Newer</option>
-                       <option value="2">Older</option>
-                       <option value="3">Priced Highest</option>
-                       <option value="4">Beds</option>
-                       <option value="5">Baths</option>
-                       <option value="6">Square Feet</option>
+                       <option value="jfy" selected>Just for you</option>
+                       <option value="newer">Newer</option>
+                       <option value="older">Older</option>
+                       <option value="pricelh">Price (Low to high)</option>
+                       <option value="pricehl">Price (High to Low)</option>
+                       <option value="beds">Beds</option>
+                       <option value="baths">Baths</option>
+                       <option value="sqft">Square feet</option>
                      </select>
+                     </div>
                   </div>
                   <div id="_listingItemsBox" class="_listingItemsBox row">
                       <div id="obj" class="col s12 md6 l6 xl4">
@@ -1196,6 +1200,8 @@
                       url: './',
                       data: {
                           pk_array: pk_array,
+                          page: $('.pagination-current').attr('data-PageNumber'),
+                          sort: $('#sort-input select').val(),
                           csrfmiddlewaretoken: '{{csrf_token}}'
                       },
                       success: function (data) {
@@ -1209,8 +1215,7 @@
                 }
             });
 
-            //Method updates the results in listings container via an ajax call to server
-            //when map is panned or zoomed by the user
+            //Method updates insights card when map is panned or zoomed by the user
             map.on('render',function() {
                 var features = map.queryRenderedFeatures({layers: ['flPoints']});
                 if (features) {
@@ -1309,7 +1314,7 @@
                   for (var i = 0; i < uniqueFeatures.length; i++) {
                     pk_array.push(parseInt(uniqueFeatures[i].properties.pk))
                   };
-                  console.log(pk_array);
+
                   //show loader
                   loader.style.display='block';
                   //hide the wrapper
@@ -1322,6 +1327,7 @@
                       url: './',
                       data: {
                           page: $(this).attr('data-PageNumber'),
+                          sort: $('#sort-input select').val(),
                           pk_array:pk_array,
                           csrfmiddlewaretoken: '{{csrf_token}}'
                       },
@@ -1338,6 +1344,40 @@
             });
 
             //Ajax sorting
+            $(document).on('change', '#sort-input select', function(){
+              var features = map.queryRenderedFeatures({layers: ['flPoints']});
+
+              if (features) {
+                  var uniqueFeatures = getUniqueFeatures(features, "pk");
+                  var pk_array = []
+                  for (var i = 0; i < uniqueFeatures.length; i++) {
+                    pk_array.push(parseInt(uniqueFeatures[i].properties.pk))
+                  };
+                  //show loader
+                  loader.style.display='block';
+                  //hide the wrapper
+                  listingsWrapper.style.display = 'none';
+                  //hide pagination bar
+                  paginatorBar.style.display = 'none';
+
+                  $.ajax({
+                      type: "POST",
+                      url: './',
+                      data: {
+                          sort: $('#sort-input select').val(),
+                          page: $('.pagination-current').attr('data-PageNumber'),
+                          pk_array:pk_array,
+                          csrfmiddlewaretoken: '{{csrf_token}}'
+                      },
+                      success: function (data) {
+                        setTimeout(function(){
+                            $("#_lsPage_scriptsWrpr").html($(data).find('#_lsPage_scripts'));
+                            $("#_ls_paginationWrpr").html($(data).find('#ls_pagination'));
+                            }, 2000);
+                          }
+                      });
+                }
+            });
 
           });
 

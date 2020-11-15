@@ -9,7 +9,7 @@
     {% endif %}
     {% for num in listings.paginator.page_range %}
         {% if listings.number == num %}
-            <span class="pagination-number pagination-current">{{ num }}</span>
+            <span class="pagination-number pagination-current" data-PageNumber="{{ num }}">{{ num }}</span>
         {% elif num > listings.number|add:'-3' and num < listings.number|add:'3' %}
             <a class="pagination-number _pageNumber" data-PageNumber="{{ num }}" href="#">{{ num }}</a>
         {% endif %}
