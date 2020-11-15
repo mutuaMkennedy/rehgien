@@ -4110,6 +4110,43 @@ _dashbordAccount{
     100%{ background-position: 650px 0; }
 }
 
+#all-card2 ._lssaveProperty{
+    position:absolute;
+    right:10px;
+    top:5px;
+    text-align:center;
+    height:35px;
+    z-index:10;
+    padding:0;
+    border:none;
+    background-color:transparent;
+}
+
+particle{
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  position: fixed;
+  opacity: 0;
+}
+
+#all-card2 ._lssaveProperty svg{
+    line-height:35px;
+    font-size:30px;
+    color:rgb(0 0 0 / 0.5);
+    stroke:#fff;
+    stroke-width:35 !important;
+    cursor:pointer;
+}
+
+#all-card2 ._lssaveProperty svg:hover{
+    stroke:rgb(255 255 255 / 0.8);
+}
+
+#all-card2 ._lsIs_saved svg{
+    color:#cc0000;
+}
+
 #all-image2, .img_placeholder {
     height: 200px;
     width: 100%;
@@ -4275,7 +4312,7 @@ _dashbordAccount{
     padding: 0 20px;
     box-sizing:border-box;
     background-color:transparent;
-    border-radius:20px !important;
+    border-radius:5px !important;
     box-shadow: 0 0px 0px 1px #9e9e9e;
     color:#000;
     font-size:15px;
@@ -4296,7 +4333,7 @@ _dashbordAccount{
 }
 
 .ResultsFilterBar input{
-    border-radius:20px !important;
+    border-radius:5px !important;
     text-transform:capitalize;
 }
 
@@ -4340,7 +4377,7 @@ _dashbordAccount{
    border:none;
    text-transform:capitalize;
    font-weight:bold;
-   border-radius:20px !important;
+   border-radius:5px !important;
    box-shadow: 0 0px 0px 1px #9e9e9e;
    font-size:15px;
    display:flex;
@@ -4469,7 +4506,7 @@ _dashbordAccount{
     width: auto;
     font-size: 15px;
     box-sizing:border-box;
-    border-radius:20px !important;
+    border-radius:5px !important;
     box-shadow: 0 0px 0px 1px #9e9e9e;
 }
 
@@ -4548,8 +4585,8 @@ _dashbordAccount{
 #submit_f_button {
     height: 40px;
     padding: 0px;
-    background-color: white;
-    border-radius: 20px;
+    background-color: #fff;
+    border-radius: 5px;
     width: 100px;
     align-content: center;
     color:rgb(44 178 234 / 1);
@@ -4711,7 +4748,8 @@ _dashbordAccount{
     display:flex;
     align-items:baseline;
     font-size:15px;
-    font-weight:bold;
+    font-weight:100;
+    color:#757575;
     position:relative;
 }
 
@@ -4729,15 +4767,19 @@ _dashbordAccount{
 
 #sort-input input {
     border-bottom: 0px;
-    font-size:13px;
-    font-weight:bold;
+    font-size:15px;
     width:100% !important;
     height:35px;
     color:#2cb2ea;
-    font-family: Open Sans, Arial;
+    font-family: inherit;
+    padding:0 10px;
     border:none;
     margin:0;
     box-sizing:border-box;
+}
+
+.sortItemWrpr .caret{
+    fill:#2cb2ea !important;
 }
 
 .sortItemWrpr ul{

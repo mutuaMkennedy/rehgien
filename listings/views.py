@@ -205,7 +205,7 @@ def property_listings_results(request, slug):
 		return render(request, 'listings/property-listing-page.html', {
 				"all_listings":all_listings,'listings':listings, 'listings_count':listings_count,
 				"location_address":location_address, "ImageTransformation":ImageTransformation ,
-				"slug":slug, "listing_type":listing_type,"insight_stats":insight_stats,
+				"slug":slug, "listing_type":listing_type,"insight_stats":insight_stats
 					})
 
 	# Innitial pagination on page load
@@ -271,15 +271,11 @@ def ajxonsale_favourite(request):
 		user = request.user.id
 		is_favourite = False
 		pk = request.POST.get('pk')
-		print(pk)
 		listing = get_object_or_404(PropertyForSale, pk=pk)
-		print(listing.property_name)
 		_liked = listing.favourite.filter(pk=user).exists()
-		print(_liked)
 		if _liked:
 			listing.favourite.remove(user)
 			is_favourite = False
-			# print('listing removed from favs')
 		else:
 			listing.favourite.add(user)
 			is_favourite = True
@@ -289,7 +285,7 @@ def ajxonsale_favourite(request):
 		}
 		if request.is_ajax():
 			html = render_to_string('listings/favourite-section.html', context, request=request)
-			return JsonResponse({'form':html})
+			return JsonResponse({'form':html, 'is_saved':is_favourite})
 
 @login_required(login_url='account_login')
 def ajxrental_favourite(request):
@@ -311,7 +307,7 @@ def ajxrental_favourite(request):
 		}
 		if request.is_ajax():
 			html = render_to_string('listings/rental-fav-section.html', context, request=request)
-			return JsonResponse({'form':html})
+			return JsonResponse({'form':html, 'is_saved':is_favourite})
 
 @login_required(login_url='account_login')
 def rental_detail(request, pk):

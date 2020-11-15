@@ -988,25 +988,26 @@
           var geojson = {
           type: 'FeatureCollection',
           features: [
-          {% for loc in listings %}
+          {% for property in listings %}
               {
               type: 'Feature',
               geometry: {
                   type: 'Point',
-                  coordinates: [{{ loc.location.x }}, {{ loc.location.y }}]
+                  coordinates: [{{ property.location.x }}, {{ property.location.y }}]
               },
               properties: {
-                  pk: '{{ loc.pk }}',
-                  title: '{{ loc.property_name }}',
-                  thumb:'{% cloudinary_url loc.thumb ImageTransformation %}',
-                  location_name:'{{loc.location_name}}',
-                  price:'{{loc.price}}',
-                  bathrooms: '{{loc.bathrooms}}',
-                  bedrooms: '{{loc.bedrooms}}',
-                  floor_area: '{{loc.floor_area}}',
-                  size_units : '{{loc.size_units}}',
-                  detail_page_url : "{% if slug == 'for-sale' %}{% url 'listings:onsale_detail' loc.pk%} {%else%} {% url 'listings:rental_detail' loc.pk%}{%endif%}",
-                  created_date:"{{loc.publishdate.date}}"
+                  pk: '{{ property.pk }}',
+                  title: '{{ property.property_name }}',
+                  thumb:'{% cloudinary_url property.thumb ImageTransformation %}',
+                  location_name:'{{property.location_name}}',
+                  price:'{{property.price}}',
+                  bathrooms: '{{property.bathrooms}}',
+                  bedrooms: '{{property.bedrooms}}',
+                  floor_area: '{{property.floor_area}}',
+                  size_units : '{{property.size_units}}',
+                  detail_page_url : "{% if slug == 'for-sale' %}{% url 'listings:onsale_detail' property.pk%} {%else%} {% url 'listings:rental_detail' property.pk%}{%endif%}",
+                  created_date:"{{property.publishdate.date}}",
+                  is_saved: "{% if request.user in property.favourite.all %}True{%else%}False{%endif%}",
               }
               },
           {% endfor %}
@@ -1099,6 +1100,17 @@
                         detailsLink.href = prop.detail_page_url;
                         detailsLink.target='_blank';
 
+                        var heartIcon = document.createElement('button')
+                            heartIcon.setAttribute("data-propertypk", prop.pk);
+                            heartIcon.innerHTML = "<i class='fas fa-heart'></i>"
+                            if (prop.is_saved ==='True') {
+                              heartIcon.className = '_lssaveProperty _lsIs_saved';
+                            }else {
+                              heartIcon.className = '_lssaveProperty';
+                            };
+
+
+
 
 
                         card.addEventListener('mouseover', function() {
@@ -1122,6 +1134,7 @@
                             popup.remove();
                         });
 
+
                         listingEl.appendChild(card);
                         detailsLink.appendChild(image);
                         detailsLink.appendChild(date);
@@ -1131,6 +1144,7 @@
                         location.appendChild(locSpan);
                         allDtls.appendChild(location);
                         cardOverlay.appendChild(allDtls)
+                        card.appendChild(heartIcon);
                         card.appendChild(detailsLink);
 
                     });
@@ -1379,6 +1393,31 @@
                 }
             });
 
+            //Ajax favourite
+
+            $(document).on('click', '._lssaveProperty', function(){
+                  var savedProperty = $(this);
+                  $.ajax({
+                      type: "POST",
+                      url: "{% if slug == 'for-sale' %}{%url 'listings:axs_favourite'%}{%else%}{% url 'listings:axr_favourite'%}{%endif%}",
+                      data: {
+                          pk:$(this).attr('data-propertypk'),
+                          csrfmiddlewaretoken: '{{csrf_token}}'
+                      },
+                      success: function (responseData) {
+                        if (responseData.is_saved === true) {
+                          savedProperty.attr('class', '_lssaveProperty _lsIs_saved')
+                        }else {
+                          savedProperty.attr('class', '_lssaveProperty')
+                        }
+
+                      },
+                      error: function(rs,e){
+                        console.log('Something Went Wrong. Could Not Save');
+                      },
+                });
+            });
+
           });
 
           // Calling this function on initialization
@@ -1396,6 +1435,73 @@
 
           for (var i = 0; i < layerChoices.length; i++) {
             layerChoices[i].onclick = switchLayer;
+          }
+
+          if (document.body.animate) {
+            document
+              .querySelectorAll("._lssaveProperty")
+              .forEach((button) => button.addEventListener("click", pop));
+          }
+
+          function pop(e) {
+            for (let i = 0; i < 30; i++) {
+              createParticle(e.clientX, e.clientY, e.target.dataset.type);
+            }
+          }
+
+          function createParticle(x, y, type) {
+            const particle = document.createElement("particle");
+            document.body.appendChild(particle);
+
+            const size = Math.floor(Math.random() * 20 + 5);
+
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+
+            const destinationX = x + (Math.random() - 0.5) * 2 * 75;
+            const destinationY = y + (Math.random() - 0.5) * 2 * 75;
+
+            // switch (type) {
+            //   case "circle":
+                particle.style.background = `hsl(10, 90%, 50%)`;
+                particle.style.borderRadius = "50%";
+            //     break;
+            //   case "square":
+            //     particle.style.background = `hsl(${Math.random() * 90 + 270}, 70%, 60%)`;
+            //     particle.style.border = "1px solid white";
+            //     break;
+            //   default:
+            //     particle.style.background = `hsl(${Math.random() * 90 + 180}, 70%, 60%)`;
+            // }
+
+            const animation = particle.animate(
+              [
+                {
+                  // Set the origin position of the particle
+                  // We offset the particle with half its size to center it around the mouse
+                  transform: `translate(${x - size / 2}px, ${y - size / 2}px)`,
+                  opacity: 1,
+                },
+                {
+                  // We define the final coordinates as the second keyframe
+                  transform: `translate(${destinationX}px, ${destinationY}px)`,
+                  opacity: 0,
+                },
+              ],
+              {
+                duration: 500 + Math.random() * 1000,
+                easing: "cubic-bezier(0, .9, .57, 1)",
+                delay: Math.random() * 200,
+              }
+            );
+
+            animation.onfinish = () => {
+              particle.removeParticle;
+            };
+          }
+
+          function removeParticle(e) {
+            e.srcElement.effect.target.remove();
           }
 
           </script>
