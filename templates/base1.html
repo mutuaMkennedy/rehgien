@@ -73,8 +73,8 @@
       <a id="logo-wrapper" href="{% url 'listings:homepage'%}" class="brand-logo left" style="height:60px;"><img class="logo" src="{%static 'img/rehgien_logo_r.png'%}"></a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-base1"class="left hide-on-med-and-down">
-        <li><a href="{% url 'listings:property-listings' slug='for-sale'%}">Buy</a></li>
-        <li><a href="{% url 'listings:property-listings' slug='for-rent'%}">Rent</a></li>
+        <li><a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale'%}">Buy</a></li>
+        <li><a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_rent'%}">Rent</a></li>
         <li><a href="{% url 'profiles:business_list' %}">Business Finder</a></li>
         <li><a href="#" id='ag-trigger' class="dropdown-trigger" data-target='ag-dropdown'>Pro Finder</a></li>
         <li><a href="#" id='svc-trigger' class="dropdown-trigger" data-target='svc-dropdown'>Request Service</a></li>
@@ -164,8 +164,7 @@
       </div>
       <div class="ac-drd-linkItems">
         {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
-        <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
-        <li><a href="{% url 'listings:rental_listing_form' %}"> Post a Rental</a></li>
+        <li><a href="{% url 'listings:property_listing_form' %}">List your Home</a></li>
         {% endif %}
         <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
         <li><a href="{% url 'account_logout' %}">Logout</a></li>
@@ -179,8 +178,8 @@
     </ul>
     <ul class="Mnav-UlItems collapsible">
       <li><a href="{%url 'listings:homepage'%}">Home</a></li>
-      <li><a href="{% url 'listings:property-listings' slug='for-sale'%}">Buy</a></li>
-      <li><a href="{% url 'listings:property-listings' slug='for-rent'%}">Rent</a></li>
+      <li><a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale'%}">Buy</a></li>
+      <li><a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_rent'%}">Rent</a></li>
       <li><a href="{% url 'profiles:business_list' %}">Business Finder</a></li>
       <li>
         <div class="collapsible-header Mnav-collapsible-header">Find a pro<i class="fas fa-chevron-right"></i></div>
@@ -248,8 +247,7 @@
         <div class="collapsible-body Mnav-collapsible-body">
           <ul>
             {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
-            <li><a href="{% url 'listings:sell_listing_form' %}">Sell</a></li>
-            <li><a href="{% url 'listings:rental_listing_form' %}"> Post a Rental</a></li>
+            <li><a href="{% url 'listings:property_listing_form' %}">List your Home</a></li>
             {% endif %}
             <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
             <li><a href="{% url 'account_logout' %}">Logout</a></li>

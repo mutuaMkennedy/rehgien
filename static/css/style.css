@@ -2308,7 +2308,7 @@ main {
     height: calc(100% - 70px);
 }
 
-.pfl-listings {
+.pfl-listings,.favourites-sc {
     width: 100% !important;
     height: 100%;
 }
@@ -2339,7 +2339,8 @@ main {
     color: #fff;
 }
 
-#MySaleListings,#MyRentalListings, #MyPropertyRequests {
+#MySaleListings,#MyRentalListings, #MyPropertyRequests,
+#MyFavSaleListings{
     height: calc(100% - 70px);
 }
 
@@ -4151,7 +4152,6 @@ particle{
     height: 200px;
     width: 100%;
     object-fit: cover;
-    border-radius:5px;
 }
 
 #all-image2:hover {
@@ -4162,16 +4162,16 @@ particle{
     position:absolute;
     top:0px;
     left:0px;
-    padding:5px 10px;
-    margin:5px;
-    color:#ffffff;
+    padding:3px 10px;
+    margin:0px;
+    color:#fff;
     background-color:rgb(0 0 0 / 0.3);
     font-weight:500;
-    font-size:11px;
+    font-size:10px;
     z-index:2;
-    border-radius:15px;
     min-width:50%;
     text-transform:uppercase;
+    text-shadow:0 0 20px #fff;
 }
 
 .all-card-overlay{
@@ -4292,7 +4292,7 @@ particle{
 
 #geocoder {
     padding: 0px;
-    width: auto;
+    width: 240px;
     border-radius:20px !important;
 }
 
@@ -4307,16 +4307,14 @@ particle{
 #geocoder input {
     margin: 0px;
     border: none;
-    height: 40px;
     width: 100%;
     padding: 0 20px;
     box-sizing:border-box;
     background-color:transparent;
-    border-radius:5px !important;
     box-shadow: 0 0px 0px 1px #9e9e9e;
     color:#000;
-    font-size:15px;
-    font-weight:bold;
+    font-size:13px;
+    font-weight:500;
 }
 
 #geocoder input:focus{
@@ -4333,8 +4331,10 @@ particle{
 }
 
 .ResultsFilterBar input{
-    border-radius:5px !important;
+    border-radius:0px !important;
     text-transform:capitalize;
+    font-family:Segoe Ui, Open Sans, Arial;
+    height:38px !important;
 }
 
 .ResultsFilterBar input:focus{
@@ -4348,10 +4348,11 @@ particle{
 
 ._ResultsFilterBarFWr{
     display:flex;
+    font-family:Segoe Ui, Open Sans, Arial;
+    justify-content:space-between;
 }
 
 #geocoder input::placeholder{
-    font-family:Open Sans, Arial;
     font-weight:500;
 }
 
@@ -4373,16 +4374,17 @@ particle{
 ._ResultsFilterFld .collapsible-header{
    padding:0 20px;
    min-width:100px;
-   height:40px;
+   height:38px;
    border:none;
    text-transform:capitalize;
-   font-weight:bold;
-   border-radius:5px !important;
-   box-shadow: 0 0px 0px 1px #9e9e9e;
-   font-size:15px;
+   font-weight:500;
+   box-shadow: 0 0px 0px 1px rgb(44 178 234 / 0.5);
+   font-size:13px;
    display:flex;
    justify-content:center;
    align-items:center;
+   color:#2cb2ea;
+   border-radius:0px;
 }
 
 ._ResultsFilterFld .collapsible-header:focus{
@@ -4404,7 +4406,7 @@ particle{
     right:0;
     background-color:#fff;
     border:1px solid #d1d1d1;
-    border-radius:20px;
+    border-radius:5px;
     border:none;
     z-index:3;
     box-shadow: 0 0px 10px 2px #eee;
@@ -4443,11 +4445,9 @@ particle{
 
 .fltr-h-helper {
     margin: 0px !important;
-    color: #747474;
+    color: #000;
     font-size: 13px;
-    font-weight:bold;
-    text-transform:uppercase;
-    text-align:center;
+    font-weight:500;
 }
 
 #price-slider {
@@ -4471,9 +4471,8 @@ particle{
 
 #price-from input, #price-to input {
     text-align: center;
-    font-weight: bold;
     font-size: 13px;
-    height: 40px;
+    height: 35px;
     box-sizing:border-box;
     border: 1px solid #d1d1d1;
 }
@@ -4499,17 +4498,16 @@ particle{
 }
 
 #type-filter input {
-    height: 40px;
+    height: 35px;
     text-align: center;
-    font-weight: bold;
+    font-weight: 500;
     border:none;
     width: auto;
-    font-size: 15px;
+    font-size: 13px;
     box-sizing:border-box;
-    border-radius:5px !important;
-    box-shadow: 0 0px 0px 1px #9e9e9e;
+    box-shadow: 0 0px 0px 1px rgb(44 178 234 / 0.5);
+    color:#2cb2ea;
 }
-
 
 #type-filter label {
     color: #000000 !important;
@@ -4544,6 +4542,14 @@ particle{
     }
 }
 
+.bdba-input .select-wrapper{
+    height:35px;
+}
+
+.bdba-input span{
+   font-size:13px;
+}
+
 #beds {
     height: 40px;
     padding:0;
@@ -4560,14 +4566,11 @@ particle{
 #beds input, #baths input {
     border: 0px;
     text-align: center;
-    font-weight: bold;
     font-size: 13px;
     border: 1px solid #d1d1d1;
-    height: 40px;
-    width:40px;
-    border-radius: 50% !important;
+    height:100%;
     box-sizing:border-box;
-    text-transform:uppercase;
+    text-transform:capitalize;
 }
 
 #beds li > span {
@@ -4582,29 +4585,31 @@ particle{
     font-weight: lighter;
 }
 
-#submit_f_button {
-    height: 40px;
-    padding: 0px;
+.saveSearch_button {
+    height: 38px;
+    padding:0 20px;
+    border:none;
     background-color: #fff;
-    border-radius: 5px;
-    width: 100px;
     align-content: center;
-    color:rgb(44 178 234 / 1);
-    border: 1px solid #d1d1d1;
-    box-shadow: 0 0px 0px 1px rgb(44 178 234 / 0.5);
-    font-size: 15px;
+    color:#fff;
+    background-color:#1100ff;
+    font-size: 13px;
     text-transform: capitalize;
     cursor:pointer;
-    font-weight:bold;
+    font-weight:500;
 }
 
 @media all and (max-width: 801px) {
-    #submit_f_button, .fltr-btn-clps {
+    .saveSearch_button, .fltr-btn-clps {
         height:30px;
     }
 }
 
-#submit_f_button:hover {
+.saveSearch_button:focus{
+    background-color:#1100ff;
+}
+
+.saveSearch_button:hover {
     box-shadow: 0 0px 5px 1px rgb(44 178 234 / 0.5);
 }
 
@@ -4617,6 +4622,10 @@ particle{
 
 .page-head{
  padding:0 25px !important;
+}
+
+._empty_listings{
+    text-align:center;
 }
 
 .page-head h2 {
@@ -4738,7 +4747,7 @@ particle{
 
 #sort-input {
   width: 100%;
-  z-index:3;
+  z-index:13;
   padding:10px 25px;
   display:flex;
   justify-content:flex-end;
@@ -4761,19 +4770,18 @@ particle{
 }
 
 #sort-input .select-wrapper{
-    max-width:140px;
     position:static !important;
 }
 
 #sort-input input {
     border-bottom: 0px;
-    font-size:15px;
+    font-size:13px;
     width:100% !important;
-    height:35px;
+    height:30px;
     color:#2cb2ea;
     font-family: inherit;
     padding:0 10px;
-    border:none;
+    border:1px solid #d1d1d1;
     margin:0;
     box-sizing:border-box;
 }
@@ -5321,6 +5329,7 @@ particle{
     display:flex;
     justify-content:center;
     align-items:center;
+    font-family:Segoe Ui,Open Sans, Arial;
 }
 
 #hideMapbtn {
@@ -5408,7 +5417,7 @@ particle{
 #_MapsMenu{
     position:absolute;
     z-index:2;
-    bottom:40px;
+    bottom:55px;
     right:65px;
     background-color:transparent;
 }
@@ -5429,6 +5438,7 @@ particle{
     align-items:center;
     border-radius:5px;
     font-weight:500;
+    font-size:13px;
 }
 
 #_MapsMenu .collapsible-header:focus{
@@ -7820,15 +7830,17 @@ particle{
     pointer-events:none;
 }
 
-.e_profileImg-Modal ._EdMdsuccessMessage_, .e_profileImg-Modal ._EdMderrorMessage_{
-    position:absolute;
+.e_profileImg-Modal ._EdMdsuccessMessage_,
+.e_profileImg-Modal ._EdMderrorMessage_,
+._upfPageAcScs, ._upfPageAcErr{
+    position:absolute !important;
     left:10px;
     bottom: 10px;
     background-color:rgb(0 0 0 / 0.7);
     width:auto;
     min-width:350px;
     height:55px;
-    color:#ffff;
+    color:#ffff !important;
     display:none;
     border-radius:25px;
     justify-content:center;
@@ -7836,12 +7848,16 @@ particle{
     text-transform:capitalize;
     z-index:2;
 }
-.e_profileImg-Modal ._EdMderrorMessage_ span{
+
+
+.e_profileImg-Modal ._EdMderrorMessage_ span,
+._upfPageAcScs span{
     margin-right:10px;
     color:#0f0;
 }
 
-.e_profileImg-Modal ._EdMderrorMessage_ span{
+.e_profileImg-Modal ._EdMderrorMessage_ span,
+._upfPageAcErr span{
     margin-right:10px;
     color:red;
 }
@@ -9584,7 +9600,7 @@ particle{
     background-color: #fff;
     position: sticky;
     top: 64px;
-    z-index: 2;
+    z-index: 4;
     display: flex;
     justify-content: space-between;
     align-items: center;

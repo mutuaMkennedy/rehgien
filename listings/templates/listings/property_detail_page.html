@@ -1,0 +1,523 @@
+{% extends 'base1.html' %}
+{% load social_share %}
+{% load static %}
+{% block content %}
+{% load cloudinary %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+      <script type="text/javascript">
+        $(document).ready(function(event){
+          $(document).on('click','#ajxFav', function(event){
+             event.preventDefault();
+             var pk = $(this).attr('value');
+             $.ajax({
+               type : 'post',
+               url : '{% url "listings:save_property"%}',
+               data : {
+                  'pk':pk,
+                  'property_category':'homes',
+                  'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+               },
+               success: function(response) {
+                 $('#dtl-fav-btn').html(response['form'])
+               },
+               error: function(rs,e){
+                 console.log(rs.responseText)
+               },
+             });
+          });
+
+          //OwlCarousel
+          $(".owl-carousel").owlCarousel({
+              loop:true,
+              margin:10,
+              nav:true,
+              responsiveClass:true,
+              responsive:{
+                 0:{
+                     items:1,
+                     nav:true
+                 },
+                 480:{
+                     items:3,
+                     nav:false
+                 },
+                 768:{
+                     items:3,
+                     nav:true,
+                     loop:false
+                 }
+             }
+            });
+        });
+      </script>
+
+<section id="d-bd">
+    <div class="container">
+      <div id="ca-row" class="row">
+        <nav class="breadc-nav">
+          <div class="nav-wrapper-bread">
+            <div class="col s12">
+              <a href="{% url 'listings:homepage'%}" class="breadcrumb">Home</a>
+              <a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale' %}" class="breadcrumb">Buy</a>
+              <a class="breadcrumb">{{listing.property_name}}</a>
+            </div>
+          </div>
+        </nav>
+        <div id="c-slide" class="col s12 md8 l8 xl8">
+          <div id="c-slider" class="carousel carousel-slider" data-indicators="true">
+            <h4 class="listing-title-d">{{listing.property_name}}</h4>
+            <div class="fa-sh-btns">
+              <div id="dtl-fav-btn">
+                  {% include 'listings/property_save_section.html'%}
+              </div>
+              <div class="share-button">
+                <a class="modal-trigger" href="#socialShareModal">
+                  <img src="{% static 'img/share.svg'%}" alt="share">
+                    Share
+                </a>
+              </div>
+            </div>
+            {%for img in images%}
+            <a href="#{{img.photo}}!" class="carousel-item" data-cindex='{{img.photo|length}}' >
+              {% cloudinary img.photo ImageTransformation %}</a>
+            {%endfor%}
+            <div class="prev">
+              <img src="{% static 'img/circled_back_arrow.svg'%}" alt="prev">
+            </div>
+            <div class="next">
+              <img src="{% static 'img/circled_next_arrow.svg'%}" alt="next">
+            </div>
+          </div>
+        </div>
+        <div id="contact-form1" class="col s12 md4 l4 xl4">
+              <div id="cont-card" class="card horizontal">
+                <div id="c-img" class="card-image">
+                  {%if listing.owner.profile_image %}
+                  <img src="{{listing.owner.profile_image.url}}" alt="{{listing.owner.first_name}}">
+                  {% else %}
+                  <img src="{% static 'img/avatar.png'%}" alt="avatar.png">
+                  {% endif %}
+                </div>
+                <div class="card-stacked">
+                  <div class="prof-card-content">
+                    <h6><b>{{listing.owner.first_name}} </b></h6>
+                    <li>{{listing.phone}}</li>
+                  </div>
+                  <div class="verified-agent">
+                  <li> Verified by Rehgien</li>
+                  </div>
+                </div>
+              </div>
+              <form id="agentContactForm1" action="{% url 'contact:contact_listing_agent' %}" class="col s12" method="POST">
+                <h6 class="black-text" style='font-size:12px; font-family:Roboto,Arial;'><b>Contact this agent</b></h6>
+                {% csrf_token %}
+                <div class="MsglistingDetails">
+                  <input id="recepient" type="hidden" name="recepient" value="{{listing.email}}" class="validate">
+                  <input type="hidden" name="recepientPhoneNumber" value="{{listing.phone}}">
+                  <input type="hidden" name="currentListingPath" value="{{ request.build_absolute_uri }}">
+                  <input type="hidden" name="currentListingName" value=" {{listing.property_name}}">
+                  <input type="hidden" name="currentListingLocation" value=" {{listing.location_name}}">
+                </div>
+                <div id="name_phone" class="row">
+                    <div class="input-field col s12">
+                      <input id="name" type="text" name="name" class="validate" placeholder="Your Name">
+                    </div>
+                    <div class="input-field col s12">
+                      <input id="phone_number" type="number" name="phone_number" min="0" class="validate" placeholder="Phone number">
+                    </div>
+                </div>
+                <div id="fEmail" class="row">
+                  <div class="input-field col s12">
+                    <input id="from_email" type="email" name="from_email" class="validate" placeholder="Your Email">
+                  </div>
+                </div>
+                <div id="eMessage" class="row">
+                  <div class="input-field col s12">
+                    <textarea id="message" rows="4" name="message" cols="80"></textarea>
+                    <script type="text/javascript">
+                      document.getElementById("message").defaultValue="Hello i'm interested in a property you are selling in {{listing.location_name}}";
+                    </script>
+                  </div>
+                </div>
+                <button id="agentSendButton" type="submit" name="button"> Send Message</button>
+              </form>
+              <div class="cont-terms">
+                <p>By clicking send you agree that Rehgien and Real Estate professionals may contact you via phone/text
+                about your inquiry, which may involve the use of automated means. You are not required to consent as a
+              condition of purchasing any property, goods or services. Note local data rates for texts/messages may apply.
+              You also agree to our terms of service</p>
+              </div>
+        </div>
+      </div>
+    </div>
+
+</section>
+
+<section class="socialShareModalWrapp">
+  <!-- Modal Structure -->
+    <div id="socialShareModal" class="modal">
+      <div class="modal-content">
+        <div class="socialShareLinks">
+          <div class="socialShareEmail">
+            <h4>Share Home</h4>
+            <form class="email_socialShare" action="{% url 'contact:share_listing'%}" method="post">
+                {% csrf_token %}
+              <div class="e_sS_hiddenDetails">
+                <input type="hidden" name="e_sS_propertyName" value="{{listing.property_name}}">
+                <input type="hidden" name="e_sS_PropertyLocation" value="{{listing.location_name}}">
+                <input type="hidden" name="e_sS_PropertyPrice" value="Ksh: {{listing.price}}">
+                <input type="hidden" name="e_sS_PropertyBathrooms" value="{{listing.bathrooms}}">
+                <input type="hidden" name="e_sS_PropertyBedrooms" value="{{listing.bedrooms}}">
+                <input type="hidden" name="e_sS_PropertySize" value="{{listing.floor_area}}{{listing.size_units}}">
+                <input type="hidden" name="e_sS_absoluteUrl" value="{{request.build_absolute_uri}}">
+                <input type="hidden" name="e_sS_propertyImage" value="{{listing.thumb.url}}">
+              </div>
+              <h6>From</h6>
+              <div class="e_sS_senderEmail">
+                  <input type="email" name="e_sS_senderEmail" placeholder="Your Email Address" validate>
+              </div>
+              <h6>Share home with</h6>
+              <div class="e_sS_recepientEmail">
+                  <input type="email" name="e_sS_recepientEmail" placeholder="Recepient Email Address" validate>
+              </div>
+              <div class="e_sS_submitEmail">
+                <button type="submit">Share</button>
+              </div>
+            </form>
+          </div>
+          <div class="socialShareIcos">
+            <h4>Or,Share a link to this Home via:</h4>
+            <span>
+              {% post_to_facebook listing.get_absolute_url%}
+              {% post_to_twitter 'Check this home out:' listing.get_absolute_url %}
+              {% post_to_whatsapp listing.get_absolute_url %}
+              {% post_to_telegram "Check this home out:" listing.get_absolute_url %}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col s12 md4 l4 xl4">
+        <div class="facts1">
+          <li class="dtl-price" >Ksh {{listing.price}}</li>
+          <li class="dtl-features"> <i class="fas fa-shower fa-lg"></i>{{listing.bathrooms}} ba | <i class="fas fa-bed fa-lg"></i> {{listing.bedrooms}} bd | <i class="fas fa-ruler-combined fa-lg"></i>{{listing.floor_area}} {{listing.size_units}}</li>
+          <li class="dtl-hometype">{{listing.type|lower}}</li>
+        </div>
+      </div>
+
+    <div class="col s12 md4 l4 xl4">
+      <div class="facts2">
+        <li><b>Year Built:</b> {{listing.year_built}}</li>
+        {% if listing.remodel_year%}
+        <li><b>Remodel Year:</b> {{listing.remodel_year}}</li>
+        {% else %}
+        <li><b>Remodel Year:</b> None</li>
+        {% endif %}
+      </div>
+    </div>
+
+      <div class="col s12 md4 l4 xl4">
+          <div class=" facts3">
+            <a href="#vid" class="modal-trigger"><button class="vid-btn" type="button" name="button"><i class="material-icons">play_circle_filled</i></button></a>
+            <a href="#vr" class="modal-trigger"><button class="vr-btn" type="button" name="button"><i class="material-icons">3d_rotation</i></button></a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- pop up video-->
+  <div id="vid" class="modal">
+    {% for vids in videos %}
+    <video src="{% cloudinary_url vids.video VideoTransformation %}" type="video/mp4" class="videos" controls="controls"/>
+
+    {% endfor %}
+  </div>
+  <!-- popup vr-->
+  <div id="vr" class="modal">
+    <iframe width="100%" height="100%" src="{{listing.virtual_tour_url}}" frameborder="0" allowfullscreen allowvr></iframe>
+  </div>
+</section>
+
+<section>
+  <div id="m-dtl-cont" class="container">
+    <div class="row">
+      <h4 class="dtl-location">{{listing.location_name}}</h4>
+      <div id='detail-map'>
+
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+    if (!mapboxgl.supported()) {
+      alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
+      } else {
+        var map = new mapboxgl.Map({
+            container: 'detail-map',
+            style: 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
+            minZoom: 10,
+            maxZoom:14,
+            center: [{{ listing.location.x }}, {{ listing.location.y }}]
+      });
+    }
+    // disable map rotation using right click + drag
+    map.dragRotate.disable();
+
+    // disable map rotation using touch rotation gesture
+    map.touchZoomRotate.disableRotation();
+
+    // Adds geolocate control to the map.
+    map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    }));
+
+    // Adds zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+
+    var geojson = {
+    type: 'FeatureCollection',
+    features: [
+        {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [{{ listing.location.x }}, {{ listing.location.y }}]
+        },
+        properties: {
+            title: '{{ listing.property_name }}',
+            thumb:
+            {% for home_photo in listing.home_photos.all %}
+              {% if forloop.last %}
+              '{% cloudinary_url home_photo.photo ImageTransformation %}'
+              {% endif %}
+            {% endfor %}
+            ,
+            location_name:'{{listing.location_name}}',
+            price:'{{listing.price}}',
+        }
+        },
+    ]
+    };
+
+    map.on('load', function() {
+      map.addSource('property',{
+        "type": "geojson",
+        "data": geojson
+      });
+      map.addLayer({
+      "id": "points",
+      "source": 'property',
+      "type": "circle",
+      "paint": {
+          "circle-radius": 6,
+          "circle-stroke-width": 1.5,
+          "circle-color": "#2ECC71",
+          "circle-stroke-color":"blue"
+      },
+    });
+  })
+  </script>
+</section>
+
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="description-d">
+        <h5>Home Description</h5>
+        <p>{{listing.description}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="container add-details-cont">
+    <div class="row">
+        <div id="add-details" class="col s12 md3 l3 xl3">
+            <h6><b>Additional Home Facts</b></h6>
+            {% if listing.floor_number%}
+            <h5><b>Floor:</b></h5>
+            <li>{{listing.floor_number}}</li>
+            {% endif %}
+            {% if listing.total_rooms%}
+            <h5><b>Total Rooms:</b></h5>
+            <li>{{listing.total_rooms}}</li>
+            {% endif %}
+            {% if listing.garage_sqm%}
+            <h5><b>Garage Size:</b></h5>
+            <li>{{listing.garage_sqm}} SqM</li>
+            {% endif %}
+            {% if listing.number_of_units%}
+            <h5><b>Units Available:</b></h5>
+            <li>{{listing.number_of_units}}</li>
+            {% endif %}
+            {% if listing.number_of_stories%}
+            <h5><b>Storeys:</b></h5>
+            <li>{{listing.number_of_stories}}</li>
+            {% endif %}
+            {% if listing.parking_spaces%}
+            <h5><b>Parking:</b></h5>
+            <li>{{listing.parking_spaces}}</li>
+            {% endif %}
+        </div>
+        <div id="add-details" class="col s12 md3 l3 xl3">
+          <h6><b>Indoor Features</b></h6>
+          <h5><b>Pre-installed Appliances:</b></h5>
+          <li>{{listing.appliances}}</li>
+          <h5><b>Basement:</b></h5>
+          <li>{{listing.basement}}</li>
+          <h5><b>Floor Covering:</b></h5>
+          <li>{{listing.floor_covering}}</li>
+          <h5><b>Rooms:</b></h5>
+          <li>{{listing.rooms}}</li>
+          <h5><b>Indoor Features:</b> </h5>
+          <li>{{listing.indoor_features}}</li>
+        </div>
+        <div id="add-details" class="col s12 md3 l3 xl3">
+          <h6><b>Utility Details</b></h6>
+          <h5><b>Cooling Type:</b> </h5>
+          <li>{{listing.cooling_type}}</li>
+          <h5><b>Heating Type:</b></h5>
+          <li>{{listing.heating_type}}</li>
+          <h5><b>Heating Fuel:</b></h5>
+          <li>{{listing.heating_fuel}}</li>
+        </div>
+        <div id="add-details" class="col s12 md3 l3 xl3">
+          <h6><b>Building Details</b></h6>
+          <h5><b>Amenities:</b></h5>
+          <li>{{listing.building_amenities}}</li>
+          <h5><b>Exterior:</b></h5>
+          <li>{{listing.exterior}}</li>
+          <h5><b>Outdoor Amenities:</b></h5>
+          <li>{{listing.outdoor_amenities}}</li>
+          <h5><b>Available Parking:</b></h5>
+          <li>{{listing.parking}}</li>
+          <h5><b>Roof Type</b></h5>
+          <li>{{listing.roof}}</li>
+          <h5><b>View Type</b> </h5>
+          <li>{{listing.view}}</li>
+        </div>
+    </div>
+    </div>
+</section>
+
+<section>
+<div class="container">
+  <div class="row">
+    {% if similar_listings %}
+    <h1 class="sld-h" >Similar Homes Around Nairobi You May Like</h1>
+    <div class="owl-carousel sld">
+      {% for similar_property in similar_listings%}
+      <a href="{{similar_property.get_absolute_url}}">
+        <div id="similar-Lcard" class="card">
+          <div class="slc-img-wrapper">
+            <li>Last update on: {{similar_property.publishdate.date}}</li>
+            {% for home_photo in similar_property.home_photos.all %}
+              {% if forloop.last %}
+              '{% cloudinary home_photo.photo ImageTransformation %}'
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="slc-f-wrapper">
+            <li>Ksh:{{similar_property.price}}</li>
+            <span class="slc-f-properties">
+              <li><i class="fas fa-shower"></i>{{similar_property.bathrooms}}
+              <i class="fas fa-bed"></i>{{similar_property.bedrooms}}
+              <i class="fas fa-ruler-combined"></i>{{similar_property.floor_area}} {{similar_property.size_units}}</li>
+            </span>
+            <span class="slc-f-properties2">
+              <li>{{similar_property.property_name}}</li>
+              <li>{{similar_property.location_name}}</li>
+            </span>
+          </div>
+        </div>
+      </a>
+    {% endfor%}
+    </div>
+    {% endif %}
+  </div>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="row">
+    {% if similar_listings_in_area %}
+    <h1 class="sld-h" >Similar Homes In This Area You May Like</h1>
+    <div class="owl-carousel sld">
+      {% for similar_property in similar_listings_in_area%}
+      <a href="{{similar_property.get_absolute_url}}">
+        <div id="similar-Lcard" class="card">
+          <div class="slc-img-wrapper">
+            <li>Last update on: {{similar_property.publishdate.date}}</li>
+            {% for home_photo in similar_property.home_photos.all %}
+              {% if forloop.last %}
+              '{% cloudinary home_photo.photo ImageTransformation %}'
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="slc-f-wrapper">
+            <li>Ksh:{{similar_property.price}}</li>
+            <span class="slc-f-properties">
+              <li><i class="fas fa-shower"></i>{{similar_property.bathrooms}}
+              <i class="fas fa-bed"></i>{{similar_property.bedrooms}}
+              <i class="fas fa-ruler-combined"></i>{{similar_property.floor_area}} {{similar_property.size_units}}</li>
+            </span>
+            <span class="slc-f-properties2">
+              <li>{{similar_property.property_name}}</li>
+              <li>{{similar_property.location_name}}</li>
+            </span>
+          </div>
+        </div>
+      </a>
+    {% endfor%}
+    </div>
+    {% endif %}
+  </div>
+</div>
+</section>
+
+{% endblock %}
+{% block footer %}
+<footer >
+<section id="footer" class="section section-follow black-text">
+  <div class="container">
+    <div class="row">
+      <div class="f-details center">
+        <a href="#"> Privacy Policy</a>
+        <a href="#"> Terms & Conditions</a>
+        <a href="#"> Advertise</a>
+        <a href="#"> Contact Us</a>
+        <a href="{% url 'contact:about_us'%}"> About Us</a>
+      </div>
+      <div id="footer-details" class="col s12 center">
+        <a href="#" class="black-text">
+          <i class="fab fa-facebook fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-twitter fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-linkedin fa-2x"></i>
+        </a>
+        <a href="#" class="black-text">
+          <i class="fab fa-instagram fa-2x"></i>
+        </a>
+      </div>
+      <p class="flow-text black-text center" id="c-year"></p>
+      <script type="text/javascript">
+        var d = new Date();
+        document.getElementById("c-year").innerHTML= 'While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright '+ d.getFullYear();
+      </script>
+    </div>
+  </div>
+</section>
+
+</footer>
+{% endblock%}

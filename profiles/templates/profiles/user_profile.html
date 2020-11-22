@@ -9,6 +9,10 @@
 
 <section>
   <div id="pfl-pg-cont" class="container">
+    <div id="upfPageAcScs" class="_upfPageAcScs">
+    </div>
+    <div id="upfPageAcErr" class="_upfPageAcErr">
+    </div>
     <div id="pfl-page-row">
         <div class="pfl-page-Sc-1" >
             <div class="ptfl-page-Sc-Overlay">
@@ -538,7 +542,7 @@
                       <div id="MySaleListings">
                         <div class="MyLsgHd">
                           <p>My Properties <span>Showing {{user_sale_posts.count}} results</span></p>
-                          <a href="{% url 'listings:sell_listing_form'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new property</button></a>
+                          <a href="{% url 'listings:property_listing_form'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new property</button></a>
                         </div>
                           <div class="profile-sale">
                                   {% if user_sale_posts%}
@@ -559,7 +563,13 @@
                                             <td>
                                                 <div id="rec-card" class="card">
                                                 <div id="rec-img" class="card-image">
-                                                  <a href="{% url 'listings:onsale_detail' onsale_listings.id %}">{% cloudinary onsale_listings.thumb ImageTransformation %}</a>
+                                                  <a href="{{onsale_listings.get_absolute_url}}">
+                                                    {% for home_photo in onsale_listings.home_photos.all %}
+                                                      {% if forloop.last %}
+                                                        {% cloudinary home_photo.photo ImageTransformation %}
+                                                      {% endif %}
+                                                    {% endfor %}
+                                                </a>
                                                 </div>
                                                 <div id="rec-content" class="card-content">
                                                   <ol>
@@ -613,8 +623,8 @@
                                             </td>
                                             <td>
                                               <div class="card-links">
-                                                <a href="{% url 'listings:s_delete' onsale_listings.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
-                                                <a href="{% url 'listings:update' onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
+                                                <a href="{% url 'listings:property_delete' property_category='for_sale' pk=onsale_listings.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
+                                                <a href="{% url 'listings:property_update' property_category='for_sale' pk=onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
 
                                               </div>
                                             </td>
@@ -632,7 +642,7 @@
                       <div id="MyRentalListings">
                         <div class="MyLsgHd">
                           <p>My Properties <span>Showing {{user_sale_posts.count}} results</span></p>
-                          <a href="{% url 'listings:rental_listing_form'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new property</button></a>
+                          <a href="{% url 'listings:property_listing_form'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new property</button></a>
                         </div>
                         <div class="profile-rentals">
                               {% if user_rental_posts%}
@@ -653,7 +663,13 @@
                                         <td>
                                             <div id="rec-card" class="card">
                                             <div id="rec-img" class="card-image">
-                                              <a href="{% url 'listings:rental_detail' rentals.id %}">{% cloudinary rentals.thumb ImageTransformation %}</a>
+                                              <a href="{{rentals.get_absolute_url}}">
+                                                {% for home_photo in rentals.home_photos.all %}
+                                                  {% if forloop.last %}
+                                                    {% cloudinary home_photo.photo ImageTransformation %}
+                                                  {% endif %}
+                                                {% endfor %}
+                                            </a>
                                             </div>
                                             <div id="rec-content" class="card-content">
                                               <ol>
@@ -707,8 +723,8 @@
                                         </td>
                                         <td>
                                           <div class="card-links">
-                                            <a href="{% url 'listings:r_delete' rentals.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
-                                            <a href="{% url 'listings:rental_update' rentals.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
+                                            <a href="{% url 'listings:property_delete' property_category='for_sale' pk=rentals.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
+                                            <a href="{% url 'listings:property_update' property_category='for_sale' pk=rentals.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
 
                                           </div>
                                         </td>
@@ -757,11 +773,17 @@
                                         </tr>
                                       </thead>
                                       {% for favs in user_sale_favs %}
-                                      <tr>
+                                      <tr id='_isSavedLsUpf_id_{{favs.pk}}'>
                                           <td>
                                               <div id="rec-card" class="card">
                                               <div id="rec-img" class="card-image">
-                                                <a href="{% url 'listings:onsale_detail' favs.id %}">{% cloudinary favs.thumb ImageTransformation %}</a>
+                                                <a href="{{favs.get_absolute_url}}">
+                                                  {% for home_photo in favs.home_photos.all %}
+                                                    {% if forloop.last %}
+                                                      {% cloudinary home_photo.photo ImageTransformation %}
+                                                    {% endif %}
+                                                  {% endfor %}
+                                                </a>
                                               </div>
                                               <div id="rec-content" class="card-content">
                                                 <ol>
@@ -787,9 +809,7 @@
                                           </td>
                                           <td>
                                             <div class="fav-button">
-                                              <a href="{% url 'listings:s_favourite' favs.pk%}">
-                                                <button type="button" name="button"><i class="material-icons right" style="color:red;">favorite_border</i></button>
-                                              </a>
+                                                <button class="_removeSavedlsUpf"  data-propertypk='{{favs.pk}}' type="button" name="button"><i class="material-icons right" style="color:red;">favorite_border</i></button>
                                             </div>
                                           </td>
                                       </tr>
@@ -820,11 +840,17 @@
                                           </tr>
                                         </thead>
                                         {% for favs in user_rental_favs %}
-                                        <tr>
+                                        <tr id='_isSavedLsUpf_id_{{favs.pk}}'>
                                             <td>
                                                 <div id="rec-card" class="card">
                                                 <div id="rec-img" class="card-image">
-                                                  <a href="{% url 'listings:rental_detail' favs.id %}">{% cloudinary favs.thumb ImageTransformation %}</a>
+                                                  <a href="{{favs.get_absolute_url}}">
+                                                    {% for home_photo in favs.home_photos.all %}
+                                                      {% if forloop.last %}
+                                                        {% cloudinary home_photo.photo ImageTransformation %}
+                                                      {% endif %}
+                                                    {% endfor %}
+                                                  </a>
                                                 </div>
                                                 <div id="rec-content" class="card-content">
                                                   <ol>
@@ -850,9 +876,7 @@
                                             </td>
                                             <td>
                                               <div class="fav-button">
-                                                <a href="{% url 'listings:r_favourite' favs.pk%}">
-                                                  <button type="button" name="button"><i class="material-icons right" style="color:red;">favorite_border</i></button>
-                                                </a>
+                                                  <button class="_removeSavedlsUpf" data-propertypk='{{favs.pk}}' type="button" name="button"><i class="material-icons right" style="color:red;">favorite_border</i></button>
                                               </div>
                                             </td>
                                         </tr>
@@ -1558,6 +1582,7 @@
 
 <script src="{% static 'progressBar/progressbar.js'%}"></script>
 <script src="{% static 'progressBar/progressbar.min.js'%}"></script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
 function openPage(event,pageName) {
   var i, dashboardTabContent, dashboardTabLinks;
@@ -1612,9 +1637,43 @@ function showBsProfileProgress(){
     duration: 3500
   }); // Number from 0.0 to 1.0
 };
-
 showProfileProgress();
 showBsProfileProgress();
+
+//remove property from saves
+//property save method
+$(document).on('click', '._removeSavedlsUpf', function(){
+      var savedProperty = $(this);
+      var pk = savedProperty.attr('data-propertypk')
+      var rowID = $('#_isSavedLsUpf_id_' + pk )
+      var successmsgBody = $('#upfPageAcScs')
+      var errmsgBody = $('#upfPageAcScs')
+
+      $.ajax({
+          type: "POST",
+          url: "{% url 'listings:save_property'%}",
+          data: {
+              'pk': pk,
+              'property_category':'homes',
+              'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+          success: function (responseData) {
+              rowID.css('display','none')
+              successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + 'Successfully removed home from saved!')
+              successmsgBody.css('display', 'flex')
+              setTimeout(function(){
+                 successmsgBody.css('display', 'none');
+              }, 6000);
+          },
+          error: function(rs,e){
+            errmsgBody.html("<span class='material-icons'>error_outline</span>" + 'Something went wrong unable to unsave property!')
+            errmsgBody.css('display', 'flex')
+            setTimeout(function(){
+               errmsgBody.css('display', 'none');
+            }, 6000);
+          },
+    });
+});
 </script>
 
 {% endblock %}

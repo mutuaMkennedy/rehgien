@@ -1,4 +1,4 @@
-from django.urls import path,include
+from django.urls import path,include, re_path
 from django.conf.urls import url
 from . import views
 
@@ -6,24 +6,15 @@ app_name = 'listings'
 
 urlpatterns = [
 	url(r'^$', views.homepage, name='homepage'),
-	path('<slug:slug>/', views.property_listings_results, name='property-listings'),
-	url(r'^onsale/(?P<pk>[0-9]+)/$', views.onsale_detail, name='onsale_detail'),
-	path('on_sale/favourite/<int:pk>/', views.onsale_favourite, name='s_favourite'),
-	path('on_sale/ajx_favourite/', views.ajxonsale_favourite, name='axs_favourite'),
-	path('for_rent/ajx_favourite/', views.ajxrental_favourite, name='axr_favourite'),
-	url(r'^rental/(?P<pk>[0-9]+)/$', views.rental_detail, name='rental_detail'),
-	path('rental/favourite/<int:pk>/', views.rental_favourite, name='r_favourite'),
-	path('on_sale/<int:pk>/edit/', views.for_sale_update, name='update'),
-	path('rental/<int:pk>/edit/', views.for_rent_update, name='rental_update'),
-	path('on_sale/<int:pk>/delete/', views.for_sale_delete, name='s_delete'),
-	path('rental/<int:pk>/delete/', views.for_rent_delete, name='r_delete'),
-	url(r'sell/$', views.listing_form, name='sell_listing_form'),
-	url(r'list_your_rental/$', views.rental_listing_form, name='rental_listing_form'),
-	url(r'^sale_like/$', views.sale_like, name = 'sale_like'),
+	re_path(r'^(?P<property_category>\w+)/(?P<property_listing_type>\w+)/$', views.property_listings_results, name='property-listings'),
+	re_path(r'^(?P<property_category>\w+)/property_id/(?P<pk>[0-9]+)/$', views.property_detail, name='property_detail'),
+	re_path(r'^save_property/$', views.save_property, name='save_property'),
+	re_path(r'^(?P<property_category>\w+)/(?P<pk>[0-9]+)/edit/', views.property_update, name='property_update'),
+	re_path(r'^(?P<property_category>\w+)/(?P<pk>[0-9]+)/delete/$', views.property_delete, name='property_delete'),
+	url(r'property/add/$', views.property_listing_form, name='property_listing_form'),
 	# url(r'^directions/$', views.directions, name = 'directions'),
 	#url(r'^search/autocomplete/$', views.autocomplete),
     #url(r'^find/', views.FacetedSearchView.as_view(), name='haystack_search'),
 	#rl(r'^find/rentals', views.rental_results, name='rental_search'),
-	#APis
 
 ]

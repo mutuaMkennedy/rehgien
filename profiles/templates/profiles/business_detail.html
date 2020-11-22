@@ -384,8 +384,8 @@
                     </tr>
                     {% for listings in sale_listings_p %}
                     <tr>
-                      <td><a href="{% url 'listings:onsale_detail' listings.pk %}"><img src="{% cloudinary_url listings.thumb ImageTransformation %}" alt="{{listings.property_name}}" width="100px" height=50px></a></td>
-                      <td><a href="{% url 'listings:onsale_detail' listings.pk %}">{{listings.location_name}}</a></td>
+                      <td><a href="{{listings.get_absolute_url}}"><img src="{% cloudinary_url listings.thumb ImageTransformation %}" alt="{{listings.property_name}}" width="100px" height=50px></a></td>
+                      <td><a href="{{listings.get_absolute_url}}">{{listings.location_name}}</a></td>
                       <td>{{listings.bathrooms}}</td>
                       <td>{{listings.bedrooms}}</td>
                       <td>{{listings.price}}</td>
@@ -409,8 +409,8 @@
                     </tr>
                     {% for listings in rental_listings_p %}
                     <tr>
-                      <td><a href="{% url 'listings:onsale_detail' listings.pk %}"><img src="{% cloudinary_url listings.thumb ImageTransformation %}" alt="{{listings.property_name}}" width="100px" height="50px"></a></td>
-                      <td><a href="{% url 'listings:onsale_detail' listings.pk %}">{{listings.location_name}}</a></td>
+                      <td><a href="{{listings.get_absolute_url}}"><img src="{% cloudinary_url listings.thumb ImageTransformation %}" alt="{{listings.property_name}}" width="100px" height="50px"></a></td>
+                      <td><a href="{{listings.get_absolute_url}}">{{listings.location_name}}</a></td>
                       <td>{{listings.bathrooms}}</td>
                       <td>{{listings.bedrooms}}</td>
                       <td>{{listings.price}}</td>

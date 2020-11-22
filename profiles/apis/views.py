@@ -55,16 +55,6 @@ class UserAccountEditApi(RetrieveUpdateAPIView):
     serializer_class = UserAccountSerializer
     permission_classes = [AccountOwnerOrReadOnly]
 
-#remove this on next commit
-class UserProfileView(ListAPIView):
-    serializer_class = AgentProfileSerializer
-    def get_queryset(self):
-        """
-        This view should return a the profile
-        for the currently authenticated user.
-        """
-        user = self.request.user
-        return AgentProfile.objects.filter(user=user)
 
 class UserListingsListApi(ListAPIView):
     queryset = User.objects.all()

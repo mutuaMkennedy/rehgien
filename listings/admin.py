@@ -1,43 +1,19 @@
 from django.contrib import admin
-from .models import (
-						PropertyTypeImage,
-						PropertyForSale,
-						PropertyForSaleImages,
-						PropertyForSaleVideos,
-						RentalProperty,
-						RentalImages,
-						RentalVideos,
-						)
+from . import models
 from leaflet.admin import LeafletGeoAdmin
-# Register your models here.
 
-class PropertyForSaleImagesInline(admin.StackedInline):
-	model = PropertyForSaleImages
+
+class PropertyPhotoInline(admin.StackedInline):
+	model = models.PropertyPhoto
 	extra = 3
 
-class PropertyForSaleVideosInline(admin.StackedInline):
-	model = PropertyForSaleVideos
-	extra = 3
+class PropertyVideoInline(admin.StackedInline):
+	model = models.PropertyVideo
+	extra = 0
 
-class PropertyForSaleAdmin(LeafletGeoAdmin):
-	inlines = [
-				PropertyForSaleImagesInline,
-	 			PropertyForSaleVideosInline,
-				]
+class HomeAdmin(LeafletGeoAdmin):
+	inlines = [PropertyPhotoInline,PropertyVideoInline]
 	list_display = ('property_name','type','owner')
 
-class RentalImagesInline(admin.StackedInline):
-	model = RentalImages
-	extra = 3
-
-class RentalVideosInline(admin.StackedInline):
-	model = RentalVideos
-	extra = 3
-
-class RentalPropertyAdmin(LeafletGeoAdmin):
-	inlines = [RentalImagesInline, RentalVideosInline]
-	list_display = ('property_name', 'type', 'owner')
-
-admin.site.register(PropertyTypeImage)
-admin.site.register(PropertyForSale, PropertyForSaleAdmin)
-admin.site.register(RentalProperty, RentalPropertyAdmin)
+admin.site.register(models.PropertyTypeImage)
+admin.site.register(models.Home, HomeAdmin)

@@ -9,35 +9,15 @@ from . models import (Districts, Divisions, KenyaNationalPolytechnics,
 						PrivateUniversities, PublicColleges, UniversitiesColleges,
 						SecondarySchools, TeachersTrainingColleges, Universities
 					)
-from listings.models import (
-							PropertyForSale,
-							RentalProperty,
-							)
-
 from .serializer import SalePropertySerializer
 from rest_framework.generics import ListAPIView
 from .pagination import ListingGeoJsonPagination
 from rest_framework.renderers import JSONRenderer
 
-def rental_listings(request):
-	rentals = RentalProperty.objects.all()
-	# paginator = Paginator(rentals, 4)  #show the first 20 items
-	# page = request.GET.get('page')
-	# rentals_paged = paginator.get_page(page)
-	return render(request, 'location/location-rentals.html', {'rentals': rentals})
 
 def map_box(request):
 	mapbox_access_token = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g'
 	return render(request, 'location/mapbox.html', {'mapbox_access_token':mapbox_access_token})
-
-#Dataset querysets for spatial analysis
-class SaleListApi(ListAPIView):
-	queryset = PropertyForSale.objects.all()
-	serializer_class = SalePropertySerializer
-	pagination_class = ListingGeoJsonPagination
-	# renderer_classes = [JSONRenderer]
-	# authentication_classes = [authentication.SessionAuthentication]
-	# permission_classes = [permissions.IsAdminUser]
 
 
 def divisions_dataset(request):

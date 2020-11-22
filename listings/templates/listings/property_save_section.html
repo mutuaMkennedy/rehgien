@@ -1,0 +1,13 @@
+{% load static %}
+<form class="ajxFavForm"  action="{% url 'listings:save_property'%}" method="post">
+  {% csrf_token %}
+    {% if is_saved %}
+    <button id="ajxFav" type="submit" value = "{{listing.pk}}">
+      <img src="{% static 'img/heart_red.svg'%}" alt="saved">
+       Saved</button>
+    {% else %}
+    <button id="ajxFav" type="submit" value = "{{listing.pk}}">
+      <img src="{% static 'img/heart.svg'%}" alt="save">
+       Save</button>
+    {% endif%}
+</form>

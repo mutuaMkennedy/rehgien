@@ -1,25 +1,6 @@
 from django.shortcuts import render
-from listings.models import (
-                    PropertyTypeImage,
-                    PropertyForSale,
-                    RentalProperty,
-                    PropertyForSaleImages,
-                    PropertyForSaleVideos,
-                    RentalImages,
-                    RentalVideos
-                    )
-from listings.apis.serializers import (
-                    PropertyTypeImageSerializer,
-                    PropertyForSaleSerializer,
-                    RentalPropertySerializer,
-                    PropertyForSaleImagesSerializer,
-                    PropertyForSaleVideosSerializer,
-                    RentalImagesSerializer,
-                    RentalVideosSerializer,
-                    UserSerializer,
-                    FavouritePropertyForSaleSerializer,
-                    FavouriteRentalPropertySerializer
-                    )
+from listings import models
+from listings.apis import serializers
 from rest_framework import generics
 from rest_framework.filters import SearchFilter
 from django.db.models import Q
@@ -43,46 +24,30 @@ from django.contrib.auth import get_user_model
 # referencing the custom user model
 User = get_user_model()
 
-#USERS VIEW
-#will be removed duplicate of UsersListAPI in profiles app apiview
-class UsersList(ListAPIView):
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
 
-class UserSalePosts(ListAPIView):
-    serializer_class = PropertyForSaleSerializer
+class UserHomeListings(ListAPIView):
+    serializer_class = serializers.HomeSerializer
     def get_queryset(self):
         """
-        This view should return a list of all the for sale listings
+        This view should return a list of all the Home listings
         for the currently authenticated user.
         """
         user = self.request.user
-        return PropertyForSale.objects.filter(owner=user)
+        return models.Home.objects.filter(owner=user)
 
-class UserRentalPosts(ListAPIView):
-    serializer_class = RentalPropertySerializer
-    def get_queryset(self):
-        """
-        This view should return a list of all the rental listings
-        for the currently authenticated user.
-        """
-        user = self.request.user
-        return RentalProperty.objects.filter(owner=user)
 
-#On Sale view APIS
+#Home model api views
 class PropertyTypeImageList(ListAPIView):
-    serializer_class = PropertyTypeImageSerializer
-    queryset = PropertyTypeImage.objects.all()
+    serializer_class = serializers.PropertyTypeImageSerializer
+    queryset = models.PropertyTypeImage.objects.all()
 
-#listing all for sale property
-class ForSaleListApi(ListAPIView):
-    # queryset = PropertyForSale.objects.all()
-    serializer_class = PropertyForSaleSerializer
+class HomeListApi(ListAPIView):
+    serializer_class = serializers.HomeSerializer
     filter_backends = [SearchFilter]
-    search_fields = ['type']
+    search_fields = [ 'listing_type','type']
 
     def get_queryset(self,*args,**kwargs):
-        queryset_list =PropertyForSale.objects.all()
+        queryset_list = models.Home.objects.all()
         query = self.request.GET.get('q')
         if query:
             queryset_list=queryset_list.filter(
@@ -90,77 +55,28 @@ class ForSaleListApi(ListAPIView):
             ).distinct()
         return queryset_list
 
-#creating a for sale listing
-class ForSaleCreateApi(CreateAPIView):
-    queryset = PropertyForSale.objects.all()
-    serializer_class = PropertyForSaleSerializer
+class HomeCreateApi(CreateAPIView):
+    queryset = models.Home.objects.all()
+    serializer_class = serializers.HomeSerializer
     permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(owner=self.request.user)
 
-#Retrieving details of a specific for sale listing
-class ForSaleDetailApi(RetrieveAPIView):
-    queryset = PropertyForSale.objects.all()
-    serializer_class = PropertyForSaleSerializer
+class HomeDetailApi(RetrieveAPIView):
+    queryset =  models.Home.objects.all()
+    serializer_class = serializers.HomeSerializer
 
-#Updating details of a specific for sale listing
-class ForSaleUpdateApi(RetrieveUpdateAPIView):
-    queryset = PropertyForSale.objects.all()
-    serializer_class = PropertyForSaleSerializer
+class HomeUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.Home.objects.all()
+    serializer_class = serializers.HomeSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
-class FavouriteForSaleUpdateApi(RetrieveUpdateAPIView):
-    queryset = PropertyForSale.objects.all()
-    serializer_class = FavouritePropertyForSaleSerializer
+class HomeSavesSerializer(RetrieveUpdateAPIView):
+    queryset = models.Home.objects.all()
+    serializer_class = serializers.HomeSavesSerializer
     permission_classes = [IsAuthenticated]
 
-#Deleting a for sale listing
-class ForSaleDeleteApi(DestroyAPIView):
-    queryset = PropertyForSale.objects.all()
-    serializer_class = PropertyForSaleSerializer
-    permission_classes = [IsAuthenticated]
-
-#RENTALS APIS
-#listing all for rent property
-class ForRentListApi(ListAPIView):
-    # queryset = RentalProperty.objects.all()
-    serializer_class = RentalPropertySerializer
-    filter_backends = [SearchFilter]
-    search_fields = ['type']
-    def get_queryset(self,*args,**kwargs):
-        queryset_list =RentalProperty.objects.all()
-        query = self.request.GET.get('q')
-        if query:
-            queryset_list=queryset_list.filter(
-            Q(type__icontains=query)
-            ).distinct()
-        return queryset_list
-
-class ForRentCreateApi(CreateAPIView):
-    queryset = RentalProperty.objects.all()
-    serializer_class = RentalPropertySerializer
-    permission_classes = [IsAuthenticated]
-    def perform_create(self,serializer):
-        serializer.save(owner=self.request.user)
-
-#Retrieving details of a specific rental listing
-class ForRentDetailApi(RetrieveAPIView):
-    queryset = RentalProperty.objects.all()
-    serializer_class = RentalPropertySerializer
-
-#Updating details of a specific for rent listing
-class ForRentUpdateApi(RetrieveUpdateAPIView):
-    queryset = RentalProperty.objects.all()
-    serializer_class = RentalPropertySerializer
-    permission_classes = [IsOwnerOrReadOnly]
-
-class FavouriteForRentUpdateApi(RetrieveUpdateAPIView):
-    queryset = RentalProperty.objects.all()
-    serializer_class = FavouriteRentalPropertySerializer
-    permission_classes = [IsAuthenticated]
-
-#Retrieving details of a specific rental listing
-class ForRentDeleteApi(DestroyAPIView):
-    queryset = RentalProperty.objects.all()
-    serializer_class = RentalPropertySerializer
+class HomeDeleteApi(DestroyAPIView):
+    queryset = models.Home.objects.all()
+    serializer_class = serializers.HomeSerializer
     permission_classes = [IsAuthenticated]

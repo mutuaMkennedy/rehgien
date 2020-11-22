@@ -8,7 +8,6 @@ app_name = 'location'
 urlpatterns = [
 	path('districts_dataset/', views.districts_dataset, name='districts_data'),
 	path('divisions_dataset/', views.divisions_dataset, name='divisions_data'),
-	path('api/sale_property/', views.SaleListApi.as_view(), name='sale_property'),
 	path('polytechnics_dataset/', views.polytechnics_dataset, name='polytechnics_data'),
 	path('private_colleges_dataset/', views.private_colleges_dataset, name='private_colleges_data'),
 	path('private_universities_dataset/', views.private_universities_dataset, name='private_universities_data'),

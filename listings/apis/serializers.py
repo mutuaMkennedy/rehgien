@@ -4,15 +4,7 @@ from drf_writable_nested.serializers import WritableNestedModelSerializer
 from django.contrib.auth import get_user_model
 # from listings.apis.api import MyModelResource
 # from django.contrib.gis.geos import GEOSGeometry, Point
-from listings.models import (
-        PropertyTypeImage,
-        PropertyForSale,
-        RentalProperty,
-        PropertyForSaleImages,
-        PropertyForSaleVideos,
-        RentalImages,
-        RentalVideos,
-                )
+from listings import models
 
 # referencing the custom user model
 User = get_user_model()
@@ -110,34 +102,25 @@ VIEW_CHOICES = (
         ('PARK', 'Park'), ('NON', 'None'),
 )
 
-#will be removed duplicate of UserSerializer in profiles app serializers
-class UserSerializer(serializers.ModelSerializer):
-    sale_property = serializers.PrimaryKeyRelatedField(many=True, queryset=PropertyForSale.objects.all())
-    rent_property = serializers.PrimaryKeyRelatedField(many=True, queryset=RentalProperty.objects.all())
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email','sale_property','rent_property']
 
 class PropertyTypeImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model=PropertyTypeImage
-        fields='__all__'
+        model = models.PropertyTypeImage
+        fields = '__all__'
 
-class PropertyForSaleImagesSerializer(serializers.ModelSerializer):
+class PropertyPhotoSerializer(serializers.ModelSerializer):
     class Meta:
-        model=PropertyForSaleImages
-        fields=['image']
+        model = models.PropertyPhoto
+        fields = ['photo']
 
-class PropertyForSaleVideosSerializer(serializers.ModelSerializer):
+class PropertyVideoSerializer(serializers.ModelSerializer):
     class Meta:
-        model=PropertyForSaleVideos
-        fields=['video']
+        model = models.PropertyVideo
+        fields = ['video']
 
-class PropertyForSaleSerializer(WritableNestedModelSerializer):
-    images= PropertyForSaleImagesSerializer(many=True)
-    videos=PropertyForSaleVideosSerializer(many=True)
-    listing_type = serializers.CharField(default='For Sale', required=False)
+class HomeSerializer(WritableNestedModelSerializer):
+    home_photos= PropertyPhotoSerializer(many=True)
+    home_video=PropertyVideoSerializer(many=True)
     cooling_type = serializers.MultipleChoiceField(choices=COOLING_TYPE_CHOICES, required=False)
     appliances = serializers.MultipleChoiceField(choices=APPLIANCES_CHOICES, required=False)
     floor_covering = serializers.MultipleChoiceField(choices=FLOOR_COVERING_CHOICES, required=False)
@@ -152,21 +135,25 @@ class PropertyForSaleSerializer(WritableNestedModelSerializer):
     roof = serializers.MultipleChoiceField(choices=ROOF_CHOICES, required=False)
     view = serializers.MultipleChoiceField(choices=VIEW_CHOICES, required=False)
     class Meta:
-        model=PropertyForSale
-        fields=[
-        'id','property_name','price','HOUSE_TYPE_CHOICES', 'type','virtual_tour_url', 'location_name',
-        'location', 'thumb', 'bathrooms', 'bedrooms', 'total_rooms',
-        'floor_number', 'description', 'floor_area', 'measurement_unit_choices',
-        'size_units', 'number_of_units', 'number_of_stories', 'parking_spaces',
-        'year_built', 'remodel_year', 'garage_sqm', 'APPLIANCES_CHOICES','appliances',
-        'BASEMENT_CHOICES','basement', 'FLOOR_COVERING_CHOICES', 'floor_covering',
-        'ROOMS_CHOICES', 'rooms', 'INDOOR_FEATURES_CHOICES', 'indoor_features',
-        'COOLING_TYPE_CHOICES', 'cooling_type', 'HEATING_TYPE_CHOICES', 'heating_type',
-        'HEATING_FUEL_CHOICES', 'heating_fuel', 'BUILDING_AMENITIES_CHOICES', 'building_amenities',
-        'EXTERIOR_CHOICES', 'exterior', 'OUTDOOR_AMENITIES_CHOICES', 'outdoor_amenities',
-        'PARKING_CHOICES', 'parking', 'ROOF_CHOICES', 'roof', 'VIEW_CHOICES', 'view',
-        'related_website', 'publishdate', 'phone', 'email',
-        'images','videos', 'listing_type', 'owner','favourite'
+        model = models.Home
+        fields = [
+        'HOUSE_TYPE_CHOICES','BASEMENT_CHOICES','FLOOR_COVERING_CHOICES','ROOMS_CHOICES',
+        'INDOOR_FEATURES_CHOICES','COOLING_TYPE_CHOICES','HEATING_TYPE_CHOICES',
+        'HEATING_FUEL_CHOICES','BUILDING_AMENITIES_CHOICES','EXTERIOR_CHOICES',
+        'OUTDOOR_AMENITIES_CHOICES','PARKING_CHOICES','ROOF_CHOICES','VIEW_CHOICES',
+        'APPLIANCES_CHOICES','LISTING_TYPE_CHOICES','PROPERTY_CATEGORY_CHOICES',
+
+        'id','listing_type', 'property_category', 'property_name','price','type',
+        'virtual_tour_url', 'location_name', 'location', 'bathrooms',
+        'bedrooms', 'total_rooms','floor_number', 'description', 'floor_area',
+        'number_of_units', 'number_of_stories', 'home_photos','home_video','saves',
+        'parking_spaces','year_built', 'remodel_year', 'garage_sqm',
+
+        'appliances', 'basement', 'floor_covering','rooms', 'indoor_features',
+        'cooling_type', 'heating_type', 'heating_fuel', 'building_amenities',
+        'exterior', 'outdoor_amenities', 'parking', 'roof',
+
+        'view', 'related_website', 'publishdate', 'phone', 'email','owner'
         ]
 
     # def create(self, validated_data):
@@ -185,67 +172,7 @@ class PropertyForSaleSerializer(WritableNestedModelSerializer):
     #     instance.save()
     #     return instance
 
-class  FavouritePropertyForSaleSerializer(serializers.ModelSerializer):
+class HomeSavesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PropertyForSale
-        fields = ['favourite']
-
-class RentalImagesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=RentalImages
-        fields=['image']
-
-class RentalVideosSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=RentalVideos
-        fields=['video']
-
-class RentalPropertySerializer(WritableNestedModelSerializer):
-    images=RentalImagesSerializer(many=True)
-    videos=RentalVideosSerializer(many=True)
-    listing_type = serializers.CharField(default='For Rent', required=False)
-    appliances = serializers.MultipleChoiceField(choices=APPLIANCES_CHOICES, required=False)
-    floor_covering = serializers.MultipleChoiceField(choices=FLOOR_COVERING_CHOICES, required=False)
-    rooms = serializers.MultipleChoiceField(choices=ROOMS_CHOICES, required=False)
-    indoor_features = serializers.MultipleChoiceField(choices=INDOOR_FEATURES_CHOICES, required=False)
-    cooling_type = serializers.MultipleChoiceField(choices=COOLING_TYPE_CHOICES, required=False)
-    heating_type = serializers.MultipleChoiceField(choices=HEATING_TYPE_CHOICES, required=False)
-    heating_fuel = serializers.MultipleChoiceField(choices=HEATING_FUEL_CHOICES, required=False)
-    building_amenities = serializers.MultipleChoiceField(choices=BUILDING_AMENITIES_CHOICES, required=False)
-    exterior = serializers.MultipleChoiceField(choices=EXTERIOR_CHOICES, required=False)
-    outdoor_amenities = serializers.MultipleChoiceField(choices=OUTDOOR_AMENITIES_CHOICES, required=False)
-    parking = serializers.MultipleChoiceField(choices=PARKING_CHOICES, required=False)
-    roof = serializers.MultipleChoiceField(choices=ROOF_CHOICES, required=False)
-    view = serializers.MultipleChoiceField(choices=VIEW_CHOICES, required=False)
-    class Meta:
-        model = RentalProperty
-        fields = [
-        'id','property_name','price','HOUSE_TYPE_CHOICES', 'type','virtual_tour_url', 'location_name',
-        'location', 'thumb', 'bathrooms', 'bedrooms', 'total_rooms',
-        'floor_number', 'description', 'floor_area', 'measurement_unit_choices',
-        'size_units', 'number_of_units', 'number_of_stories', 'parking_spaces',
-        'year_built', 'remodel_year', 'APPLIANCES_CHOICES','appliances',
-        'BASEMENT_CHOICES','basement', 'FLOOR_COVERING_CHOICES', 'floor_covering',
-        'ROOMS_CHOICES', 'rooms', 'INDOOR_FEATURES_CHOICES', 'indoor_features',
-        'COOLING_TYPE_CHOICES', 'cooling_type', 'HEATING_TYPE_CHOICES', 'heating_type',
-        'HEATING_FUEL_CHOICES', 'heating_fuel', 'BUILDING_AMENITIES_CHOICES', 'building_amenities',
-        'EXTERIOR_CHOICES', 'exterior', 'OUTDOOR_AMENITIES_CHOICES', 'outdoor_amenities',
-        'PARKING_CHOICES', 'parking', 'ROOF_CHOICES', 'roof', 'VIEW_CHOICES', 'view',
-        'related_website', 'publishdate', 'phone', 'email',
-        'images','videos', 'listing_type', 'owner','favourite'
-        ]
-
-    # def create(self, validated_data):
-    #     images_data = validated_data.pop('images')
-    #     video_data= validated_data.pop('videos')
-    #     property = RentalProperty.objects.create(**validated_data)
-    #     for images_data in images_data:
-    #         RentalImages.objects.create(property=property, **images_data)
-    #     for video_data in video_data:
-    #         RentalVideos.objects.create(property=property, **video_data)
-    #     return property
-
-class  FavouriteRentalPropertySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RentalProperty
-        fields = ['favourite']
+        model = models.Home
+        fields = ['saves']

@@ -1,5 +1,4 @@
-from listings.models import PropertyForSale
-from listings.models import RentalProperty
+from listings import models
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, render, redirect, HttpResponseRedirect
@@ -33,6 +32,7 @@ from markets.models import (
 from django.core.exceptions import PermissionDenied
 from . import forms
 from . import models
+from listings import models as listings_models
 from django.db.models import Avg
 from django.db.models import Prefetch
 from django.db.models import Q
@@ -60,17 +60,17 @@ def profile(request):
 	ImageTransformation = dict(
 	format = "jpeg",
 	transformation = [
-		dict(height=333, width=500, crop="fill",quality="auto", gravity="center",
+		dict(height=112, width=200, crop="fill",quality="auto", gravity="center",
 		 format="auto", dpr="auto"),
 			]
 		)
 	user = request.user
 
-	user_sale_posts = PropertyForSale.objects.all().filter(owner=request.user)
-	user_rental_posts = RentalProperty.objects.all().filter(owner=request.user)
+	user_sale_posts = listings_models.Home.objects.all().filter(owner=request.user, listing_type='for_sale')
+	user_rental_posts =  listings_models.Home.objects.all().filter(owner=request.user, listing_type='for_rent')
 
-	user_sale_favs = user.favourite.all()
-	user_rental_favs = user.rental_favourite.all()
+	user_sale_favs = user.listings_home_saves_related.filter(listing_type='for_sale')
+	user_rental_favs =  user.listings_home_saves_related.filter(listing_type='for_rent')
 
 	#requests
 	property_requests = PropertyRequestLead.objects.all().filter(active=True).filter(owner=request.user)
@@ -218,8 +218,8 @@ def business_detail(request, pk):
 			connection = connection_object
 		request_exists = True
 
-	sale_listings = PropertyForSale.objects.filter(owner=business.user)
-	rental_listings = RentalProperty.objects.filter(owner=business.user)
+	sale_listings = listings_models.Home.objects.filter(owner=business.user)
+	rental_listings = listings_models.Home.objects.filter(owner=business.user)
 	management_portfolio = PMPortfolio.objects.filter(created_by = business.user)
 	company_reviews = business.company_review.all()
 	average_rating = company_reviews.aggregate(Avg('rating'))
@@ -382,8 +382,8 @@ def agent_detail(request, pk):
 			connection = connection_object
 		request_exists = True
 
-	sale_listings = PropertyForSale.objects.filter(owner=agent.user)
-	rental_listings = RentalProperty.objects.filter(owner=agent.user)
+	sale_listings = listings_models.Home.objects.filter(owner=agent.user)
+	rental_listings = listings_models.Home.objects.filter(owner=agent.user)
 	agent_reviews = agent.agent_review.all()
 	average_rating = agent_reviews.aggregate(Avg('rating'))
 	responsive_avg_rating = agent_reviews.aggregate(Avg('responsive_rating'))
@@ -536,8 +536,8 @@ def property_manager_detail(request, pk):
 			connection = connection_object
 		request_exists = True
 
-	sale_listings = PropertyForSale.objects.filter(owner=agent.user)
-	rental_listings = RentalProperty.objects.filter(owner=agent.user)
+	sale_listings = listings_models.Home.objects.filter(owner=agent.user)
+	rental_listings = listings_models.Home.objects.filter(owner=agent.user)
 	management_portfolio = PMPortfolio.objects.filter(created_by = agent.user)
 	agent_reviews = agent.pm_review.all()
 	average_rating = agent_reviews.aggregate(Avg('rating'))
@@ -554,7 +554,7 @@ def property_manager_detail(request, pk):
 	r_paginator = Paginator(rental_listings, 3) #show the first 3
 	rentals_page = request.GET.get('page')
 	rental_listings_p = r_paginator.get_page(rentals_page)
-	return render(request, 'profiles/property_manager_detail.html', {'agent':agent, 'sale_listings': sale_listings,
+	return render(request, 'profiles/property_manager_detail.html', {'business':agent, 'sale_listings': sale_listings,
 				'rental_listings':rental_listings, 'sale_listings_p':sale_listings_p, 'rental_listings_p':rental_listings_p,
 				's_r_total':s_r_total, 's_count':s_count,'r_count':r_count, 'agent_reviews':agent_reviews,
 				'reviews_count':reviews_count, 'average_rating':average_rating, 'responsive_avg_rating':responsive_avg_rating,

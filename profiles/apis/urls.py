@@ -4,7 +4,6 @@ from profiles.apis.views import (
                                 UserListingsListApi,
                                 UsersListAPI,
                                 UserAccountEditApi,
-                                UserProfileView,
                                 AgentProfileListApi,
                                 AgentProfileDetailApi,
                                 AgentProfileUpdateApi,
@@ -46,8 +45,7 @@ from . import views
 urlpatterns = [
     path('user/account/list/', UsersListAPI.as_view(), name='user_list' ),
     path('user/account/<int:pk>/edit/', UserAccountEditApi.as_view(), name='edit_account'),
-    path('user/listings/', UserListingsListApi.as_view(), name='listings_list'),
-    path('user/profiles/', UserProfileView.as_view(), name='user_profile'), #will be removed on next commit
+    path('user/listings/property/homes/', UserListingsListApi.as_view(), name='listings_list'),
 
     path('profiles/companies/', CompanyProfileListApi.as_view(), name='CompanyProfile'),
     path('profiles/companies/<int:pk>/detail/', CompanyProfileDetailApi.as_view(), name='CompanyProfile'),

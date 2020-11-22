@@ -8,10 +8,6 @@ from django.contrib import messages
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
-from . models import (
-				PropertyForSale, PropertyForSaleImages,
-				PropertyForSaleVideos, RentalProperty,RentalImages, RentalVideos,
-				)
 from profiles.models import AgentProfile
 from . import forms
 from . import models
@@ -23,10 +19,6 @@ from django.views import generic
 from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.template.loader import render_to_string
-from .forms import (
-			ImageForm, VideoForm,
-			RentalImageForm, RentalVideoForm,
-			)
 try:
 	from django.utils import simplejson as simplejson
 except ImportError:
@@ -35,6 +27,7 @@ from django.core.paginator import Paginator
 import statistics
 from .regression import trendline as trend
 from django.core.serializers import serialize
+from django.db.models import Max
 #from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 #from haystack.query import SearchQuerySet
 
@@ -45,15 +38,15 @@ def check_q_valid(param):
 	return param !="" and param is not None
 
 def homepage(request):
-	onsale_recent = PropertyForSale.objects.order_by('publishdate')[:6]
+	onsale_recent = models.Home.objects.filter(listing_type__iexact = 'for_sale').order_by('publishdate')[:6]
 	onsale_reversed = reversed(onsale_recent)
 	#rentals
-	rentals_recent = RentalProperty.objects.order_by('publishdate')[:6]
+	rentals_recent = models.Home.objects.filter(listing_type__iexact = 'for_rent').order_by('publishdate')[:6]
 	rentals_reversed = reversed(rentals_recent)
 	return render(request, 'listings/homey.html', {'onsale_reversed': onsale_reversed, 'rentals_reversed': rentals_reversed})
 
 
-def property_listings_results(request, slug):
+def property_listings_results(request, property_category, property_listing_type):
 	ImageTransformation = dict(
 	format = "jpg",
 	transformation = [
@@ -63,57 +56,31 @@ def property_listings_results(request, slug):
 		)
 
 	listings = ''
-	listing_type= ''
-
-	if slug == 'for-sale':
-		listings = PropertyForSale.objects.all().order_by('-publishdate', 'price')
-		listing_type = 'for-sale'
-	elif slug ==  'for-rent':
-		listings = RentalProperty.objects.all().order_by('-publishdate', 'price')
-		listing_type = 'for-rent'
+	model_object = ''
+	if property_category == 'homes':
+		model_object = models.Home
 	else:
 		messages.error(request, 'The path you requested is invalid!')
 		return redirect('listings:homepage')
 
-	# listings = listings.order_by('-price')
-	n_bds_median_price = 0
-
-	loc_input_q = request.GET.get('location')
-	min_price = request.GET.get('min_price')
-	max_price = request.GET.get('max_price')
-	property_type= request.GET.get('property_type')
-	bedrooms = request.GET.get('bedrooms')
-	bathrooms = request.GET.get('bathrooms')
-	if check_q_valid(loc_input_q):
-		loc_icontains = loc_input_q.split(',')
-		listings = listings.filter(location_name__icontains = loc_icontains[0])
-		location_address = loc_input_q
-	if check_q_valid(min_price) and check_q_valid(max_price):
-		listings = listings.filter(price__range = (min_price,max_price))
-	if check_q_valid(property_type):
-		listings = listings.filter(type__iexact=property_type)
-	if check_q_valid(bedrooms):
-		#filter with beds submitted by user
-		listings = listings.filter(bedrooms__gte=bedrooms)
-		#returns prices array for properties based after filter by beds above
-		n_bds_median_price = 0
-		if listings:
-			n_bds_prices = listings.values_list('price', flat=True).distinct()
-			#Getting the median n_bds_prices
-			n_bds_median_price = statistics.median(n_bds_prices)
-	if check_q_valid(bathrooms):
-		listings = listings.filter(bathrooms__gte=bathrooms)
+	if property_listing_type == 'for_sale':
+		listings = model_object.objects.filter(listing_type__iexact = property_listing_type).order_by('-publishdate', 'price')
+		listing_type = 'for_sale'
+	elif property_listing_type ==  'for_rent':
+		listings = model_object.objects.filter(listing_type = property_listing_type).order_by('-publishdate', 'price')
 	else:
-		listings = listings.filter(location_name__icontains= 'Nairobi')
-		location_address = 'Nairobi,Kenya'
+		messages.error(request, 'The path you requested is invalid!')
+		return redirect('listings:homepage')
+
+	n_bds_median_price = 0
 
 	#Stats placeholders if no listings
 	all_prices_median = 0
 	all_prices_trend = 0
-	_1bd_plus_median_price = 0
-	_1bd_plus_price_trend = 0
-	_2bd_plus_median_price = 0
-	_2bd_plus_price_trend = 0
+	_1bd_median_price = 0
+	_1bd_price_trend = 0
+	_2bd_median_price = 0
+	_2bd_price_trend = 0
 	_3bd_plus_median_price = 0
 	_3bd_plus_price_trend = 0
 
@@ -124,17 +91,17 @@ def property_listings_results(request, slug):
 		all_prices_index = list(range(1,len(all_prices)+1)) #adding 1 extra index to compensate for starting range at 1
 		all_prices_trend = trend(all_prices_index , all_prices)
 
-		_1bd_plus_price = listings.filter(bedrooms = 1).values_list('price', flat=True).distinct()
-		if _1bd_plus_price:
-			_1bd_plus_median_price = statistics.median(_1bd_plus_price)
-			_1bd_plus_price_index = list(range(1,len(_1bd_plus_price)+1))
-			_1bd_plus_price_trend = trend(_1bd_plus_price_index , _1bd_plus_price)
+		_1bd_price = listings.filter(bedrooms = 1).values_list('price', flat=True).distinct()
+		if _1bd_price:
+			_1bd_median_price = statistics.median(_1bd_price)
+			_1bd_price_index = list(range(1,len(_1bd_price)+1))
+			_1bd_price_trend = trend(_1bd_price_index , _1bd_price)
 
-		_2bd_plus_price = listings.filter(bedrooms = 2).values_list('price', flat=True).distinct()
-		if _2bd_plus_price:
-			_2bd_plus_median_price = statistics.median(_2bd_plus_price)
-			_2bd_plus_price_index = list(range(1,len(_2bd_plus_price)+1))
-			_2bd_plus_price_trend = trend(_2bd_plus_price_index , _2bd_plus_price)
+		_2bd_price = listings.filter(bedrooms = 2).values_list('price', flat=True).distinct()
+		if _2bd_price:
+			_2bd_median_price = statistics.median(_2bd_price)
+			_2bd_price_index = list(range(1,len(_2bd_price)+1))
+			_2bd_price_trend = trend(_2bd_price_index , _2bd_price)
 
 		_3bd_plus_price = listings.filter(bedrooms__gte = 3).values_list('price', flat=True).distinct()
 		if _3bd_plus_price:
@@ -143,34 +110,70 @@ def property_listings_results(request, slug):
 			_3bd_plus_price_trend = trend(_3bd_plus_price_index , _3bd_plus_price)
 
 	# Grouped context data
-	filter_fields = {
-		"min_price":min_price,
-		"max_price":max_price,
-		"property_type":property_type,
-		"bedrooms":bedrooms,
-		"bathrooms":bathrooms,
-	}
 	insight_stats = {
-		"Onebd_plus_median_price":_1bd_plus_median_price,
-		"Twobd_plus_median_price":_2bd_plus_median_price,
+		"Onebd_median_price":_1bd_median_price,
+		"Twobd_median_price":_2bd_median_price,
 		"Threebd_plus_median_price":_3bd_plus_median_price,
+		"all_prices_median":all_prices_median,
 		"n_bds_median_price":n_bds_median_price,
-		"onebd_plus_price_trend":_1bd_plus_price_trend,
-		"twobd_plus_price_trend":_2bd_plus_price_trend,
+		"Onebd_price_trend":_1bd_price_trend,
+		"twobd_price_trend":_2bd_price_trend,
 		"threebd_plus_price_trend":_3bd_plus_price_trend,
 		"all_prices_trend":all_prices_trend
 	}
 
+	location_address = ''
 	# Ajax call filter sent each time the map is panned or zoomed by user
 	if request.method == 'POST':
 		# Request.post values are always bundled in every post request from the client
-		# so that we have a consisent base order on how items are being requested
+		# so that we have a consisent order on how items are being filtered or sorted
+		def checkAllValue(param):
+			return param == 'All';
+
+		filtrer_params_dict = {}
+		formdata = json.loads(request.POST.get('filterFormData'))
+		for field in formdata:
+			filtrer_params_dict[field["name"]] = field["value"]
+
+		location = filtrer_params_dict['location']
+		min_price = filtrer_params_dict['min_price']
+		max_price = filtrer_params_dict['max_price']
+		property_type= filtrer_params_dict['property_type']
+		bedrooms = filtrer_params_dict['bedrooms']
+		bathrooms = filtrer_params_dict['bathrooms']
+
 		page = request.POST.get('page')
-
+		print(page)
 		sortValue = str(request.POST.get('sort'))
-
 		array_of_pks = request.POST.getlist('pk_array[]')
 		array_of_pks = list(map(int, array_of_pks))
+
+		if check_q_valid(location):
+			listings = listings.filter(location_name__icontains = str(location.split(',')[0]))
+			location_address = location
+		else:
+			listings = listings.filter(location_name__icontains= 'Nairobi')
+			location_address = 'Nairobi,Kenya'
+		if check_q_valid(min_price) and check_q_valid(max_price):
+			if checkAllValue(max_price): #if max price is set to all.
+				max_price =  listings.aggregate(Max('price'))
+				listings = listings.filter(price__range = (min_price,max_price['price__max']))
+			else:
+				listings = listings.filter(price__range = (min_price,max_price))
+		if check_q_valid(property_type):
+			if not checkAllValue(property_type):
+				listings = listings.filter(type__iexact=property_type)
+		if check_q_valid(bedrooms):
+			#filter with beds submitted by user
+			listings = listings.filter(bedrooms__gte=bedrooms)
+
+			#finding n-median price for a n-bedroomed house to populate the template's insights bar
+			n_bds_median_price = 0
+			if listings:
+				n_bds_prices = listings.values_list('price', flat=True).distinct()
+				n_bds_median_price = statistics.median(n_bds_prices)
+		if check_q_valid(bathrooms):
+			listings = listings.filter(bathrooms__gte=bathrooms)
 
 		listings = listings.filter(id__in = array_of_pks)
 
@@ -196,6 +199,14 @@ def property_listings_results(request, slug):
 		else:
 			listings = listings.order_by('-publishdate')
 
+		filter_fields = {
+			"min_price":min_price,
+			"max_price":max_price,
+			"property_type":property_type,
+			"bedrooms":bedrooms,
+			"bathrooms":bathrooms,
+		}
+
 		listings_count = listings.count()
 		all_listings = listings
 		# Main pagination
@@ -204,25 +215,34 @@ def property_listings_results(request, slug):
 		listings = paginator.get_page(page)
 		return render(request, 'listings/property-listing-page.html', {
 				"all_listings":all_listings,'listings':listings, 'listings_count':listings_count,
-				"location_address":location_address, "ImageTransformation":ImageTransformation ,
-				"slug":slug, "listing_type":listing_type,"insight_stats":insight_stats
+				"ImageTransformation":ImageTransformation ,"location_address":location_address,
+				"insight_stats":insight_stats,"filter_fields":filter_fields
 					})
+	else:
+		loc_input_q_get = request.GET.get('location')
+		if check_q_valid(loc_input_q_get):
+			loc_input_q_get = loc_input_q_get.split(',')[0]
+			listings = listings.filter(location_name__icontains = str(loc_input_q_get))
+			location_address = loc_input_q_get
+		else:
+			listings = listings.filter(location_name__icontains= 'Nairobi')
+			location_address = 'Nairobi,Kenya'
+		# Innitial pagination on page load
+		# Used only when the page laods the first time
+		listings_count = listings.count()
+		all_listings = listings
+		paginator = Paginator(listings, 20)
+		page = request.GET.get('page')
+		listings = paginator.get_page(page)
 
-	# Innitial pagination on page load
-	# Used only when the page laods the first time
-	listings_count = listings.count()
-	all_listings = listings
-	paginator = Paginator(listings, 20)
-	page = request.GET.get('page')
-	listings = paginator.get_page(page)
-
-	return render(request, 'listings/property-listing-page.html', {"all_listings":all_listings,'listings':listings, 'listings_count':listings_count,
-			"location_address":location_address, "ImageTransformation":ImageTransformation ,"slug":slug, "filter_fields":filter_fields,
-			"insight_stats":insight_stats, "listing_type":listing_type
+		return render(request, 'listings/property-listing-page.html', {
+			"all_listings":all_listings,'listings':listings, 'listings_count':listings_count,
+			"location_address":location_address, "ImageTransformation":ImageTransformation ,
+			"insight_stats":insight_stats,
 			})
 
-@login_required(login_url='account_login')
-def onsale_detail(request, pk):
+# @login_required(login_url='account_login')
+def property_detail(request, property_category, pk):
 	ImageTransformation = dict(
 	format = "jpeg",
 	transformation = [
@@ -237,133 +257,80 @@ def onsale_detail(request, pk):
 		 format="auto", dpr="auto", fallback_content="Your browser does not support HTML5 video tags."),
 			]
 		)
-	listing = get_object_or_404(PropertyForSale, pk=pk)
-	is_favourite = False
-	if listing.favourite.filter(id=request.user.id).exists():
-		is_favourite = True
-	images = listing.images.all()
-	videos = listing.videos.all()
+
+	model_object = ''
+	if property_category == 'homes':
+		model_object = models.Home
+	else:
+		messages.error(request, 'The path you requested is invalid!')
+		return redirect('listings:homepage')
+
+	listing = get_object_or_404(model_object, pk=pk)
+	images = listing.home_photos.all()
+	video = listing.home_video.all()
+
+	is_saved = False
+	if listing.saves.filter(id=request.user.id).exists():
+		is_saved = True
+
 	# filter for similar listings
-	similar_listings = PropertyForSale.objects.filter(	\
+	similar_listings = model_object.objects.filter(	\
 		price__range = (listing.price - listing.price * 0.2, listing.price + listing.price * 0.2),
 		location_name__icontains = listing.location_name.split(',')[0]
 		).exclude(id = listing.id)
-	similar_listings_in_area = PropertyForSale.objects.filter(	\
+	similar_listings_in_area = model_object.objects.filter(	\
 		price__range = (listing.price - listing.price * 0.2, listing.price + listing.price * 0.2),
 		location_name__icontains = listing.location_name.split(',')[-1]
 		).exclude(id = listing.id)
-	return render(request, 'listings/onsale_detail.html', {'listing': listing,'is_favourite':is_favourite ,'images':images, 'videos': videos,
+
+	return render(request, 'listings/property_detail_page.html', {'listing': listing,'is_saved':is_saved ,'images':images, 'videos': video,
 				"similar_listings":similar_listings,"similar_listings_in_area":similar_listings_in_area,
 				'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation})
 
 @login_required(login_url='account_login')
-def onsale_favourite(request,pk):
-	listing = get_object_or_404(PropertyForSale, pk=pk)
-	if listing.favourite.filter(pk=request.user.pk).exists():
-		listing.favourite.remove(request.user.pk)
-	else:
-		listing.favourite.add(request.user.pk)
-	return HttpResponseRedirect(listing.get_absolute_url())
-
-@login_required(login_url='account_login')
-def ajxonsale_favourite(request):
+def save_property(request):
 	if request.method == 'POST':
-		user = request.user.id
-		is_favourite = False
-		pk = request.POST.get('pk')
-		listing = get_object_or_404(PropertyForSale, pk=pk)
-		_liked = listing.favourite.filter(pk=user).exists()
-		if _liked:
-			listing.favourite.remove(user)
-			is_favourite = False
+		model_object = ''
+		property_category = request.POST.get('property_category')
+		if property_category == 'homes':
+			model_object = models.Home
 		else:
-			listing.favourite.add(user)
-			is_favourite = True
+			messages.error(request, 'The path you requested is invalid!')
+			return redirect('listings:homepage')
+
+		user = request.user.id
+		is_saved = False
+		pk = request.POST.get('pk')
+		listing = get_object_or_404(model_object, pk=pk)
+		_saved = listing.saves.filter(pk=user).exists()
+		if _saved:
+			listing.saves.remove(user)
+			is_saved = False
+		else:
+			listing.saves.add(user)
+			is_saved = True
 		context = {
-		'is_favourite':is_favourite,
+		'is_saved':is_saved,
 		'listing':listing,
 		}
 		if request.is_ajax():
-			html = render_to_string('listings/favourite-section.html', context, request=request)
-			return JsonResponse({'form':html, 'is_saved':is_favourite})
-
-@login_required(login_url='account_login')
-def ajxrental_favourite(request):
-	if request.method == 'POST':
-		user = request.user.id
-		is_favourite = False
-		pk = request.POST.get('pk')
-		listing = get_object_or_404(RentalProperty, pk=pk)
-		_liked = listing.favourite.filter(pk=user).exists()
-		if _liked:
-			listing.favourite.remove(user)
-			is_favourite = False
-		else:
-			listing.favourite.add(user)
-			is_favourite = True
-		context = {
-		'is_favourite':is_favourite,
-		'listing':listing,
-		}
-		if request.is_ajax():
-			html = render_to_string('listings/rental-fav-section.html', context, request=request)
-			return JsonResponse({'form':html, 'is_saved':is_favourite})
-
-@login_required(login_url='account_login')
-def rental_detail(request, pk):
-	ImageTransformation = dict(
-	format = "jpeg",
-	transformation = [
-		dict(height=450, width=640, crop="fill",quality="auto", gravity="center",
-		 format="auto", dpr="auto"),
-			]
-		)
-	VideoTransformation = dict(
-	format = "mp4",
-	transformation = [
-		dict(height=360, width=640, crop="pad",quality=100, gravity="center",
-		 format="auto", dpr="auto", fallback_content="Your browser does not support HTML5 video tags."),
-			]
-		)
-	rentals = get_object_or_404(RentalProperty, pk=pk)
-	is_favourite = False
-	if rentals.favourite.filter(id=request.user.id).exists():
-		is_favourite = True
-	images = rentals.images.all()
-	videos = rentals.videos.all()
-	# filter for similar listings
-	similar_listings = PropertyForSale.objects.filter(	\
-		price__range = (rentals.price - rentals.price * 0.2, rentals.price + rentals.price * 0.2),
-		location_name__icontains = rentals.location_name.split(',')[0]
-		).exclude(id = rentals.id)
-	similar_listings_in_area = PropertyForSale.objects.filter(	\
-		price__range = (rentals.price - rentals.price * 0.2, rentals.price + rentals.price * 0.2),
-		location_name__icontains = rentals.location_name.split(',')[-1]
-		).exclude(id = rentals.id)
-	return render(request, 'listings/rental_detail.html', {'listing': rentals,'is_favourite':is_favourite, 'images':images, 'videos': videos,
-	 			"similar_listings":similar_listings,"similar_listings_in_area":similar_listings_in_area,
-				'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation})
-
-@login_required(login_url='account_login')
-def rental_favourite(request,pk):
-	listing = get_object_or_404(RentalProperty, pk=pk)
-	if listing.favourite.filter(pk=request.user.pk).exists():
-		listing.favourite.remove(request.user.pk)
+			html = render_to_string('listings/property_save_section.html', context, request=request)
+			return JsonResponse({'form':html, 'is_saved':is_saved})
 	else:
-		listing.favourite.add(request.user.pk)
-	return HttpResponseRedirect(listing.get_absolute_url())
+		messages.error(request, 'Invalid Request!')
+		return redirect('listings:homepage')
 
 @login_required(login_url='account_login')
-def listing_form(request):
+def property_listing_form(request):
 	if request.user.user_type =='Agent' or request.user.user_type =='PropertyManager':
 		if request.method =='POST':
 				PropertyForm = forms.ListingForm(request.POST, request.FILES)
-				ImageForm = forms.ImageForm(request.POST, request.FILES)
-				images = request.FILES.getlist('image')#name of field
+				ImageForm = forms.PhotoForm(request.POST, request.FILES)
+				images = request.FILES.getlist('photo')#name of field
 				VideoForm = forms.VideoForm(request.POST, request.FILES)
 				videos = request.FILES.getlist('video')#name of field
 				# Authenticate form
-				if PropertyForm.is_valid() and ImageForm.is_valid() and VideoForm.is_valid():
+				if PropertyForm.is_valid() and PhotoForm.is_valid() and VideoForm.is_valid():
 					instance = PropertyForm.save(commit=False)
 					# Associate listing with user
 					instance.owner = request.user
@@ -371,11 +338,11 @@ def listing_form(request):
 					instance.save()
 
 					for img in images:
-						file_instance = PropertyForSaleImages(image = img, property=PropertyForSale.objects.get(id=instance.id))
+						file_instance = PropertyPhoto(photo = img, home = models.Home.objects.get(id=instance.id))
 						file_instance.save()
 
 					for vid in videos:
-						file_instance2 = PropertyForSaleVideos(video = vid, property=PropertyForSale.objects.get(id=instance.id))
+						file_instance2 = PropertyVideo(video = vid, home = models.Home.objectsget(id=instance.id))
 						file_instance2.save()
 					messages.success(request, 'Your Listing has been posted Successfully!')
 					return redirect('profiles:account')
@@ -383,16 +350,23 @@ def listing_form(request):
 					messages.error(request,'Could not complete request. Try again later.')
 		else:
 			PropertyForm = forms.ListingForm()
-			ImageForm = forms.ImageForm()
+			ImageForm = forms.PhotoForm()
 			VideoForm = forms.VideoForm()
 	else:
-		messages.error(request,'Restricted. This service is for Real Estate Pros only.')
+		messages.error(request,'Restricted. Your account type is not allowed to access this service.')
 		return redirect('profiles:account')
-	return render(request, 'listings/sell-listing-form.html', {'PropertyForm': PropertyForm, 'ImageForm': ImageForm, 'VideoForm':VideoForm,})
+	return render(request, 'listings/property_listing_form.html.html', {'PropertyForm': PropertyForm, 'ImageForm': ImageForm, 'VideoForm':VideoForm,})
 
 @login_required(login_url='account_login')
-def for_sale_update(request, pk):
-	listing = get_object_or_404(PropertyForSale, pk=pk)
+def property_update(request, pk):
+	model_object = ''
+	if property_category == 'homes':
+		model_object = models.Home
+	else:
+		messages.error(request, 'The path you requested is invalid!')
+		return redirect('listings:homepage')
+
+	listing = get_object_or_404(model_object, pk=pk)
 	image_formset = modelformset_factory(PropertyForSaleImages, max_num=1, min_num=1, fields=('image',))
 	video_formset = modelformset_factory(PropertyForSaleVideos, max_num=1, min_num=1, fields=('video',))
 	if request.user == listing.owner:
@@ -450,104 +424,15 @@ def for_sale_update(request, pk):
 	return render(request, 'listings/update_form.html', {'PropertyForm':PropertyForm, 'listing':listing, 'img_formset':img_formset, 'vid_formset':vid_formset})
 
 @login_required(login_url='account_login')
-def rental_listing_form(request):
-	if request.user.user_type =='Agent' or request.user.user_type =='PropertyManager':
-		if request.method =='POST':
-			PropertyForm = forms.RentalListingForm(request.POST, request.FILES)
-			ImageForm = forms.RentalImageForm(request.POST, request.FILES)
-			images = request.FILES.getlist('image')#name of field
-			VideoForm = forms.RentalVideoForm(request.POST, request.FILES)
-			videos = request.FILES.getlist('video')#name of field
-			# Authenticate form
-			if PropertyForm.is_valid() and ImageForm.is_valid() and VideoForm.is_valid():
-				instance = PropertyForm.save(commit=False)
-				# Associate listing with user
-				instance.owner = request.user
-				# finally save to db
-				instance.save()
-
-				for img in images:
-					file_instance = RentalImages(image = img, property=RentalProperty.objects.get(id=instance.id))
-					file_instance.save()
-
-				for vid in videos:
-					file_instance = RentalVideos(video = vid, property=RentalProperty.objects.get(id=instance.id))
-					file_instance.save()
-				messages.success(request, 'Your Listing has been posted Successfully!')
-				return redirect('profiles:account')
-			else:
-				messages.error(request,'Could not complete request. Try again later!')
-		else:
-			PropertyForm = forms.RentalListingForm()
-			ImageForm = forms.RentalImageForm()
-			VideoForm = forms.RentalVideoForm()
+def property_delete(request,property_category,pk):
+	model_object = ''
+	if property_category == 'homes':
+		model_object = models.Home
 	else:
-		messages.error(request,'Restricted. This service is for Real Estate Pros only.')
-		return redirect('profiles:account')
-	return render(request, 'listings/rent-listing-form.html', {'PropertyForm': PropertyForm, 'ImageForm': ImageForm, 'VideoForm':VideoForm,})
+		messages.error(request, 'The path you requested is invalid!')
+		return redirect('listings:homepage')
 
-@login_required(login_url='account_login')
-def for_rent_update(request, pk):
-	listing = get_object_or_404(RentalProperty, pk=pk)
-	image_formset = modelformset_factory(RentalImages, max_num=1, min_num=1, fields=('image',))
-	video_formset = modelformset_factory(RentalVideos, max_num=1, min_num=1, fields=('video',))
-	if request.user == listing.owner:
-		if request.method=='POST':
-			PropertyForm = forms.RentalListingForm(request.POST, request.FILES, instance=listing)
-			img_formset = image_formset(request.POST or None, request.FILES or None)
-			vid_formset = video_formset(request.POST or None, request.FILES or None)
-			if PropertyForm.is_valid() and img_formset.is_valid() and vid_formset.is_valid():
-				listing = PropertyForm.save(commit=False)
-				# Associate listing with user
-				listing.owner = request.user
-				# finally save to db
-				listing.save()
-
-				i_data = RentalImages.objects.filter(property=listing)
-				v_data = RentalVideos.objects.filter(property=listing)
-
-				for index, i in enumerate(img_formset):
-					if i.cleaned_data:
-						if i.cleaned_data['id'] is None:
-							img = RentalImages(property=listing, image=i.cleaned_data.get('image'))
-							img.save()
-						# elif i.cleaned_data['image'] is False:
-						# 	img = RentalImages.objects.get(id=request.POST.get('form-' + str(index) + '-id'))
-						# 	img.delete()
-						else:
-							img = RentalImages(property=listing, image=i.cleaned_data.get('image'))
-							p = RentalImages.objects.get(id=i_data[index].id)
-							p.image = img.image
-							p.save()
-
-				for index, v in enumerate(vid_formset):
-					if v.cleaned_data:
-						if v.cleaned_data['id'] is None:
-							vid = RentalVideos(property=listing, video=v.cleaned_data.get('video'))
-							vid.save()
-						# elif v.cleaned_data['video'] is False:
-						# 	vid = RentalVideos.objects.get(id=request.POST.get('form-' + str(index) + '-id'))
-						# 	vid.delete()
-						else:
-							vid = RentalVideos(property=listing, video=v.cleaned_data.get('video'))
-							p = RentalVideos.objects.get(id=v_data[index].id)
-							p.video = vid.video
-							p.save()
-				messages.success(request, 'Update Successull')
-				return redirect('profiles:account')
-			else:
-				messages.error(request, 'Unable to update try again later!!')
-		else:
-			PropertyForm = forms.ListingForm(instance=listing)
-			img_formset = image_formset(queryset = RentalImages.objects.filter(property=listing))
-			vid_formset = video_formset(queryset = RentalVideos.objects.filter(property=listing))
-	else:
-		raise PermissionDenied
-	return render(request, 'listings/rental_update_form.html', {'PropertyForm':PropertyForm, 'listing':listing, 'img_formset':img_formset, 'vid_formset':vid_formset})
-
-@login_required(login_url='account_login')
-def for_sale_delete(request, pk):
-	listing = get_object_or_404(PropertyForSale, pk=pk)
+	listing = get_object_or_404(model_object, pk=pk)
 	if request.user == listing.owner:
 		listing.delete()
 		messages.success(request, 'Successfully deleted!!')
@@ -555,64 +440,3 @@ def for_sale_delete(request, pk):
 	else:
 		raise PermissionDenied
 		return redirect('profiles:account')
-
-@login_required(login_url='account_login')
-def for_rent_delete(request, pk):
-	listing = get_object_or_404(RentalProperty, pk=pk)
-	if request.user == listing.owner:
-		listing.delete()
-		messages.success(request, 'Successfully deleted!!')
-		return redirect('profiles:account')
-	else:
-		raise PermissionDenied
-		return redirect('profiles:account')
-
-@login_required(login_url = 'account_login')
-@require_POST
-def sale_like(request):
-	if request.method == 'POST':
-		user = request.user
-		slug = request.POST.get('slug', None)
-		property_for_sale = get_object_or_404(PropertyForSale, slug = slug)
-
-		if property_for_sale.likes.filter(id=user.id).exists():
-			#user has liked so remove like/user
-			property_for_sale.likes.remove(user)
-			messages = 'Saved item removed'
-		else:
-			#add the new like
-			property_for_sale.likes.add(user)
-			message = 'Save successfull!'
-
-	context = {'likes_count': property_for_sale.totallikes, 'message': message}
-	return HttpResponse(json.dumps(context), content_type = 'application/json')
-
-
-#search views for haystack
-#def autocomplete(request):
-    #sqs = SearchQuerySet().autocomplete(
-        #content_auto=request.GET.get(
-            #'query',
-            #''))[
-        #:5]
-    #s = []
-    #for result in sqs:
-        #d = {"value": result.name, "data": result.object.pk}
-        #s.append(d)
-    #output = {'suggestions': s}
-    #return JsonResponse(output)
-
-"""
-class FacetedSearchView(BaseFacetedSearchView):
-
-    form_class = FacetedSaleSearchForm
-    facet_fields = ['location_name', 'type', 'bathrooms', 'bedrooms']
-    template_name = 'search-results.html'
-    paginate_by = 3
-    context_object_name = 'object_list'
-
-def rental_results(request):
-	query = str(request.GET.get('q'))
-	sqs = SearchQuerySet().filter(content=query).models(RentalProperty)
-	return render(request, 'rental_search_results.html', {'sqs':sqs})
-"""
