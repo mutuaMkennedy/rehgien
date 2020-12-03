@@ -1,0 +1,13 @@
+{% load static%}
+<form class="ProFollowForm{% if request.user in pro.followers.all %} _in-followers {%else%} _not-in-followers{%endif%}"  action="{% url 'profiles:follow_pro'%}" method="post">
+  {% csrf_token %}
+{% if request.user in pro.followers.all %}
+    <button id="proFollow" class="_add-to-following" type="submit" value="{{pro.pk}}">
+      <span class="material-icons">remove</span>Unfollow
+    </button>
+{% else %}
+    <button id="proFollow" class="_add-to-following" type="submit" value="{{pro.pk}}">
+     <span class="material-icons" >add</span>Follow
+    </button>
+{% endif %}
+</form>

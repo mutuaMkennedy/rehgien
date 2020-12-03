@@ -75,7 +75,6 @@
       <ul id="nav-base1"class="left hide-on-med-and-down">
         <li><a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale'%}">Buy</a></li>
         <li><a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_rent'%}">Rent</a></li>
-        <li><a href="{% url 'profiles:business_list' %}">Business Finder</a></li>
         <li><a href="#" id='ag-trigger' class="dropdown-trigger" data-target='ag-dropdown'>Pro Finder</a></li>
         <li><a href="#" id='svc-trigger' class="dropdown-trigger" data-target='svc-dropdown'>Request Service</a></li>
 
@@ -105,26 +104,85 @@
 
       <div id="ag-dropdown" class="dropdown-content hide-on-med-and-down">
         <div class="container">
+          <h6><b>Professional categories</b> <div class=""></div> <span><a href="#">View all categories</a></span></h6>
           <div class="row">
-            <div class="col s12 md4 l4 xl4" style="border-right:1px solid #dddddd; margin-top:5px; display:flex;">
-                <div class="re_pros">
-                  <h6><b>Real Estate Pros</b></h6>
-                    <li><a href="{% url 'profiles:agent_list'%}">Real estate agents</a></li>
-                    <li><a href="{% url 'profiles:pm_list'%}">Property managers</a></li>
-                    <li><b>Coming soon</b></li>
-                    <li><a href="#!" style="color: #d1d1d1 !important;" >Building inspectors</a></li>
-                    <li><a href="#!" style="color: #d1d1d1 !important;">Appraisers/Valuers</a></li>
-                </div>
-                <div class="o_pros">
-                  <h6><b>Other Pros</b></h6>
-                  <li><a href="{% url 'profiles:d_service_list'%}">Design & service</a></li>
+            <div class="col s12 md3 l3 xl3 nav_pro_list_col">
+                <div class="re_pros col s12">
+                    <div class="_nav_pro_list col s12">
+                        <span class="col s12">Real Estate Services</span>
+                          <ul class="col s12">
+                              <li><a href="{% url 'profiles:business_list' slug='valuers' %}">valuers</a></li>
+                              <li><a href="{% url 'profiles:business_list' slug='realestate-agents' %}">realestate agents</a></li>
+                              <li><a href="{% url 'profiles:business_list' slug='property-managers' %}">property managers</a></li>
+                              <li><a href="{% url 'profiles:business_list' slug='facility-managers' %}">facility managers</a></li>
+                              <li><a href="{% url 'profiles:business_list' slug='building-inspectors' %}">building-inspectors</a></li>
+                          </ul>
+                          <span class="col s12">Surveying and construction</span>
+                          <ul class="col s12">
+                            <li><a href="{% url 'profiles:business_list' slug='land-surveyors' %}">land surveyors</a></li>
+                            <li><a href="{% url 'profiles:business_list' slug='quantity-surveyors' %}">quantity surveyors</a></li>
+                            <li><a href="{% url 'profiles:business_list' slug='construction-managers' %}">construction managers</a></li>
+                          </ul>
+                    </div>
                 </div>
             </div>
-            <div class="col s12 md8 l8 xl8" style="margin-top:5px;">
-              <div class="o_pros">
-                <h6><b>Are you a pro? advertise with us today</b></h6>
-                <li><a href="#">I'm a Real Estate Profesional</a></li>
-                <li><a href="#">Other</a></li>
+            <div class="col s12 md3 l3 xl3 nav_pro_list_col">
+                <div class="re_pros col s12">
+                    <div class="_nav_pro_list col s12">
+                        <span class="col s12">Architecture and building design</span>
+                          <ul class="col s12">
+                            <li><a href="{% url 'profiles:business_list' slug='architects' %}">architects</a></li>
+                            <li><a href="{% url 'profiles:business_list' slug='landscape-architects' %}">landscape architects</a></li>
+                            <li><a href="{% url 'profiles:business_list' slug='landscape-designers' %}">landscape designers</a></li>
+                            <li><a href="{% url 'profiles:business_list' slug='general-contrators' %}">general contrators</a></li>
+                            <li><a href="{% url 'profiles:business_list' slug='interior-designers-and-decorators' %}">interior designers and decorators</a></li>
+                          </ul>
+                        <span class="col s12">General services</span>
+                        <ul class="col s12">
+                          <li><a href="{% url 'profiles:business_list' slug='photographers' %}">photographers</a></li>
+                          <li><a href="{% url 'profiles:business_list' slug='movers' %}">movers</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 md3 l3 xl3 nav_pro_list_col">
+                <div class="re_pros col s12">
+                    <div class="_nav_pro_list col s12">
+                        <span class="col s12">Renovation and remodeling</span>
+                          <ul class="col s12">
+                            <li><a href="{% url 'profiles:business_list' slug='carpenters' %}">carpenters</a></li>
+                            <li><a href="{% url 'profiles:business_list' slug='door-dealers' %}">door dealers</a></li>
+                            <li><a href="{% url 'profiles:business_list' slug='carpet-dealers' %}">carpet dealers</a></li>
+                            <li><a href="{% url 'profiles:business_list' slug='building-supplies-dealers' %}">building supplies dealers</a></li>
+                          </ul>
+                        <span class="col s12">Appliances and systems</span>
+                        <ul class="col s12">
+                          <li><a href="{% url 'profiles:business_list' slug='plumbers' %}">plumbers</a></li>
+                          <li><a href="{% url 'profiles:business_list' slug='home-automation-and-home-media' %}">home automation and home media</a></li>
+                          <li><a href="{% url 'profiles:business_list' slug='electricians' %}">electricians</a></li>
+                          <li><a href="{% url 'profiles:business_list' slug='solar-energy-systems' %}">solar energy systems</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 md3 l3 xl3 nav_pro_list_col">
+              <div class="re_pros col s12">
+                  <div class="_nav_pro_list col s12">
+                    <span class="col s12">Cleaning services</span>
+                    <ul class="col s12">
+                      <li><a href="{% url 'profiles:business_list' slug='house-cleaners' %}">house cleaners</a></li>
+                      <li><a href="{% url 'profiles:business_list' slug='carpet-and-upholstery-cleaners' %}">carpet and upholstery cleaners</a></li>
+                      <li><a href="{% url 'profiles:business_list' slug='window-cleaners' %}">window cleaners</a></li>
+                      <li><a href="{% url 'profiles:business_list' slug='garbage-cleaners' %}">garbage cleaners</a></li>
+                      <li><a href="{% url 'profiles:business_list' slug='pest-control' %}">pest control</a></li>
+                    </ul>
+                    <span class="col s12" style='margin-top:25px;'>Are you a pro?</span>
+                    <ul class="col s12 catRe_pros">
+                      <li><a href="#">Join as a pro</a></li>
+                      <li><a href="#">Join insider programme</a></li>
+                      <li><a href="#">Partner with us</a></li>
+                    </ul>
+                  </div>
               </div>
             </div>
           </div>
@@ -150,7 +208,7 @@
   </nav>
     <div id="ac-dropdown" class="hide-on-med-and-down">
       <button id="acDropdownClose" type="button" style="background-image:url({%static 'img/close.svg' %});"></button>
-      <div class="ac-drd-img valign-wrapper" style="background-image:linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ),url({%static 'img/b2.jpg' %});">
+      <div class="ac-drd-img valign-wrapper">
       <div class="ac-drd-img-wrapper">
         {% if request.user.profile_image%}
         <img src="{{request.user.profile_image.url}}" alt="profile.img" style="width:40px">
@@ -163,9 +221,6 @@
         </div>
       </div>
       <div class="ac-drd-linkItems">
-        {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
-        <li><a href="{% url 'listings:property_listing_form' %}">List your Home</a></li>
-        {% endif %}
         <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
         <li><a href="{% url 'account_logout' %}">Logout</a></li>
       </div>
@@ -180,22 +235,22 @@
       <li><a href="{%url 'listings:homepage'%}">Home</a></li>
       <li><a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale'%}">Buy</a></li>
       <li><a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_rent'%}">Rent</a></li>
-      <li><a href="{% url 'profiles:business_list' %}">Business Finder</a></li>
+      <li><a href="#">Business Finder</a></li>
       <li>
         <div class="collapsible-header Mnav-collapsible-header">Find a pro<i class="fas fa-chevron-right"></i></div>
         <div class="collapsible-body Mnav-collapsible-body">
           <ul>
             <div class="Mnav-re_pros">
               <h6>Real Estate Pros</h6>
-                <li><a href="{% url 'profiles:agent_list'%}">Real estate agents</a></li>
-                <li><a href="{% url 'profiles:pm_list'%}">Property managers</a></li>
+                <li><a href="#">Real estate agents</a></li>
+                <li><a href="#">Property managers</a></li>
               <h6>Coming soon</h6>
                 <li><a href="#!" style="color: #d1d1d1 !important;" >Building inspectors</a></li>
                 <li><a href="#!" style="color: #d1d1d1 !important;">Appraisers/Valuers</a></li>
             </div>
             <div class="Mnav-o_pros">
               <h6>Other Pros</h6>
-              <li><a href="{% url 'profiles:d_service_list'%}">Design & service</a></li>
+              <li><a href="#">Design & service</a></li>
             </div>
             <div class="Mnav-o_pros">
               <h6>Are you a pro? advertise with us today</h6>
@@ -246,9 +301,6 @@
         </div>
         <div class="collapsible-body Mnav-collapsible-body">
           <ul>
-            {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
-            <li><a href="{% url 'listings:property_listing_form' %}">List your Home</a></li>
-            {% endif %}
             <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
             <li><a href="{% url 'account_logout' %}">Logout</a></li>
           </ul>

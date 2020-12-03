@@ -39,7 +39,7 @@ class PropertyTypeImage(models.Model):
 class PropertyBase(models.Model):
 	property_name = models.CharField(max_length=20, default=None, db_index=True)
 	price = models.PositiveIntegerField(default=0)
-	virtual_tour_url = models.CharField(max_length = 500, default = None)
+	virtual_tour_url = models.URLField(default = None)
 	location_name = models.CharField(max_length= 20, default=None)
 	location = models.PointField(srid=4326, default=None)
 	description = models.TextField()
@@ -180,15 +180,15 @@ class Home(PropertyBase):
 		}
 
 	LISTING_TYPE_CHOICES = (
-	('for_sale','for_sale'),
-	('for_rent','for_rent')
+	('FOR_SALE','for sale'),
+	('FOR_RENT','for rent')
 	)
 	PROPERTY_CATEGORY_CHOICES = (
-		('homes','homes'),
+		('HOMES','homes'),
 	)
 	#Property Facts
-	listing_type = models.CharField(max_length=20, choices = LISTING_TYPE_CHOICES, default='for_sale')
-	property_category = models.CharField(max_length=20, choices = PROPERTY_CATEGORY_CHOICES, default='homes')
+	listing_type = models.CharField(max_length=20, choices = LISTING_TYPE_CHOICES, default='FOR_SALE')
+	property_category = models.CharField(max_length=20, choices = PROPERTY_CATEGORY_CHOICES, default='HOMES')
 	type = models.CharField(max_length=20, choices = HOUSE_TYPE_CHOICES, default='APARTMENT')
 	bathrooms = models.PositiveIntegerField(default=1, blank = True)
 	bedrooms = models.PositiveIntegerField(default=1)
@@ -232,8 +232,21 @@ class PropertyPhoto(models.Model):
 	photo = CloudinaryField('photo', blank=True, overwrite=True, resource_type='image',
 	 						folder='property_photos')
 
+	__initial_photo = None
+
+	def __init__(self, *args, **kwargs):
+		super(PropertyPhoto, self).__init__(*args, **kwargs)
+		self.__initial_photo = self.photo
+
 	def save(self, *args, **kwargs):
+		# We check if the photo object exists, if not we compress the new photo uploaded
+		# this will fire mostly on innitial saves
 		if not self.id:
+			self.photo = self.compressImage(self.photo)
+		# When the photo field is updated the photo will not be compressed,
+		# so we match the original photo value
+		# and the new one and if it has changed we compress the photo
+		elif self.photo != self.__initial_photo:
 			self.photo = self.compressImage(self.photo)
 		super(PropertyPhoto, self).save(*args, **kwargs)
 

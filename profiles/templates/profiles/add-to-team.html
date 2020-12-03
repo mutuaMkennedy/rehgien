@@ -2,17 +2,8 @@
 <form class="ProSaveForm"  action="{% url 'profiles:request_connection'%}" method="post">
   {% csrf_token %}
   {% if request_exists %}
-     <button class="tooltipped" id="_proTeam" type="submit" value="{{user_2}}" data-position="top"
-     data-tooltip="
-      {% if connection.receiver_accepted == 'Yes'%}
-        leave team
-      {%else %}
-        Request sent. Waiting for approval
-      {% endif %}
-     "
-     style="color:#1100ff;"
-     >
-       <span class="material-icons" style="color:#2cb2ea;">group_add</span>
+     <button id="_proTeam" type="submit" value="{{receiver}}" style="color:#1100ff;">
+       <span class="material-icons" style="color:#2cb2ea;">check</span>
        {% if connection.receiver_accepted == 'Yes'%}
          Connection
       {% else%}
@@ -20,13 +11,10 @@
       {% endif %}
      </button>
   {% else %}
-    <button class="tooltipped {% if user_1 == user_2 %} team_iconDisabled{% endif %}" id="_proTeam" {% if user_1 == user_2 %} disabled {%endif%} type="submit"  value="{{user_2}}" data-position="top"
-    data-tooltip="
-      Get added to this pro's network as a teammate
-    "
-    style="{% if user_1 == user_2 %} color:#ddd !important; {%else%} color:#000 {% endif %}"
+    <button class="{% if request.user == receiver %} team_iconDisabled{% endif %}" id="_proTeam" {% if request.user == receiver %} disabled {%endif%} type="submit"  value="{{receiver}}"
+    style="{% if request.user == receiver %} color:#ddd !important; {%else%} color:#2cb2ea  {% endif %}"
     >
-      <span class="material-icons {% if user_1 == user_2 %} team_iconDisabled{% endif %}" style="{% if user_1 == user_2 %} color:#ddd; {%else%} color:#2cb2ea {% endif %}">group_add</span>Connect
+      <span class="material-icons {% if request.user == receiver %} team_iconDisabled{% endif %}" style="{% if request.user == receiver %} color:#ddd; {%else%} color:#2cb2ea {% endif %}">group_add</span>Connect
     </button>
   {% endif%}
 </form>

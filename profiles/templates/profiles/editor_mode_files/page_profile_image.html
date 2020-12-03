@@ -1,8 +1,8 @@
 {% load static %}
 
-{% if agent.banner_image%}
-<img src="{{agent.banner_image.url}}" alt="{{agent.user.first_name}}" style="width:150px;height:150px;object-fit:cover;">
+{% if bs_profile.business_profile_image%}
+<img src="{{bs_profile.business_profile_image.url}}" alt="{{bs_profile.username}}" style="width:150px;height:150px;object-fit:cover;">
 {% else %}
-<img src="{%static 'img/avatar.png'%}" alt="{{agent.user.first_name}}" style="width:150px;height:150px;object-fit:cover;">
+<img src="{%static 'img/avatar.png'%}" alt="{{agent.user.username}}" style="width:150px;height:150px;object-fit:cover;">
 {% endif %}
 <a href="#e_profileImg-Modal" class="modal-trigger"><span class="material-icons">photo_camera</span></a>

@@ -1,88 +1,23 @@
 {% load static %}
 {% load cloudinary %}
 
-{% if request.user.user_type == 'Agent'%}
-  <div class="_ag-clients {% if agent.ag_top_clients.all %}owl-carousel {% endif %}">
-    {% if agent.ag_top_clients.all %}
-      {% for top_client in agent.ag_top_clients.all %}
-      <div class="_ag-clientsCard card">
-          <div class="_ag-clientsCardImg">
-              {% cloudinary top_client.client_logo %}
-          </div>
-          <div class="_ag-clientsCardDt">
-            <h5>{{top_client.client_name}}</h5>
-            <h6>{{top_client.business_category}}</h6>
-          </div>
-      </div>
-      {% endfor %}
-    {%else %}
-      <div class="pflpages-no-results">
-        <img src="{%static 'img/note.svg'%}" alt="empty">
-        <p>Nothing Yet</p>
-      </div>
-    {% endif %}
-  </div>
-{% elif request.user.user_type == 'PropertyManager'%}
-  <div class="_ag-clients {% if agent.pm_top_clients.all %}owl-carousel {% endif %}">
-    {% if agent.pm_top_clients.all %}
-      {% for top_client in agent.pm_top_clients.all %}
-      <div class="_ag-clientsCard card">
-          <div class="_ag-clientsCardImg">
-              {% cloudinary top_client.client_logo %}
-          </div>
-          <div class="_ag-clientsCardDt">
-            <h5>{{top_client.client_name}}</h5>
-            <h6>{{top_client.business_category}}</h6>
-          </div>
-      </div>
-      {% endfor %}
-    {%else %}
-      <div class="pflpages-no-results">
-        <img src="{%static 'img/note.svg'%}" alt="empty">
-        <p>Nothing Yet</p>
-      </div>
-    {% endif %}
-  </div>
-{% elif request.user.user_type == 'Design&servicePro'%}
-  <div class="_ag-clients {% if agent.ds_top_clients.all %}owl-carousel {% endif %}">
-    {% if agent.ds_top_clients.all %}
-      {% for top_client in agent.ds_top_clients.all %}
-      <div class="_ag-clientsCard card">
-          <div class="_ag-clientsCardImg">
-              {% cloudinary top_client.client_logo %}
-          </div>
-          <div class="_ag-clientsCardDt">
-            <h5>{{top_client.client_name}}</h5>
-            <h6>{{top_client.business_category}}</h6>
-          </div>
-      </div>
-      {% endfor %}
-    {%else %}
-      <div class="pflpages-no-results">
-        <img src="{%static 'img/note.svg'%}" alt="empty">
-        <p>Nothing Yet</p>
-      </div>
-    {% endif %}
-  </div>
-{% elif request.user.user_type == 'Company'%}
-  <div class="_ag-clients {% if agent.co_top_clients.all %}owl-carousel {% endif %}">
-    {% if agent.co_top_clients.all %}
-      {% for top_client in agent.co_top_clients.all %}
-      <div class="_ag-clientsCard card">
-          <div class="_ag-clientsCardImg">
-              {% cloudinary top_client.client_logo %}
-          </div>
-          <div class="_ag-clientsCardDt">
-            <h5>{{top_client.client_name}}</h5>
-            <h6>{{top_client.business_category}}</h6>
-          </div>
-      </div>
-      {% endfor %}
-    {%else %}
-      <div class="pflpages-no-results">
-        <img src="{%static 'img/note.svg'%}" alt="empty">
-        <p>Nothing Yet</p>
-      </div>
-    {% endif %}
-  </div>
-{% endif %}
+<div class="_ag-clients {% if bs_profile.pro_business_client.all %}owl-carousel {% endif %}">
+  {% if bs_profile.pro_business_client.all %}
+    {% for top_client in bs_profile.pro_business_client.all %}
+    <div class="_ag-clientsCard card">
+        <div class="_ag-clientsCardImg">
+            {% cloudinary top_client.client_logo %}
+        </div>
+        <div class="_ag-clientsCardDt">
+          <h5>{{top_client.client_name}}</h5>
+          <h6>{{top_client.business_category}}</h6>
+        </div>
+    </div>
+    {% endfor %}
+  {%else %}
+    <div class="pflpages-no-results">
+      <img src="{%static 'img/note.svg'%}" alt="empty">
+      <p>Nothing Yet</p>
+    </div>
+  {% endif %}
+</div>

@@ -11,9 +11,9 @@ urlpatterns = [
     #Home endpoints
     path('listings/property/homes/', views.HomeListApi.as_view(), name='home_list_api'),
     path('listings/property/home/create/', views.HomeCreateApi.as_view(), name='home_create_api'),
-    path('listings/property/home/<int:pk>/details/', views.HomeDetailApi.as_view(), name='home_detail_api'),
+    path('listings/property/home/<int:pk>/retrieve/', views.HomeDetailApi.as_view(), name='home_detail_api'),
     path('listings/property/home/<int:pk>/edit/', views.HomeUpdateApi.as_view(), name='home_update_api'),
-    path('listings/property/home/<int:pk>/saves/', views.HomeSavesSerializer.as_view(), name='home_saves_api'),
+    path('listings/property/home/<int:pk>/save/', views.HomeSavesSerializer.as_view(), name='home_saves_api'),
     path('listings/property/home/<int:pk>/delete/', views.HomeDeleteApi.as_view(), name='home_delete_api'),
     #Users & authentication
     path('accounts/user_listings/property/home/', views.UserHomeListings.as_view(), name='user_home_listings'),

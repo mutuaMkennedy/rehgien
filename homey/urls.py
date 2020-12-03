@@ -33,7 +33,7 @@ urlpatterns = [
     path('listings/', include('listings.urls')),
     path('mortgage/', include('mortgage.urls')),
     path('contact/', include('contact.urls')),
-    path('profile/', include('profiles.urls')),
+    path('professionals/', include('profiles.urls')),
     path('rehgien_markets/', include('markets.urls')),
     path('apis/', include('listings.apis.urls')),
     path('location-apis/', include('location.api.urls')),

@@ -1,0 +1,23 @@
+{% load static %}
+
+<div class="b-dtls">
+  <h5> {% if bs_profile.business_name %}{{bs_profile.business_name}} {%else %}{{bs_profile.user.username}}{%endif%}</h5>
+</div>
+<div class="ag-rating">
+  {% if bs_profile.average_rating %}
+      {% if bs_profile.average_rating > 4.5  and bs_profile.average_rating <= 5 %}
+      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+      {%elif bs_profile.average_rating > 3.5 and bs_profile.average_rating <= 4.5 %}
+      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+      {% elif bs_profile.average_rating > 2.5 and bs_profile.average_rating <= 3.5 %}
+      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+      {% elif bs_profile.average_rating > 1.5 and bs_profile.average_rating <= 2.5 %}
+      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+      {% elif bs_profile.average_rating > 0 and bs_profile.average_rating <= 1.5 %}
+      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+      {% else %}
+      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+      {% endif %}
+  {% endif %}
+</div>
+<h6><span class="material-icons">location_on</span> {{bs_profile.address|truncatechars:30}}</h6>

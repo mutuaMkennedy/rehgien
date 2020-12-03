@@ -3,8 +3,50 @@
 {% block content %}
 
 <script src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+  $(document).on('click','._add-to-following', function(event){
+     event.preventDefault();
+     var pk = $(this).attr('value');
+     var successmsgBody = $('#upfPageAcScs')
+     var errmsgBody = $('#upfPageAcScs')
+     var formBox = $('._uMyFnFAbtnPk'+pk)
+     $.ajax({
+       type : 'post',
+       url : '{% url "profiles:follow_pro"%}',
+       data : {
+          'pk':pk,
+          'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+       },
+       dataType: 'json',
+       // success
+       success: function(response) {
+         formBox.html(response['form']);
+         successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+         successmsgBody.css({'display': 'flex','bottom':'10px'})
+         $('#_rmvdAlertTip').html("<p><span class='material-icons'>check_circle</span>" + response['alert_message'] + "</p>" ).css('display','flex')
+         $('#_rmvdAlertTip p').css('top','5px')
+
+         setTimeout(function(){
+            successmsgBody.css('bottom','-100px');
+            $('#_rmvdAlertTip').css('display','none');
+         }, 6000);
+       },
+       error: function(response,e){
+           errmsgBody.html("<span class='material-icons'>error_outline</span>" + response['err_message'])
+           errmsgBody.css({'display': 'flex','bottom':'10px'})
+           setTimeout(function(){
+              errmsgBody.css('bottom', '-100px');
+           }, 6000);
+       },
+     });
+  });
+</script>
 
 <div class="container _connectionsPgCont">
+  <div id="upfPageAcScs" class="_upfPageAcScs">
+  </div>
+  <div id="upfPageAcErr" class="_upfPageAcErr">
+  </div>
   <div class="row">
     <div class="_connectionsHeader">
       <div class="_connectionsHrow">
@@ -32,7 +74,7 @@
       <div class="_uFrFgTabs">
         <div class="_uFrFg-swc-wrp">
           <ul id="_uFrFg-switch" class="tabs">
-            {% if request.user.user_type == 'NormalUser' %}
+            {% if request.user.user_type == 'CLIENT' %}
               <li class="tab col s3"><a href="#_u-Following-vw">Following</a></li>
               <li class="tab col s3"><a href="#_u-Followers-vw">Followers</a></li>
             {% else %}
@@ -42,15 +84,13 @@
           </ul>
         </div>
       </div>
-      <div id="_rmvdAlertTip">
-        <p><span class="material-icons">check_circle</span>You unfollowed a pro. Unfollowed pros clear on page reload.</p>
-      </div>
+      <div id="_rmvdAlertTip"></div>
     </div>
     <div id="_u-Following-vw">
         <div class="_uMyFollowing">
           <div class="_uFrFgHdr">
             <div class="_uFrFgHdrTwrp">
-              <h1>Pros you are following <span>{{my_following|length}}</span></h1>
+              <h1>Pages you are following <span>{{my_following|length}}</span></h1>
               <h6>Showing {{my_following|length}} results</h6>
             </div>
           </div>
@@ -58,17 +98,12 @@
               {% if my_following %}
                 {% for following in my_following %}
                   <div id="_uMyFollowingcard{{forloop.counter}}" class="card _uMyFollowingcard">
-                        <div class="_ProFollower">
-                          <a href="{{following.get_absolute_url}}">
-                            <span class='material-icons'>arrow_forward</span>
-                          </a>
-                        </div>
                         <div class="_uMyFollowingCTop">
                           <a href="{{following.get_absolute_url}}">
                             <div class="_uMyFollowingImg">
                               <img src="
-                              {% if following.user.profile_image %}
-                                {{following.user.profile_image.url}}
+                              {% if following.business_profile_image %}
+                                {{following.business_profile_image.url}}
                               {% else %}
                                 {%static 'img/avatar.png'%}
                               {% endif %}
@@ -76,61 +111,38 @@
                             </div>
                             <div class="_uMyFollowingOvw">
                                 <div class="_uMyFollowingOvwT">
-                                    <h3>{{following.user.get_full_name}} <span class="material-icons" style="color:green;">verified</span></h3>
+                                    <h3>{% if following.business_name %}{{following.business_name}} {% else %} {{following.user.username}} {% endif %}<span class="material-icons" style="color:green;">verified</span></h3>
                                     <h4>@{{following.user.username}}</h4>
                                     <p>{{following.user.user_type}}</p>
                                 </div>
                             </div>
                           </a>
                         </div>
+                        <div class="_ProFollower">
+                          <a href="{{following.get_absolute_url}}">Business Page
+                            <span class='material-icons'>expand_more</span>
+                          </a>
+                        </div>
                         <div class="_uMyFollowingCMd">
-                          {% if following.user.user_type == 'Agent'%}
-                            {{following.user.agent_profile.followers.all.count}} followers
-                          {% elif following.user.user_type == 'PropertyManager' %}
-                            {{following.user.pm_profile.followers.all.count}} followers
-                          {% elif following.user.user_type == 'Design&servicePro' %}
-                            {{following.user.DService_profile.followers.all.count}} followers
-                          {% elif following.user.user_type == 'Company' %}
-                            {{following.user.company_profile.followers.all.count}} followers
-                          {%else%}
-                          0 followers
-                          {% endif %}
+                            <img src="
+                            {% if following.business_profile_image %}
+                              {{following.business_profile_image.url}}
+                            {% else %}
+                              {%static 'img/avatar.png'%}
+                            {% endif %}
+                            " alt="avatar">
+                            {{following.user.pro_business_profile.followers.all.count}} follower{{following.user.pro_business_profile.followers.all.count|pluralize}}
                         </div>
-                        <div id="_uMyFollowingAbtn{{forloop.counter}}" class="_uMyFollowingAbtn">
-                              {% include 'profiles/follow-pro-section.html'%}
+                        <div class="_uMyFollowingAbtn _uMyFnFAbtnPk{{following.user.pro_business_profile.pk}}">
+                              {% include 'profiles/pro-follow-section.html' with pro=following.user.pro_business_profile %}
                         </div>
-                        <script type="text/javascript">
-                          $(document).on('click','#proFollowing{{forloop.counter}}', function(event){
-                             event.preventDefault();
-                             var pk = $(this).attr('value');
-                             var userType = $(this).attr('data-user-type');
-                             var loopIndex = $(this).attr('data-loop-index');
-                             $.ajax({
-                               type : 'post',
-                               url : '{% url "profiles:pro_follow"%}',
-                               data : {
-                                  'pk':pk,
-                                  'userType':userType,
-                                  'loopIndex':loopIndex,
-                                  'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-                               },
-                               dataType: 'json',
-                               // success
-                               success: function(response) {
-                                 $('#_uMyFollowerAbtn{{forloop.counter}}').html(response['form'])
-                               },
-                               error: function(rs,e){
-                               },
-                             });
-                          });
-                        </script>
                   </div>
                 {% endfor %}
               {% else %}
                   <div class="_connectionsEmpty">
                     It appears you are not following any pros yet.
                     Pros you follow will appear here.<br>
-                    You can find pros to follow in the Pro listing directories. <br>
+                    You can find pros to follow in the Pro finder section. <br>
                     Learn more about who followers are on rehgien by <a href="#"><u>Clicking here.</u></a>
                   </div>
               {% endif %}
@@ -140,7 +152,7 @@
     <div id="_u-Followers-vw">
       <div class="_uMyFollowing">
           <div class="_uFrFgHdr">
-            {% if request.user.user_type != 'NormalUser' %}
+            {% if request.user.user_type == 'PRO' %}
             <div class="_uFrFgHdrTwrp">
               <h1>People following you<span>{{followers.count}}</span></h1>
               <h6>Showing {{followers.count}} results</h6>
@@ -148,43 +160,11 @@
             {% endif %}
           </div>
           <div class="_uMyFollowingRow">
-            {% if request.user.user_type != 'NormalUser' %}
+            {% if request.user.user_type == 'PRO' %}
               {% if followers %}
                   {% for follower in followers %}
                     <div class="card _uMyFollowingcard">
-
-                          <div class="_ProFollower">
-                            {% if follower.user_type != 'NormalUser' %}
-                            <a href="
-                            {% if follower.user_type == 'Agent'%}
-                              {{follower.agent_profile.get_absolute_url}}
-                            {% elif follower.user_type == 'PropertyManager' %}
-                              {{follower.pm_profile.get_absolute_url}}
-                            {% elif follower.user_type == 'Design&servicePro' %}
-                              {{follower.DService_profile.get_absolute_url}}
-                            {% elif follower.user_type == 'Company' %}
-                              {{follower.company_profile.get_absolute_url}}
-                            {% endif %}
-                            "
-                            >
-                              <span class='material-icons'>arrow_forward</span>
-                            </a>
-                            {% endif %}
-                          </div>
-
                             <div class="_uMyFollowingCTop">
-                                <a href="
-                                {% if follower.user_type == 'Agent'%}
-                                  {{follower.agent_profile.get_absolute_url}}
-                                {% elif follower.user_type == 'PropertyManager' %}
-                                  {{follower.pm_profile.get_absolute_url}}
-                                {% elif follower.user_type == 'Design&servicePro' %}
-                                  {{follower.DService_profile.get_absolute_url}}
-                                {% elif follower.user_type == 'Company' %}
-                                  {{follower.company_profile.get_absolute_url}}
-                                {% endif %}
-                                "
-                                >
                                   <div class="_uMyFollowingImg">
                                     <img src="
                                     {% if follower.profile_image %}
@@ -196,61 +176,44 @@
                                   </div>
                                   <div class="_uMyFollowingOvw">
                                       <div class="_uMyFollowingOvwT">
-                                          <h3>{{follower.get_full_name}} <span class="material-icons" style="color:green;">verified</span></h3>
+                                          <h3>{% if follower.get_full_name %}{{follower.get_full_name}} {% else %} {{follower.username}} {% endif %}<span class="material-icons" style="color:green;">verified</span></h3>
                                           <h4>@{{follower.username}}</h4>
                                           <p>{{follower.user_type}}</p>
                                       </div>
                                   </div>
-                                </a>
+                            </div>
+                            <div class="_ProFollower">
+                              {% if follower.user_type == 'PRO' %}
+                              <a href="{{follower.pro_business_profile.get_absolute_url}}">
+                                Business Page
+                                <span class='material-icons'>expand_more</span>
+                              </a>
+                              {% endif %}
                             </div>
                           <div class="_uMyFollowingCMd">
-                            {% if follower.user_type == 'Agent'%}
-                              {{follower.agent_profile.followers.all.count}} followers
-                            {% elif follower.user_type == 'PropertyManager' %}
-                              {{follower.pm_profile.followers.all.count}} followers
-                            {% elif follower.user_type == 'Design&servicePro' %}
-                              {{follower.DService_profile.followers.all.count}} followers
-                            {% elif follower.user_type == 'Company' %}
-                              {{follower.company_profile.followers.all.count}} followers
-                            {%else%}
-                              0 followers
-                            {% endif %}
+                              <img src="
+                              {% if follower.pro_business_profile.business_profile_image %}
+                                {{follower.pro_business_profile.business_profile_image.url}}
+                              {% else %}
+                                {%static 'img/avatar.png'%}
+                              {% endif %}
+                              " alt="{{follower.pro_business_profile.business_name}}">
+                            {% if follower.user_type == 'PRO'%}
+                              {{follower.pro_business_profile.followers.all.count}} follower{{follower.pro_business_profile.followers.all.count|pluralize}}
+                            {%endif%}
                           </div>
 
-                          <div id="_uMyFollowerAbtn{{forloop.counter}}" class="_uMyFollowerAbtn">
-                                {% include 'profiles/follow-pro-section.html'%}
+                          <div class="_uMyFollowerAbtn _uMyFnFAbtnPk{{follower.pro_business_profile.pk}}">
+                            {% if request.user.user_type == 'PRO' %}
+                                {% include 'profiles/pro-follow-section.html'  with pro=follower.pro_business_profile %}
+                            {% endif %}
                           </div>
-                          <script type="text/javascript">
-                            $(document).on('click','#proFollow{{forloop.counter}}', function(event){
-                               event.preventDefault();
-                               var pk = $(this).attr('value');
-                               var userType = $(this).attr('data-user-type');
-                               var loopIndex = $(this).attr('data-loop-index');
-                               $.ajax({
-                                 type : 'post',
-                                 url : '{% url "profiles:pro_follow"%}',
-                                 data : {
-                                    'pk':pk,
-                                    'userType':userType,
-                                    'loopIndex':loopIndex,
-                                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-                                 },
-                                 dataType: 'json',
-                                 // success
-                                 success: function(response) {
-                                   $('#_uMyFollowerAbtn{{forloop.counter}}').html(response['form'])
-                                 },
-                                 error: function(rs,e){
-                                 },
-                               });
-                            });
-                          </script>
                     </div>
                   {% endfor %}
               {% else %}
                   <div class="_connectionsEmpty">
                     It appears you don't have any followers yet.
-                    People or pros who follow you will appear here.<br>
+                    Clients or pros who follow you will appear here.<br>
                     Learn more about who followers are on rehgien by <a href="#"><u>Clicking here.</u></a>
                   </div>
               {% endif %}

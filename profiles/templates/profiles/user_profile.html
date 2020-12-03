@@ -20,8 +20,8 @@
                   <div class="_pfl-acct-ElpflOv">
                       <div class="_pfl-acct-ElpFImg">
                         <img src="
-                        {% if request.user.profile_image%}
-                          {{ request.user.profile_image.url}}
+                        {% if user.profile_image%}
+                          {{ user.profile_image.url}}
                         {% else %}
                           {% static 'img/avatar.png'%}
                         {% endif %}
@@ -29,19 +29,8 @@
                       </div>
                       <div class="_pfl-acct-ElpSnap">
                         <h3>{% if user.get_full_name %}{{user.get_full_name}}{%else%}{{user.username}}{% endif %}</h3>
-                        <h5>
-                        {% if user.user_type == 'Agent' %}
-                          Agent
-                        {% elif user.user_type == 'PropertyManager' %}
-                          Property Manager
-                        {% elif user.user_type == 'Company' %}
-                          Company
-                        {% elif user.user_type == 'Design&servicePro' %}
-                          Design and Service Pro
-                        {% elif user.user_type == 'NormalUser'%}
-                          Regular User
-                        {% endif %}
-                        </h5>
+                        <h5>{{user.pro_business_profile.get_pro_category_display}}</h5>
+                        <h6>{{user.pro_business_profile.pro_speciality}}</h6>
                       </div>
                   </div>
                   <div class="pfl-acct-BtnsWrps">
@@ -105,8 +94,8 @@
                       <div class="accountTab">
                         <div class="pfl-card-img">
                             <img src="
-                            {% if request.user.profile_image%}
-                              {{ request.user.profile_image.url}}
+                            {% if user.profile_image%}
+                              {{ user.profile_image.url}}
                             {% else %}
                               {% static 'img/avatar.png'%}
                             {% endif %}
@@ -120,7 +109,7 @@
               </div>
           </div>
           <div id="_dashbordAccount" class="_dashboardTabContent">
-            <h1>Your account <sup>{%if request.user.user_type != 'NormalUser'%}PRO {% else %}REGULAR{% endif %}</sup></h1>
+            <h1>Your account <sup>{{user.user_type}}</sup></h1>
             <div class="_AccountovDbox">
               <div class="_accCardsWrapper">
                   <div class="_accCardsWrapperL">
@@ -132,8 +121,8 @@
                                 <div id="_uProgress">
                                   <div class="_userProfileImg">
                                     <img src="
-                                      {% if request.user.profile_image %}
-                                        {{ request.user.profile_image.url}}
+                                      {% if user.profile_image %}
+                                        {{ user.profile_image.url}}
                                       {% else %}
                                         {% static 'img/avatar.png' %}
                                       {% endif %}" alt="avatar">
@@ -144,13 +133,13 @@
                                 </div>
                                 <h5>{% if user.get_full_name %} {{user.get_full_name}}{% else %} {{user.username}}{%endif%}<span class="material-icons">verified</span></h5>
                                 <div class="_userProfileEnd">
-                                  <a href="#e-profile-Modal" class="modal-trigger"><button type="button" name="button">Update profile</button></a>
+                                  <a href="#e-profile-Modal" class="modal-trigger"><button type="button" name="button">Update account</button></a>
                                 </div>
                               </div>
                         </div>
                     </div>
                       <div class="card _accCard">
-                        {% if request.user.user_type == 'NormalUser' %}
+                        {% if user.user_type != 'PRO' %}
                         <div class="disabledCardOverlay">
                           <div class="_diabledHelperTxt">
                               Pro feature! <br>
@@ -165,14 +154,8 @@
                               <div id="_bspProgress">
                                 <div class="_bsProfileCompletion">
                                   <h5>
-                                    {% if user.user_type == 'Agent'%}
-                                      {{user.agent_profile.percentage_complete}}
-                                    {% elif user.user_type == 'PropertyManager'%}
-                                      {{user.pm_profile.percentage_complete}}
-                                    {% elif user.user_type == 'Design&servicePro'%}
-                                      {{user.DService_profile.percentage_complete}}
-                                    {% elif user.user_type == 'Company'%}
-                                      {{user.company_profile.percentage_complete}}
+                                    {% if user.user_type == 'PRO'%}
+                                      {{user.pro_business_profile.percentage_complete}}
                                     {% else %}
                                       0
                                     {% endif %}
@@ -181,37 +164,18 @@
                                   <h6>Complete</h6>
                                 </div>
                               </div>
-                              <a href="
-                                {% if user.user_type == 'Agent'%}
-                                  {{user.agent_profile.get_absolute_url}}
-                                {% elif user.user_type == 'PropertyManager'%}
-                                  {{user.pm_profile.get_absolute_url}}
-                                {% elif user.user_type == 'Design&servicePro'%}
-                                  {{user.DService_profile.get_absolute_url}}
-                                {% elif user.user_type == 'Company'%}
-                                  {{user.company_profile.get_absolute_url}}
-                                {%endif%}
-                              ">
+                              <a href="{{user.pro_business_profile.get_absolute_url}}">
                                 <h5>Go to business page &nbsp<span class="material-icons">east</span></h5>
                               </a>
                           </div>
                           <div class="_userProfileEnd">
-                            <a {% if request.user.user_type != 'NormalUser' %}
-                               href="
-                               {% if user.user_type == 'Agent'%}
-                                {% url 'profiles:ag_profile_edit_mode' user.agent_profile.pk%}
-                               {% elif user.user_type == 'PropertyManager'%}
-                                 {% url 'profiles:pm_profile_edit_mode' user.pm_profile.pk%}
-                               {% elif user.user_type == 'Design&servicePro'%}
-                                 {% url 'profiles:ds_profile_edit_mode' user.DService_profile.pk%}
-                               {% elif user.user_type == 'Company'%}
-                                 {% url 'profiles:co_profile_edit_mode' user.company_profile.pk%}
-                               {%endif%}
-
-                              "
+                            <a
+                            {% if user.user_type == 'PRO' %}
+                               href="{% url 'profiles:pro_business_page_edit' user.pro_business_profile.pk %}"
                               class="modal-trigger"
-                            {% endif %}>
-                            <button type="button" name="button">Update profile</button>
+                            {% endif %}
+                            >
+                            <button type="button" name="button">Update Business Profile</button>
                           </a>
                           </div>
                       </div>
@@ -219,7 +183,7 @@
                   <div class="_accCardsWrapperR">
                     <div class="_accCardsWrapScal">
                       <div class="card _accCard">
-                        {% if request.user.user_type == 'NormalUser' %}
+                        {% if request.user.user_type != 'PRO' %}
                         <div class="disabledCardOverlay">
                           <div class="_diabledHelperTxt">
                               Pro feature! <br>
@@ -232,37 +196,37 @@
                           <h3><span class="material-icons">groups</span>Connections</h3>
                           <div class="_bsProfileMiddle">
                                 <div class="_userConnections">
-                                  <h5>{{user_connections.count}}</h5>
+                                  <h5>{{pro_connections.count}}</h5>
                                   <h6>Connections</h6>
                                 </div>
                                 <div class="_userConnectionsAvatars">
-                                  {% if user_connections %}
-                                    {% for connection in user_connections|slice:":3"%}
-                                      {% if request.user == connection.requestor %}
+                                  {% if pro_connections %}
+                                    {% for connection in pro_connections|slice:":3"%}
+                                      {% if user == connection.requestor %}
                                         <div class="_userCAvImg{{forloop.counter}}">
                                           <img src="
                                           {% if connection.receiver.profile_image %}
                                             {{connection.receiver.profile_image.url}}
                                           {% else %}
-                                            {%static 'img/av1.jpg'%}
+                                            {%static 'img/avatar.png'%}
                                           {% endif %}
                                           " alt="avatar">
                                         </div>
-                                      {% elif request.user == connection.receiver %}
+                                      {% elif user == connection.receiver %}
                                         <div class="_userCAvImg{{forloop.counter}}">
                                           <img src="
                                           {% if connection.requestor.profile_image %}
                                             {{connection.requestor.profile_image.url}}
                                           {% else %}
-                                            {%static 'img/av1.jpg'%}
+                                            {%static 'img/avatar.png'%}
                                           {% endif %}
                                           " alt="avatar">
                                         </div>
                                       {% endif %}
                                     {%endfor%}
-                                    {% if user_connections|length > 3 %}
+                                    {% if pro_connections|length > 3 %}
                                       <div class="_userCAvImgExtra">
-                                        +{{ user_connections|length|add:"-3" }} <span>more</span>
+                                        +{{ pro_connections|length|add:"-3" }} <span>more</span>
                                       </div>
                                     {% else %}
                                       <div class="_userCAvImgExtra">
@@ -273,12 +237,12 @@
                                 </div>
                           </div>
                           <div class="_userProfileEnd">
-                            <a {% if request.user.user_type != 'NormalUser' %} href="{% url 'profiles:user_connections'%}" {% endif %}><button type="button" name="button">Manage Connections</button></a>
+                            <a {% if request.user.user_type == 'PRO' %} href="{% url 'profiles:user_connections'%}" {% endif %}><button type="button" name="button">Manage Connections</button></a>
                           </div>
                       </div>
                       <div class="card _accCard">
                           <h3><span class="material-icons">how_to_reg</span>
-                            {% if request.user.user_type == 'NormalUser' %}
+                            {% if user.user_type == 'CLIENT' %}<!-- Use following instead of followers -->
                               Following
                             {% else %}
                               Followers
@@ -286,7 +250,7 @@
                           </h3>
 
                           <div class="_bsProfileMiddle">
-                            {% if request.user.user_type == 'NormalUser'%} <!-- Use following instead of followers -->
+                            {% if request.user.user_type == 'CLIENT'%} <!-- Use following instead of followers -->
                                 <div class="_userConnections">
                                     <h5>
                                       {{following|length}}
@@ -318,22 +282,11 @@
                                 </div>
                             {% else %}
                                 <div class="_userConnections">
-                                    <h5>
-                                      {% if request.user.user_type == 'Agent'%}
-                                        {{user.agent_profile.followers.all.count}}
-                                      {% elif request.user.user_type == 'PropertyManager' %}
-                                        {{user.pm_profile.followers.all.count}}
-                                      {% elif request.user.user_type == 'Design&servicePro' %}
-                                        {{user.DService_profile.followers.all.count}}
-                                      {% elif request.user.user_type == 'Company' %}
-                                        {{user.company_profile.followers.all.count}}
-                                      {% endif %}
-                                    </h5>
+                                    <h5>{{user.pro_business_profile.followers.all.count}}</h5>
                                     <h6>Followers</h6>
                                 </div>
                                 <div class="_userConnectionsAvatars">
-                                    {% if request.user.user_type == 'Agent'%}
-                                      {% if user.agent_profile.followers%}
+                                      {% if user.pro_business_profile.followers%}
                                           {% for follower in user.agent_profile.followers.all %}
                                             <div class="_userCAvImg{{forloop.counter}}">
                                               <img src="
@@ -353,76 +306,9 @@
                                             <div class="_userCAvImgExtra">
                                             </div>
                                           {% endif %}
-                                    {% endif %}
-                                  {% elif request.user.user_type == 'PropertyManager' %}
-                                      {% if user.pm_profile.followers %}
-                                            {% for follower in user.pm_profile.followers.all %}
-                                              <div class="_userCAvImg{{forloop.counter}}">
-                                                <img src="
-                                                  {% if follower.profile_image %}
-                                                    {{follower.profile_image.url}}
-                                                  {% else %}
-                                                    {%static 'img/avatar.png'%}
-                                                  {% endif %}
-                                                " alt="avatar">
-                                              </div>
-                                            {% endfor %}
-                                            {% if user.pm_profile.followers|length > 3 %}
-                                              <div class="_userCAvImgExtra">
-                                                +{{ user.pm_profile.followers|length|add:"-3" }}
-                                              </div>
-                                            {% else %}
-                                              <div class="_userCAvImgExtra">
-                                              </div>
-                                            {% endif %}
-                                      {% endif %}
-                                  {% elif request.user.user_type == 'Design&servicePro' %}
-                                      {% if user.DService_profile.followers%}
-                                            {% for follower in user.DService_profile.followers.all %}
-                                              <div class="_userCAvImg{{forloop.counter}}">
-                                                <img src="
-                                                  {% if follower.profile_image %}
-                                                    {{follower.profile_image.url}}
-                                                  {% else %}
-                                                    {%static 'img/avatar.png'%}
-                                                  {% endif %}
-                                                " alt="avatar">
-                                              </div>
-                                            {% endfor %}
-                                            {% if user.DService_profile.followers|length > 3 %}
-                                              <div class="_userCAvImgExtra">
-                                                +{{ user.DService_profile.followers|length|add:"-3" }}
-                                              </div>
-                                            {% else %}
-                                              <div class="_userCAvImgExtra">
-                                              </div>
-                                            {% endif %}
-                                      {% endif %}
-                                  {% elif request.user.user_type == 'Company' %}
-                                      {% if user.company_profile.followers %}
-                                            {% for follower in user.company_profile.followers.all %}
-                                              <div class="_userCAvImg{{forloop.counter}}">
-                                                <img src="
-                                                  {% if follower.profile_image %}
-                                                    {{follower.profile_image.url}}
-                                                  {% else %}
-                                                    {%static 'img/avatar.png'%}
-                                                  {% endif %}
-                                                " alt="avatar">
-                                              </div>
-                                            {% endfor %}
-                                            {% if user.company_profile.followers|length > 3 %}
-                                              <div class="_userCAvImgExtra">
-                                                +{{ user.company_profile.followers|length|add:"-3" }}
-                                              </div>
-                                            {% else %}
-                                              <div class="_userCAvImgExtra">
-                                              </div>
-                                            {% endif %}
-                                      {% endif %}
                                   {% endif %}
                                 </div>
-                              {% endif %}
+                            {% endif %}
                           </div>
                           <div class="_userProfileEnd">
                             <a href="{% url 'profiles:user_followers' %}"><button type="button" name="button">Manage Followers</button></a>
@@ -525,14 +411,14 @@
                     <li class="tab col s3"><a href="#_dashMyListings">Property</a></li>
                     <li class="tab col s3"><a href="#_dashRequests">Requests</a></li>
                     <li class="tab col s3"><a href="#_dashMyFavs">Saved Property</a></li>
-                    {% if request.user.user_type == 'PropertyManager' or request.user.user_type == 'Company' or request.user.user_type == 'Design&servicePro'%}
+                    {% if user.user_type == 'PRO'%}
                       <li class="tab col s3"><a href="#_dashMyPortfolio">Portfolio</a></li>
                     {% endif %}
                 </ul>
               </div>
               <div class="pfl-dtl">
                 <div id="_dashMyListings" class="pfl-listings">
-                    {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' or request.user.user_type == 'Company'%}
+                    {% if user.pro_business_profile.pro_category == 'PCAT1'%}
                       <div  id="MyListingsSwWr">
                         <ul id="MyListings-switch" class="tabs">
                             <li class="tab col s3"><a href="#MySaleListings">For sale</a></li>
@@ -623,9 +509,11 @@
                                             </td>
                                             <td>
                                               <div class="card-links">
-                                                <a href="{% url 'listings:property_delete' property_category='for_sale' pk=onsale_listings.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
-                                                <a href="{% url 'listings:property_update' property_category='for_sale' pk=onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
-
+                                                  <form action="{% url 'listings:property_delete' property_category=onsale_listings.property_category pk=onsale_listings.pk%}" method="post">
+                                                    {% csrf_token %}
+                                                    <button id="link-del" type="submit" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button>
+                                                  </form>
+                                                  <a href="{% url 'listings:property_update' property_category=onsale_listings.property_category pk=onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
                                               </div>
                                             </td>
                                         </tr>
@@ -723,10 +611,12 @@
                                         </td>
                                         <td>
                                           <div class="card-links">
-                                            <a href="{% url 'listings:property_delete' property_category='for_sale' pk=rentals.pk%}"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
-                                            <a href="{% url 'listings:property_update' property_category='for_sale' pk=rentals.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
-
-                                          </div>
+                                            <form action="{% url 'listings:property_delete' property_category=rentals.property_category pk=rentals.pk%}" method="post">
+                                              {% csrf_token %}
+                                              <button id="link-del" type="submit" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button>
+                                            </form>
+                                            <a href="{% url 'listings:property_update' property_category=rentals.property_category pk=rentals.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
+                                            </div>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -895,7 +785,7 @@
                 <div id="_dashRequests" class="requests-sc">
                       <div  id="MyListingsSwWr">
                         <ul id="MyListings-switch" class="tabs">
-                          {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
+                          {% if user.user_type == 'PRO' %}
                               <li class="tab col s3"><a href="#MyLeadRequests">Lead Requests</a></li>
                               <li class="tab col s3"><a href="#MyAgentPropertyRequests">Property Request</a></li>
                           {% else %}
@@ -905,7 +795,7 @@
                           {% endif %}
                         </ul>
                       </div>
-                      {% if request.user.user_type == 'Agent' or request.user.user_type == 'PropertyManager' %}
+                      {% if user.user_type == 'PRO' %}
                             <div id="MyLeadRequests">
                               <div class="MyLsgHd">
                                 <p>My Lead Requests <span>Showing {{ag_lead_requests.count}} results.</span></p>
@@ -1335,136 +1225,74 @@
                             </div>
                       {% endif %}
                 </div>
-                {% if request.user.user_type == 'PropertyManager' or request.user.user_type == 'Company' or request.user.user_type == 'Design&servicePro'%}
+                {% if user.user_type == 'PRO'%}
                 <div id="_dashMyPortfolio">
                   <div class="MyLsgHd">
-                    {% if request.user.user_type == 'PropertyManager' or request.user.user_type == 'Company'%}
-                      <p>My management portfolio <span>Showing {{pm_portfolio.count}} results</span></p>
-                      <a href="#c-portfolio-Modal" class="modal-trigger"><button type="button" name="button"><span class="material-icons">add</span>Add new property</button></a>
-                    {% elif request.user.user_type == 'Design&servicePro'%}
-                      <p>My projects <span>Showing {{project_portfolio.count}} results</span></p>
-                      <a href="#c-portfolio-Modal" class="modal-trigger"><button type="button" name="button"><span class="material-icons">add</span>Add new project</button></a>
-                    {% endif %}
+                      <p>My portfolio <span>Showing {{portfolio_items.count}} items</span></p>
+                      <a href="#c-portfolio-Modal" class="modal-trigger"><button type="button" name="button"><span class="material-icons">add</span>Add new item</button></a>
                   </div>
-                  <div id="pfl-sal">
-                    {% if request.user.user_type == 'PropertyManager' or request.user.user_type == 'Company'%}
-                      {% if pm_portfolio %}
-                        <table>
-                          <thead>
+                  <div class="profile-sale">
+                    {% if portfolio_items %}
+                      <div id="pfl-sal">
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>Item</th>
+                                <th>Item type</th>
+                                <th>Stats</th>
+                                <th>Posted on</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            {% for portfolio_item in portfolio_items %}
                             <tr>
-                              <th>Property</th>
-                              <th>Stats</th>
-                              <th>Posted on</th>
-                              <th>Actions</th>
-                            </tr>
-                          </thead>
-                          {% for property in pm_portfolio %}
-                          <tr>
-                              <td>
-                                  <div id="rec-card" class="card">
-                                    <div id="rec-img" class="card-image">
-                                      {% for thumb in property.PM_porfolio_Images.all%}
-                                        {% if forloop.last %}
-                                          <a href="#">{% cloudinary thumb.property_image ImageTransformation %}</a>
-                                        {% endif %}
-                                      {% endfor %}
+                                <td>
+                                    <div id="rec-card" class="card">
+                                      <div id="rec-img" class="card-image">
+                                        {% for thumb in portfolio_item.portfolio_item_photo.all%}
+                                          {% if forloop.last %}
+                                            <a href="#">{% cloudinary thumb.photo ImageTransformation %}</a>
+                                          {% endif %}
+                                        {% endfor %}
+                                      </div>
+                                      <div id="rec-content" class="card-content">
+                                        <ol>
+                                          <li class="rec-h-name">{{portfolio_item.name}}</li>
+                                          <li class="rec-h-location">{{portfolio_item.address}}</li>
+                                          <li class="rec-h-price">Worth:<br>Ksh {{portfolio_item.worth}}</li>
+                                        </ol>
+                                      </div>
                                     </div>
-                                    <div id="rec-content" class="card-content">
-                                      <ol>
-                                        <li class="rec-h-name">{{property.property_name}}</li>
-                                        <li class="rec-h-location">{{property.property_location}}</li>
-                                        <li class="rec-h-price">Market Value:<br>Ksh {{property.property_market_value}}</li>
-                                      </ol>
-                                    </div>
+                                </td>
+                                <td>
+                                  <span id="rec-date"><p>{{portfolio_item.porfolio_item_type}}</p></span>
+                                </td>
+                                <td>
+                                  <div class="_dashLsgAcStats">
+                                      <span class="material-icons">trending_up</span>
+                                      <div class="_dashLsgAcStd">
+                                        <h4>300 &nbsp + &nbsp<span>12</span></h4>
+                                        <h5>Total Views</h5>
+                                      </div>
                                   </div>
-                              </td>
-                              <td>
-                                <div class="_dashLsgAcStats">
-                                    <span class="material-icons">trending_up</span>
-                                    <div class="_dashLsgAcStd">
-                                      <h4>300 &nbsp + &nbsp<span>12</span></h4>
-                                      <h5>Total Views</h5>
-                                    </div>
-                                </div>
-                              </td>
-                              <td>
-                                <span id="rec-date" class="card-title"><p>{{property.created_at.date}}</p></span>
-                              </td>
-                              <td>
-                                <div class="card-links">
-                                  <a href="#"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
-                                  <a href="{% url 'profiles:pm_portfolio_update' property.pk %}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
-                                </div>
-                              </td>
-                          </tr>
-                          {% endfor %}
-                        </table>
-                      {% else %}
-                        <div class="empty-list">
-                          <p>You currently dont have any properties. Properties you add will appear here.</p>
-                        </div>
-                      {% endif %}
-                    {% elif request.user.user_type == 'Design&servicePro'%}
-                      {% if project_portfolio %}
-                        <table>
-                          <thead>
-                            <tr>
-                              <th>Project</th>
-                              <th>Project Year</th>
-                              <th>Stats</th>
-                              <th>Posted on</th>
-                              <th>Actions</th>
-                            </tr>
-                          </thead>
-                          {% for project in project_portfolio %}
-                          <tr>
-                              <td>
-                                  <div id="rec-card" class="card">
-                                    <div id="rec-img" class="card-image">
-                                      {% for thumb in project.DS_project_Images.all%}
-                                        {% if forloop.last %}
-                                          <a href="#">{% cloudinary thumb.project_image ImageTransformation %}</a>
-                                        {% endif %}
-                                      {% endfor %}
-                                    </div>
-                                    <div id="rec-content" class="card-content">
-                                      <ol>
-                                        <li class="rec-h-name">{{project.project_name}}</li>
-                                        <li class="rec-h-location">{{project.project_location}}</li>
-                                        <li class="rec-h-price">Project Cost:<br>Ksh {{project.project_cost}}</li>
-                                      </ol>
-                                    </div>
+                                </td>
+                                <td>
+                                  <span id="rec-date" class="card-title"><p>{{portfolio_item.created_at.date}}</p></span>
+                                </td>
+                                <td>
+                                  <div class="card-links">
+                                    <a href="#"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
+                                    <a href="{% url 'profiles:portfolio_item_update' portfolio_item.pk %}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
                                   </div>
-                              </td>
-                              <td>
-                                <span   id="rec-date" class="card-title"><p>{{project.project_year}}</p></span>
-                              </td>
-                              <td>
-                                <div class="_dashLsgAcStats">
-                                    <span class="material-icons">trending_up</span>
-                                    <div class="_dashLsgAcStd">
-                                      <h4>300 &nbsp + &nbsp<span>12</span></h4>
-                                      <h5>Total Views</h5>
-                                    </div>
-                                </div>
-                              </td>
-                              <td>
-                                <span id="rec-date" class="card-title"><p>{{project.created_at.date}}</p></span>
-                              </td>
-                              <td>
-                                <div class="card-links">
-                                  <a href="#"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
-                                  <a href="{% url 'profiles:DS_project_update' project.pk %}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
-                                </div>
-                              </td>
-                          </tr>
-                          {% endfor %}
-                        </table>
-                      {% else %}
-                        <div class="empty-list">
-                          <p>You currently dont have any properties. Properties you add will appear here.</p>
-                        </div>
-                      {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                          </table>
+                      </div>
+                    {% else %}
+                      <div class="empty-list">
+                        <p>You currently dont have any items in your portfolio list. Items you add will appear here.</p>
+                      </div>
                     {% endif %}
                   </div>
                 </div>
@@ -1473,7 +1301,7 @@
           </div>
           <div id="_dashbordAdvertise" class="advertising-sc _dashboardTabContent">
             <div class="a-content">
-              <p>under construction stay tuned! <br>
+              <p>Under construction stay tuned! <br>
                 Advertise like a PRO. <br>
                 Can't wait? Sign up to our Rehgien Insider Programme and have access to new features first.
               </p>
@@ -1544,37 +1372,35 @@
   <div id="c-portfolio-Modal" class="modal">
     <div class="c-portfolio-helper">
       <div class="upf-header">
-        <div class="">
-
-        </div>
         <button type="button" class="modal-close">
           <span class="material-icons">close</span>
         </button>
       </div>
-      <h1>Showcase your portfolio</h1>
+      <h1>Showcase your best work</h1>
         <div class="c-portfolio-hp-t">
-            {% if request.user.user_type == 'Company' or request.user.user_type == 'PropertyManager' %}
-              Tell potential clients you are the person they are looking for.<br>
-              Showcase your property management portfolio by adding properties you are managing.<br>
-              <b>We show your portfolio on your business page</b>
-            {% elif request.user.user_type == 'Design&servicePro' %}
-              Tell potential clients you are the person they are looking for.
-              Showcase your project portfolio by adding ongoing or completed projects.<br>
-              <b>We show your portfolio on your business page</b>
-            {% endif %}
+              Showcasing your best work is the surest way to tell potential clients you are the person
+              they are looking for.
+              <br><b>We show your portfolio on your business page.</b>
+              <br>
+              <br>
+               Select a relevant category below and then click the add item button to begin.
+               <br>
+               <br>
         </div>
-        {% if request.user.user_type == 'Company' or request.user.user_type == 'PropertyManager' %}
-          <a href="{% url 'profiles:pm_portfolio_create'%}">
-            <button type="button" name="button">
-                Add a property
-            </button>
-          </a>
-        {% elif request.user.user_type == 'Design&servicePro' %}
-          <a href="{% url 'profiles:DS_project_create'%}">
-            <button type="button" name="button">
-                Add a project
-            </button>
-          </a>
+         {% if user.user_type == 'PRO' %}
+            <form class="portfolio-category-form_" action="{% url 'profiles:portfolio_item_create' slug='category'%}" method="get">
+                <div class="_ptf-catg-wrpr_xchs input-field">
+                  <select name="_ptf-catg-choice">
+                    {% for choice in porfolio_categories%}
+                      <option value="{{choice|slugify}}" selected>{{choice|lower}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              <button type="submit" name="button">
+                  Add item
+              </button>
+              <span>or | <a href="#">Suggest a category</a></span>
+            </form>
         {% endif %}
     </div>
   </div>
@@ -1619,7 +1445,7 @@ function showProfileProgress(){
   }); // Number from 0.0 to 1.0
 };
 
-var bsProfilePercentComplete = {% if user.user_type == 'Agent'%}{{user.agent_profile.percentage_complete}}{% elif user.user_type == 'PropertyManager'%}{{user.pm_profile.percentage_complete}}{% elif user.user_type == 'Design&servicePro' %}{{user.DService_profile.percentage_complete}}{% elif user.user_type == 'Company'%}{{user.company_profile.percentage_complete}}{%else%}0{% endif %};
+var bsProfilePercentComplete = {% if user.user_type == 'PRO'%}{{user.pro_business_profile.percentage_complete}}{% else %}0{% endif %};
 
 
 function showBsProfileProgress(){

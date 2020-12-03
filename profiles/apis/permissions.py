@@ -19,4 +19,14 @@ class AccountOwnerOrReadOnly(BasePermission):
 class IsAPro(BasePermission):
     message = 'PermissionDenied.'
     def has_object_permission(self,request,view,obj):
-        return request.user.user_type != 'NormalUser'
+        return request.user.user_type != 'CLIENT'
+
+class IsRequestorOrReceiver(BasePermission):
+    message = 'PermissionDenied.'
+    def has_object_permission(self,request,view,obj):
+        return request.user is obj.requestor or  obj.receiver
+
+class IsProfileOwnerOrReadOnly(BasePermission):
+    message = 'PermissionDenied.'
+    def has_object_permission(self,request,view,obj):
+        return obj.business_profile.user == request.user

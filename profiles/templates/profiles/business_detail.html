@@ -4,38 +4,55 @@
 {% block content %}
 
 <script src="{% static 'js/jquery.min.js' %}"></script>
-      <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function(event){
           // save
-          $(document).on('click','#proSave', function(event){
-             event.preventDefault();
-             var pk = $(this).attr('value');
-             $.ajax({
-               type : 'post',
-               url : '{% url "profiles:save_company"%}',
-               data : {
-                  'pk':pk,
-                  'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-               },
-               dataType: 'json',
-               // success
-               success: function(response) {
-                 $('#_savePro').html(response['form'])
+          $(document).on('click', '._add-pro-to-saved', function(e){
+                e.preventDefault()
+                var button = $(this);
+                var proId = $(this).attr('value');
+                var formBox= $('#_savePro');
+                var successmsgBody = $('#upfPageAcScs')
+                var errmsgBody = $('#upfPageAcScs')
 
-
-               },
-               error: function(rs,e){
-               },
-             });
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'profiles:save_pro'%}",
+                    data: {
+                        'pk': proId,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                   dataType: 'json',
+                    success: function (response) {
+                      formBox.html(response['form']);
+                      successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                      successmsgBody.css({'display': 'flex','bottom':'10px'})
+                      setTimeout(function(){
+                         successmsgBody.css('bottom', '-100px');
+                      }, 6000);
+                    },
+                    error: function(response,e){
+                      errmsgBody.html("<span class='material-icons'>error_outline</span>" + response['err_message'])
+                      errmsgBody.css({'display': 'flex','bottom':'10px'})
+                      setTimeout(function(){
+                         errmsgBody.css('bottom', '-100px');
+                      }, 6000);
+                    },
+              });
           });
+
           //follow
-          $(document).on('click','#proFollow', function(event){
+          $(document).on('click','._add-to-following', function(event){
              event.preventDefault();
              var pk = $(this).attr('value');
+             var successmsgBody = $('#upfPageAcScs')
+             var errmsgBody = $('#upfPageAcScs')
+             var formBox= $('#_followPro');
+
              $.ajax({
                type : 'post',
-               url : '{% url "profiles:follow_company"%}',
+               url : '{% url "profiles:follow_pro"%}',
                data : {
                   'pk':pk,
                   'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
@@ -43,18 +60,33 @@
                dataType: 'json',
                // success
                success: function(response) {
-                 $('#_followPro').html(response['form'])
+
+                 formBox.html(response['form']);
+                 successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                 successmsgBody.css({'display': 'flex','bottom':'10px'})
+
+                 setTimeout(function(){
+                    successmsgBody.css('bottom','-100px');
+                 }, 6000);
 
                },
-               error: function(rs,e){
-                 console.log(rs.responseText)
+               error: function(response,e){
+                   errmsgBody.html("<span class='material-icons'>error_outline</span>" + response['err_message'])
+                   errmsgBody.css({'display': 'flex','bottom':'10px'})
+                   setTimeout(function(){
+                      errmsgBody.css('bottom','-100px');
+                   }, 6000);
                },
              });
           });
+
           //join team
           $(document).on('click','#_proTeam', function(event){
              event.preventDefault();
              var user = $(this).attr('value');
+             var successmsgBody = $('#upfPageAcScs')
+             var errmsgBody = $('#upfPageAcScs')
+             var formBox= $('#_join_leave_team');
              $.ajax({
                type : 'post',
                url : '{% url "profiles:request_connection"%}',
@@ -65,18 +97,29 @@
                dataType: 'json',
                // success
                success: function(response) {
-                 $('#_join_leave_team').html(response['form'])
+                 formBox.html(response['form']);
+                 successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                 successmsgBody.css({'display': 'flex','bottom':'10px'})
+
+                 setTimeout(function(){
+                    successmsgBody.css('bottom','-100px');
+                 }, 6000);
 
 
                },
                error: function(rs,e){
-                 console.log(rs.responseText)
+                 errmsgBody.html("<span class='material-icons'>error_outline</span>" + response['err_message'])
+                 errmsgBody.css({'display': 'flex','bottom':'10px'})
+                 setTimeout(function(){
+                    errmsgBody.css('bottom', '-100px');
+                 }, 6000);
                },
              });
           });
           //
           $(".owl-carousel").owlCarousel({
-              // loop:true,
+              // loop:true
+                    autoPlay:3000,
               margin:10,
               nav:true,
               responsiveClass:true,
@@ -101,13 +144,19 @@
 </script>
 
 <div class="ag-dtl-wrapper">
+
+  <div id="upfPageAcScs" class="_upfPageAcScs">
+  </div>
+  <div id="upfPageAcErr" class="_upfPageAcErr">
+  </div>
+
 <div class="bs-pfl-swc-wrp">
   <ul id="bs-pfl-switch" class="tabs">
       <li class="tab col s3"><a href="#co-about-vw">Posts</a></li>
       <li class="tab col s3"><a href="#co-sr-lsts-vw">Listings</a></li>
       <li class="tab col s3"><a href="#co-Portfolio-vw">Portfolio</a></li>
   </ul>
-  {% if user_1 == user_2 %} <button type="button" name="button">This is your business page</button>{%endif %}
+  {% if business.user == request.user %} <button type="button" name="button">This is your business page</button>{%endif %}
 </div>
 <section>
   <div class="container" style="width:95%;">
@@ -119,10 +168,10 @@
                 <div class="bsPCoverOverlay">
                   <div class="img-rv-wrapper">
                     <div class="ag-d-img">
-                      {% if business.user.profile_image%}
-                      <img src="{{business.user.profile_image.url}}" alt="{{business.user.first_name}}">
+                      {% if business.business_profile_image%}
+                      <img src="{{business.business_profile_image.url}}" alt="{{business.business_name}}">
                       {% else %}
-                      <img src="{%static 'img/avatar.png'%}" alt="{{business.user.first_name}}">
+                      <img src="{%static 'img/avatar.png'%}" alt="{{business.business_name}}">
                       {% endif %}
                     </div>
                     <div class="ag-d-details">
@@ -130,7 +179,7 @@
                             <div class="agNm-Ratings">
                                 <div class="b-dtls-wrp">
                                     <div class="b-dtls">
-                                      <h5> {{business.user.get_full_name}}</h5>
+                                      <h5> {%if business.business_name %}{{business.business_name}}{% else %}{{business.user.username}}{% endif %}</h5>
                                     </div>
                                     <div class="ag-rating">
                                       {% if average_rating.rating__avg %}
@@ -151,12 +200,12 @@
                                         <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
                                         {% endif %}
                                     </div>
-                                  <h6><span class="material-icons">location_on</span> {{business.address}}</h6>
+                                  <h6><span class="material-icons">location_on</span> {{business.address|truncatechars:30}}</h6>
                                 </div>
                             </div>
                             <div class="bPg-CTA-btns">
                                 <div id="_savePro">
-                                    {% include 'profiles/save-co-section.html'%}
+                                    {% include 'profiles/pro-save-section.html' with pro=business %}
                                 </div>
                                 <div class="ag-messageBtn">
                                   <a href="#_contactProModal" class="modal-trigger">
@@ -197,11 +246,11 @@
                         </div>
                         <div class="ag-SvFo">
                           <div id="_followPro">
-                              {% include 'profiles/follow-co-section.html'%}
+                              {% include 'profiles/pro-follow-section.html' with pro=business %}
                           </div>
-                          {% if request.user.user_type != 'NormalUser'%}
+                          {% if request.user.user_type == 'PRO'%}
                           <div id="_join_leave_team">
-                              {% include 'profiles/add-to-team.html'%}
+                              {% include 'profiles/add-to-team.html' with receiver=business.user %}
                           </div>
                           {% endif %}
                         </div>
@@ -213,20 +262,23 @@
             <div id="ag-o-d">
               <li><span class="material-icons">call</span>{{business.phone}}</li>
               {% if business.website_link%}
-              <li><span class="material-icons">public</span><a href="#" target='_blank'>{{business.website_link}}</a></li>
+              <li><span class="material-icons">public</span><a href="{{business.website_link}}" target='_blank'>{{business.website_link|truncatechars:30}}</a></li>
               {% endif %}
               <ul>
-                <li><b>License No:</b><br>{{business.license_number}}</li>
+                <li><b>Licenses & Certifications:</b><br><a href="#">See all</a></li>
                 <li><b>Rehgien Member since:</b><br>{{business.member_since.date}}</li>
                 <li class="social-btns"><b>Follow Us:</b><br>
-                  {% if business.linkedin_link%}
-                  <a href="{{business.linkedin_link}}" target='_blank'><i class="fab fa-linkedin-in fa-2x"></i></a>
+                  {% if business.linkedin_page_link%}
+                  <a href="{{business.linkedin_page_link}}" target='_blank'><i class="fab fa-linkedin-in fa-2x"></i></a>
                   {% endif %}
-                  {% if business.facebook_link%}
-                  <a href="{{business.facebook_link}}" target='_blank'><i class="fab fa-facebook-f fa-2x"></i></a>
+                  {% if business.facebook_page_link%}
+                  <a href="{{business.facebook_page_link}}" target='_blank'><i class="fab fa-facebook-f fa-2x"></i></a>
                   {% endif%}
-                  {% if business.twitter_link%}
-                  <a href="{{business.twitter_link}}" target='_blank'><i class="fab fa-twitter fa-2x"></i></a>
+                  {% if business.twitter_page_link%}
+                  <a href="{{business.twitter_page_link}}" target='_blank'><i class="fab fa-twitter fa-2x"></i></a>
+                  {% endif%}
+                  {% if business.instagram_page_link%}
+                  <a href="{{business.instagram_page_link}}" target='_blank'><i class="fab fa-instagram fa-2x"></i></a>
                   {% endif%}
                 </li>
               </ul>
@@ -302,11 +354,11 @@
                       {% endif %}
                     </div>
                     <div class="_ag-about-sc">
-                      <h2><span class="material-icons">verified</span> Speciality</h2>
+                      <h2><span class="material-icons">verified</span> Services Offered</h2>
                       <div class="_ag-skillBtns">
-                        {% if business.speciality %}
-                          {% for speciality in business.speciality.choices %}
-                            <button type="button" name="button">{{speciality}}</button>
+                        {% if business.services %}
+                          {% for service in business.services %}
+                            <button type="button" name="button">{{service}}</button>
                           {%endfor%}
                         {% else %}
                           <div class="pflpages-no-results">
@@ -317,17 +369,17 @@
                       </div>
                     </div>
                     <div class="_ag-about-sc">
-                      <h2><span class="material-icons">group</span> Our top clients</h2>
-                      <div class="_ag-clients {% if top_clients %} owl-carousel {% endif %}">
-                        {% if top_clients %}
-                          {% for top_client in top_clients %}
+                      <h2><span class="material-icons">group</span> Top clients</h2>
+                      <div class="_ag-clients {% if business.pro_business_client %} owl-carousel {% endif %}">
+                        {% if business.pro_business_client %}
+                          {% for client in business.pro_business_client.all %}
                           <div class="_ag-clientsCard card">
                               <div class="_ag-clientsCardImg">
-                                  {% cloudinary top_client.client_logo %}
+                                  {% cloudinary client.client_logo %}
                               </div>
                               <div class="_ag-clientsCardDt">
-                                <h5>{{top_client.client_name}}</h5>
-                                <h6>{{top_client.business_category}}</h6>
+                                <h5>{{client.client_name}}</h5>
+                                <h6>{{client.business_category}}</h6>
                               </div>
                           </div>
                           {% endfor %}
@@ -344,7 +396,7 @@
                       <div class="_ag-serviceAreas">
                           {% if business.service_areas %}
                             {% for service_area in business.service_areas%}
-                              <form class="_ag-svcAreafORM" action="{% url 'profiles:business_list' %}" method="get">
+                              <form class="_ag-svcAreafORM" action="{% url 'profiles:business_list' slug=business.pro_speciality%}" method="get">
                                 {%csrf_token%}
                                   <button type="submit" name="bs-location" value="{{service_area}}">{{service_area}}</button>
                               </form>
@@ -362,7 +414,7 @@
             <div class="Pr-sr-lsts-vw" id="co-sr-lsts-vw">
                 <div class="ag-sr-m-sc">
                   <div class="_pf_sectionHeader">
-                    <h1>Listings Distribution</h1>
+                    <h1>Property Listings Distribution</h1>
                   </div>
                   <li><i class="fas fa-circle" style="color:red;"></i>For Sale ({{s_count}})
                     <i class="fas fa-circle" style="color:blue;"></i>For Rent ({{r_count}})</li>
@@ -384,7 +436,15 @@
                     </tr>
                     {% for listings in sale_listings_p %}
                     <tr>
-                      <td><a href="{{listings.get_absolute_url}}"><img src="{% cloudinary_url listings.thumb ImageTransformation %}" alt="{{listings.property_name}}" width="100px" height=50px></a></td>
+                      <td>
+                        <a href="{{listings.get_absolute_url}}">
+                          {% for home_photo in listings.home_photos.all %}
+                            {% if forloop.last %}
+                              {% cloudinary home_photo.photo ImageTransformation %}
+                            {% endif %}
+                          {% endfor %}
+                        </a>
+                      </td>
                       <td><a href="{{listings.get_absolute_url}}">{{listings.location_name}}</a></td>
                       <td>{{listings.bathrooms}}</td>
                       <td>{{listings.bedrooms}}</td>
@@ -409,7 +469,15 @@
                     </tr>
                     {% for listings in rental_listings_p %}
                     <tr>
-                      <td><a href="{{listings.get_absolute_url}}"><img src="{% cloudinary_url listings.thumb ImageTransformation %}" alt="{{listings.property_name}}" width="100px" height="50px"></a></td>
+                      <td>
+                        <a href="{{listings.get_absolute_url}}">
+                          {% for home_photo in listings.home_photos.all %}
+                            {% if forloop.last %}
+                              {% cloudinary home_photo.photo ImageTransformation %}
+                            {% endif %}
+                          {% endfor %}
+                        </a>
+                      </td>
                       <td><a href="{{listings.get_absolute_url}}">{{listings.location_name}}</a></td>
                       <td>{{listings.bathrooms}}</td>
                       <td>{{listings.bedrooms}}</td>
@@ -584,24 +652,20 @@
                     {% if business.user == connection.requestor %}
                     <div class="_ag-cns-user">
                       <div class="_ag-cns-imgWrp">
-                          <img src="{{connection.receiver.profile_image.url}}">
+                          <img src="
+                          {% if connection.receiver.profile_image %}
+                            {{connection.receiver.profile_image.url}}
+                          {% else %}
+                            {%static 'img/avatar.png'%}
+                          {% endif %}
+                          " alt="{{business.business_name}}">
                       </div>
                       <div class="_ag-cns-Dtls">
                           <h5>{% if connection.receiver.get_full_name %}{{connection.receiver.get_full_name}} {% else %} {{connection.receiver.username}}{% endif %}</h5>
                           <h6>{{connection.receiver.user_type}}</h6>
                       </div>
                       <div class="_ag-cns-Cta">
-                        <a href="
-                          {% if connection.receiver.user_type == 'Agent' %}
-                              {% url 'profiles:agent_detail' connection.receiver.agent_profile.pk %}
-                          {% elif connection.receiver.user_type == 'PropertyManager' %}
-                              {% url 'profiles:pm_detail' connection.receiver.pm_profile.pk %}
-                          {% elif connection.receiver.user_type == 'Design&servicePro' %}
-                              {% url 'profiles:d_service_detail' connection.receiver.DService_profile.pk %}
-                          {% elif connection.receiver.user_type == 'Company' %}
-                              {% url 'profiles:business_detail' connection.receiver.company_profile.pk %}
-                          {% endif %}
-                        ">
+                        <a href="{{connection.receiver.pro_business_profile.get_absolute_url}}">
                         <span class="material-icons" style="border:1px solid #ddd">chevron_right</span>
                       </a>
                       </div>
@@ -609,24 +673,20 @@
                     {% elif business.user == connection.receiver%}
                     <div class="_ag-cns-user">
                       <div class="_ag-cns-imgWrp">
-                          <img src="{{connection.requestor.profile_image.url}}">
+                          <img src="
+                          {% if connection.requestor.profile_image %}
+                            {{connection.requestor.profile_image.url}}
+                          {% else %}
+                            {%static 'img/avatar.png'%}
+                          {% endif %}
+                          " alt="{{business.business_name}}">
                       </div>
                       <div class="_ag-cns-Dtls">
                           <h5>{% if connection.requestor.get_full_name %}{{connection.requestor.get_full_name}} {% else %} {{connection.requestor.username}}{% endif %}</h5>
-                          <h6>{{connection.requestor.user_type}}</h6>
+                          <h6>{% if connection.requestor.user_type == 'CLIENT' %}Rehgien User {%else%}Rehgien Pro{%endif%}</h6>
                       </div>
                       <div class="_ag-cns-Cta">
-                        <a href="
-                          {% if connection.requestor.user_type == 'Agent' %}
-                              {% url 'profiles:agent_detail' connection.requestor.agent_profile.pk %}
-                          {% elif connection.requestor.user_type == 'PropertyManager' %}
-                              {% url 'profiles:pm_detail' connection.requestor.pm_profile.pk %}
-                          {% elif connection.requestor.user_type == 'Design&servicePro' %}
-                              {% url 'profiles:d_service_detail' connection.requestor.DService_profile.pk %}
-                          {% elif connection.requestor.user_type == 'Company' %}
-                              {% url 'profiles:business_detail' connection.requestor.company_profile.pk %}
-                          {% endif %}
-                        ">
+                        <a href="{{connection.requestor.pro_business_profile.get_absolute_url}}">
                         <span class="material-icons" style="border:1px solid #ddd">chevron_right</span>
                       </a>
                       </div>
@@ -679,15 +739,15 @@
               </div>
             </div>
             <div class="_ag-cns-content">
-              {% if company_reviews %}
-              {% for review in company_reviews%}
+              {% if pro_reviews %}
+              {% for review in pro_reviews%}
                 <div class="_ag-cns-user">
                   <div class="_ag-cns-imgWrp">
                       <img src="{% if review.user.profile_image %}{{review.user.profile_image.url}}{% else %} {% static 'img/avatar.png' %}{% endif %}">
                   </div>
                   <div class="_ag-cns-Dtls">
-                      <h5>{% if review.user.get_full_name %}{{review.user.get_full_name}} {% else %} {{review.user.username}}{% endif %}</h5>
-                      <h6>{% if review.user.user_type == 'NormalUser' %}Rehgien User {%else%}{{review.user.user_type}}{%endif%}</h6>
+                      <h5>{% if review.user.get_full_name %}{{review.reviewer.get_full_name}} {% else %} {{review.reviewer.username}}{% endif %}</h5>
+                      <h6>{% if review.user.user_type == 'CLIENT' %}Rehgien User {%else%}Rehgien Pro{%endif%}</h6>
                   </div>
                   <div class="_ag-cns-Cta">
                     <button type="button" name="button">
@@ -732,79 +792,39 @@
           <span class="material-icons">close</span>
         </button>
       </div>
-      {% if pro_teammatess%}
+      {% if pro_teammates%}
           <div class="bsTMembersCards">
              {% for teammate in pro_teammates%}
               {% if business.user == teammate.requestor %}
                 <div class="bsTMembersWrp">
-                    <div class="bsTMbImg-wrp">
-                      <a href="
-                      {% if teammate.receiver.user_type == 'Agent' %}
-                          {% url 'profiles:agent_detail' teammate.receiver.agent_profile.pk %}
-                      {% elif teammate.receiver.user_type == 'PropertyManager' %}
-                          {% url 'profiles:pm_detail' teammate.receiver.pm_profile.pk %}
-                      {% elif teammate.receiver.user_type == 'Design&servicePro' %}
-                          {% url 'profiles:d_service_detail' teammate.receiver.DService_profile.pk %}
-                      {% elif teammate.receiver.user_type == 'Company' %}
-                          {% url 'profiles:business_detail' teammate.receiver.company_profile.pk %}
-                      {% endif %}
-                      ">
-                        <img src="
-                        {% if teammate.receiver.profile_image %}
-                        {{teammate.receiver.profile_image.url}}
-                        {% else %}
-                          {% static 'img/avatar.png'%}
-                        {% endif %}
-                        ">
-                      </a>
-                    </div>
-                    <div class="bsTMbI-wrp">
-                      <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i>
-
-                        {% if teammate.receiver.user_type == 'Agent' %}
-
-                            {% if teammate.receiver.agent_profile.average_rating > 0 %}
-                              {{teammate.receiver.agent_profile.average_rating}}/5 ({{teammate.receiver.agent_profile.agent_review.all.count}} Reviews)
-                            {% else %}
-                              0 Reviews
-                            {% endif %}
-                        {% elif teammate.receiver.user_type == 'PropertyManager' %}
-                            {% if teammate.receiver.pm_profile.average_rating > 0 %}
-                              {{teammate.receiver.pm_profile.average_rating}}/5 ({{teammate.receiver.pm_profile.pm_review.all.count}} Reviews)
-                            {% else %}
-                              0 Reviews
-                            {% endif %}
-                        {% elif teammate.receiver.user_type == 'Design&servicePro' %}
-                            {% if teammate.receiver.DService_profile.average_rating > 0 %}
-                              {{teammate.receiver.DService_profile.average_rating}}/5 ({{teammate.receiver.DService_profile.DService_review.all.count}} Reviews)
-                            {% else %}
-                              0 Reviews
-                            {% endif %}
-                        {% elif teammate.receiver.user_type == 'Company' %}
-                            {% if teammate.receiver.company_profile.average_rating > 0 %}
-                              {{teammate.receiver.company_profile.average_rating}}/5 ({{teammate.receiver.company_profile.company_review.all.count}} Reviews)
-                            {% else %}
-                              0 Reviews
-                            {% endif %}
-                        {% endif %}
-                       </li>
-                      {{teammate.receiver.get_full_name}}
-                    </div>
+                   <a href="{{connection.requestor.get_absolute_url}">
+                      <div class="bsTMbImg-wrp">
+                        <a href="{{connection.receiver.get_absolute_url}}">
+                          <img src="
+                          {% if teammate.receiver.profile_image %}
+                          {{teammate.receiver.profile_image.url}}
+                          {% else %}
+                            {% static 'img/avatar.png'%}
+                          {% endif %}
+                          ">
+                        </a>
+                      </div>
+                      <div class="bsTMbI-wrp">
+                        <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i>
+                              {% if teammate.receiver.pro_business_profile.average_rating > 0 %}
+                                {{teammate.receiver.pro_business_profile.average_rating}}/5 ({{teammate.receiver.pro_business_profile.pro_business_review.all.count}} Reviews)
+                              {% else %}
+                                0 Reviews
+                              {% endif %}
+                         </li>
+                        {{teammate.receiver.get_full_name}}
+                      </div>
+                    </a>
                 </div>
               {% elif  business.user == teammate.receiver%}
                 <div class="bsTMembersWrp">
+                  <a href="{{connection.requestor.get_absolute_url}">
                     <div class="bsTMbImg-wrp">
-                      <a href="
-                      {% if teammate.requestor.user_type == 'Agent' %}
-                          {% url 'profiles:agent_detail' teammate.requestor.agent_profile.pk %}
-                      {% elif teammate.requestor.user_type == 'PropertyManager' %}
-                          {% url 'profiles:pm_detail' teammate.requestor.pm_profile.pk %}
-                      {% elif teammate.requestor.user_type == 'Design&servicePro' %}
-                          {% url 'profiles:d_service_detail' teammate.requestor.DService_profile.pk %}
-                      {% elif teammate.requestor.user_type == 'Company' %}
-                          {% url 'profiles:business_detail' teammate.requestor.company_profile.pk %}
-                      {% endif %}
-                      ">
                         <img src="
                         {% if teammate.requestor.profile_image %}
                         {{teammate.requestor.profile_image.url}}
@@ -812,38 +832,18 @@
                           {% static 'img/avatar.png'%}
                         {% endif %}
                         ">
-                      </a>
                     </div>
                     <div class="bsTMbI-wrp">
                       <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i>
-                        {% if teammate.requestor.user_type == 'Agent' %}
-                            {% if teammate.requestor.agent_profile.average_rating > 0 %}
-                              {{teammate.requestor.agent_profile.average_rating}}/5 ({{teammate.requestor.agent_profile.agent_review.all.count}} Reviews)
-                            {% else %}
-                              0 Reviews
-                            {% endif %}
-                        {% elif teammate.requestor.user_type == 'PropertyManager' %}
-                          {% if teammate.requestor.pm_profile.average_rating > 0 %}5
-                              {{teammate.requestor.pm_profile.average_rating}}/5 ({{teammate.requestor.pm_profile.pm_review.all.count}} Reviews)
-                            {% else %}
-                              0 Reviews
-                            {% endif %}
-                        {% elif teammate.requestor.user_type == 'Design&servicePro' %}
-                            {% if teammate.requestor.DService_profile.average_rating > 0 %}
-                              {{teammate.requestor.DService_profile.average_rating}}/5 ({{teammate.requestor.DService_profile.DService_review.all.count}} Reviews)
-                            {% else %}
-                              0 Reviews
-                            {% endif %}
-                        {% elif teammate.requestor.user_type == 'Company' %}
-                            {% if teammate.requestor.company_profile.average_rating > 0 %}
-                              {{teammate.requestor.company_profile.average_rating}}/5 ({{teammate.requestor.company_profile.company_review.all.count}} Reviews)
-                            {% else %}
-                              0 Reviews
-                            {% endif %}
-                        {% endif %}
+                          {% if teammate.requestor.pro_business_profile.average_rating > 0 %}
+                            {{teammate.requestor.pro_business_profile.average_rating}}/5 ({{teammate.requestor.pro_business_profile.pro_business_review.all.count}} Reviews)
+                          {% else %}
+                            0 Reviews
+                          {% endif %}
                        </li>
                       {{teammate.requestor.get_full_name}}
                     </div>
+                    </a>
                 </div>
               {%endif%}
             {% endfor %}
@@ -871,8 +871,8 @@
         </div>
         <br>
         <div class="review-comments">
-          {% if company_reviews %}
-          {% for reviews in company_reviews%}
+          {% if pro_reviews %}
+          {% for reviews in pro_reviews%}
           <div class="review-wrapper">
           <div class="revCo-header">
             <div class="revCo-h-ar-reP">
@@ -1052,7 +1052,7 @@
                     <input type="hidden" name="rFo-Sub-user-pk" value="{{business.user.pk}}">
                     <input type="hidden" name="rFo-Sub-review-pk" value="{{reviews.pk}}">
                     <input type="hidden" name="rFo-current-path" value="{{request.build_absolute_uri}}">
-                      <div class="reportformSeF input-field col s12">
+                      <div class="reportformSeF input-field">
                         <p>Problem</p>
                        <select name="rFo-Problem">
                          <option value="" disabled selected>Select one</option>
@@ -1062,15 +1062,15 @@
                          <option value="4">Other</option>
                         </select>
                      </div>
-                     <div class="reportformTeAWrp col s12">
+                     <div class="reportformTeAWrp">
                        <p>Details</p>
                        <textarea rows="20" cols="80" placeholder="optional" name="rFo-Details"></textarea>
                      </div>
-                     <div class="reportformInput col s12">
+                     <div class="reportformInput">
                        <p>Your email</p>
-                       <input type="text" name="rFo-Email">
+                       <input type="text" name="rFo-Email" value="{{request.user.email}}">
                      </div>
-                     <div class="reportSubmitBtn col s12">
+                     <div class="reportSubmitBtn">
                        <button type="submit">Submit</button>
                      </div>
                   </form>
@@ -1088,7 +1088,7 @@
 <div id="_contactProModal" class="modal">
     <div class="ag-contact-wrapper col s12">
       <div class="ag-modalHeader">
-        <h1>Contact {{business.user.first_name}}</h1>
+        <h1>Contact {% if business.business_name %} {{business.business_name}} {%else%} this pro {%endif%}</h1>
         <button type="button" class='modal-close'>
           <span class="material-icons">close</span>
         </button>
@@ -1097,7 +1097,7 @@
         <form id="ag-d-contact" action="{% url 'contact:contact_pro' %}" class="col s12" method="POST">
           {% csrf_token %}
           <div class="ag-d-contactDetails">
-            <input type="hidden" name="recepient" value="{{business.user.email}}" class="validate">
+            <input type="hidden" name="recepient" value="{%if business.business_email%}{{business.business_email}}{%else%}{{business.user.email}}{%endif%}" class="validate">
             <input type="hidden" name="recepientPhoneNumber" value="{{business.phone}}">
             <input type="hidden" name="currentPath" value="{{ request.build_absolute_uri }}">
           </div>

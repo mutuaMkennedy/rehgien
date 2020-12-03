@@ -19,7 +19,7 @@ $(document).ready(function(){
     _helperTextTrigger.addEventListener( 'click', function(){
        document.getElementById("_helperTextTrigger").style.color='#1100ff';
        var helperText = document.getElementById('_helperText');
-        helperText.style.display= 'block';
+        helperText.style.display= 'flex';
         helperText.style.transform= 'translateY(5px)';
      });
      _helperTextHide.addEventListener( 'click', function(){

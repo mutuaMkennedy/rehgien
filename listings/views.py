@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
-from django.forms import modelformset_factory
+from django.forms import inlineformset_factory
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse
@@ -8,9 +8,9 @@ from django.contrib import messages
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
-from profiles.models import AgentProfile
 from . import forms
 from . import models
+from profiles import models as profiles_models
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -30,7 +30,6 @@ from django.core.serializers import serialize
 from django.db.models import Max
 #from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 #from haystack.query import SearchQuerySet
-
 # referencing the custom user model
 User = get_user_model()
 
@@ -43,8 +42,18 @@ def homepage(request):
 	#rentals
 	rentals_recent = models.Home.objects.filter(listing_type__iexact = 'for_rent').order_by('publishdate')[:6]
 	rentals_reversed = reversed(rentals_recent)
-	return render(request, 'listings/homey.html', {'onsale_reversed': onsale_reversed, 'rentals_reversed': rentals_reversed})
+	pro_business_categories = []
+	for choice in profiles_models.BusinessProfile.PRO_SPECIALITY_CATEGORIZED:
+			pcat = {}
+			values = []
+			for val in choice[1]:
+				values.append(val[1])
+			pcat[choice[0]] = values
+			pro_business_categories.append(pcat)
 
+	pro_business_categories = eval(str(pro_business_categories)[1:-1])
+	return render(request, 'listings/homey.html', {'onsale_reversed': onsale_reversed,
+	 		'rentals_reversed': rentals_reversed, 'pro_business_categories':pro_business_categories})
 
 def property_listings_results(request, property_category, property_listing_type):
 	ImageTransformation = dict(
@@ -143,7 +152,6 @@ def property_listings_results(request, property_category, property_listing_type)
 		bathrooms = filtrer_params_dict['bathrooms']
 
 		page = request.POST.get('page')
-		print(page)
 		sortValue = str(request.POST.get('sort'))
 		array_of_pks = request.POST.getlist('pk_array[]')
 		array_of_pks = list(map(int, array_of_pks))
@@ -241,7 +249,7 @@ def property_listings_results(request, property_category, property_listing_type)
 			"insight_stats":insight_stats,
 			})
 
-# @login_required(login_url='account_login')
+@login_required(login_url='account_login')
 def property_detail(request, property_category, pk):
 	ImageTransformation = dict(
 	format = "jpeg",
@@ -322,10 +330,10 @@ def save_property(request):
 
 @login_required(login_url='account_login')
 def property_listing_form(request):
-	if request.user.user_type =='Agent' or request.user.user_type =='PropertyManager':
+	if request.user.pro_business_profile.pro_category =='PCAT1' :
 		if request.method =='POST':
 				PropertyForm = forms.ListingForm(request.POST, request.FILES)
-				ImageForm = forms.PhotoForm(request.POST, request.FILES)
+				PhotoForm = forms.PhotoForm(request.POST, request.FILES)
 				images = request.FILES.getlist('photo')#name of field
 				VideoForm = forms.VideoForm(request.POST, request.FILES)
 				videos = request.FILES.getlist('video')#name of field
@@ -338,11 +346,11 @@ def property_listing_form(request):
 					instance.save()
 
 					for img in images:
-						file_instance = PropertyPhoto(photo = img, home = models.Home.objects.get(id=instance.id))
+						file_instance = models.PropertyPhoto(photo = img, home = models.Home.objects.get(id=instance.id))
 						file_instance.save()
 
 					for vid in videos:
-						file_instance2 = PropertyVideo(video = vid, home = models.Home.objectsget(id=instance.id))
+						file_instance2 = models.PropertyVideo(video = vid, home = models.Home.objects.get(id=instance.id))
 						file_instance2.save()
 					messages.success(request, 'Your Listing has been posted Successfully!')
 					return redirect('profiles:account')
@@ -350,15 +358,15 @@ def property_listing_form(request):
 					messages.error(request,'Could not complete request. Try again later.')
 		else:
 			PropertyForm = forms.ListingForm()
-			ImageForm = forms.PhotoForm()
+			PhotoForm = forms.PhotoForm()
 			VideoForm = forms.VideoForm()
 	else:
 		messages.error(request,'Restricted. Your account type is not allowed to access this service.')
 		return redirect('profiles:account')
-	return render(request, 'listings/property_listing_form.html.html', {'PropertyForm': PropertyForm, 'ImageForm': ImageForm, 'VideoForm':VideoForm,})
+	return render(request, 'listings/property_listing_form.html', {'PropertyForm': PropertyForm, 'ImageForm': PhotoForm, 'VideoForm':VideoForm,})
 
 @login_required(login_url='account_login')
-def property_update(request, pk):
+def property_update(request, property_category, pk):
 	model_object = ''
 	if property_category == 'homes':
 		model_object = models.Home
@@ -367,58 +375,32 @@ def property_update(request, pk):
 		return redirect('listings:homepage')
 
 	listing = get_object_or_404(model_object, pk=pk)
-	image_formset = modelformset_factory(PropertyForSaleImages, max_num=1, min_num=1, fields=('image',))
-	video_formset = modelformset_factory(PropertyForSaleVideos, max_num=1, min_num=1, fields=('video',))
+	image_iformset = inlineformset_factory( models.Home , models.PropertyPhoto, forms.PhotoForm,
+	 					max_num=15, min_num=1, extra=0, can_order = True,can_delete=True, exclude=('home',)
+	 					)
+	video_iformset = inlineformset_factory(models.Home, models.PropertyVideo, forms.VideoForm,
+						max_num=1, min_num=1,extra=0,can_order = True,exclude=('home',)
+						)
 	if request.user == listing.owner:
 		if request.method=='POST':
 			PropertyForm = forms.ListingForm(request.POST, request.FILES, instance=listing)
-			img_formset = image_formset(request.POST or None, request.FILES or None)
-			vid_formset = video_formset(request.POST or None, request.FILES or None)
+			img_formset = image_iformset(request.POST or None, request.FILES or None, instance=listing)
+			vid_formset = video_iformset(request.POST or None, request.FILES or None,  instance=listing)
 			if PropertyForm.is_valid() and img_formset.is_valid() and vid_formset.is_valid():
 				listing = PropertyForm.save(commit=False)
-				# Associate listing with user
 				listing.owner = request.user
-				# finally save to db
 				listing.save()
+				img_formset.save()
+				vid_formset.save()
 
-				i_data = PropertyForSaleImages.objects.filter(property=listing)
-				v_data = PropertyForSaleVideos.objects.filter(property=listing)
-
-				for index, i in enumerate(img_formset):
-					if i.cleaned_data:
-						if i.cleaned_data['id'] is None:
-							img = PropertyForSaleImages(property=listing, image=i.cleaned_data.get('image'))
-							img.save()
-						# elif i.cleaned_data['image'] is False:
-						# 	img = PropertyForSaleImages.objects.get(id=request.POST.get('form-' + str(index) + '-id'))
-						# 	img.delete()
-						else:
-							img = PropertyForSaleImages(property=listing, image=i.cleaned_data.get('image'))
-							p = PropertyForSaleImages.objects.get(id=i_data[index].id)
-							p.image = img.image
-							p.save()
-
-				for index, v in enumerate(vid_formset):
-					if v.cleaned_data:
-						if v.cleaned_data['id'] is None:
-							vid = PropertyForSaleVideos(property=listing, video=v.cleaned_data.get('video'))
-							vid.save()
-						# elif v.cleaned_data['video'] is False:
-						# 	vid = PropertyForSaleVideos.objects.get(id=request.POST.get('form-' + str(index) + '-id'))
-						# 	vid.delete()
-						else:
-							vid = PropertyForSaleVideos(property=listing, video=v.cleaned_data.get('video'))
-							p = PropertyForSaleVideos.objects.get(id=v_data[index].id)
-							p.video = vid.video
-							p.save()
 				messages.success(request, 'Update Successull')
 				return redirect('profiles:account')
 			else:
 				messages.error(request, 'Unable to update try again later')
 		else:
 			PropertyForm = forms.ListingForm(instance=listing)
-			img_formset = image_formset(queryset = PropertyForSaleImages.objects.filter(property=listing))
-			vid_formset = video_formset(queryset = PropertyForSaleVideos.objects.filter(property=listing))
+			img_formset = image_iformset(instance=listing)
+			vid_formset = video_iformset(instance=listing)
 	else:
 		raise PermissionDenied
 	return render(request, 'listings/update_form.html', {'PropertyForm':PropertyForm, 'listing':listing, 'img_formset':img_formset, 'vid_formset':vid_formset})

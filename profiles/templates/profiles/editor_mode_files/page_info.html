@@ -1,23 +1,23 @@
 {% load static %}
-<li><span class="material-icons">call</span>{{agent.phone}}</li>
-{% if agent.website_link%}
-<li><span class="material-icons">public</span><a href="#" target='_blank'>{{agent.website_link}}</a></li>
+<li><span class="material-icons">call</span>{{bs_profile.phone}}</li>
+{% if bs_profile.website_link%}
+<li><span class="material-icons">public</span><a href="#" target='_blank'>{{bs_profile.website_link|truncatechars:30}}</a></li>
 {% endif %}
 <ul>
-  <li><b>License No:</b><br> {{agent.license_number}}</li>
-  <li><b>Rehgien Member since:</b><br>{{agent.member_since.date}}</li>
+  <li><b>License No:</b><br> <a href="#">See all</a></li>
+  <li><b>Rehgien Member since:</b><br>{{bs_profile.member_since.date}}</li>
   <li class="social-btns"><b>Follow Us:</b><br>
-    {% if agent.linkedin_link%}
-    <a href="{{agent.linkedin_link}}" target='_blank'><i class="fab fa-linkedin-in fa-2x"></i></a>
+    {% if bs_profile.linkedin_page_link%}
+    <a href="{{bs_profile.linkedin_page_link}}" target='_blank'><i class="fab fa-linkedin-in fa-2x"></i></a>
     {% endif %}
-    {% if agent.facebook_link%}
-    <a href="{{agent.facebook_link}}" target='_blank'><i class="fab fa-facebook-f fa-2x"></i></a>
+    {% if bs_profile.facebook_page_link%}
+    <a href="{{bs_profile.facebook_page_link}}" target='_blank'><i class="fab fa-facebook-f fa-2x"></i></a>
     {% endif%}
-    {% if agent.twitter_link%}
-    <a href="{{agent.twitter_link}}" target='_blank'><i class="fab fa-twitter fa-2x"></i></a>
+    {% if bs_profile.twitter_page_link%}
+    <a href="{{bs_profile.twitter_page_link}}" target='_blank'><i class="fab fa-twitter fa-2x"></i></a>
     {% endif%}
-    {% if agent.instagram_link%}
-    <a href="{{agent.twitter_link}}" target='_blank'><i class="fab fa-instagram"></i></a>
+    {% if bs_profile.instagram_page_link%}
+    <a href="{{bs_profile.instagram_page_link}}" target='_blank'><i class="fab fa-instagram"></i></a>
     {% endif%}
   </li>
 </ul>

@@ -23,7 +23,7 @@
                             <div class="collapsible-body">
                               <div style='width:auto; padding:0;'>
                                 <h6 class="fltr-h-helper">Select a price range</h6>
-                                {% if slug == 'for-sale' %}
+                                {% if listing_type == 'for_sale' %}
                                   <div id="price-slider">
                                     <div id="price-from" class="input-field">
                                      <select name='min_price'>
@@ -182,10 +182,8 @@
                       <div class="ls_inStsHpr">
                           <span class="material-icons">help</span>
                           <div class="ls_inStsHpr-Txt">
-                            This insights are based on public listings in our database which
+                            These insights are based on public listings in our database which
                             offer a significant reflection of the areas activity.
-                            <b>Note:</b> The trendlines are global and do not change
-                            when filtering results with the map.
                           </div>
                       </div>
                       <h5><span class="material-icons">insights</span> &nbsp Area insights.</h5>
@@ -1345,7 +1343,6 @@
                             //hiding the pagination bar untill new results are rendered to the dom
                             paginatorBar.style.display = 'none';
 
-                            console.log(pageNumber);
                             //Make call to the server
                               $.ajax({
                                   type: "POST",
@@ -1401,7 +1398,6 @@
 
                           },
                           error: function(rs,e){
-                            console.log(e);
                           },
                     });
                 });

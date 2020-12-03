@@ -1,225 +1,450 @@
-{% extends 'base1.html' %}
+ {% extends 'base.html' %}
 {% load static %}
+{% load cloudinary %}
 {% block content %}
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags%}
 {% load leaflet_tags %}
 {% leaflet_js plugins="forms" %}
 {% leaflet_css plugins="forms" %}
-
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'dynamic_formsets_src/jquery.formset.js'%}"></script>
 <section class='ListingFormSection'>
 <div class="container ListingFormContainer">
-<div class="row ListingFormRow">
-  <div class="Lst-BannerImg" style="background-image:linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ),url({%static 'img/property_sky.jpg'%})">
-    <h1>Update Your Listing.</h1>
+  <div class="LstFmSecLgoWrpx">
+    <img src="{% static 'img/rehgien_logo_r.png'%}" alt="rehgien-home">
+      <h1>Update this property's details.</h1>
   </div>
-<form class="post-form" action="{% url 'listings:update' pk=listing.pk%}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-<div class="ListingFormStep">
-    <h2>Step 1 of 6: Property Facts</h2>
-    <div class="form-row">
-        <div class="name">
-          {{PropertyForm.property_name|as_crispy_field}}
+  <div class="row ListingFormRow">
+    <div class="ListingFormRow_header">
+      <a href="{% url 'profiles:account'%}">
+        <button type="button" class="modal-close">
+          <span class="material-icons">west</span> &nbsp
+          Back to account
+        </button>
+      </a>
+    </div>
+    <form class="post-form" autocomplete="off" action="{% url 'listings:property_update' property_category=listing.property_category pk=listing.pk %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+    <div class="_plS_form_steps-xsjk">
+      <div class="ListingFormStep">
+            <h5>Property facts</h5>
+            <div class="form-row">
+              <div class="_xlsFormField-listing_type">
+                <p>Listing type.<span>*</span></p>
+                {{PropertyForm.listing_type|as_crispy_field}}
+              </div>
+                <div class="name">
+                  <p>Property name.<span>*</span></p>
+                  {{PropertyForm.property_name|as_crispy_field}}
+                </div>
+                <div class="price">
+                  <p>Set your price.<span>*</span></p>
+                  {{PropertyForm.price|as_crispy_field}}
+                </div>
+                <div class="type">
+                  <p>Property type.<span>*</span></p>
+                  {{PropertyForm.type|as_crispy_field}}
+                </div>
+                <br>
+                <div class="description">
+                  <p>Describe this home or say something you like about this home.<span>*</span></p>
+                  {{PropertyForm.description|as_crispy_field}}
+                </div>
+            </div>
+      </div>
+
+      <div class="ListingFormStep">
+        <h5>Media</h5>
+        <div class="photos">
+          <p>Add or remove some photos.<span>*</span></p>
+          <table class="_media-update-formXtable">
+            <thead>
+              <th ></th>
+              <th ></th>
+              <th hidden ></th>
+              <th></th>
+            </thead>
+            <tbody>
+                {% for form in img_formset%}
+                <tr class="_HomePhotoTabDtxsf">
+                  <td>
+                    <div class="_FmsetLstfPhSelected-box">
+                      {% if form.instance.photo%}
+                      <img src="{{form.instance.photo.url}}" alt="photo">
+                      {% endif %}
+                    </div>
+                  </td>
+                  <td class="_img_formset_photo_inputukhk">
+                    {{form.photo}}
+                  </td>
+                  <td hidden>
+                    {{form.id}}
+                    {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                  </td>
+                  <td></td>
+                </tr>
+                {%endfor%}
+            </tbody>
+          </table>
+          {{img_formset.management_form}}
         </div>
-        <div class="price">
-          {{PropertyForm.price|as_crispy_field}}
+
+        <div class="_lstfVideoFieldghk">
+          <p>Change the video walkthrough.<span>*</span></p>
+          <div class="_LstfVdSelected-box"></div>
+          <table class="_media-update-formXtable">
+            <thead>
+              <th ></th>
+              <th ></th>
+              <th hidden ></th>
+              <th></th>
+            </thead>
+            <tbody>
+                {% for form in vid_formset%}
+                <tr class="_HomeVidTabDtxsf">
+                  <td>
+                    <div class="_FmsetLstfVdSelected-box">
+                      {% if form.instance.video%}
+                        <video src="{{form.instance.video.url}}" controls autoplay></video>
+                      {% endif %}
+                    </div>
+                  </td>
+                  <td class="_img_formset_vid_inputukhk">
+                    {{form.video}}
+                  </td>
+                  <td hidden>
+                    {{form.id}}
+                    {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                  </td>
+                  <td></td>
+                </tr>
+                {%endfor%}
+            </tbody>
+          </table>
+          {{vid_formset.management_form}}
         </div>
-    </div>
 
-  <div class="type">
-      {{PropertyForm.type|as_crispy_field}}
-  </div>
-</div>
-
-<div class="ListingFormStep">
-    <h2>Step 2 of 6: Photos and video</h2>
-    <div class="photos">
-      <p>Select pictures.<p>
-        {{img_formset.management_form}}
-        {% for form in img_formset%}
-          {{form.as_p}}
-        {%endfor%}
-    </div>
-    <div class="photos">
-      <p>Add a video.<p>
-        {{vid_formset.management_form}}
-        {% for form in vid_formset%}
-          {{form.as_p}}
-        {%endfor%}
-    </div>
-
-    <div class="virtual-tour">
-      <p>Provide a link from your virtual tour provider below. Dont have one? <a href="#">Contact US!</a></p>
-        {{PropertyForm.virtual_tour_url|as_crispy_field}}
-    </div>
-</div>
-
-<div class="ListingFormStep">
-  <h2>Step 3 of 6: Location</h2>
-  <div class="location">
-    <p>Tell your clients where this property is located.</p>
-          {{PropertyForm.location_name|as_crispy_field}}
-    <p>Provide a point on the map. Zoom in for a better accuracy!</p>
-          {{PropertyForm.location|as_crispy_field}}
-  </div>
-</div>
-
-<div class="ListingFormStep">
-  <h2>Step 4 of 6: More information</h2>
-  <div class="form-row1">
-  <p>Giving more information about your property will raise chances of getting a client quickly.</p>
-    <div class="bathrooms">
-        {{PropertyForm.bathrooms|as_crispy_field}}
-    </div>
-    <div class="bedrooms">
-        {{PropertyForm.bedrooms|as_crispy_field}}
-    </div>
-    <div class="total-rooms">
-        {{PropertyForm.total_rooms|as_crispy_field}}
-    </div>
-    <div class="floor-number">
-        {{PropertyForm.floor_number|as_crispy_field}}
-    </div>
-  </div>
-
-  <div class="form-row2">
-    <div class="lot-size">
-      {{PropertyForm.floor_area|as_crispy_field}}
-    </div>
-    <div class="lot-size-unit">
-      {{PropertyForm.size_units|as_crispy_field}}
-    </div>
-    <div class="garage-size">
-      {{PropertyForm.garage_sqm|as_crispy_field}}
-    </div>
-  </div>
-
-  <div class="form-row3">
-    <div class="units">
-      {{PropertyForm.number_of_units|as_crispy_field}}
-    </div>
-    <div class="stories">
-      {{PropertyForm.number_of_stories|as_crispy_field}}
-    </div>
-    <div class="parking-spaces">
-        {{PropertyForm.parking_spaces|as_crispy_field}}
-    </div>
-  </div>
-
-  <div class="form-row4">
-      <div class="year-bullt">
-        {{PropertyForm.year_built|as_crispy_field}}
+        <div class="virtual-tour sjfr8vrtour">
+          <p>Add a virtual tour URL. Don't have a virtual tour talk to us and get one? <a href="#">Contact US!</a><span>*</span></p>
+          <div class="__virtualTourPrvBox">
+              <iframe  class='pstfoRmVrbOXSA' src="
+                  {% if PropertyForm.instance.virtual_tour_url %}
+                  {{PropertyForm.instance.virtual_tour_url}}
+                  {% endif %}
+                   " frameborder="0" allowfullscreen allowvr>
+              </iframe>
+              <div class="__vr-tour-loader-msg">
+                <div class="__lldMsgg">
+                  <img src="{% static 'img/ajax-loader.gif'%}" alt="">
+                  Loading...<br>
+                  If this is taking too long make sure your url below is
+                  correct or check your connection status.
+                </div>
+                <br><br>
+                <span>Don't submit a virtual tour url that is not displaying here correctly! <br> We continually review and remove invalid tours.</span>
+              </div>
+          </div>
+          <br>
+            {{PropertyForm.virtual_tour_url|as_crispy_field}}
+        </div>
       </div>
-      <div class="remodel-year">
-        {{PropertyForm.remodel_year|as_crispy_field}}
+
+      <script type="text/javascript">
+        $('._HomePhotoTabDtxsf').formset({
+          prefix: '{{ img_formset.prefix }}'
+        });
+        $('._HomeVidTabDtxsf').formset({
+          prefix: '{{ vid_formset.prefix }}'
+        });
+
+        $(document).on('change', '._img_formset_photo_inputukhk input', function () {
+            var inputField = $(this);
+        if (inputField[0].files && inputField[0].files[0]) {
+            var reader = new FileReader()
+            reader.onload = function (e) {
+              inputField.parent().prev('td').find('._FmsetLstfPhSelected-box')
+                .html("<img src=' " + e.target.result + " '>")
+                .css('display','flex');
+            };
+            reader.readAsDataURL(inputField[0].files[0]);
+        }
+      });
+        $(document).on('change', '._img_formset_vid_inputukhk input', function () {
+            var inputField = $(this);
+          if (inputField[0].files && inputField[0].files[0]) {
+              var reader = new FileReader()
+              reader.onload = function (e) {
+                inputField.parent().prev('td').find('._FmsetLstfVdSelected-box')
+                  .html("<video src=' " + e.target.result + " ' controls autoplay type='video/mp4' ></video>")
+                  .css('display','flex');
+              };
+              reader.readAsDataURL(inputField[0].files[0]);
+            }
+        });
+
+        $('.pstfoRmVrbOXSA').load(function () {
+          $('.__lldMsgg').css('display', 'none');
+        });
+        $(document).on('change', '.sjfr8vrtour input', function () {
+            $('.__lldMsgg').css('display', 'flex');
+            $('._cskjListingStepPagBtsn button').attr('disabled', true).css('opacity','0.5')
+            var inputField = $(this);
+            var inputVal=''
+            if (inputField.val() !=''){
+              inputVal = inputField.val()
+            }
+            inputField.parentsUntil('div.virtual-tour sjfr8vrtour').find('.pstfoRmVrbOXSA')
+              .attr("src", inputVal)
+              .css('display','flex');
+            $('.pstfoRmVrbOXSA').load(function () {
+              $('.__lldMsgg').css('display', 'none');
+            });
+            setTimeout(function(){
+              $('._cskjListingStepPagBtsn button').attr('disabled', false).css('opacity','1')
+            }, 1000);
+        });
+
+      </script>
+
+      <div class="ListingFormStep">
+        <h5>Location</h5>
+        <div class="location">
+            <p>Tell your clients where this property is located.<span>*</span></p>
+                    {{PropertyForm.location_name|as_crispy_field}}
+            <p>Move your home to the correct location. Zoom in for a better accuracy!<span>*</span></p>
+                    {{PropertyForm.location|as_crispy_field}}
+        </div>
       </div>
-  </div>
-</div>
+
+      <div class="ListingFormStep">
+          <h5>Extra information</h5>
+
+          <div class="form-row1">
+            <div class="bathrooms">
+              <p>Bathrooms.<span>*</span></p>
+                {{PropertyForm.bathrooms|as_crispy_field}}
+            </div>
+            <div class="bedrooms">
+              <p>Bedrooms.<span>*</span></p>
+                {{PropertyForm.bedrooms|as_crispy_field}}
+            </div>
+            <div class="total-rooms">
+              <p>Total rooms.<span>*</span></p>
+                {{PropertyForm.total_rooms|as_crispy_field}}
+            </div>
+            <div class="floor-number">
+              <p>Floor number.<span>*</span></p>
+                {{PropertyForm.floor_number|as_crispy_field}}
+            </div>
+          </div>
+
+          <div class="form-row2">
+            <div class="lot-size">
+              <p>Floor area in sqft.<span>*</span></p>
+              {{PropertyForm.floor_area|as_crispy_field}}
+            </div>
+            <div class="garage-size">
+              <p>Garage size in sqft.<span>*</span></p>
+              {{PropertyForm.garage_sqm|as_crispy_field}}
+            </div>
+          </div>
+
+          <div class="form-row3">
+            <div class="units">
+              <p>Number of units availlable.<span>*</span></p>
+              {{PropertyForm.number_of_units|as_crispy_field}}
+            </div>
+            <div class="stories">
+              <p>Number of stories.<span>*</span></p>
+              {{PropertyForm.number_of_stories|as_crispy_field}}
+            </div>
+            <div class="parking-spaces">
+              <p>Number of parking spaces.<span>*</span></p>
+                {{PropertyForm.parking_spaces|as_crispy_field}}
+            </div>
+          </div>
+
+          <div class="form-row4">
+              <div class="year-bullt">
+                <p>Year built.<span>*</span></p>
+                {{PropertyForm.year_built|as_crispy_field}}
+              </div>
+              <div class="remodel-year">
+                <p>Remodel year.<span>*</span></p>
+                {{PropertyForm.remodel_year|as_crispy_field}}
+              </div>
+          </div>
+      </div>
+
+      <div class="ListingFormStep">
+        <h5>Features</h5>
+        <div class="_ScFsform-row-choices">
+        <h5>#Room Details</h5>
+          <div class="appliances">
+            <p>Appliances.<span>*</span></p>
+            {{PropertyForm.appliances|as_crispy_field}}
+          </div>
+          <div class="basement">
+            <p>Basement.<span>*</span></p>
+              {{PropertyForm.basement|as_crispy_field}}
+          </div>
+          <div class="floor-covering">
+            <p>Floor covering.<span>*</span></p>
+            {{PropertyForm.floor_covering|as_crispy_field}}
+          </div>
+          <div class="rooms">
+            <p>Rooms.<span>*</span></p>
+            {{PropertyForm.rooms|as_crispy_field}}
+          </div>
+          <div class="indoor-features">
+            <p>Indoor features.<span>*</span></p>
+            {{PropertyForm.indoor_features|as_crispy_field}}
+          </div>
+        </div>
+        <div class="_ScFsform-row-choices">
+          <h5>#Utility Details</h5>
+          <div class="cooling-type">
+            <p>Cooling type.<span>*</span></p>
+            {{PropertyForm.cooling_type|as_crispy_field}}
+          </div>
+          <div class="heating-type">
+            <p>Heating type.<span>*</span></p>
+            {{PropertyForm.heating_type|as_crispy_field}}
+          </div>
+          <div class="heating-fuel">
+            <p>Heating fuel.<span>*</span></p>
+            {{PropertyForm.heating_fuel|as_crispy_field}}
+          </div>
+        </div>
+        <div class="_ScFsform-row-choices">
+          <h5>#Building Details</h5>
+            <div class="building-amenities">
+              <p>Built amenities.<span>*</span></p>
+              {{PropertyForm.building_amenities|as_crispy_field}}
+            </div>
+            <div class="exterior">
+              <p>Exterior features.<span>*</span></p>
+              {{PropertyForm.exterior|as_crispy_field}}
+            </div>
+            <div class="outdoor-amenities">
+              <p>Outdoor amenities.<span>*</span></p>
+              {{PropertyForm.outdoor_amenities|as_crispy_field}}
+            </div>
+            <div class="parking">
+              <p>Parking.<span>*</span></p>
+              {{PropertyForm.parking|as_crispy_field}}
+            </div>
+            <div class="roof">
+              <p>Roof.<span>*</span></p>
+              {{PropertyForm.roof|as_crispy_field}}
+            </div>
+            <div class="view">
+              <p>View.<span>*</span></p>
+              {{PropertyForm.view|as_crispy_field}}
+            </div>
+        </div>
+      </div>
+
+      <div class="ListingFormStep">
+        <h5>Contact information</h5>
+        <div class="form-row-info">
+          <p>Provide a link to a website associated with this home where people can find more information. Can be a personal or company website.<span>*</span></p>
+          <div class="related_website">
+            {{PropertyForm.related_website|as_crispy_field}}
+          </div>
+          <br>
+          <h5>Owner information.</h5>
+          <div class="phone">
+            <p>Phone number.<span>*</span></p>
+            {{PropertyForm.phone|as_crispy_field}}
+          </div>
+          <div class="email">
+            <p>Email.<span>*</span></p>
+            {{PropertyForm.email|as_crispy_field}}
+          </div>
+        </div>
+        <p><b>By clicking create you agree that you own this property or are acting on behalf of the owner of this property as an Agent. Also you consent to our <a href="#">terms of service</a></b></p>
+        <br>
+        <div class="submit-button">
+          <input type="submit" value="Create">
+        </div>
+      </div>
+
+      <div class="_cskjListingStepPagBtsn" style="overflow:auto;">
+          <button type="button" id="prevStepBtn" onclick="nextPrev(-1)">Previous</button>
+          <button type="button" id="nextStepBtn" onclick="nextPrev(1)">Next</button>
+      </div>
+    </div>
+    <div class="_Post_form_stepId-cIfdj">
+        <span class="StepIndicator">
+          <div class="StepIndicatorElm">
+            <span class="material-icons _plsf-StepIcon">fact_check</span>
+            <div class="_plsf-BgStepIndicatorStrike"></div>
+          </div>
+          <h5>
+            <span class="material-icons _plsf-stepInprogress">donut_large</span>
+            <span class="material-icons _plsf-stepDone">check_circle</span>
+             &nbsp Property Facts</h5>
+        </span>
+
+        <span class="StepIndicator">
+          <div class="StepIndicatorElm">
+            <span class="material-icons _plsf-StepIcon">add_photo_alternate</span>
+            <div class="_plsf-StepIndicatorStrike"></div>
+          </div>
+          <h5>
+            <span class="material-icons _plsf-stepInprogress">donut_large</span>
+            <span class="material-icons _plsf-stepDone">check_circle</span>
+             &nbsp Media</h5>
+        </span>
+
+        <span class="StepIndicator">
+          <div class="StepIndicatorElm">
+            <span class="material-icons _plsf-StepIcon">edit_location</span>
+            <div class="_plsf-StepIndicatorStrike"></div>
+          </div>
+          <h5>
+            <span class="material-icons _plsf-stepInprogress">donut_large</span>
+            <span class="material-icons _plsf-stepDone">check_circle</span>
+             &nbsp Location</h5>
+        </span>
 
 
-<div class="ListingFormStep">
-  <h2>Step 5 of 6: Features</h2>
-  <div class="form-row-choices1">
-  <h5>#Room Details</h5>
-    <div class="appliances">
-      {{PropertyForm.appliances|as_crispy_field}}
-    </div>
-    <div class="basement">
-      {{PropertyForm.basement|as_crispy_field}}
-    </div>
-    <div class="floor-covering">
-      {{PropertyForm.floor_covering|as_crispy_field}}
-    </div>
-    <div class="rooms">
-      {{PropertyForm.rooms|as_crispy_field}}
-    </div>
-    <div class="indoor-features">
-      {{PropertyForm.indoor_features|as_crispy_field}}
-    </div>
-  </div>
+        <span class="StepIndicator">
+          <div class="StepIndicatorElm">
+            <span class="material-icons _plsf-StepIcon">local_offer</span>
+            <div class="_plsf-StepIndicatorStrike"></div>
+          </div>
+          <h5>
+            <span class="material-icons _plsf-stepInprogress">donut_large</span>
+            <span class="material-icons _plsf-stepDone">check_circle</span>
+             &nbsp Extra info</h5>
+        </span>
 
-  <div class="form-row-choices2">
-    <h5>#Utility Details</h5>
-    <div class="cooling-type">
-      {{PropertyForm.cooling_type|as_crispy_field}}
-    </div>
-    <div class="heating-type">
-      {{PropertyForm.heating_type|as_crispy_field}}
-    </div>
-    <div class="heating-fuel">
-      {{PropertyForm.heating_fuel|as_crispy_field}}
-    </div>
-  </div>
+        <span class="StepIndicator">
+          <div class="StepIndicatorElm">
+            <span class="material-icons _plsf-StepIcon">pending_actions</span>
+            <div class="_plsf-StepIndicatorStrike"></div>
+          </div>
+          <h5>
+            <span class="material-icons _plsf-stepInprogress">donut_large</span>
+            <span class="material-icons _plsf-stepDone">check_circle</span>
+             &nbsp Features</h5>
+        </span>
 
-  <div class="form-row-choices3">
-    <h5>#Building Details</h5>
-      <div class="building-amenities">
-        {{PropertyForm.building_amenities|as_crispy_field}}
-      </div>
-      <div class="exterior">
-        {{PropertyForm.exterior|as_crispy_field}}
-      </div>
-      <div class="outdoor-amenities">
-        {{PropertyForm.outdoor_amenities|as_crispy_field}}
-      </div>
-      <div class="parking">
-        {{PropertyForm.parking|as_crispy_field}}
-      </div>
-      <div class="roof">
-        {{PropertyForm.roof|as_crispy_field}}
-      </div>
-      <div class="view">
-        {{PropertyForm.view|as_crispy_field}}
-      </div>
+        <span class="StepIndicator">
+          <div class="StepIndicatorElm">
+            <span class="material-icons _plsf-StepIcon">pending_actions</span>
+            <div class="_plsf-EnStepIndicatorStrike"></div>
+          </div>
+          <h5>
+            <span class="material-icons _plsf-stepInprogress">donut_large</span>
+            <span class="material-icons _plsf-stepDone">check_circle</span>
+             &nbsp Contact info</h5>
+        </span>
+    </div>
+    </form>
   </div>
-</div>
-
-<div class="ListingFormStep">
-  <h2>Step 6 of 6: Contact details & final touches.</h2>
-  <div class="form-row-info">
-    <p><b>Owner information:</b> This is the final section of this form, add you details and choose a thumbnail picture. this will appear in the listing section</p>
-    <div class="phone">
-      {{PropertyForm.phone|as_crispy_field}}
-    </div>
-    <div class="email">
-      {{PropertyForm.email|as_crispy_field}}
-    </div>
-    <br>
-    <p>Provide a link to a website associated with this listing where homeseekers can find more information. Can be a personal or company website. </p>
-    <div class="related_website">
-      {{PropertyForm.related_website|as_crispy_field}}
-    </div>
-    <br>
-    <p>Choose a thumbnail image for this property.</p>
-    <div class="thumb">
-      {{PropertyForm.thumb|as_crispy_field}}
-    </div>
-    <div class="description">
-      <p>Lastly <b>say something</b> about your property or add some <b>additional details</b> we might have missed.</p>
-      {{PropertyForm.description|as_crispy_field}}
-    </div>
-  </div>
-  <p><b>By clicking update you agree that you own this property or are acting on behalf of the owner of this property as an Agent. Also you consent to our <a href="#">terms of service</a></b></p>
-  <div class="submit-button">
-    <input type="submit" value="Update">
-  </div>
-</div>
-
-<div style="overflow:auto;">
-  <div style="float:right;">
-    <button type="button" id="prevStepBtn" onclick="nextPrev(-1)">Previous</button>
-    <button type="button" id="nextStepBtn" onclick="nextPrev(1)">Next</button>
-  </div>
-</div>
-<!-- Circles which indicate the steps of the form: -->
-<div style="text-align:center;margin-top:40px;">
-  <span class="StepIndicator"></span>
-  <span class="StepIndicator"></span>
-  <span class="StepIndicator"></span>
-  <span class="StepIndicator"></span>
-  <span class="StepIndicator"></span>
-  <span class="StepIndicator"></span>
-</div>
-  </form>
 </div>
 </section>
 
@@ -273,11 +498,15 @@ function validateForm() {
   // A loop that checks every input field in the current tab:
   for (i = 0; i < y.length; i++) {
     // If a field is empty...
-    if (y[i].value == "") {
-      // add an "invalid" class to the field:
-      y[i].className += " invalid";
-      // and set the current valid status to false
-      valid = false;
+    if (y[i].type === 'text') {
+      if (y[i].value == "") {
+        // add an "invalid" class to the field:
+        y[i].className += " invalid";
+        // and set the current valid status to false
+        valid = false;
+      }
+    }else {
+      valid = true;
     }
   }
   // If the valid status is true, mark the step as finished and valid:
@@ -297,4 +526,5 @@ function fixStepIndicator(n) {
   x[n].className += " active";
 }
 </script>
+
 {% endblock %}

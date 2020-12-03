@@ -1,6 +1,10 @@
 {% load static %}
-{% if agent.about %}
-  <p>{{agent.about|safe}}</p>
+{% load embed_video_tags %}
+{% if bs_profile.about or bs_profile.about_video %}
+  <p>
+    {% video bs_profile.about_video '100% x 350' %}
+  </p>
+  <p>{{bs_profile.about|truncatewords:100}}</p>
 {% else %}
   <div class="pflpages-no-results">
     <img src="{%static 'img/note.svg'%}" alt="empty">

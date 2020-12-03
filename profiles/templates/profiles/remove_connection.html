@@ -1,0 +1,25 @@
+{% load static %}
+<form class="ProSaveForm {% if connection %} _rConnection {% else %} _removedConnection {% endif %}"  action="{% url 'profiles:remove_connection'%}" method="post" style='width:100%'>
+  {% csrf_token %}
+  {% if connection %}
+       <button class="_proTeam" type="submit"
+       data-targetuser-id = '{% if target_user %}{{target_user.id}}{% elif request.user == connection.requestor %}{{connection.receiver.id}}{% elif request.user == connection.receiver %}{{connection.requestor.id}}{% endif %}'
+       value="{% if target_user %}{{target_user}}{% elif request.user == connection.requestor %}{{connection.receiver}}{% elif request.user == connection.receiver %}{{connection.requestor}}{% endif %}"
+       >
+         <span class="material-icons">remove</span>
+         {% if connection.receiver_accepted == 'Yes'%}
+           Connection
+        {% else%}
+          Waiting approval
+        {% endif %}
+       </button>
+  {% else %}
+     <button class="_proTeam" type="submit"
+     data-targetuser-id = '{% if target_user %}{{target_user.id}}{% elif request.user == connection.requestor %}{{connection.receiver.id}}{% elif request.user == connection.receiver %}{{connection.requestor.id}}{% endif %}'
+     value="{% if target_user %}{{target_user}}{% elif request.user == connection.requestor %}{{connection.receiver}}{% elif request.user == connection.receiver %}{{connection.requestor}}{% endif %}"
+     >
+       <span class="material-icons">add</span>
+        Connect
+     </button>
+    {%endif%}
+</form>

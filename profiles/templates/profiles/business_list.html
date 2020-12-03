@@ -1,56 +1,128 @@
 {% extends 'base1.html' %}
 {% load static %}
 {% block content %}
-<!-- <script src="{% static 'js/jquery.min.js' %}"></script> -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'OwlCarousel/owl.carousel.min.js'%}"></script>
+<script type="text/javascript">
+  $(document).ready(function(event){
+    $(".owl-carousel").owlCarousel({
+        loop:false,
+        rewind:true,
+        autoplay: true,
+    		autoplayTimeout: 3000,
+    		autoplayHoverPause: true,
+        margin:10,
+        nav:true,
+        responsiveClass:true,
+        responsive:{
+           0:{
+               items:2,
+               nav:true
+           },
+           480:{
+               items:2,
+               nav:true
+           },
+           768:{
+               items:4,
+               nav:true,
+           }
+       }
+     });
+
+     $(document).on('click', '._add-pro-to-saved', function(e){
+           e.preventDefault()
+           var button = $(this);
+           var proId = $(this).attr('value');
+           var formBox= $('._pfl-save-fm-wrprx' + proId);
+           var successmsgBody = $('#upfPageAcScs')
+           var errmsgBody = $('#upfPageAcScs')
+
+           $.ajax({
+               type: "POST",
+               url: "{% url 'profiles:save_pro'%}",
+               data: {
+                   'pk': proId,
+                   'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+               },
+              dataType: 'json',
+              success: function (response) {
+                 formBox.html(response['form']);
+                 successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                 successmsgBody.css('display', 'flex')
+                 setTimeout(function(){
+                    successmsgBody.css('display', 'none');
+                 }, 6000);
+               },
+               error: function(response,e){
+                 errmsgBody.html("<span class='material-icons'>error_outline</span>" + response['err_message'])
+                 errmsgBody.css('display', 'flex')
+                 setTimeout(function(){
+                    errmsgBody.css('display', 'none');
+                 }, 6000);
+               },
+         });
+     });
+
+
+});
+</script>
+
 <div class="pros-ag-wrapper">
     <div class="pros-ag-inner-wrapper">
+      <div id="upfPageAcScs" class="_upfPageAcScs">
+      </div>
+      <div id="upfPageAcErr" class="_upfPageAcErr">
+      </div>
         <section class="ab-ag-list">
             <div class="container" style="width:90%;">
                 <nav class="breadc-nav">
                   <div class="nav-wrapper-bread">
                     <div class="col s12">
                       <a href="{% url 'listings:homepage'%}" class="breadcrumb">Home</a>
-                      <a href="{% url 'profiles:agent_list'%}" class="breadcrumb">Find Business</a>
+                      <a href="#" class="breadcrumb">Find Professionals</a>
                     </div>
                   </div>
                 </nav>
                 <div id="ProBusinessListings">
                   <div class="row">
                       <div class="ag-title col s12">
-                        <h5> Real estate companies in {{location_address}}</h5>
+                        <h5> {{type_of_pro|capfirst}} in {{location_address}}</h5>
                         <h6>{{business_list_count}} results found</h6>
                       </div>
                   </div>
-
-
                   <div class="row">
                     <div class="filter-fields col s12">
-                      <form class="agt-filter-form col s12" action="{% url 'profiles:business_list'%}" method="GET">
+                      <form class="agt-filter-form col s12" action="{% url 'profiles:business_list' slug=slug %}" method="GET">
                         <div class="col s12 md4 l4 xl4" style="width:auto; margin:0;">
-                          <ul id="ag-filter-collapsible1" class="collapsible">
+                          <ul class="collapsible ag-filter-collapsible">
                             <li>
                               <button class="ag-fl-trigger-btn collapsible-header" type="button" name="button">
                                 <span class="material-icons">keyboard_arrow_down</span>{% if location_address %} {{location_address}} {% else %}Location{%endif%}</button>
-                              <div id="ag-filter-collapsible-body1" class="collapsible-body">
-                                <label for="name_filter">Enter location</label>
+                              <div class="collapsible-body ag-filter-collapsible-body">
+                                <span class="filter-h-helper">Find {{type_of_pro|capfirst}} in your region of choice. Enter new location.</span>
+                                <br>
+                                <br>
                                 <div id='ag-input-wrapper'style="margin:0; display:flex;">
                                   <div id="aglst_geocoder">
 
                                   </div>
-                                  <button id= "ag_f_button" type="submit" name="button"><span class="material-icons">search</span></button>
+                                  <button class= "ag_f_button" type="submit" name="button"><span class="material-icons">search</span></button>
                                 </div
                               </div>
                             </li>
                             <li>
                               <button class="ag-fl-trigger-btn collapsible-header" type="button" name="button">
                                 <span class="material-icons">keyboard_arrow_down</span>{% if name %}{{name}}{% else %}Company Name{%endif%}</button>
-                              <div id="ag-filter-collapsible-body" class="collapsible-body">
+                              <div  class="collapsible-body ag-filter-collapsible-body">
                                 <div class="row" style="margin:0; padding:0;">
-                                  <label for="name_filter">Enter company name</label>
+                                  <span class="filter-h-helper">Try a pro's name or business name to narrow your results.</span>
+                                  <br>
+                                  <br>
                                   <div id='ag-input-wrapper' style="">
                                     <div class="" style="display:flex; align-items:center;">
                                       <input id= "name_filter" placeholder="e.g. abc real estate " type="text" name="bs-name-input" value='{% if name %}{{name}}{% endif %}'>
-                                        <button id= "ag_f_button2" type="submit" name="button"> <span class="material-icons">search</span></button>
+                                        <button class="ag_f_button" type="submit" name="button"> <span class="material-icons">search</span></button>
                                     </div>
                                   </div>
                                 </div>
@@ -59,20 +131,22 @@
                             <li>
                               <button class="ag-fl-trigger-btn collapsible-header" type="button" name="button">
                                 <span class="material-icons">keyboard_arrow_down</span>{% if service %} {{service}}{% else %}Select Service{%endif%}</button>
-                              <div id="ag-filter-collapsible-body2" class="collapsible-body">
+                              <div class="collapsible-body ag-filter-collapsible-body">
                                 <div class="row" style="margin:0; padding:0;">
-                                  <label for="service_filter">Select Service</label>
-                                  <div id='ag-input-wrapper' style="">
+                                  <span class="filter-h-helper">Filter by related services.</span>
+                                  <br>
+                                  <br>
+                                  <div id='ag-input-wrapper'>
                                     <div class="svce-ag-slt" style="display:flex; align-items:center;">
                                           <div  class="input-field col s12">
-                                          <select name="bs-service-input">
-                                            <option value="" disabled selected>{% if service %} {{service}}{% else %} Select service {% endif %}</option>
-                                            <option value="Property Management">Property Management</option>
-                                            <option value="Agency">Agency</option>
-                                            <option value="Consultancy">Consultancy</option>
+                                          <select name="bs-service-input" multiple>
+                                            <option value="any" disabled>{% if service %} {{service}}{% else %} Select service {% endif %}</option>
+                                            {% for rel_services in related_services %}
+                                            <option value="{{rel_services}}">{{rel_services}}</option>
+                                            {% endfor %}
                                           </select>
                                           </div>
-                                      <button id= "ag_f_button3" type="submit" name="button"> <span class="material-icons">search</span></button>
+                                      <button class= "ag_f_button" type="submit" name="button"> <span class="material-icons">search</span></button>
                                     </div>
                                   </div>
                                 </div>
@@ -83,149 +157,167 @@
                       </form>
                     </div>
                   </div>
-
-                  <div class="row">
-                    <div class="featured_ag-sc col s12">
+                  <div class="_all_pro_ls_sctX">
+                    <div class="featured_ag-sc">
                       {% if featured_b_list %}
-                      <h5 class="featured-header-t">Featured Real Estate Companies</h5>
-                      {% for f_business in featured_b_list|slice:':3'%}
-                        <div class="col s12 md4 l4 xl4">
-                          <a href="{% url 'profiles:business_detail' f_business.pk%}">
-                              <div id="featured-ag-card" class="card">
-                                <div class="featured-ag-img-wrapper">
-
-                                    <img src="
-                                      {% if f_business.user.profile_image %}
-                                        {{f_business.user.profile_image.url}}
-                                      {% else %}
-                                        {%static 'img/avatar.png'%}
-                                      {% endif %}
-                                      " alt="{{f_business.get_full_name}}" class='circle responsive-img' style="width:100px;height:100px;object-fit:cover;">
-
-                                </div>
-                                <div class="featured-d-s-box">
-                                  <div class="featured-ag-dtls">
-                                    <h6>{{f_business.user.get_full_name}}</h6>
-                                    <li>{{f_business.phone}}</li>
-                                  </div>
-                                  <div class="featured-ag-stars">
-                                    {% if f_business.average_rating %}
-                                        {% if f_business.average_rating  > 4.5  and f_business.average_rating <= 5 %}
-                                          <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><a href="#">({{f_business.company_review.all.count}})</a></li>
-                                        {%elif f_business.average_rating > 3.5 and f_business.average_rating <= 4.5 %}
-                                        <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><a href="#">({{f_business.company_review.all.count}})</a></li>
-                                        {% elif f_business.average_rating > 2.5 and f_business.average_rating <= 3.5 %}
-                                        <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><a href="#">({{f_business.company_review.all.count}})</a></li>
-                                        {% elif f_business.average_rating > 1.5 and f_business.average_rating <= 2.5 %}
-                                        <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><a href="#">({{f_business.company_review.all.count}})</a></li>
-                                        {% elif f_business.average_rating > 0.5 and f_business.average_rating <= 1.5 %}
-                                        <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><a href="#">({{f_business.company_review.all.count}})</a></li>
-                                        {%else%}
-                                          <li>Unable to fetch rating!</li>
+                      <h5 class="featured-header-t">Featured {{type_of_pro|capfirst}} in this area</h5>
+                        <div class="owl-carousel _prscFd-owl-car">
+                          {% for agent in featured_b_list %}
+                              <div id="pro_bs-card{{agent.pk}}" class="card agent-card">
+                                <div class="agent-card_cts">
+                                    <div class="ag-img">
+                                      <a href="{{agent.get_absolute_url}}">
+                                      <div class="ag-prfX-image">
+                                        <img src="
+                                        {% if agent.business_profile_image %}
+                                        {{agent.business_profile_image.url}}
+                                        {% else %}
+                                          {%static 'img/avatar.png'%}
                                         {% endif %}
-                                    {%else%}
-                                        <li><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i></li>
-                                    {%endif%}
-                                  </div>
+                                          " alt="{{agent.business_name}}">
+                                      </div>
+                                      </a>
+                                      <div class="DtxDlsWrapper">
+                                        <div class="ag-details">
+                                          <p> <b>{%if agent.business_name%}{{agent.business_name}}{%else%}{{agent.user.username}}{%endif%}</b></p>
+                                        </div>
+                                        <div class="rating_stars">
+                                          {% if agent.average_rating %}
+                                            {% if agent.average_rating > 4.5  and agent.average_rating <= 5 %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                                            {%elif agent.average_rating > 3.5 and agent.average_rating <= 4.5 %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                                            {% elif agent.average_rating > 2.5 and agent.average_rating <= 3.5 %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                            {% elif agent.average_rating > 1.5 and agent.average_rating <= 2.5 %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                            {% elif agent.average_rating > 0 and agent.average_rating <= 1.5 %}
+                                            <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                            {% else %}
+                                            <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                            {% endif %}
+                                          {%else%}
+                                          <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                          {%endif%}
+                                          <a href="{{agent.get_absolute_url}}#reviews"> {{agent.pro_business_review.all.count}} reviews.</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <a href="{{agent.get_absolute_url}}">
+                                    <div class="agls-details">
+                                      {% for bsvc in agent.services|slice:':4' %}
+                                       <button type="button" name="button">{{bsvc}}</button>
+                                      {% endfor %}
+                                      {% if agent.services|length > 4 %}
+                                          <span>+{{ agent.services|length|add:"-4" }} more services</span>
+                                      {% endif%}
+                                    </div>
+                                    </a>
+                                    <div class='ag-review'>
+                                      {% if agent.about%}
+                                        <p>{{agent.about|truncatechars:100}}</p>
+                                      {% endif %}
+                                    </div>
+                                    <div class="_pfl_bs_card_footer">
+                                      <div class="_pfl-save-fm-wrprx{{agent.pk}}">
+                                        {%include 'profiles/pro-save-section.html' with pro=agent %}
+                                      </div>
+                                      <a href="{{agent.get_absolute_url}}"> See more</a>
+                                    </div>
+
                                 </div>
                               </div>
-                          </a>
+                          {%endfor%}
                         </div>
-                        {%endfor%}
                       {% endif %}
                     </div>
                   </div>
 
-                  <div class="row">
+                  <div class="_all_pro_ls_sctX">
                       {% if business_list %}
                           <div class="pro-bs-listings">
-                            <h5>All Real Estate companies</h5>
+                            <h5>More {{type_of_pro|capfirst}} for you</h5>
                             <div class="ag-sort-wrapper">
-                              <div  id="ag-sort-input" class="input-field col s12">
+                              <div  id="ag-sort-input" class="input-field">
+                                Sort by
                               <select name="ag-sort-input">
-                                <option value="" disabled selected>Sort</option>
+                                <option value="jfy" selected>Just for you</option>
                                 <option value="1">Highest rating</option>
                                 <option value="2">Lowest rating</option>
                                 <option value="3">Most Active</option>
+                                <option value="4">Most Saves</option>
                               </select>
                               </div>
                             </div>
+                            <div class="_pro_all_cardsXa">
                             {% for agent in business_list %}
-                            <div id="agent-card" class="card">
-                              <div class="row" style="margin:0;">
-                                <div class="col s12 md6 l5 xl5">
-                                  <div class="ag-img">
-                                    <div class="ag-prfX-image">
-                                      {% if agent.user.profile_image %}
-                                      <a href="{% url 'profiles:business_detail' agent.pk %}">
-                                      <img src="{{agent.user.profile_image.url}}" style='width:120px;height:120px;object-fit:cover;' class='circle responsive-img' alt="{{agent.user.first_name}}">
-                                      </a>
-                                      {% else %}
-                                      <a href="{% url 'profiles:business_detail' agent.pk %}">
-                                      <img src="{% static 'img/avatar.png'%}" style='width:120px;height:120px;object-fit:cover;' class='circle responsive-img' alt="{{agent.user.first_name}}">
-                                      </a>
-                                      {% endif%}
-                                    </div>
-                                    <div class="DtxDlsWrapper">
-                                      <div class="ag-details">
-                                        <p> <b>{{agent.user.first_name}} {{agent.user.last_name}}</b></p>
-                                        <li>{{agent.phone}}</li>
-                                        <li><a href="{% url 'profiles:business_detail' agent.pk %}#reviews">{{agent.company_review.all.count}} total reviews.</a></li>
-                                      </div>
-                                      <div class="rating_stars">
-                                        {% if agent.average_rating %}
-                                            {% if agent.average_rating  > 4.5  and agent.average_rating <= 5 %}
-                                              <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i></li>
-                                            {%elif agent.average_rating > 3.5 and agent.average_rating <= 4.5 %}
-                                            <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i></li>
-                                            {% elif agent.average_rating > 2.5 and agent.average_rating <= 3.5 %}
-                                            <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i></li>
-                                            {% elif agent.average_rating > 1.5 and agent.average_rating <= 2.5 %}
-                                            <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i></li>
-                                            {% elif agent.average_rating > 0.5 and agent.average_rating <= 1.5 %}
-                                            <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i><i class="fas fa-star fa-2x" style='color:#B3B4B3'></i></li>
+                                <div id="pro_bs-card{{agent.pk}}" class="card agent-card">
+                                  <div class="agent-card_cts">
+                                      <div class="ag-img">
+                                        <a href="{{agent.get_absolute_url}}">
+                                        <div class="ag-prfX-image">
+                                          <img src="
+                                          {% if agent.business_profile_image %}
+                                          {{agent.business_profile_image.url}}
+                                          {% else %}
+                                            {%static 'img/avatar.png'%}
+                                          {% endif %}
+                                            " alt="{{agent.business_name}}">
+                                        </div>
+                                        </a>
+                                        <div class="DtxDlsWrapper">
+                                          <div class="ag-details">
+                                            <p> <b>{%if agent.business_name%}{{agent.business_name}}{%else%}{{agent.user.username}}{%endif%}</b></p>
+                                          </div>
+                                          <div class="rating_stars">
+                                            {% if agent.average_rating %}
+                                              {% if agent.average_rating > 4.5  and agent.average_rating <= 5 %}
+                                              <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                                              {%elif agent.average_rating > 3.5 and agent.average_rating <= 4.5 %}
+                                              <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                                              {% elif agent.average_rating > 2.5 and agent.average_rating <= 3.5 %}
+                                              <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                              {% elif agent.average_rating > 1.5 and agent.average_rating <= 2.5 %}
+                                              <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                              {% elif agent.average_rating > 0 and agent.average_rating <= 1.5 %}
+                                              <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                              {% else %}
+                                              <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                              {% endif %}
                                             {%else%}
-                                              <li>Unable to fetch rating!</li>
-                                            {% endif %}
-                                        {%else%}
-                                        <li><i class="far fa-star" style='color:#B3B4B3;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i><i class="far fa-star" style='color:#B3B4B3 ;'></i></li>
-                                        {%endif%}
+                                            <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                            {%endif%}
+                                            <a href="{{agent.get_absolute_url}}#reviews"> {{agent.pro_business_review.all.count}} reviews.</a>
+                                          </div>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col s12 md6 l3 xl3 hide-on-med-and-down" >
-                                  <div class="agls-details">
-                                    <li>Sale listings</li>
-                                    <h6>{{agent.user.sale_property.all.count}}</h6>
-                                    <li>Rental listings</li>
-                                    <h6>{{agent.user.rent_property.all.count}}</h6>
+                                      <a href="{{agent.get_absolute_url}}">
+                                      <div class="agls-details">
+                                        {% for bsvc in agent.services|slice:':4' %}
+                                         <button type="button" name="button">{{bsvc}}</button>
+                                        {% endfor %}
+                                        {% if agent.services|length > 4 %}
+                                            <span>+{{ agent.services|length|add:"-4" }} more services</span>
+                                        {% endif%}
+                                      </div>
+                                      </a>
+                                      <div class='ag-review'>
+                                        {% if agent.about%}
+                                          <p>{{agent.about|truncatechars:100}}</p>
+                                        {% endif %}
+                                      </div>
+                                      <div class="_pfl_bs_card_footer">
+                                        <div class="_pfl-save-fm-wrprx{{agent.pk}}">
+                                          {%include 'profiles/pro-save-section.html' with pro=agent %}
+                                        </div>
+                                        <a href="{{agent.get_absolute_url}}"> See more</a>
+                                      </div>
 
-                                    <p><a href="{% url 'profiles:business_detail' agent.pk%}">View More</a></p>
                                   </div>
                                 </div>
-                                <div class="col s12 md6 l4 xl4">
-                                  <div class='ag-review'>
-                                    {% if agent.agent_review.all%}
-                                      {% for review in agent.agent_review.all%}
-                                            {% if forloop.last %}
-                                                <li>{{review.review_date}}</li>
-                                                <p>"{{review.comment|truncatewords:15}}"</p>
-                                            {% endif %}
-                                      {% endfor%}
-                                    {% else %}
-                                    <p>No review availlable.</p>
-                                    <form class="" action="{% url 'profiles:business_review'%}" method="GET">
-                                      <button type="submit" name="bsr" value='{{agent.pk}}'> Do a review</button>
-                                    </form>
-                                    {% endif %}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
                             {% endfor %}
-                            <!-- paginator for agent list-->
-                            {% include 'profiles/pagination.html' with listings=business_list %}
+                            </div>
+                              {% include 'profiles/pagination.html' with listings=business_list %}
                           </div>
                       {%else%}
                       <h5 class="center">Ooops! we could not match any results. Try refining your search.</h5>
@@ -311,6 +403,7 @@
 <script type="text/javascript">
   document.querySelector(".mapboxgl-ctrl-geocoder--input").name="bs-name-input";
   document.querySelector(".mapboxgl-ctrl-geocoder--input").value="{{location_address}}";
+
 </script>
 {% endblock %}
 {% block footer %}

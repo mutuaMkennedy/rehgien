@@ -1,68 +1,14 @@
 {% load static %}
-{% if request.user.user_type == 'Agent'%}
-    {% if agent.speciality %}
-      {% for speciality in agent.speciality %}
-        <button type="button" name="button">
-          {% if speciality == '1' %}
-          Buying and Selling of houses
-          {% elif speciality == '2' %}
-          Renting houses
-          {% elif speciality == '3' %}
-          Leasing office spaces
-          {% elif speciality == '4' %}
-          Buying and selling of land
-          {% endif %}
-        </button>
-      {%endfor%}
-    {% else %}
-      <div class="pflpages-no-results">
-        <img src="{%static 'img/note.svg'%}" alt="empty">
-        <p>Nothing Yet</p>
-      </div>
-    {% endif %}
-{% elif request.user.user_type == 'PropertyManager'%}
-    {% if agent.speciality %}
-      {% for speciality in agent.speciality %}
-        <button type="button" name="button">
-          {% if speciality == '1' %}
-          Buying and Selling of houses
-          {% elif speciality == '2' %}
-          Renting houses
-          {% elif speciality == '3' %}
-          Leasing office spaces
-          {% elif speciality == '4' %}
-          Buying and selling of land
-          {% endif %}
-        </button>
-      {%endfor%}
-    {% else %}
-      <div class="pflpages-no-results">
-        <img src="{%static 'img/note.svg'%}" alt="empty">
-        <p>Nothing Yet</p>
-      </div>
-    {% endif %}
-{% elif request.user.user_type == 'Design&servicePro'%}
-    {% if agent.pro_speciality %}
-        <button type="button" name="button">
-          {{agent.pro_speciality}}
-        </button>
-    {% else %}
-      <div class="pflpages-no-results">
-        <img src="{%static 'img/note.svg'%}" alt="empty">
-        <p>Nothing Yet</p>
-      </div>
-    {% endif %}
-{% elif request.user.user_type == 'Company'%}
-    {% if agent.speciality %}
-      {% for speciality in agent.speciality %}
-        <button type="button" name="button">
-          {{speciality}}
-        </button>
-      {%endfor%}
-    {% else %}
-      <div class="pflpages-no-results">
-        <img src="{%static 'img/note.svg'%}" alt="empty">
-        <p>Nothing Yet</p>
-      </div>
-    {% endif %}
-{%endif%}
+
+{% if bs_profile.services %}
+  {% for speciality in bs_profile.services %}
+    <button type="button" name="button">
+      {{speciality}}
+    </button>
+  {%endfor%}
+{% else %}
+  <div class="pflpages-no-results">
+    <img src="{%static 'img/note.svg'%}" alt="empty">
+    <p>Nothing Yet</p>
+  </div>
+{% endif %}

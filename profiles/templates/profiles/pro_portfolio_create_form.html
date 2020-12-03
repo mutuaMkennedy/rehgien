@@ -8,14 +8,10 @@
 <div id="porfolio-form-Box">
     <div class="porfolio-form-Logo">
       <img src="{% static 'img/rehgien_logo_r.png'%}" alt="rehgien-home">
-      {% if request.user.user_type == 'Company' or request.user.user_type == 'PropertyManager' %}
-        <h1>Add property to portfolio.</h1>
-      {% elif request.user.user_type == 'Design&servicePro'%}
-        <h1>Add project to portfolio.</h1>
-      {% endif %}
+        <h1>Add an item to your portfolio.</h1>
     </div>
   <div class="_portfolio_form_Elm">
-    {% if request.user.user_type == 'Company' or request.user.user_type == 'PropertyManager' %}
+    {% if request.user.user_type == 'PRO' %}
           <div class="_portfolio_form_header">
             <a href="{% url 'profiles:account'%}">
               <button type="button" class="modal-close">
@@ -24,7 +20,7 @@
               </button>
             </a>
           </div>
-          <form class="_portfolio_form_" autocomplete='off' action="{% url 'profiles:pm_portfolio_create' %}" method="post" enctype="multipart/form-data">
+          <form class="_portfolio_form_" autocomplete='off' action="{% url 'profiles:portfolio_item_create' slug=category_type%}" method="post" enctype="multipart/form-data">
 
             <div class="_portfolio_form_details">
               {{PortfolioForm.media}}
@@ -32,42 +28,59 @@
                 <div class="_pf-list-step">
                     <h5>General</h5>
                     <div class="_pf-property_name">
-                      <p>Provide a name identity for this property.<span>*</span></p>
-                      {{PortfolioForm.property_name}}
+                      <p>Give this service a name.<span>*</span></p>
+                      {{PortfolioForm.name}}
+                    </div>
+                    <h5>Completion/Start year</h5>
+                    <div class="_pf-project_year">
+                      <p>What year was the service? If it's continous provide the start year. <span>*</span></p>
+                      {{PortfolioForm.year}}
                     </div>
                 </div>
                 <div class="_pf-list-step">
-                  <h5>Value Estimate</h5>
+                  <h5>Worth Estimate</h5>
                   <div class="_pf-property_market_value">
-                    <p>At what market value is this property estimated at in KSH?  <span>*</span></p>
-                    {{PortfolioForm.property_market_value}}
+                    <p>What is the cost or value of property in KSH?<span>*</span></p>
+                    {{PortfolioForm.worth}}
                   </div>
+
                 </div>
                 <div class="_pf-list-step">
                     <h5>Location</h5>
                     <div class="_pf-property_location">
-                      <p>Provide an address for this property i.e the street name or immediate neighborhood.<span>*</span></p>
-                      {{PortfolioForm.property_location}}
+                      <p>Where was this job done provide an address for this property i.e the street name or immediate neighborhood.<span>*</span></p>
+                      {{PortfolioForm.address}}
                     </div>
                     <div class="_pf-address">
-                      {{PortfolioForm.property_map_point}}
+                      <p>Provide a point on the map</p>
+                      {{PortfolioForm.map_point}}
                     </div>
                  </div>
                  <div class="_pf-list-step">
                    <h5>Photos</h5>
                     <div class="_pf-property_image">
-                      <p>Choose some nice photos of this property. <span>*</span></p>
-                      {{PoImageForm.property_image}}
+                      <p>Choose some nice photos of the property/project/job. <span>*</span></p>
+                      {{PoImageForm.photo}}
+                    </div>
+                    <div class="_pf-project_video">
+                      <p>Have a video? Paste the youtube link here. Click share button from the youtube video and copy the url.</p>
+                      {{PortfolioForm.video}}
                     </div>
                 </div>
                 <div class="_pf-list-step">
-                  <h5>Manager State</h5>
+                  <h5>About Project</h5>
+                  <div class="_pf-project_description">
+                    <p>Say something about the property/project/job. <span>*</span></p>
+                    {{PortfolioForm.description}}
+                  </div>
+
+                  <h5>Progress State</h5>
                   <div class="_pf-currently_managing">
-                    <p>Are you the currrent manager? <span>*</span></p>
-                    {{PortfolioForm.currently_managing}}
+                    <p>What is the progress state of the service? <span>*</span></p>
+                    {{PortfolioForm.progress}}
                   </div>
                   <div class="s-prof">
-                    <button type="submit" name="button">Add Property</button>
+                    <button type="submit" name="button">Add Item</button>
                   </div>
                 </div>
               </div>
@@ -127,128 +140,6 @@
                   <span class="material-icons _stepInprogress">donut_large</span>
                   <span class="material-icons _stepDone">check_circle</span>
                    &nbsp Manager Status</h5>
-              </span>
-            </div>
-          </form>
-    {% elif request.user.user_type == 'Design&servicePro'%}
-          <div class="_portfolio_form_header">
-            <a href="{% url 'profiles:account'%}">
-              <button type="button" class="modal-close">
-                <span class="material-icons">west</span> &nbsp
-                Back to account
-              </button>
-            </a>
-          </div>
-          <form class="_portfolio_form_" autocomplete='off' action="{% url 'profiles:DS_project_create' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="_portfolio_form_details">
-              {{ProjectForm.media}}
-              <div class="_pf-fieldWrappers">
-                  <div class="_pf-list-step">
-                    <h5>General</h5>
-                    <div class="_pf-project_name">
-                      <p>Provide the a name for the project. <span>*</span></p>
-                      {{ProjectForm.project_name}}
-                    </div>
-                    <div class="_pf-project_year">
-                      <p>What year was the project done? <span>*</span></p>
-                      {{ProjectForm.project_year}}
-                    </div>
-                  </div>
-                  <div class="_pf-list-step">
-                    <h5>About Project</h5>
-                    <div class="_pf-project_description">
-                      <p>Say something about the project. <span>*</span></p>
-                      {{ProjectForm.project_description}}
-                    </div>
-                  </div>
-                  <div class="_pf-list-step">
-                    <div class="_pf-project_cost">
-                      <p>What was the project cost in Ksh? <span>*</span></p>
-                      {{ProjectForm.project_cost}}
-                    </div>
-                  </div>
-                  <div class="_pf-list-step">
-                    <h5>Location</h5>
-                      <div class="_pf-project_location">
-                        <p>Provide an address for this project i.e the street name or immediate neighborhood. <span>*</span></p>
-                        {{ProjectForm.project_location}}
-                      </div>
-                      <div class="_pf-project_map_point">
-                        {{ProjectForm.project_map_point}}
-                      </div>
-                  </div>
-                  <div class="_pf-list-step">
-                    <h5>Media</h5>
-                    <div class="_pf-project_image">
-                      <p>Choose some nice photos of this project. <span>*</span></p>
-                      {{ProjectImageForm.project_image}}
-                    </div>
-                    <div class="_pf-project_video">
-                      <p>Have a video? Paste the youtube link here. Click share button from the youtube video and copy the url.</p>
-                      {{ProjectForm.project_video}}
-                    </div>
-                    <div class="s-prof">
-                      <button type="submit" name="button">Post project</button>
-                    </div>
-                  </div>
-              </div>
-              <div class="_pf-StepBtns">
-                <button type="button" id="_pf-prevStepBtn" onclick="nextPrev(-1)">Previous</button>
-                <button type="button" id="_pf-nextStepBtn" onclick="nextPrev(1)">Next</button>
-              </div>
-            </div>
-            <!-- Circles which indicate the steps of the form: -->
-            <div class="_pf-StepIndicators">
-              <span class="_pf-StepIndicator">
-                <div class="_pf-StepIndicatorElm">
-                  <span class="material-icons _pf-StepIcon">fact_check</span>
-                  <div class="_pf-BgStepIndicatorStrike"></div>
-                </div>
-                <h5>
-                  <span class="material-icons _stepInprogress">donut_large</span>
-                  <span class="material-icons _stepDone">check_circle</span>
-                   &nbsp General</h5>
-              </span>
-              <span class="_pf-StepIndicator">
-                <div class="_pf-StepIndicatorElm">
-                  <span class="material-icons _pf-StepIcon">description</span>
-                  <div class="_pf-StepIndicatorStrike"></div>
-                </div>
-                <h5>
-                  <span class="material-icons _stepInprogress">donut_large</span>
-                  <span class="material-icons _stepDone">check_circle</span>
-                   &nbsp Description</h5>
-              </span>
-              <span class="_pf-StepIndicator">
-                <div class="_pf-StepIndicatorElm">
-                  <span class="material-icons _pf-StepIcon">local_offer</span>
-                  <div class="_pf-StepIndicatorStrike"></div>
-                </div>
-                <h5>
-                  <span class="material-icons _stepInprogress">donut_large</span>
-                  <span class="material-icons _stepDone">check_circle</span>
-                   &nbsp Project Cost</h5>
-              </span>
-              <span class="_pf-StepIndicator">
-                <div class="_pf-StepIndicatorElm">
-                  <span class="material-icons _pf-StepIcon">edit_location</span>
-                  <div class="_pf-StepIndicatorStrike"></div>
-                </div>
-                <h5>
-                  <span class="material-icons _stepInprogress">donut_large</span>
-                  <span class="material-icons _stepDone">check_circle</span>
-                   &nbsp Location</h5>
-              </span>
-              <span class="_pf-StepIndicator">
-                <div class="_pf-StepIndicatorElm">
-                  <span class="material-icons _pf-StepIcon">add_photo_alternate</span>
-                  <div class="_pf-EnStepIndicatorStrike"></div>
-                </div>
-                <h5>
-                  <span class="material-icons _stepInprogress">donut_large</span>
-                  <span class="material-icons _stepDone">check_circle</span>
-                   &nbsp Media</h5>
               </span>
             </div>
           </form>
