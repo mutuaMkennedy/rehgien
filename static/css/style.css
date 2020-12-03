@@ -1973,7 +1973,7 @@ main {
 
 .post-form #prevStepBtn,#nextStepBtn {
     height: 35px;
-    width: 100px;
+    min-width: 100px;
     border: 0;
     font-family: Open Sans, Arial;
     margin:0 !important;
@@ -1985,13 +1985,25 @@ main {
 }
 
 .post-form #nextStepBtn {
-    background-color: #ee6e73;
+    background-color: #cc0000;
     color: #fff;
 }
 
 .post-form #prevStepBtn {
     background-color: #d1d1d1;
     color: #000;
+}
+
+._cskjListingStepPagBtsn input{
+    height:35px;
+    background-color:#1100ff;
+    border:none;
+    color:#fff;
+    cursor:pointer;
+}
+
+._cskjListingStepPagBtsn input:hover{
+    background-color:rgb(17 0 255 / 0.5);
 }
 
 .ListingFormStep {
@@ -2273,7 +2285,6 @@ main {
 }
 
 .post-form .__virtualTourPrvBox{
-    background-color:#eee;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -2424,21 +2435,6 @@ main {
     display:none;
 }
 
-.submit-button input {
-    margin-bottom: 10px;
-    background-color: #1100ff;
-    height: 35px;
-    width: 100px;
-    border: 0px;
-    color:#fff;
-    margin-left:100%;
-    transform:translatex(-100%);
-}
-
-.submit-button input:hover {
-    cursor: pointer;
-    background-color: #7b7bd4;
-}
 
 .dab-links-wrapper {
     font-size: 13px;

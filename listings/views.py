@@ -396,7 +396,7 @@ def property_update(request, property_category, pk):
 				messages.success(request, 'Update Successull')
 				return redirect('profiles:account')
 			else:
-				messages.error(request, 'Unable to update try again later')
+				messages.error(request, 'Unable to update. Make sure no fields are empty')
 		else:
 			PropertyForm = forms.ListingForm(instance=listing)
 			img_formset = image_iformset(instance=listing)

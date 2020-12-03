@@ -296,15 +296,12 @@
           </div>
         </div>
         <p><b>By clicking create you agree that you own this property or are acting on behalf of the owner of this property as an Agent. Also you consent to our <a href="#">terms of service</a></b></p>
-        <br>
-        <div class="submit-button">
-          <input type="submit" value="Create">
-        </div>
       </div>
 
       <div class="_cskjListingStepPagBtsn" style="overflow:auto;">
           <button type="button" id="prevStepBtn" onclick="nextPrev(-1)">Previous</button>
           <button type="button" id="nextStepBtn" onclick="nextPrev(1)">Next</button>
+          <input type="submit" value="Finish & Submit">
       </div>
     </div>
     <div class="_Post_form_stepId-cIfdj">
@@ -344,7 +341,7 @@
 
         <span class="StepIndicator">
           <div class="StepIndicatorElm">
-            <span class="material-icons _plsf-StepIcon">local_offer</span>
+            <span class="material-icons _plsf-StepIcon">note_add</span>
             <div class="_plsf-StepIndicatorStrike"></div>
           </div>
           <h5>
@@ -355,7 +352,7 @@
 
         <span class="StepIndicator">
           <div class="StepIndicatorElm">
-            <span class="material-icons _plsf-StepIcon">pending_actions</span>
+            <span class="material-icons _plsf-StepIcon">style</span>
             <div class="_plsf-StepIndicatorStrike"></div>
           </div>
           <h5>
@@ -366,7 +363,7 @@
 
         <span class="StepIndicator">
           <div class="StepIndicatorElm">
-            <span class="material-icons _plsf-StepIcon">pending_actions</span>
+            <span class="material-icons _plsf-StepIcon">contact_mail</span>
             <div class="_plsf-EnStepIndicatorStrike"></div>
           </div>
           <h5>
@@ -390,14 +387,19 @@ function showTab(n) {
   x[n].style.display = "block";
   //... and fix the Previous/Next buttons:
   if (n == 0) {
-    document.getElementById("prevStepBtn").style.display = "none";
+      $("#prevStepBtn").css('display','none')
   } else {
-    document.getElementById("prevStepBtn").style.display = "inline";
+    $("#prevStepBtn").css('display','inline')
   }
   if (n == (x.length - 1)) {
-    document.getElementById("nextStepBtn").style.display = "none";
+    $("#nextStepBtn").css('display','none');
+    $("._cskjListingStepPagBtsn input").css('display','inline');
   } else {
-    document.getElementById("nextStepBtn").style.display = "inline";
+    $("#nextStepBtn")
+    .css('display','inline')
+    .attr('type','button')
+    .html("Next");
+    $("._cskjListingStepPagBtsn input").css('display','none');
   }
   //... and run a function that will display the correct step indicator:
   fixStepIndicator(n)
@@ -412,12 +414,6 @@ function nextPrev(n) {
   x[currentTab].style.display = "none";
   // Increase or decrease the current tab by 1:
   currentTab = currentTab + n;
-  // if you have reached the end of the form...
-  if (currentTab >= x.length) {
-    // ... the form gets submitted:
-    document.getElementsByClassName("post-form").submit();
-    return false;
-  }
   // Otherwise, display the correct tab:
   showTab(currentTab);
 }
@@ -430,11 +426,15 @@ function validateForm() {
   // A loop that checks every input field in the current tab:
   for (i = 0; i < y.length; i++) {
     // If a field is empty...
-    if (y[i].value == "") {
-      // add an "invalid" class to the field:
-      y[i].className += " invalid";
-      // and set the current valid status to false
-      valid = false;
+    if (y[i].type === 'text') {
+      if (y[i].value == "") {
+        // add an "invalid" class to the field:
+        y[i].className += " invalid";
+        // and set the current valid status to false
+        valid = false;
+      }
+    }else {
+      valid = true;
     }
   }
   // If the valid status is true, mark the step as finished and valid:
