@@ -2,7 +2,7 @@
 {% load static %}
 {% load cloudinary %}
 {% block content %}
-
+{% load profiles_extra_tags %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript">
 
@@ -117,6 +117,80 @@
              });
           });
           //
+          $(document).on('click', '.review_like_btn', function(e){
+                e.preventDefault()
+                var button = $(this);
+                var rvwId = $(this).attr('value');
+                var formBox= $('#rvwSct_form'+rvwId);
+                var successmsgBody = $('#upfPageAcScs')
+                var errmsgBody = $('#upfPageAcScs')
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'profiles:like_review'%}",
+                    data: {
+                        'like_review': rvwId,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                   dataType: 'json',
+                    success: function (response) {
+                      formBox.html(response['form']);
+                      if (response['message'] === 'Success') {
+                        successmsgBody.html("<span class='material-icons'>check_circle_outline</span> Success. Thanks for your feedback!")
+                        successmsgBody.css({'display': 'flex','bottom':'10px'})
+                        setTimeout(function(){
+                           successmsgBody.css('bottom', '-100px');
+                        }, 6000);
+                      }else {
+                        errmsgBody.html("<span class='material-icons'>error_outline</span> Something went wrong. Try again later")
+                        errmsgBody.css({'display': 'flex','bottom':'10px'})
+                        setTimeout(function(){
+                           errmsgBody.css('bottom', '-100px');
+                        }, 6000);
+                      }
+                    },
+                    error: function(response,e){
+                      errmsgBody.html("<span class='material-icons'>error_outline</span> Something went wrong. Try again later")
+                      errmsgBody.css({'display': 'flex','bottom':'10px'})
+                      setTimeout(function(){
+                         errmsgBody.css('bottom', '-100px');
+                      }, 6000);
+                    },
+              });
+          });
+
+          var rvwPageNumber = $('#rvwsPaginationBar').find($('.pagination-current')).attr('data-pagenumber');
+          $(document).on('click', '._rvwpageNumber', function (event) {
+            event.preventDefault()
+            rvwPageNumber = $(this).attr('data-PageNumber');
+            filter();
+          });
+          $(document).on('change','#rvwSortWrp_sjTSh select', function(event){
+            event.preventDefault()
+            filter();
+          })
+          function filter(){
+            $(".loading_reviews").css('display','flex');
+            $.ajax({
+                type: "GET",
+                url: './',
+                data:{
+                    'review_sort':$('#rvwSortWrp_sjTSh select').val(),
+                    'review_page': rvwPageNumber,
+                },
+                success: function (data) {
+                        $("#rvwBoxsuwlVhd").html($(data).find('.review-comments'));
+                        $('#askoewO_PRO_d').val($(data).find('#askoewO_PRO_d').val());
+                          $('.modal').modal();
+                          $('select').formSelect();
+                        var q_string = $(data).find('#askoewO_PRO_d').val();
+                        window.history.pushState({qs : q_string }, null, "?" + q_string );
+                        $(".loading_reviews").css('display','none');
+                    },
+                });
+          }
+          $('#rvwSortWrp_sjTSh select').val('{{params_context.review_sort}}');
+
           $(".owl-carousel").owlCarousel({
               // loop:true
                     autoPlay:3000,
@@ -125,7 +199,7 @@
               responsiveClass:true,
               responsive:{
                  0:{
-                     items:2,
+                     items:1,
                      nav:true
                  },
                  480:{
@@ -138,8 +212,21 @@
                  }
              }
             });
-            //
 
+          let about = $('#_Pro_Intro_sc');
+          let innitialAb = about.html();
+          let sliced = innitialAb.slice(0, 250);
+          if (innitialAb.length > 250) {
+            about.html('')
+            about.html(sliced)
+            about.append("<a id='abRdMore'>...Read more</a>").css('cursor','pointer');
+            $(document).on('click','#abRdMore',function(){
+              about.html(innitialAb).append("<a id='abRdLess'>Read less</a>")
+            })
+            $(document).on('click','#abRdLess', function(){
+              about.html(sliced).append("<a id='abRdMore'>...Read more</a>")
+            })
+          }
         });
 </script>
 
@@ -149,12 +236,13 @@
   </div>
   <div id="upfPageAcErr" class="_upfPageAcErr">
   </div>
-
+<data id="askoewO_PRO_d" hidden value="{{query_string}}"></data>
 <div class="bs-pfl-swc-wrp">
-  <ul id="bs-pfl-switch" class="tabs">
-      <li class="tab col s3"><a href="#co-about-vw">Posts</a></li>
-      <li class="tab col s3"><a href="#co-sr-lsts-vw">Listings</a></li>
-      <li class="tab col s3"><a href="#co-Portfolio-vw">Portfolio</a></li>
+  <ul id="bs-pfl-switch" class="">
+      <li class="col s3"><a href="#co-about-vw">Posts</a></li>
+      <li class="col s3"><a href="#co-Portfolio-vw">Portfolio</a></li>
+      <li class="col s3"><a href="#pro_reviews_vw">Reviews</a></li>
+      <li class="col s3"><a href="#co-sr-lsts-vw">Listings</a></li>
   </ul>
   {% if business.user == request.user %} <button type="button" name="button">This is your business page</button>{%endif %}
 </div>
@@ -182,16 +270,16 @@
                                       <h5> {%if business.business_name %}{{business.business_name}}{% else %}{{business.user.username}}{% endif %}</h5>
                                     </div>
                                     <div class="ag-rating">
-                                      {% if average_rating.rating__avg %}
-                                          {% if average_rating.rating__avg  > 4.5  and average_rating.rating__avg <= 5 %}
+                                      {% if recommendation_rating_avg %}
+                                          {% if recommendation_rating_avg  > 4.5  and recommendation_rating_avg <= 5 %}
                                           <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
-                                          {%elif average_rating.rating__avg > 3.5 and average_rating.rating__avg <= 4.5 %}
+                                          {%elif recommendation_rating_avg > 3.5 and recommendation_rating_avg <= 4.5 %}
                                           <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
-                                          {% elif average_rating.rating__avg > 2.5 and average_rating.rating__avg <= 3.5 %}
+                                          {% elif recommendation_rating_avg > 2.5 and recommendation_rating_avg <= 3.5 %}
                                           <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-                                          {% elif average_rating.rating__avg > 1.5 and average_rating.rating__avg <= 2.5 %}
+                                          {% elif recommendation_rating_avg > 1.5 and recommendation_rating_avg <= 2.5 %}
                                           <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-                                          {% elif average_rating.rating__avg > 0 and average_rating.rating__avg <= 1.5 %}
+                                          {% elif recommendation_rating_avg > 0 and recommendation_rating_avg <= 1.5 %}
                                           <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
                                           {% else %}
                                           <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
@@ -289,66 +377,47 @@
             <div class="Pr-about-vw" id='co-about-vw'>
                 <div class="ag_featuredListings">
                   <div class="_pf_sectionHeader">
-                    <h1>Featured listings</h1>
+                    <h1>Recent Projects</h1>
                   </div>
-                  <div class="{% if business%}owl-carousel{% endif %} ag_featuredCarousel">
-                      {% if business%}
+                  {% if projects%}
+                  <div class="owl-carousel ag_featuredCarousel">
+                        {% for project in projects|slice:':5'%}
                         <div class="_pf_FeaturedItem card">
 
                             <div class="_pf_FeaturedItemImg">
-                              <img src="{%static 'img/place1.jpg'%}">
+                              {% for photo_object in project.portfolio_item_photo.all %}
+                                {% if forloop.last %}
+                                {% cloudinary photo_object.photo ImageTransformation %}
+                                {% endif %}
+                              {% endfor %}
                             </div>
                             <div class="_pf_FeaturedCtOvy">
                               <div class="_pf_FeaturedItemDt">
-                                <h5>Bream View townhouse</h5>
-                                <h3>Ksh: 25,000,000</h3>
-                                <h4>3ba 5bd 120sqm <span>Muthaiga, Nairobi, Kenya</span></h4>
+                                <h5>{{project.name}}</h5>
+                                <a href="#portf-detail-modal{{forloop.counter}}" class=" modal-trigger">
+                                  View more
+                                </a>
                               </div>
                           </div>
                         </div>
-                        <div class="_pf_FeaturedItem card">
-                            <div class="_pf_FeaturedItemImg">
-                              <img src="{%static 'img/place2.jpg'%}">
-                            </div>
-                            <div class="_pf_FeaturedCtOvy">
-                              <div class="_pf_FeaturedItemDt">
-                                <h5>Bream View townhouse</h5>
-                                <h3>Ksh: 25,000,000</h3>
-                                <h4>3ba 5bd 120sqm <span>Muthaiga, Nairobi, Kenya</span></h4>
-                              </div>
-                          </div>
-                        </div>
-                        <div class="_pf_FeaturedItem card">
-                            <div class="_pf_FeaturedItemImg">
-                              <img src="{%static 'img/place3.jpg'%}">
-                            </div>
-                            <div class="_pf_FeaturedCtOvy">
-                              <div class="_pf_FeaturedItemDt">
-                                <h5>Bream View townhouse</h5>
-                                <h3>Ksh: 25,000,000</h3>
-                                <h4>3ba 5bd 120sqm <span>Muthaiga, Nairobi, Kenya</span></h4>
-                              </div>
-                          </div>
-                        </div>
-                      {%else%}
-                          <div class="pflpages-no-results">
-                            <img src="{%static 'img/note.svg'%}" alt="empty">
-                            <p>Nothing yet. <br> Featured listings will appear here</p>
-                          </div>
-                      {%endif%}
+                        {% endfor %}
                   </div>
+                  {%else%}
+                      <div class="pflpages-no-results">
+                        <p>Nothing yet. <br> Featured projects will appear here</p>
+                      </div>
+                  {%endif%}
                 </div>
-                <div class="ag-about ">
+                <div class="ag-about">
                     <div class="_pf_sectionHeader">
                       <h1>Who we are</h1>
                     </div>
                     <div class="_ag-about-sc">
                         <h2><span class="material-icons">assignment</span> Overview</h2>
                       {% if business.about %}
-                        <p>{{business.about|safe}}</p>
+                        <p id="_Pro_Intro_sc">{{business.about|safe}}</p>
                       {% else %}
                         <div class="pflpages-no-results">
-                          <img src="{%static 'img/note.svg'%}" alt="empty">
                           <p>Nothing yet</p>
                         </div>
                       {% endif %}
@@ -356,9 +425,11 @@
                     <div class="_ag-about-sc">
                       <h2><span class="material-icons">verified</span> Services Offered</h2>
                       <div class="_ag-skillBtns">
-                        {% if business.services %}
-                          {% for service in business.services %}
-                            <button type="button" name="button">{{service}}</button>
+                        {% if business.professional_services %}
+                          {% for service in business.professional_services.all %}
+                          <form action="{% url 'profiles:business_list'%}" method="get">
+                              <button type="submit" name="q_service" value='{{service.slug}}'>{{service|capfirst}}</button>
+                          </form>
                           {%endfor%}
                         {% else %}
                           <div class="pflpages-no-results">
@@ -396,9 +467,8 @@
                       <div class="_ag-serviceAreas">
                           {% if business.service_areas %}
                             {% for service_area in business.service_areas%}
-                              <form class="_ag-svcAreafORM" action="{% url 'profiles:business_list' slug=business.pro_speciality%}" method="get">
-                                {%csrf_token%}
-                                  <button type="submit" name="bs-location" value="{{service_area}}">{{service_area}}</button>
+                              <form class="_ag-svcAreafORM" action="{% url 'profiles:business_list'%}" method="get">
+                                  <button type="submit" name="pro_location" value="{{service_area}}">{{service_area}}</button>
                               </form>
                             {% endfor %}
                           {% else %}
@@ -410,152 +480,404 @@
                       </div>
                     </div>
                 </div>
-            </div>
-            <div class="Pr-sr-lsts-vw" id="co-sr-lsts-vw">
-                <div class="ag-sr-m-sc">
-                  <div class="_pf_sectionHeader">
-                    <h1>Property Listings Distribution</h1>
+                <div class="ag-about">
+                  <div id="pro_reviews_vw" class="_pf_sectionHeader">
+                    <h1>Reviews</h1>
                   </div>
-                  <li><i class="fas fa-circle" style="color:red;"></i>For Sale ({{s_count}})
-                    <i class="fas fa-circle" style="color:blue;"></i>For Rent ({{r_count}})</li>
-                  <div id='ag-d-sr-map'>
+                  <div class="reviews-section">
+                    <div class="_rvStatsBar">
+                      <div class="_rvStatsSmry">
+                        {% if recommendation_rating_avg  > 4.5  and recommendation_rating_avg <= 5 %}
+                          <li><span>{{recommendation_rating_avg}}</span>/5</li>
+                          Very Highly rated
+                        {%elif recommendation_rating_avg > 3.5 and recommendation_rating_avg <= 4.5 %}
+                          <li><span>{{recommendation_rating_avg}}</span>/5</li>
+                          Highly rated
+                        {% elif recommendation_rating_avg > 2.5 and recommendation_rating_avg <= 3.5 %}
+                          <li><span>{{recommendation_rating_avg}}</span>/5</li>
+                          Rated Average
+                        {% elif recommendation_rating_avg > 1.5 and recommendation_rating_avg <= 2.5 %}
+                          <li><span>{{recommendation_rating_avg}}</span>/5</li>
+                          Rated Low
+                        {% elif recommendation_rating_avg > 0 and recommendation_rating_avg <= 1.5 %}
+                          <li><span>{{recommendation_rating_avg}}</span>/5</li>
+                          Rated lowest
+                        {% else %}
+                          <li><span>{{recommendation_rating_avg}}</span>/5</li>
+                          Not rated
+                        {% endif %}
+                        <p>{{reviews_count}} review{{reviews_count|pluralize}}</p>
 
-                  </div>
-                </div>
-                <div class="ag-sr-lsts">
-                  <div class="_pf_sectionHeader">
-                    <h1>What we are selling</h1>
-                  </div>
-                  <table>
-                    <tr>
-                      <th>Property</th>
-                      <th>Address</th>
-                      <th>Baths</th>
-                      <th>Beds</th>
-                      <th>Price</th>
-                    </tr>
-                    {% for listings in sale_listings_p %}
-                    <tr>
-                      <td>
-                        <a href="{{listings.get_absolute_url}}">
-                          {% for home_photo in listings.home_photos.all %}
-                            {% if forloop.last %}
-                              {% cloudinary home_photo.photo ImageTransformation %}
-                            {% endif %}
+                      </div>
+                      <div class="_rvStatsBarIts">
+                        <div class="_rtngProgress">
+                          5 stars
+                          <div class="_rtngProgressBar">
+                            <div class="_rtngProgressFill" style="width:{{five_star_ratings_avg}}%"></div>
+                          </div>
+                          {{five_star_ratings_avg|floatformat:"0"}}%
+                        </div>
+                        <div class="_rtngProgress">
+                          4 stars
+                          <div class="_rtngProgressBar">
+                            <div class="_rtngProgressFill" style="width:{{four_star_ratings_avg}}%"></div>
+                          </div>
+                          {{four_star_ratings_avg|floatformat:"0"}}%
+                        </div>
+                        <div class="_rtngProgress">
+                          3 stars
+                          <div class="_rtngProgressBar">
+                            <div class="_rtngProgressFill" style="width:{{three_star_ratings_avg}}%"></div>
+                          </div>
+                          {{three_star_ratings_avg|floatformat:"0"}}%
+                        </div>
+                        <div class="_rtngProgress">
+                          2 stars
+                          <div class="_rtngProgressBar">
+                            <div class="_rtngProgressFill" style="width:{{two_star_ratings_avg}}%"></div>
+                          </div>
+                          {{two_star_ratings_avg|floatformat:"0"}}%
+                        </div>
+                        <div class="_rtngProgress">
+                          1 stars
+                          <div class="_rtngProgressBar">
+                            <div class="_rtngProgressFill" style="width:{{one_star_ratings_avg}}%"></div>
+                          </div>
+                          {{one_star_ratings_avg|floatformat:"0"}}%
+                        </div>
+                      </div>
+                      <div class="_rvStatsOthIts">
+                          <h6>Rating in other areas</h6>
+                          <div class="__rvStatsOthItsWrp">
+                            Responsiveness
+                            <div class="__rvStatsFlxIts">
+                                  {{responsive_rating_avg}}
+                              <span class="material-icons">star_rate</span>
+                            </div>
+                           </div>
+                           <div class="__rvStatsOthItsWrp">
+                             Service knowledge
+                             <div class="__rvStatsFlxIts">
+                                  {{knowledge_rating_avg}}
+                               <span class="material-icons">star_rate</span>
+                             </div>
+                            </div>
+                            <div class="__rvStatsOthItsWrp">
+                              Professional conduct
+                              <div class="__rvStatsFlxIts">
+                                    {{professionalism_rating_avg}}
+                                <span class="material-icons">star_rate</span>
+                              </div>
+                             </div>
+                             <div class="__rvStatsOthItsWrp">
+                               Quality of service
+                               <div class="__rvStatsFlxIts">
+                                    {{quality_of_service_rating_avg}}
+                                 <span class="material-icons">star_rate</span>
+                               </div>
+                              </div>
+                      </div>
+                    </div>
+                      <div class="goToReviewButton">
+                        <div id="rvwSortWrp_sjTSh" class="rvwSortSelect">
+                          Sort by
+                            <select name="review_sort">
+                              <option value="most relevant">Most relevant</option>
+                              <option value="highest rated">Highest Rated</option>
+                              <option value="lowest rated">Lowest Rated</option>
+                              <option value="newest first">Newest first</option>
+                              <option value="oldest first">Oldest first</option>
+                            </select>
+                        </div>
+                        <form class="goToReviewForm" action="{% url 'profiles:business_review'%}" method="GET">
+                            <button type="submit" name="bsr" value="{{business.pk}}" >Write a review</button>
+                        </form>
+                      </div>
+                      <br>
+                      <div id="rvwBoxsuwlVhd" class="rvwBoxiTME">
+                        <div class="review-comments">
+                          <div class="loading_reviews"> <img src="{% static 'img/ajax-loader.gif'%}" alt="loading"></div>
+                          {% if pro_reviews %}
+                          {% for reviews in pro_reviews%}
+                          <div class="review-wrapper">
+                            <div class="revCo-header">
+                              <div class="reviewerDtlx">
+                                <img src="
+                                  {% if reviews.reviewer.profile_image %}
+                                    {{reviews.reviewer.profile_image.url}}
+                                  {% else %}
+                                  {% static 'img/avatar.png'%}
+                                  {% endif %}
+                                " alt="{{reviews.reviewer.username}}">
+                                <div class="reviewerDtlx_user">
+                                  <h5>{{reviews.reviewer.username}}</h5>
+                                  <h6>{{reviews.review_date.date}}</h6>
+                                </div>
+                              </div>
+                              <div class="rvwsrTNGS">
+                                <div class="revCo-h-ar-reP">
+                                    {% if reviews.recommendation_rating == 5%}
+                                    <h2>
+                                        <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                                      Highly likely to recommend.
+                                    </h2>
+                                    {% endif %}
+                                    {% if reviews.recommendation_rating == 4%}
+                                    <h2>
+                                      <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                                      Likely to recommend.
+                                    </h2>
+                                    {% endif %}
+                                    {% if reviews.recommendation_rating == 3%}
+                                    <h2>
+                                      <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                      Slightly likely to recommend.</h2>
+                                    {% endif %}
+                                    {% if reviews.recommendation_rating == 2%}
+                                    <h2>
+                                      <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                      Not likely to recommend.</h2>
+                                    {% endif %}
+                                    {% if reviews.recommendation_rating == 1%}
+                                    <h2>
+                                      <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                      Never likely to recomend.</h2>
+                                    {% endif %}
+                                    <div class="proPf-t-fla-b">
+                                      <a href="#reviewReport" class="modal-trigger">
+                                        <button type="button" name="button">
+                                          <span class="material-icons">flag</span>
+                                        </button>
+                                      </a>
+                                    </div>
+                                </div>
+                                <div class="revCo-or">
+
+                                  {% if reviews.responsive_rating == 5%}
+                                  <div>
+                                    Responsiveness:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.responsive_rating == 4%}
+                                  <div>
+                                    Responsiveness:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.responsive_rating == 3%}
+                                  <div>
+                                    Responsiveness:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.responsive_rating == 2%}
+                                  <div>
+                                    Responsiveness:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.responsive_rating == 1%}
+                                  <div>
+                                    Responsiveness:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.knowledge_rating == 5%}
+                                  <div>
+                                    Service Knowledge:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.knowledge_rating == 4%}
+                                  <div>
+                                    Service Knowledge:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.knowledge_rating == 3%}
+                                  <div>
+                                    Service Knowledge:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.knowledge_rating == 2%}
+                                  <div>
+                                    Service Knowledge:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.knowledge_rating == 1%}
+                                  <div>
+                                    Service Knowledge:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.quality_of_service_rating == 5%}
+                                  <div>
+                                    Quality of service:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.quality_of_service_rating == 4%}
+                                  <div>
+                                    Quality of service:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.quality_of_service_rating == 3%}
+                                  <div>
+                                    Quality of service:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.quality_of_service_rating == 2%}
+                                  <div>
+                                    Quality of service:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.quality_of_service_rating == 1%}
+                                  <div>
+                                    Quality of service:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.professionalism_rating == 5%}
+                                  <div>
+                                    Professional Conduct:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.professionalism_rating == 4%}
+                                  <div>
+                                    Professional Conduct:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.professionalism_rating == 3%}
+                                  <div>
+                                    Professional Conduct:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.professionalism_rating == 2%}
+                                  <div>
+                                    Professional Conduct:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                  {% if reviews.professionalism_rating == 1%}
+                                  <div>
+                                    Professional Conduct:
+                                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                  </div>
+                                  {% endif %}
+                                </div>
+                                <div class="revCO-content">
+                                  <p>{{reviews.comment}}</p>
+                                </div>
+                                <div id="rvwSct_form{{reviews.id}}" class="lUGBFdjksfRIMwR">
+                                  {% include 'profiles/review_like_section.html'%}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div id="reviewReport" class="modal">
+                            <div class="reportformWp">
+                                <div class="reportformHeader">
+                                  <h1>Report a problem</h1>
+                                  <button type="button" class='modal-close'>
+                                    <span class="material-icons">close</span>
+                                  </button>
+                                </div>
+                                  <form class="reportform" action="{% url 'contact:review_report' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="rFo-Sub-user-pk" value="{{business.user.pk}}">
+                                    <input type="hidden" name="rFo-Sub-review-pk" value="{{reviews.pk}}">
+                                    <input type="hidden" name="rFo-current-path" value="{{request.build_absolute_uri}}">
+                                      <div class="reportformSeF input-field">
+                                        <p>Problem</p>
+                                       <select name="rFo-Problem">
+                                         <option value="" disabled selected>Select one</option>
+                                         <option value="1">Offensive Language</option>
+                                         <option value="2">Appears Fake</option>
+                                         <option value="3">Inaccurate review</option>
+                                         <option value="4">Other</option>
+                                        </select>
+                                     </div>
+                                     <div class="reportformTeAWrp">
+                                       <p>Details</p>
+                                       <textarea rows="20" cols="80" placeholder="optional" name="rFo-Details"></textarea>
+                                     </div>
+                                     <div class="reportformInput">
+                                       <p>Your email</p>
+                                       <input type="text" name="rFo-Email" value="{{request.user.email}}">
+                                     </div>
+                                     <div class="reportSubmitBtn">
+                                       <button type="submit">Submit</button>
+                                     </div>
+                                  </form>
+                            </div>
+                          </div>
                           {% endfor %}
-                        </a>
-                      </td>
-                      <td><a href="{{listings.get_absolute_url}}">{{listings.location_name}}</a></td>
-                      <td>{{listings.bathrooms}}</td>
-                      <td>{{listings.bedrooms}}</td>
-                      <td>{{listings.price}}</td>
-
-                    </tr>
-                    {% endfor %}
-                  </table>
-                  <div class="s_l_pgnt">
-                    {% include 'profiles/pagination.html' with listings=sale_listings_p %}
-                  </div>
-                  <div class="_pf_sectionHeader">
-                    <h1>What we are renting</h1>
-                  </div>
-                  <table>
-                    <tr>
-                      <th>Property</th>
-                      <th>Address</th>
-                      <th>Baths</th>
-                      <th>Beds</th>
-                      <th>Price</th>
-                    </tr>
-                    {% for listings in rental_listings_p %}
-                    <tr>
-                      <td>
-                        <a href="{{listings.get_absolute_url}}">
-                          {% for home_photo in listings.home_photos.all %}
-                            {% if forloop.last %}
-                              {% cloudinary home_photo.photo ImageTransformation %}
-                            {% endif %}
-                          {% endfor %}
-                        </a>
-                      </td>
-                      <td><a href="{{listings.get_absolute_url}}">{{listings.location_name}}</a></td>
-                      <td>{{listings.bathrooms}}</td>
-                      <td>{{listings.bedrooms}}</td>
-                      <td>{{listings.price}}</td>
-
-                    </tr>
-                    {% endfor %}
-                  </table>
-                  <div class="s_l_pgnt">
-                    {% include 'profiles/pagination.html' with listings=rental_listings_p %}
+                          <div id="rvwsPaginationBar">
+                            {% include 'profiles/reviews_pagination.html' with listings=pro_reviews %}
+                          </div>
+                          {% else %}
+                          <div class="pflpages-no-results">
+                            <p>No reviews yet</p>
+                          </div>
+                          {% endif %}
+                        </div>
+                      </div>
                   </div>
                 </div>
             </div>
             <div class="Pr-Portfolio-vw" id="co-Portfolio-vw">
                 <div class="pro-portfolio">
                   <div class="_pf_sectionHeader">
-                    <h1>Properties managed</h1>
+                    <h1>Portfolio</h1>
                   </div>
                   <div class="_pf-items">
-                    {% if management_portfolio %}
-                      {% for propManaged in management_portfolio %}
+                    {% if projects %}
+                      {% for project in projects %}
                       <div class="pro-pofo-item card">
-                        <div class="pro-pf-img-slider">
-                              <div  class="portf-slider carousel carousel-slider" data-indicators="true">
-                                {% for image in propManaged.PM_porfolio_Images.all%}
-                                <a href="#{{image.property_image}}!" class="carousel-item" data-cindex='{{image.property_image}}' >
-                                  {% cloudinary image.property_image ImageTransformation %}</a>
+                        <a href="#portf-detail-modal" class="modal-trigger">
+                          <div class="pro-pf-img-slider">
+                              <div  class="portf-slider">
+                                {% for photo_object in project.portfolio_item_photo.all %}
+                                  {% if forloop.last %}
+                                  {% cloudinary photo_object.photo ImageTransformation %}
+                                  {% endif %}
                                 {% endfor %}
-                                <div class="prev">
-                                  <img src="{% static 'img/circled_back_arrow.svg'%}" alt="prev">
-                                </div>
-                                <div class="next">
-                                  <img src="{% static 'img/circled_next_arrow.svg'%}" alt="next">
-                                </div>
                               </div>
-                        </div>
+                          </div>
+                        </a>
                         <div class="pro-pf-text-box">
                             <div class="pro-pf-dR">
                               <div class="proPf-t-wrp">
-                                <h5>{{propManaged.property_name}}</h5>
-                                <h6>{{propManaged.property_location}}</h6>
-                                <li><b>Valued at approx:</b>
-                                <br>
-                                  Ksh: {{propManaged.property_market_value}}
-                                </li>
-                                {% if propManaged.currently_managing == 'Yes'%}
-                                <li><span>Currently managing</span></li>
-                                {%else%}
-                                <li><span>Currently managing</span></li>
-                                {% endif %}
+                                <h5>{{project.name}}</h5>
                               </div>
-                              <div class="proPf-t-fla-b">
-                                <a href="#portfolioReport" class="modal-trigger">
-                                  <button type="button" name="button">
-                                    <span class="material-icons">flag</span>
-                                  </button>
-                                </a>
-                              </div>
+                              <a href="#portf-detail-modal{{forloop.counter}}" class="ptf-D-trigger modal-trigger">
+                                <button type="button" name="button">View more</button>
+                              </a>
                             </div>
-                            <a href="#portf-detail-modal" class="ptf-D-trigger modal-trigger">
-                              <button type="button" name="button">View</button>
-                            </a>
                         </div>
                       </div>
-                      <div id="portf-detail-modal" class="modal">
+                      <div id="portf-detail-modal{{forloop.counter}}" class="modal ptf_modal_container">
                         <div class="ag-modalHeader">
-                          <h1>Property's Details</h1>
+                          <h1>{{project.name}}</h1>
                           <button type="button" class='modal-close'>
                             <span class="material-icons">close</span>
                           </button>
-
                         </div>
                         <div class="ptfDMoWrappper">
                             <div class="PDM-imageSliderBox">
                               <div  class="PDM-Islider carousel carousel-slider" data-indicators="true">
-                                {% for image in propManaged.PM_porfolio_Images.all%}
-                                <a href="#{{image.property_image}}!" class="carousel-item" data-cindex='{{image.property_image}}' >
-                                  {% cloudinary image.property_image ImageTransformation %}</a>
+                                {% for image in project.portfolio_item_photo.all%}
+                                <a href="#{{image.photo}}!" class="carousel-item" data-cindex='{{forloop.counter}}' >
+                                  {% cloudinary image.photo ImageTransformation %}</a>
                                 {% endfor %}
                                 <div class="prev">
                                   <img src="{% static 'img/circled_back_arrow.svg'%}" alt="prev">
@@ -568,65 +890,15 @@
                             <div class="PDM-DetailsBox">
                               <div class="PDM-Dtxt">
                                   <div class="PDM-Dtxt-header">
-                                    {{propManaged.property_name}}
-                                    <div class="proPf-t-fla-b">
-                                      <a href="#portfolioReport" class="modal-trigger">
-                                        <button type="button" name="button">
-                                          <span class="material-icons">flag</span>
-                                        </button>
-                                      </a>
-                                    </div>
+                                    <h5>Project title</h5>
+                                    {{project.name}}
                                   </div>
-                                  <ul>
-                                    <li>Location<br><span>{{propManaged.property_location}}</span></li>
-                                    <li>Aproximate Value<br><span>Ksh {{propManaged.property_market_value}}</span></li>
-                                    <li>Management Status<br>
-                                      {% if propManaged.currently_managing == 'Yes'  %}
-                                        <span>Ongoing</span>
-                                      {% else %}
-                                        <span>Ended</span>
-                                      {% endif %}
-                                    </li>
-                                  </ul>
+                                  <div class="PDM-Dtxt-description">
+                                    <h5>Project description</h5>
+                                    {{project.description}}
+                                  </div>
                               </div>
                             </div>
-                        </div>
-                      </div>
-                      <div id="portfolioReport" class="modal">
-                        <div class="reportformWp">
-                            <div class="ag-modalHeader">
-                              <h1>Report a problem</h1>
-                              <button type="button" class='modal-close'>
-                                <span class="material-icons">close</span>
-                              </button>
-                            </div>
-                              <form class="reportform" action="{% url 'contact:p_p_report' %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="rFo-Sub-user-pk" value="{{business.user.pk}}">
-                                <input type="hidden" name="rFo-Sub-project-pk" value="{{propManaged.pk}}">
-                                <input type="hidden" name="rFo-current-path" value="{{request.build_absolute_uri}}">
-                                  <div class="reportformSeF input-field col s12">
-                                    <p>Problem</p>
-                                   <select name="rFo-Problem">
-                                     <option value="" disabled selected>Select one</option>
-                                     <option value="1">Offensive content</option>
-                                     <option value="2">Irrelevant content</option>
-                                     <option value="3">Innacurate information</option>
-                                     <option value="4">Other</option>
-                                    </select>
-                                 </div>
-                                 <div class="reportformTeAWrp col s12">
-                                   <p>Details</p>
-                                   <textarea rows="20" cols="80" placeholder="optional" name="rFo-Details"></textarea>
-                                 </div>
-                                 <div class="reportformInput col s12">
-                                   <p>Your email</p>
-                                   <input type="text" name="rFo-Email">
-                                 </div>
-                                 <div class="reportSubmitBtn col s12">
-                                   <button type="submit">Submit</button>
-                                 </div>
-                              </form>
                         </div>
                       </div>
                       {% endfor %}
@@ -639,6 +911,50 @@
                   </div>
                 </div>
             </div>
+            <div class="Pr-sr-lsts-vw" id="co-sr-lsts-vw">
+                <div class="ag-sr-m-sc">
+                    <div class="_pf_sectionHeader">
+                      <h1>Property Listings Distribution</h1>
+                    </div>
+                    <li><i class="fas fa-circle" style="color:red;"></i>For Sale ({{s_count}})
+                      <i class="fas fa-circle" style="color:blue;"></i>For Rent ({{r_count}})</li>
+                    <div id='ag-d-sr-map'>
+
+                    </div>
+                    <div class="pro_pfpLst_container_Sui">
+                      <table>
+                        <tr>
+                          <th>Property</th>
+                          <th>Address</th>
+                          <th>Baths</th>
+                          <th>Beds</th>
+                          <th>Price</th>
+                        </tr>
+                        {% for listings in sale_listings_p %}
+                        <tr>
+                          <td>
+                            <a href="{{listings.get_absolute_url}}">
+                              {% for home_photo in listings.home_photos.all %}
+                                {% if forloop.last %}
+                                  {% cloudinary home_photo.photo ImageTransformation %}
+                                {% endif %}
+                              {% endfor %}
+                            </a>
+                          </td>
+                          <td><a href="{{listings.get_absolute_url}}">{{listings.location_name}}</a></td>
+                          <td>{{listings.bathrooms}}</td>
+                          <td>{{listings.bedrooms}}</td>
+                          <td>{{listings.price}}</td>
+
+                        </tr>
+                        {% endfor %}
+                      </table>
+                    </div>
+                    <div class="s_l_pgnt">
+                      {% include 'profiles/pagination.html' with listings=sale_listings_p %}
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="ag-d-right-content">
           <div class="_ag-connections card">
@@ -648,7 +964,7 @@
             </div>
             <div class="_ag-cns-content">
               {% if pro_teammates %}
-                  {% for connection in pro_teammates%}
+                  {% for connection in pro_teammates|slice:':5'%}
                     {% if business.user == connection.requestor %}
                     <div class="_ag-cns-user">
                       <div class="_ag-cns-imgWrp">
@@ -705,30 +1021,30 @@
           <div class="_ag-connections card">
             <div class="_ag-connectionsHeader">
               <h1>Reviews <span>{{reviews_count}}</span></h1>
-              <a href="#co-reviews-vw" class='modal-trigger' >Show All</a>
+              <a href="#pro_reviews_vw">Show All</a>
             </div>
             <div class="_ag-cns-ratingWrp">
               <div class="_ag-cns-OvRt">
-                Overall Rating
+                Rating
                 <div class="_ag-cns-OvRtScore">
-                  {% if average_rating.rating__avg %}
-                    <span>{{average_rating.rating__avg|floatformat}}</span>/5
+                  {% if recommendation_rating_avg %}
+                    <span>{{recommendation_rating_avg}}</span>/5
                   {% else %}
                     <span>0</span>/5
                   {% endif %}
                 </div>
               </div>
               <div class="_ag-cns-rating">
-                {% if average_rating.rating__avg %}
-                    {% if average_rating.rating__avg  > 4.5  and average_rating.rating__avg <= 5 %}
+                {% if recommendation_rating_avg %}
+                    {% if recommendation_rating_avg  > 4.5  and recommendation_rating_avg <= 5 %}
                     <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
-                    {%elif average_rating.rating__avg > 3.5 and average_rating.rating__avg <= 4.5 %}
+                    {%elif recommendation_rating_avg > 3.5 and recommendation_rating_avg <= 4.5 %}
                     <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
-                    {% elif average_rating.rating__avg > 2.5 and average_rating.rating__avg <= 3.5 %}
+                    {% elif recommendation_rating_avg > 2.5 and recommendation_rating_avg <= 3.5 %}
                     <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-                    {% elif average_rating.rating__avg > 1.5 and average_rating.rating__avg <= 2.5 %}
+                    {% elif recommendation_rating_avg > 1.5 and recommendation_rating_avg <= 2.5 %}
                     <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-                    {% elif average_rating.rating__avg > 0 and average_rating.rating__avg <= 1.5 %}
+                    {% elif recommendation_rating_avg > 0 and recommendation_rating_avg <= 1.5 %}
                     <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
                     {% else %}
                     <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
@@ -740,18 +1056,18 @@
             </div>
             <div class="_ag-cns-content">
               {% if pro_reviews %}
-              {% for review in pro_reviews%}
+              {% for review in pro_reviews|slice:':5'%}
                 <div class="_ag-cns-user">
                   <div class="_ag-cns-imgWrp">
-                      <img src="{% if review.user.profile_image %}{{review.user.profile_image.url}}{% else %} {% static 'img/avatar.png' %}{% endif %}">
+                      <img src="{% if review.reviewer.profile_image %}{{review.reviewer.profile_image.url}}{% else %} {% static 'img/avatar.png' %}{% endif %}">
                   </div>
                   <div class="_ag-cns-Dtls">
-                      <h5>{% if review.user.get_full_name %}{{review.reviewer.get_full_name}} {% else %} {{review.reviewer.username}}{% endif %}</h5>
-                      <h6>{% if review.user.user_type == 'CLIENT' %}Rehgien User {%else%}Rehgien Pro{%endif%}</h6>
+                      <h5>{% if review.reviewer.get_full_name %}{{review.reviewer.get_full_name}} {% else %} {{review.reviewer.username}}{% endif %}</h5>
+                      <h6>{% if review.reviewer.user_type == 'CLIENT' %}Rehgien User {%else%}Rehgien Pro{%endif%}</h6>
                   </div>
                   <div class="_ag-cns-Cta">
                     <button type="button" name="button">
-                      <span class="material-icons">star_rate</span>{{review.rating}}
+                      <span class="material-icons">star_rate</span>{{review.recommendation_rating}}
                     </button>
                   </div>
                 </div>
@@ -817,7 +1133,7 @@
                                 0 Reviews
                               {% endif %}
                          </li>
-                        {{teammate.receiver.get_full_name}}
+                        {% if teammate.requestor.get_full_name %} {{teammate.requestor.get_full_name}} {% else %} {{teammate.requestor.username}} {%endif%}
                       </div>
                     </a>
                 </div>
@@ -841,7 +1157,7 @@
                             0 Reviews
                           {% endif %}
                        </li>
-                      {{teammate.requestor.get_full_name}}
+                      {% if teammate.requestor.get_full_name %} {{teammate.requestor.get_full_name}} {% else %} {{teammate.requestor.username}} {%endif%}
                     </div>
                     </a>
                 </div>
@@ -855,235 +1171,6 @@
           </div>
       {% endif %}
   </div>
-</div>
-<div class="Pr-reviews-vw modal" id="co-reviews-vw">
-    <div class="reviews-section">
-        <div class="ag-modalHeader">
-          <h1>Reviews</h1>
-          <button type="button" class='modal-close'>
-            <span class="material-icons">close</span>
-          </button>
-        </div>
-        <div class="goToReviewButton">
-          <form class="goToReviewForm" action="{% url 'profiles:business_review'%}" method="GET">
-              <button type="submit" name="bsr" value="{{business.pk}}" >Write a review ></button>
-          </form>
-        </div>
-        <br>
-        <div class="review-comments">
-          {% if pro_reviews %}
-          {% for reviews in pro_reviews%}
-          <div class="review-wrapper">
-          <div class="revCo-header">
-            <div class="revCo-h-ar-reP">
-                {% if reviews.rating == 5%}
-                <h2>
-                    <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
-                  Highly likely to recommend.
-                </h2>
-                {% endif %}
-                {% if reviews.rating == 4%}
-                <h2>
-                  <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
-                  Likely to recommend.
-                </h2>
-                {% endif %}
-                {% if reviews.rating == 3%}
-                <h2>
-                  <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-                  Slightly likely to recommend.</h2>
-                {% endif %}
-                {% if reviews.rating == 2%}
-                <h2>
-                  <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-                  Not likely to recommend.</h2>
-                {% endif %}
-                {% if reviews.rating == 1%}
-                <h2>
-                  <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-                  Never likely to recomend.</h2>
-                {% endif %}
-                <div class="proPf-t-fla-b">
-                  <a href="#reviewReport" class="modal-trigger">
-                    <button type="button" name="button">
-                      <span class="material-icons">flag</span>
-                    </button>
-                  </a>
-                </div>
-            </div>
-            <div class="revCo-or">
-              <div style="margin-bottom:10px;">{{reviews.review_date.date}} - {{reviews.user.username}}</div>
-              {% if reviews.responsive_rating == 5%}
-              <div>
-                Responsiveness:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.responsive_rating == 4%}
-              <div>
-                Responsiveness:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.responsive_rating == 3%}
-              <div>
-                Responsiveness:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.responsive_rating == 2%}
-              <div>
-                Responsiveness:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.responsive_rating == 1%}
-              <div>
-                Responsiveness:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.knowledge_rating == 5%}
-              <div>
-                Local Knowledge:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.knowledge_rating == 4%}
-              <div>
-                Local Knowledge:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.knowledge_rating == 3%}
-              <div>
-                Local Knowledge:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.knowledge_rating == 2%}
-              <div>
-                Local Knowledge:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.knowledge_rating == 1%}
-              <div>
-                Local Knowledge:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.negotiation_rating == 5%}
-              <div>
-                Negotiation Skills:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.negotiation_rating == 4%}
-              <div>
-                Negotiation Skills:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.negotiation_rating == 3%}
-              <div>
-                Negotiation Skills:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.negotiation_rating == 2%}
-              <div>
-                Negotiation Skills:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.negotiation_rating == 1%}
-              <div>
-                Negotiation Skills:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.professionalism_rating == 5%}
-              <div>
-                Professional Conduct:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.professionalism_rating == 4%}
-              <div>
-                Professional Conduct:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.professionalism_rating == 3%}
-              <div>
-                Professional Conduct:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.professionalism_rating == 2%}
-              <div>
-                Professional Conduct:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-              {% if reviews.professionalism_rating == 1%}
-              <div>
-                Professional Conduct:
-                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
-              </div>
-              {% endif %}
-            </div>
-          </div>
-          <div class="revCO-content">
-            <p>{{ reviews.comment}}</p>
-          </div>
-          </div>
-          <div id="reviewReport" class="modal">
-            <div class="reportformWp">
-                <div class="reportformHeader">
-                  <h1>Report a problem</h1>
-                  <button type="button" class='modal-close'>
-                    <span class="material-icons">close</span>
-                  </button>
-                </div>
-                  <form class="reportform" action="{% url 'contact:review_report' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="rFo-Sub-user-pk" value="{{business.user.pk}}">
-                    <input type="hidden" name="rFo-Sub-review-pk" value="{{reviews.pk}}">
-                    <input type="hidden" name="rFo-current-path" value="{{request.build_absolute_uri}}">
-                      <div class="reportformSeF input-field">
-                        <p>Problem</p>
-                       <select name="rFo-Problem">
-                         <option value="" disabled selected>Select one</option>
-                         <option value="1">Offensive Language</option>
-                         <option value="2">Appears Fake</option>
-                         <option value="3">Inaccurate review</option>
-                         <option value="4">Other</option>
-                        </select>
-                     </div>
-                     <div class="reportformTeAWrp">
-                       <p>Details</p>
-                       <textarea rows="20" cols="80" placeholder="optional" name="rFo-Details"></textarea>
-                     </div>
-                     <div class="reportformInput">
-                       <p>Your email</p>
-                       <input type="text" name="rFo-Email" value="{{request.user.email}}">
-                     </div>
-                     <div class="reportSubmitBtn">
-                       <button type="submit">Submit</button>
-                     </div>
-                  </form>
-            </div>
-          </div>
-          {% endfor %}
-          {% else %}
-          <div class="no-reviews">
-            <h2>No reviews for this agent.</h2>
-          </div>
-          {% endif %}
-        </div>
-    </div>
 </div>
 <div id="_contactProModal" class="modal">
     <div class="ag-contact-wrapper col s12">
@@ -1188,15 +1275,15 @@
             center: [37.01, -1.10]
       });
     }
-    //fit to bounds
-    map.fitBounds([
-    {%for cd in sale_listings %}
-      [{{cd.location.x}}, {{cd.location.y}}],
-    {%endfor%}
-    {%for cd in rental_listings %}
-      [{{cd.location.x}}, {{cd.location.y}}],
-    {%endfor%}
-    ]);
+
+    var bounds = new mapboxgl.LngLatBounds();
+
+    {% for hm in all_listings%}
+      bounds.extend([{{hm.location.x}}, {{hm.location.y}}]);
+    {% endfor %}
+
+    map.fitBounds(bounds, {padding:50, duration:0});
+
     // disable map rotation using right click + drag
     map.dragRotate.disable();
 
@@ -1219,7 +1306,13 @@
         },
         properties: {
             title: '{{ loc.property_name }}',
-            thumb:'{% cloudinary_url loc.thumb ImageTransformation %}',
+            thumb:
+              {% for home_photo in loc.home_photos.all %}
+                {% if forloop.last %}
+                '{% cloudinary_url home_photo.photo ImageTransformation %}'
+                {% endif %}
+              {% endfor %}
+              ,
             location_name:'{{loc.location_name}}',
             price:'{{loc.price}}',
         }
@@ -1240,7 +1333,13 @@
         },
         properties: {
             title: '{{ loc.property_name }}',
-            thumb:'{% cloudinary_url loc.thumb ImageTransformation %}',
+            thumb:
+              {% for home_photo in loc.home_photos.all %}
+                {% if forloop.last %}
+                '{% cloudinary_url home_photo.photo ImageTransformation %}'
+                {% endif %}
+              {% endfor %}
+              ,
             location_name:'{{loc.location_name}}',
             price:'{{loc.price}}',
         }

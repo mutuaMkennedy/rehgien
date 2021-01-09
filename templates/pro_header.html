@@ -1,0 +1,266 @@
+{% load static %}
+<header id="main_hdr_hmpg_aiuu">
+  <div class="navbar-fixed">
+    <nav role="navigation">
+    <div class="nav-wrapper">
+      <a id="logo-wrapper" href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo left" style="height:60px;">
+        <img class="logo" src="{%static 'img/rehgien_pro_white.png' %}">
+      </a>
+      <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul id="nav-base1"class="left hide-on-med-and-down">
+        <li><a href="#"  class="dropdown-trigger" data-target='pro_solutions'>Solutions</a></li>
+        <li><a href="#" class="dropdown-trigger" data-target='pro_resources'>Resources</a></li>
+      </ul>
+
+      <div id="pro_solutions" class="dropdown-content hide-on-med-and-down _RgnProNav_dwn">
+        <div class="container">
+          <div class="pro_nav_rbox">
+            <div class="row">
+              <div class="col s12 md6 l6 xl6 pro_nav_drd_lItems_sxui_col">
+                <div class="pro_nav_drd_lItems_wrpx col s12">
+                  <div class="pro_nav_drd_lItems_sxui col s12">
+                    <a href="{% url 'rehgien_pro:jobs_list'%}">
+                      <div class="pro_sltn_wrpx">
+                        <span class="material-icons">person_search</span>
+                          <div class="pro_sltn_wrpxBd">
+                              <div class="pro_sltn_title">
+                                Find customers
+                              </div>
+                              <p>Let us connnect you to your next client. Your next project is a step away!</p>
+                          </div>
+                      </div>
+                    </a>
+                    <a href="#" class="link_disabled">
+                      <div class="pro_sltn_wrpx">
+                        <span class="material-icons">duo</span>
+                          <div class="pro_sltn_wrpxBd">
+                              <div class="pro_sltn_title">
+                                Customer Experience
+                              </div>
+                              <p>Engage with your clients more deeply. Chat live or have video calls with ease.</p>
+                          </div>
+                      </div>
+                    </a>
+                    <a href="#" class="link_disabled">
+                      <div class="pro_sltn_wrpx">
+                        <span class="material-icons">folder</span>
+                          <div class="pro_sltn_wrpxBd">
+                              <div class="pro_sltn_title">
+                                Project management
+                              </div>
+                              <p>Organize your projects build teams and collaborate for maximum productivity.</p>
+                          </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col s12 md6 l6 xl6 pro_nav_drd_lItems_sxui_col">
+                <div class="pro_nav_drd_lItems_wrpx col s12">
+                  <div class="pro_nav_drd_lItems_sxui col s12">
+                    <a href="#" class="link_disabled">
+                      <div class="pro_sltn_wrpx">
+                        <span class="material-icons">3d_rotation</span>
+                          <div class="pro_sltn_wrpxBd">
+                              <div class="pro_sltn_title">
+                                Virtual Experiences
+                              </div>
+                              <p>Go 3D with virtual reality tools and showcase your best work
+                              in the best possible way.</p>
+                          </div>
+                      </div>
+                    </a>
+                    <a href="#" class="link_disabled">
+                      <div class="pro_sltn_wrpx">
+                        <span class="material-icons">campaign</span>
+                          <div class="pro_sltn_wrpxBd">
+                              <div class="pro_sltn_title">
+                                Marketing options
+                              </div>
+                              <p>Meet new clients with our integrated marketing tools.</p>
+                          </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="pro_resources" class="dropdown-content hide-on-med-and-down _RgnProNav_dwn">
+        <div class="container">
+          <div class="pro_nav_rbox">
+            <div class="row">
+              <div class="col s12 md6 l6 xl6 pro_nav_drd_lItems_sxui_col">
+                <div class="pro_nav_drd_lItems_wrpx col s12">
+                  <div class="pro_nav_drd_lItems_sxui col s12">
+                    <a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=product-updates">
+                      <div class="pro_sltn_wrpx">
+                        <span class="material-icons">important_devices</span>
+                          <div class="pro_sltn_wrpxBd">
+                              <div class="pro_sltn_title">
+                                Product updates
+                              </div>
+                              <p>Get the latest news about new Rehgien features and updates.</p>
+                          </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col s12 md6 l6 xl6 pro_nav_drd_lItems_sxui_col">
+                <div class="pro_nav_drd_lItems_wrpx col s12">
+                  <div class="pro_nav_drd_lItems_sxui col s12">
+                    <a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=tutorials" >
+                      <div class="pro_sltn_wrpx">
+                        <span class="material-icons">video_library</span>
+                          <div class="pro_sltn_wrpxBd">
+                              <div class="pro_sltn_title">
+                                Tutorials
+                              </div>
+                              <p>Learn how to use rehgien features and tools. </p>
+                          </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ul id="nav-base2" class="right hide-on-med-and-down">
+        <li><a href="{% url 'homepage'%}">Rehgien Home</a></li>
+        {% if not request.user.is_authenticated %}
+        <li><a href="{% url 'account_login' %}" class="modal-trigger"> LogIn</a></li>
+        <li>or</li>
+        <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+        {% else %}
+        <li><a id='ac-trigger'>
+            <span class="material-icons">account_circle</span>
+          </a>
+      </li>
+
+      </ul>
+      {% endif %}
+    </div>
+  </nav>
+    <div id="ac-dropdown" class="hide-on-med-and-down">
+      <button id="acDropdownClose" type="button" style="background-image:url({%static 'img/close.svg' %});"></button>
+      <div class="ac-drd-img valign-wrapper">
+      <div class="ac-drd-img-wrapper">
+        {% if request.user.profile_image%}
+        <img src="{{request.user.profile_image.url}}" alt="profile.img" style="width:40px">
+        {% else %}
+        <img src="{% static 'img/avatar.png'%}" alt="avatar.png"style="width:40px">
+        {% endif %}
+      </div>
+        <div class="ac-drd-li-wrapper">
+          <li>Hello {{request.user.first_name}}</li>
+        </div>
+      </div>
+      <div class="ac-drd-linkItems">
+        <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
+        <li><a href="{% url 'account_logout' %}">Logout</a></li>
+      </div>
+    </div>
+
+    <ul id="mobile-nav" class="sidenav">
+      <ul class="Mnav-logoUl">
+        <li><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo center Mnav-logoWrapper"><img class="logo" src="{%static 'img/rehgien_pro_regular.png'%}"></a>
+        </li>
+      </ul>
+      <ul class="Mnav-UlItems collapsible">
+        <li><a href="{%url 'rehgien_pro:rehgien_pro_homepage'%}">Home</a></li>
+        <li>
+          <div class="collapsible-header Mnav-collapsible-header"><h6>Solutions</h6><i class="fas fa-chevron-right"></i></div>
+          <div class="collapsible-body Mnav-collapsible-body">
+            <ul>
+              <div class="Mnav-re_pros pro_links">
+                <h6><span class="material-icons">person_search</span>Find customers</h6>
+                <li><a href="{%url 'rehgien_pro:jobs_list'%}">
+                  Let us connnect you to your next client. Your next project is a step away!
+                </a></li>
+                <h6><span class="material-icons">duo</span>Customer Experience</h6>
+                <li><a href="#" class="link_disabled">
+                  Engage with your clients more deeply. Chat live or have video calls with ease.
+                </a></li>
+                <h6><span class="material-icons">folder</span>Project management</h6>
+                <li><a href="#" class="link_disabled">
+                  Organize your projects build teams and collaborate for maximum productivity.
+                </a></li>
+                <h6><span class="material-icons">3d_rotation</span>Virtual Experiences</h6>
+                <li><a href="#" class="link_disabled">
+                  Go 3D with virtual reality tools and showcase your best work
+                  in the best possible way.
+                </a></li>
+                <h6><span class="material-icons">campaign</span>Marketing options</h6>
+                <li><a href="#" class="link_disabled">
+                    Meet new clients with our integrated marketing tools
+                </a></li>
+              </div>
+            </ul>
+          </div>
+        </li>
+        <li><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">Rehgien Home</a></li>
+        {% if not request.user.is_authenticated %}
+        <ul>
+          <div class="Mnav-authWrapper">
+            <li>You are not signed in</li>
+            <div class="Mnav-authLinks">
+              <li><a href="{% url 'account_login' %}" class="modal-trigger">LogIn</a></li>
+              <li>or</li>
+              <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+            </div>
+          </div>
+        </ul>
+        {% else %}
+
+        <li>
+          <div class="collapsible-header Mnav-collapsible-header">
+              <a style="color:#000;"><span class="material-icons">account_circle</span></a>
+              <i class="fas fa-chevron-right"></i>
+          </div>
+          <div class="collapsible-body Mnav-collapsible-body">
+            <ul>
+              <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
+              <li><a href="{% url 'account_logout' %}">Logout</a></li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+      </ul>
+
+    </ul>
+
+  </div>
+</header>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(document).on( 'click', '#ac-trigger', function() {
+        $('#ac-dropdown').css('display','block');
+    });
+    $(document).on('click', '#acDropdownClose', function() {
+        $('#ac-dropdown').css('display','none')
+    });
+
+    const black_logo =   "{%static 'img/rehgien_pro_regular.png' %}";
+    const white_logo = "{%static 'img/rehgien_pro_white.png' %}";
+
+    $(window).scroll(function() {
+      if($(this).scrollTop() > 1) {
+          $('header').removeAttr('id');
+          $('#logo-wrapper img').attr('src',black_logo)
+      } else {
+          $('header').attr('id','main_hdr_hmpg_aiuu');
+          $('#logo-wrapper img').attr('src',white_logo)
+      }
+    });
+
+});
+</script>

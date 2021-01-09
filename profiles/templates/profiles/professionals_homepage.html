@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head_title %}<title>Rehgien|Find Qualified property experts</title>{% endblock %}
+{% block header %}{% include 'header_section.html' %}{% endblock%}
+{% block content %}
+<script type="text/javascript">
+$(document).ready(function(){
+    const pro_heros = [
+      "{%static 'img/carpeter_hero_webv.png' %}",
+      "{%static 'img/photgrapher_hero_webv.png' %}",
+      "{%static 'img/realtor_hero_wbv.png' %}",
+      "{%static 'img/plumber_hero_webv.png' %}",
+    ]
+
+    const node = document.getElementById("xaeW_Hero_background");
+
+    const cycleImages = (images, container, step) => {
+        images.forEach((image, index) => (
+        setTimeout(() => {
+            container.style.backgroundImage = `url(${image})`
+        }, step * (index + 1))
+      ))
+      setTimeout(() => cycleImages(images, container, step), step * images.length)
+    }
+
+    cycleImages(pro_heros, node, 10000);
+
+    $(".owl-carousel").owlCarousel({
+        loop:true,
+        margin:10,
+        nav:true,
+        responsiveClass:true,
+        responsive:{
+           0:{
+               items:1,
+               nav:true
+           },
+           480:{
+               items:4,
+               nav:false
+           },
+           768:{
+               items:4,
+               nav:true,
+           }
+       }
+      });
+
+    $("#sInsTRABDHS_XG").autocomplete({
+      source:"{% url 'profiles:pro_service_ajx_search'%}",
+      appendTo:'#svc_frm_hmpGYvsl',
+      autoFocus: true,
+      minLength: 2,
+    });
+
+});
+</script>
+
+<div id="xaeW_Hero_background" class="_cdleHBn_Sxxcrs" style="background-image:url({%static 'img/plumber_hero_webv.png' %})">
+   <div class="_cdleHBROverlay">
+      <div class="container">
+          <div class="row">
+            <div class="col s12 _home_Bnr_tt">
+                <h1>Find qualified local experts for any property service</h1>
+                <div class="_pr_BnSfmwrp">
+                  <form id="svc_frm_hmpGYvsl" class="_in_formCXcUm" action="{% url 'profiles:business_list'%}" method="get">
+                    <div class="input-field _prBnSfmwrpInp">
+                      <input id="sInsTRABDHS_XG" type="text" name="q_service" placeholder="What are you looking for? Ex. property consultancy">
+                      <button type="submit">Search</button>
+                    </div>
+                  </form>
+                  <div class="_pr_BnSfmwrpTags">
+                      <span>Popular:</span>
+                      <form class="tg_in_formUbdl" action="{% url 'profiles:business_list'%}" method="get">
+                        <button type="submit" name="q_service" value="property-valuation">Property valuation</button>
+                      </form>
+                      <form class="tg_in_formUbdl" action="{% url 'profiles:business_list'%}" method="get">
+                        <button type="submit" name="q_service" value="buying-and-selling-property">Buying & selling property</button>
+                      </form>
+                      <form class="tg_in_formUbdl" action="{% url 'profiles:business_list'%}" method="get">
+                          <button type="submit" name="q_service" value="cleaning-services">Cleaning services</button>
+                      </form>
+                      <form class="tg_in_formUbdl" action="{% url 'profiles:business_list'%}" method="get">
+                        <button type="submit" name="q_service" value="moving">Moving</button>
+                      </form>
+                  </div>
+                </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% include 'profiles/popular_pro_services.html'%}
+
+<div class="container _allProCatG">
+  <a id="allPros"></a>
+  <div class="row">
+    <div class="col s12 ">
+      <h2>Browse all professionals</h2>
+      <div class="pxcrpFvksy">
+        {% for group in pro_group %}
+          <div class="pxcrpFvksy_Items">
+            <h5>{{group.group_name|capfirst}}</h5>
+            <ul>
+              {% for category in group.pro_category_group.all%}
+              <li>
+                  <form action="{%url 'profiles:business_list'%}" method="get">
+                    <button type="submit" name="p_cat" value="{{category.slug}}">{{category.category_name|capfirst}}</button>
+                  </form>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'profiles/recommended_pro_services.html'%}
+<br>
+<br>
+<br>
+<br>
+<section>
+  <div class="container">
+    <div class="getApp-card-row row">
+        <div class="getApp-card card col s12 md6 l6">
+            <div class="getappImgWrp">
+                <img src="{% static 'img/6532.png'%}" alt="phone">
+            </div>
+            <h1>Get more flexibility</h1>
+            <p>Do more on the go. Get our features customized for your phone.</p>
+            <div class="appStoreBadges">
+                <a href="#">
+                  <button type="button" name="button">
+                    <img src="{%static 'img/apple-store-badge.png'%}" alt="applestore">
+                  </button>
+                </a>
+                <a href="#">
+                  <button type="button" name="button">
+                    <img src="{%static 'img/google-play-badge.png'%}" alt="googleplay">
+                  </button>
+                </a>
+            </div>
+        </div>
+        <div class="getApp-card card col s12 md6 l6">
+            <div class="getappImgWrp">
+                <img src="{% static 'img/call-center.png'%}" alt="call-center">
+            </div>
+            <h1>Reach out to us</h1>
+            <p>We are always happy to hear from you.</p>
+            <div class="appStoreBadges">
+                <a href="#">
+                  <button type="button" name="button">
+                    +254 12 345 678
+                  </button>
+                </a>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<script type="text/javascript">
+  function scrollTo(to, duration) {
+    if (document.body.scrollTop == to) return;
+    var diff = to - document.body.scrollTop;
+    var scrollStep = Math.PI / (duration / 10);
+    var count = 0, currPos;
+    start = window.pageYOffset;
+    scrollInterval = setInterval(function(){
+
+      if((document.body.scrollTop || document.documentElement.scrollTop || 0)!=to){
+            count++
+            currPos=start+diff*(.5-.5*Math.cos(count*scrollStep))
+            document.body.scrollTop=currPos
+            document.documentElement.scrollTop=currPos
+        }else{clearInterval(scrollInterval)}
+    },10);
+}
+
+  function test(elID)
+  {
+      var dest = document.getElementById(elID);
+      scrollTo(dest.offsetTop, 500);
+  }
+</script>
+{% endblock %}
+{% block footer %}{% include 'footer_section.html' %}{% endblock %}

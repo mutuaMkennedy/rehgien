@@ -8,6 +8,7 @@
 {% leaflet_css plugins="forms" %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'dynamic_formsets_src/jquery.formset.js'%}"></script>
+<script src="{% static 'JqueryDateTimepicker/jquery.datetimepicker.full.js'%}"></script>
 <section class='ListingFormSection'>
 <div class="container ListingFormContainer">
   <div class="LstFmSecLgoWrpx">
@@ -23,12 +24,27 @@
         </button>
       </a>
     </div>
-    <form class="post-form" autocomplete="off" action="{% url 'listings:property_update' property_category=listing.property_category pk=listing.pk %}" method="post" enctype="multipart/form-data">
+    <form class="post-form" autocomplete="off" action="{% url 'listings:property_update' property_category=listing.property_category|lower pk=listing.pk %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
     <div class="_plS_form_steps-xsjk">
       <div class="ListingFormStep">
             <h5>Property facts</h5>
             <div class="form-row">
+              <div class="_xlsFormField-Dlclosed">
+                <button type="button" name="button" class='dropdown-trigger' data-target='_kjsDfskllkf'>Sold/leased this home? click here!</button>
+                <div id="_kjsDfskllkf" class="dropdown-content _kjdslfjWrpsjh">
+                  <div class="_xlsFormField-help">
+                    <h6><span class="material-icons">help</span>Update deal closure state of this property.</h6>
+                    This information is used to build your sales/leases portfolio which we show against your profile.
+                    Don't fill this part if this home is yet to be sold/leased. Only post correct information,
+                    giving false information may lead to account suspension!
+                  </div>
+                  <p>Closed this deal?</p>
+                  {{PropertyForm.deal_closed}}
+                  <p>Final closing price.</p>
+                  {{PropertyForm.final_closing_offer}}
+                </div>
+              </div>
               <div class="_xlsFormField-listing_type">
                 <p>Listing type.<span>*</span></p>
                 {{PropertyForm.listing_type|as_crispy_field}}
@@ -218,7 +234,6 @@
 
       <div class="ListingFormStep">
           <h5>Extra information</h5>
-
           <div class="form-row1">
             <div class="bathrooms">
               <p>Bathrooms.<span>*</span></p>
@@ -273,6 +288,66 @@
                 <p>Remodel year.<span>*</span></p>
                 {{PropertyForm.remodel_year|as_crispy_field}}
               </div>
+          </div>
+
+          <h5>Open House</h5>
+          <div id="_ldfjsljoiSDkf" class="_sjkawfp-form-row1">
+            <p>Having an open house soon? Tell us the date and time. Open houses are a great way to
+            showcase a home and gain more attention.</p>
+              <table>
+                <thead>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th hidden></th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  {% for form in open_house_formset %}
+                    <tr class="dskdjOpendlkksHse-rw">
+                      <td>Date {{form.date}}</td>
+                      <td>Start time {{form.start_time}}</td>
+                      <td>End time {{form.end_time}}</td>
+                      <td hidden>
+                        {{form.id}}
+                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                      </td>
+                      <td></td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {{open_house_formset.management_form}}
+            <script>
+              $(document).ready(function(){
+                  $('.dskdjOpendlkksHse-rw').formset({
+                    prefix: '{{ open_house_formset.prefix }}'
+                  });
+                  $('.dskdjOpendlkksHse-rw input[type=text]').timepicker({
+                    timeFormat: 'HH:mm',
+                    interval: 60,
+                    minTime: '12:00am',
+                    maxTime: '23:00pm',
+                    dynamic: true,
+                    dropdown: true,
+                    scrollbar: true
+                  }); //disabled materialize timepicker which was overriding this plugin
+                  $(document).on('focus', '.add-row', function(){
+                    setTimeout(function(){
+                      $('.dskdjOpendlkksHse-rw input[type=text]').timepicker({
+                      timeFormat: 'HH:mm',
+                      interval: 60,
+                      minTime: '12:00am',
+                      maxTime: '23:00pm',
+                      dynamic: true,
+                      dropdown: true,
+                      scrollbar: true
+                    });
+                    }, 100);
+                  });
+                })
+            </script>
+
           </div>
       </div>
 

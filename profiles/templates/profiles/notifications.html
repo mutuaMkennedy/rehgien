@@ -1,0 +1,39 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block content %}
+<div class="notifIC">
+  <div class="_HsbAlertsBx">
+    <div class="container">
+      <div class="row">
+        <h1>Notifications &nbsp <span>{{notifications_count}}</span></h1>
+        <div class="_notifyCards">
+          {% if pending_connections %}
+              {% for request in pending_connections %}
+                <div class="card">
+                    <div class="prCo_img_wrp">
+                      <img src="
+                          {% if request.requestor.profile_image %}
+                            {{request.requestor.profile_image.url}}
+                          {% else %}
+                            {% static 'img/avatar.png'%}
+                          {% endif %}
+                          " alt="{{request.requestor.username}}">
+                    </div>
+                    <div class="_conBody">
+                      <p><span>{{request.requestor.username}}</span> sent you a connection request.</p>
+                      <div class="_conAcBtnsWr">
+                        <button id="_acceptC" type="button" name="rq_id" data-objId='{{request.pk}}' value='accept'>Accept</button>
+                        <button id="_ignoreC" type="button" name="rq_id" data-objId='{{request.pk}}' value='ignore'>Ignore</button>
+                      </div>
+                    </div>
+                </div>
+              {% endfor %}
+          {% else %}
+          <p>You have no new notifications</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

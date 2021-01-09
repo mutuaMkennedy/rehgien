@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (Districts, Divisions, KenyaNationalPolytechnics,
 					KenyaPrimarySchools, PrivateColleges, PrivateUniversities,
 					PublicColleges, UniversitiesColleges,
-					SecondarySchools, TeachersTrainingColleges, Universities
+					SecondarySchools, TeachersTrainingColleges, Universities,KenyaTown
 					)
 from leaflet.admin import LeafletGeoAdmin
 # Register your models here.
@@ -40,6 +40,9 @@ class TeachersTrainingCollegesAdmin(LeafletGeoAdmin):
 class UniversitiesAdmin(LeafletGeoAdmin):
 	list_display = ('name', 'descriptio', 'geom')
 
+class KenyaTownsAdmin(LeafletGeoAdmin):
+	list_display = ('town_name', 'town_type','geom')
+
 admin.site.register(Districts, LeafletGeoAdmin)
 admin.site.register(Divisions, LeafletGeoAdmin)
 admin.site.register(KenyaNationalPolytechnics, LeafletGeoAdmin)
@@ -51,3 +54,4 @@ admin.site.register(UniversitiesColleges, LeafletGeoAdmin)
 admin.site.register(SecondarySchools, LeafletGeoAdmin)
 admin.site.register(TeachersTrainingColleges, LeafletGeoAdmin)
 admin.site.register(Universities, LeafletGeoAdmin)
+admin.site.register(KenyaTown, KenyaTownsAdmin)

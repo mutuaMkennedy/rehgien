@@ -1,0 +1,76 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block content %}
+<div class="jb_postContentHm">
+  <div class="container">
+    <div class="row">
+      <div class=" col s12 md9 l9 xl9">
+        <div class="card">
+           <div class="jbHm_cardHeader">
+             <h2>Post a job</h2>
+           </div>
+           <div class="jbHm_cardBody">
+               <a href="{% url 'markets:job_post_create'%}"><button type="button" name="button">Click to begin</button></a>
+           </div>
+        </div>
+
+         <div class="card">
+            <div class="jbHm_cardHeader">
+              <h2>What jobs are</h2>
+            </div>
+            <div class="jbHm_cardBody">
+              <div class="jbHm_cardBodyImg">
+                <img src="{% static 'img/applicant.svg'%}" alt="applicant">
+              </div>
+              <div class="jbHm_cardBodyTx">
+                <h3>A simple way to get the service you need.</h3>
+                A job post on rehgien is a simple powerfull way <br> to match you to service providers.
+              </div>
+            </div>
+         </div>
+
+         <div class="card">
+            <div class="jbHm_cardHeader">
+              <h2>How it works</h2>
+            </div>
+
+            <div class="jbHm_cardBody">
+              <div class="jbHm_cardBodyImg">
+                <img src="{% static 'img/bullet-form.svg'%}" alt="applicant">
+              </div>
+              <div class="jbHm_cardBodyTx">
+                <h3>Post a job and start receiving proposals.</h3>
+                Write a clear and detailed job description <br>which is shown to qualified professionals. Start
+                <br>receving proposals.
+              </div>
+            </div>
+              <hr>
+            <div class="jbHm_cardBody">
+              <div class="jbHm_cardBodyImg">
+                <img src="{% static 'img/profiles_p.svg'%}" alt="applicant">
+              </div>
+              <div class="jbHm_cardBodyTx">
+                <h3>Evaluate proposals.</h3>
+                 Evaluate professionals who respond to your job <br> post and screen who fits
+                 best to <br>your requirements.
+              </div>
+            </div>
+              <hr>
+            <div class="jbHm_cardBody">
+              <div class="jbHm_cardBodyImg">
+                <img src="{% static 'img/team.svg'%}" alt="applicant">
+              </div>
+              <div class="jbHm_cardBodyTx">
+                <h3>Work together.</h3>
+                 Contact the professonal who best fits what you <br> want and start working together on
+                 the service or job you need <br>taken care off.
+              </div>
+            </div>
+
+         </div>
+
+       </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

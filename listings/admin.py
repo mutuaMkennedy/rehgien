@@ -11,9 +11,22 @@ class PropertyVideoInline(admin.StackedInline):
 	model = models.PropertyVideo
 	extra = 0
 
+class PropertyOpenHouseInline(admin.StackedInline):
+	model = models.PropertyOpenHouse
+	extra = 0
+
+class PropertyInteractionInline(admin.StackedInline):
+	model = models.PropertyInteraction
+	extra = 0
+
 class HomeAdmin(LeafletGeoAdmin):
-	inlines = [PropertyPhotoInline,PropertyVideoInline]
+	inlines = [
+	PropertyPhotoInline,PropertyVideoInline, PropertyInteractionInline,
+	PropertyOpenHouseInline
+	]
 	list_display = ('property_name','type','owner')
 
-admin.site.register(models.PropertyTypeImage)
+
 admin.site.register(models.Home, HomeAdmin)
+admin.site.register(models.PropertyTypeImage)
+admin.site.register(models.SavedSearch)

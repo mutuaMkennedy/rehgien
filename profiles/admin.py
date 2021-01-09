@@ -21,6 +21,23 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
 
+class ProfessionalCategoryInline(admin.StackedInline):
+	model = models.ProfessionalCategory
+	extra = 1
+
+class ProfessionalCategoryAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("category_name",)}
+    list_display = ("category_name","slug",)
+
+class ProfessionalGroupAdmin(admin.ModelAdmin):
+    inlines = [ProfessionalCategoryInline]
+    list_display = ("group_name","slug",)
+    prepopulated_fields = {"slug": ("group_name",)}
+
+class ProfessionalServiceAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("service_name",)}
+    list_display = ("service_name","slug",)
+
 class BusinessProfileAdminForm(forms.ModelForm):
     class Meta:
         model = models.BusinessProfile
@@ -50,11 +67,14 @@ class PortfolioItemPhotoInline(admin.StackedInline):
 
 class PortfolioItemAdmin(AdminVideoMixin,LeafletGeoAdmin):
 	inlines = [PortfolioItemPhotoInline]
-	list_display = ("name","worth", "address", "created_by")
+	list_display = ("name","created_by")
 
 
 
 admin.site.register(models.User, CustomUserAdmin)
+admin.site.register(models.ProfessionalGroup,ProfessionalGroupAdmin)
+admin.site.register(models.ProfessionalCategory,ProfessionalCategoryAdmin)
+admin.site.register(models.ProfessionalService,ProfessionalServiceAdmin)
 admin.site.register(models.BusinessProfile,BusinessProfileAdmin)
 admin.site.register(models.PortfolioItem, PortfolioItemAdmin)
 admin.site.register(models.TeammateConnection)

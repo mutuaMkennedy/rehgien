@@ -28,32 +28,46 @@ import statistics
 from .regression import trendline as trend
 from django.core.serializers import serialize
 from django.db.models import Max
+from django.core.signals import request_finished
+import datetime
+from django.utils import timezone
+from django.utils.http import urlencode
 #from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 #from haystack.query import SearchQuerySet
 # referencing the custom user model
 User = get_user_model()
 
 def check_q_valid(param):
-	return param !="" and param is not None
+	return param !="" and param is not None and param != []
+
+def checkAllValue(param):
+	return param == 'All';
+
+def shop_category_homepage(request):
+	return render(request, 'listings/shop_categories.html', {})
 
 def homepage(request):
+	professional_groups = profiles_models.ProfessionalGroup.objects.all()
+	popular_services = profiles_models.ProfessionalService.objects.all()[:10]
+	recommended_services = profiles_models.ProfessionalService.objects.all()[:10]
+	context ={
+		"professional_groups":professional_groups,
+		"popular_services":popular_services,
+		"recommended_services":recommended_services
+	}
+	return render(request, 'listings/homey.html', context)
+
+def property_homepage(request):
 	onsale_recent = models.Home.objects.filter(listing_type__iexact = 'for_sale').order_by('publishdate')[:6]
 	onsale_reversed = reversed(onsale_recent)
 	#rentals
 	rentals_recent = models.Home.objects.filter(listing_type__iexact = 'for_rent').order_by('publishdate')[:6]
 	rentals_reversed = reversed(rentals_recent)
-	pro_business_categories = []
-	for choice in profiles_models.BusinessProfile.PRO_SPECIALITY_CATEGORIZED:
-			pcat = {}
-			values = []
-			for val in choice[1]:
-				values.append(val[1])
-			pcat[choice[0]] = values
-			pro_business_categories.append(pcat)
+	return render(request, 'listings/find_property_home_page.html', {'onsale_reversed': onsale_reversed,
+	 		'rentals_reversed': rentals_reversed})
 
-	pro_business_categories = eval(str(pro_business_categories)[1:-1])
-	return render(request, 'listings/homey.html', {'onsale_reversed': onsale_reversed,
-	 		'rentals_reversed': rentals_reversed, 'pro_business_categories':pro_business_categories})
+def post_property(request):
+	return render(request, 'listings/post_property_landing.html', {})
 
 def property_listings_results(request, property_category, property_listing_type):
 	ImageTransformation = dict(
@@ -66,6 +80,7 @@ def property_listings_results(request, property_category, property_listing_type)
 
 	listings = ''
 	model_object = ''
+
 	if property_category == 'homes':
 		model_object = models.Home
 	else:
@@ -97,7 +112,7 @@ def property_listings_results(request, property_category, property_listing_type)
 	if listings:
 		all_prices = listings.values_list('price', flat=True).distinct()
 		all_prices_median = statistics.median(all_prices)
-		all_prices_index = list(range(1,len(all_prices)+1)) #adding 1 extra index to compensate for starting range at 1
+		all_prices_index = list(range(1,len(all_prices)+1)) #adding 1 extra index to compensate for starting range at 1 instead of 0
 		all_prices_trend = trend(all_prices_index , all_prices)
 
 		_1bd_price = listings.filter(bedrooms = 1).values_list('price', flat=True).distinct()
@@ -118,8 +133,106 @@ def property_listings_results(request, property_category, property_listing_type)
 			_3bd_plus_price_index = list(range(1,len(_3bd_plus_price)+1))
 			_3bd_plus_price_trend = trend(_3bd_plus_price_index , _3bd_plus_price)
 
+	location_address = ''
+	# Innitial Filter values
+	location = request.GET.get('location', '')
+	min_price = request.GET.get('min_price', 0)
+	max_price = request.GET.get('max_price', 'All')
+	property_type = request.GET.get('property_type', 'All')
+	bedrooms = request.GET.get('bedrooms', 0)
+	bathrooms = request.GET.get('bathrooms', 0)
+	page = request.GET.get('page',1)
+	sort = str(request.GET.get('sort','jfy'))
+	properties_array = request.GET.getlist('properties_array[]',None)
+	properties_array = list(map(int, properties_array))
+	openhouse = request.GET.get('openhouse', '')
+	vr = request.GET.get('vr', '')
+
+	filter_form_data = request.GET.get('filterFormData', '') # Filter form submitted from the results page via ajax
+	filter_params_dict = {}
+	if check_q_valid(filter_form_data): #if not empty overwrite some of the innitial filter values above
+		formdata = json.loads(filter_form_data)
+		for field in formdata:
+			filter_params_dict[field["name"]] = field["value"]
+		# Here we are overwriting the innitial values corresponding to the data in the form
+		location = filter_params_dict['location']
+		min_price = filter_params_dict['min_price']
+		max_price = filter_params_dict['max_price']
+		property_type= filter_params_dict['property_type']
+		bedrooms = filter_params_dict['bedrooms']
+		bathrooms = filter_params_dict['bathrooms']
+
+	if check_q_valid(location):
+		listings = listings.filter(location_name__icontains = str(location.split(',')[0]))
+		location_address = location
+	else:
+		listings = listings.filter(location_name__icontains= 'Nairobi')
+		location_address = 'Nairobi,Kenya'
+	if check_q_valid(min_price) and check_q_valid(max_price):
+		if checkAllValue(max_price): #if max price is set to all.
+			max_price_q =  listings.aggregate(Max('price'))
+			listings = listings.filter(price__range = (min_price,max_price_q['price__max']))
+		else:
+			listings = listings.filter(price__range = (min_price,max_price))
+	if check_q_valid(property_type):
+		if not checkAllValue(property_type):
+			listings = listings.filter(type__iexact=property_type)
+	if check_q_valid(bedrooms):
+		#filter with beds submitted by user
+		listings = listings.filter(bedrooms__gte=bedrooms)
+
+		#finding n-median price for a n-bedroomed house to populate the template's insights bar
+		n_bds_median_price = 0
+		if listings:
+			n_bds_prices = listings.values_list('price', flat=True).distinct()
+			n_bds_median_price = statistics.median(n_bds_prices)
+	if check_q_valid(bathrooms):
+		listings = listings.filter(bathrooms__gte=bathrooms)
+	if check_q_valid(properties_array):
+		listings = listings.filter(id__in = properties_array)
+	if check_q_valid(openhouse):
+		listings = listings.filter(virtual_tour_url !='')
+	# if check_q_valid(vr):
+	# 	listings = listings.filter(home_openhouse__virtual_tour_url !='')
+	# Sorting the results
+	if sort == 'jfy':
+		listings = listings.order_by('-publishdate', 'price') # default sort with our chosen params
+	elif sort == 'newer':
+		listings = listings.order_by('-publishdate') # descending sort
+	elif sort == 'pricehl':
+		listings = listings.order_by('-price')
+	elif sort == 'older':
+		listings = listings.order_by('publishdate') # ascending sort
+	elif sort == 'pricelh':
+		listings = listings.order_by('price')
+	elif sort == 'beds':
+		listings = listings.order_by('bedrooms')
+	elif sort == 'baths':
+		listings = listings.order_by('bathrooms')
+	elif sort == 'sqft':
+		listings = listings.order_by('floor_area')
+	else:
+		listings = listings.order_by('-publishdate', 'price')
+
+	listings_count = listings.count()
+	all_listings = listings # This will not be paginated
+
+	# paginating the results
+	paginator = Paginator(listings, 20)
+	if check_q_valid(page):
+		listings = paginator.get_page(page)
+	else:
+		listings = paginator.get_page(1)
+
+	# We reconstruct our query string object which we use in updating addressbar and in saving search
+	search_params = filter_params_dict
+	search_params['page'] = page
+	search_params['sort'] = sort
+	search_params['properties_array'] = properties_array
+	query_string = urlencode(search_params)
+
 	# Grouped context data
-	insight_stats = {
+	insight_stats_context = {
 		"Onebd_median_price":_1bd_median_price,
 		"Twobd_median_price":_2bd_median_price,
 		"Threebd_plus_median_price":_3bd_plus_median_price,
@@ -130,124 +243,21 @@ def property_listings_results(request, property_category, property_listing_type)
 		"threebd_plus_price_trend":_3bd_plus_price_trend,
 		"all_prices_trend":all_prices_trend
 	}
+	filter_fields_context = {
+		"min_price":min_price,
+		"max_price":max_price,
+		"property_type":property_type,
+		"bedrooms":bedrooms,
+		"bathrooms":bathrooms,
+		'sort':sort
+	}
 
-	location_address = ''
-	# Ajax call filter sent each time the map is panned or zoomed by user
-	if request.method == 'POST':
-		# Request.post values are always bundled in every post request from the client
-		# so that we have a consisent order on how items are being filtered or sorted
-		def checkAllValue(param):
-			return param == 'All';
-
-		filtrer_params_dict = {}
-		formdata = json.loads(request.POST.get('filterFormData'))
-		for field in formdata:
-			filtrer_params_dict[field["name"]] = field["value"]
-
-		location = filtrer_params_dict['location']
-		min_price = filtrer_params_dict['min_price']
-		max_price = filtrer_params_dict['max_price']
-		property_type= filtrer_params_dict['property_type']
-		bedrooms = filtrer_params_dict['bedrooms']
-		bathrooms = filtrer_params_dict['bathrooms']
-
-		page = request.POST.get('page')
-		sortValue = str(request.POST.get('sort'))
-		array_of_pks = request.POST.getlist('pk_array[]')
-		array_of_pks = list(map(int, array_of_pks))
-
-		if check_q_valid(location):
-			listings = listings.filter(location_name__icontains = str(location.split(',')[0]))
-			location_address = location
-		else:
-			listings = listings.filter(location_name__icontains= 'Nairobi')
-			location_address = 'Nairobi,Kenya'
-		if check_q_valid(min_price) and check_q_valid(max_price):
-			if checkAllValue(max_price): #if max price is set to all.
-				max_price =  listings.aggregate(Max('price'))
-				listings = listings.filter(price__range = (min_price,max_price['price__max']))
-			else:
-				listings = listings.filter(price__range = (min_price,max_price))
-		if check_q_valid(property_type):
-			if not checkAllValue(property_type):
-				listings = listings.filter(type__iexact=property_type)
-		if check_q_valid(bedrooms):
-			#filter with beds submitted by user
-			listings = listings.filter(bedrooms__gte=bedrooms)
-
-			#finding n-median price for a n-bedroomed house to populate the template's insights bar
-			n_bds_median_price = 0
-			if listings:
-				n_bds_prices = listings.values_list('price', flat=True).distinct()
-				n_bds_median_price = statistics.median(n_bds_prices)
-		if check_q_valid(bathrooms):
-			listings = listings.filter(bathrooms__gte=bathrooms)
-
-		listings = listings.filter(id__in = array_of_pks)
-
-		#default sort with our chosen params
-		if sortValue == 'jfy':
-			listings = listings.order_by('-publishdate', 'price')
-		#descending sort
-		elif sortValue == 'newer':
-			listings = listings.order_by('-publishdate')
-		elif sortValue == 'pricehl':
-			listings = listings.order_by('-price')
-		#ascending sort
-		elif sortValue == 'older':
-			listings = listings.order_by('publishdate')
-		elif sortValue == 'pricelh':
-			listings = listings.order_by('price')
-		elif sortValue == 'beds':
-			listings = listings.order_by('bedrooms')
-		elif sortValue == 'baths':
-			listings = listings.order_by('bathrooms')
-		elif sortValue == 'sqft':
-			listings = listings.order_by('floor_area')
-		else:
-			listings = listings.order_by('-publishdate')
-
-		filter_fields = {
-			"min_price":min_price,
-			"max_price":max_price,
-			"property_type":property_type,
-			"bedrooms":bedrooms,
-			"bathrooms":bathrooms,
-		}
-
-		listings_count = listings.count()
-		all_listings = listings
-		# Main pagination
-		# Used for all subsequent requests after the innitial page load
-		paginator = Paginator(listings, 20)
-		listings = paginator.get_page(page)
-		return render(request, 'listings/property-listing-page.html', {
-				"all_listings":all_listings,'listings':listings, 'listings_count':listings_count,
-				"ImageTransformation":ImageTransformation ,"location_address":location_address,
-				"insight_stats":insight_stats,"filter_fields":filter_fields
-					})
-	else:
-		loc_input_q_get = request.GET.get('location')
-		if check_q_valid(loc_input_q_get):
-			loc_input_q_get = loc_input_q_get.split(',')[0]
-			listings = listings.filter(location_name__icontains = str(loc_input_q_get))
-			location_address = loc_input_q_get
-		else:
-			listings = listings.filter(location_name__icontains= 'Nairobi')
-			location_address = 'Nairobi,Kenya'
-		# Innitial pagination on page load
-		# Used only when the page laods the first time
-		listings_count = listings.count()
-		all_listings = listings
-		paginator = Paginator(listings, 20)
-		page = request.GET.get('page')
-		listings = paginator.get_page(page)
-
-		return render(request, 'listings/property-listing-page.html', {
+	return render(request, 'listings/property-listing-page.html', {
 			"all_listings":all_listings,'listings':listings, 'listings_count':listings_count,
-			"location_address":location_address, "ImageTransformation":ImageTransformation ,
-			"insight_stats":insight_stats,
-			})
+			"ImageTransformation":ImageTransformation ,"location_address":location_address,
+			"insight_stats":insight_stats_context,"filter_fields":filter_fields_context, 'query_string':query_string,
+			"property_category":property_category,"property_listing_type":property_listing_type
+				})
 
 @login_required(login_url='account_login')
 def property_detail(request, property_category, pk):
@@ -277,23 +287,47 @@ def property_detail(request, property_category, pk):
 	images = listing.home_photos.all()
 	video = listing.home_video.all()
 
+	#this is only fired when the user has clicked the click to call button
+	if request.is_ajax():
+		dataType = request.GET.get('dataType');
+		context={
+			'listing':listing,'images':images, 'videos': video,
+			'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation,
+			}
+		if dataType == 'phone_number':
+			int_object = models.PropertyInteraction.objects.filter(home=listing, user=request.user)
+			int_object.update(is_lead = True)
+			return JsonResponse({'phone_number':listing.phone})
+		elif dataType == 'media_video':
+			html = render_to_string('listings/property_video_section.html', context, request=request)
+			return JsonResponse({'html':html})
+		elif dataType == 'media_vr':
+			html = render_to_string('listings/property_vr_section.html', context, request=request)
+			return JsonResponse({'html':html})
+
+	# Check whether user has an interation object on the listing then create or update it
+	try:
+		interaction = get_object_or_404(models.PropertyInteraction, user=request.user)
+		_views_count = interaction.views_count
+		models.PropertyInteraction.objects.filter(home=listing, user=request.user)\
+					.update(views_count = _views_count + 1)
+	except:
+		interaction_obj = models.PropertyInteraction.objects.create(
+									home = listing,
+									user = request.user,
+									has_viewed = True,
+									views_count = 1
+									)
+		interaction_obj.save()
+	openhouse_dates = listing.home_openhouse.filter(date__range = ( timezone.now() - datetime.timedelta(hours = 12) , timezone.now() + datetime.timedelta(days = 31) ) )
+	happening_today = openhouse_dates.filter(date__range = ( timezone.now() - datetime.timedelta(hours = 12) , timezone.now() + datetime.timedelta(hours = 12) ) )
 	is_saved = False
 	if listing.saves.filter(id=request.user.id).exists():
 		is_saved = True
 
-	# filter for similar listings
-	similar_listings = model_object.objects.filter(	\
-		price__range = (listing.price - listing.price * 0.2, listing.price + listing.price * 0.2),
-		location_name__icontains = listing.location_name.split(',')[0]
-		).exclude(id = listing.id)
-	similar_listings_in_area = model_object.objects.filter(	\
-		price__range = (listing.price - listing.price * 0.2, listing.price + listing.price * 0.2),
-		location_name__icontains = listing.location_name.split(',')[-1]
-		).exclude(id = listing.id)
-
 	return render(request, 'listings/property_detail_page.html', {'listing': listing,'is_saved':is_saved ,'images':images, 'videos': video,
-				"similar_listings":similar_listings,"similar_listings_in_area":similar_listings_in_area,
-				'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation})
+				'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation, 'openhouse_dates':openhouse_dates,
+				'happening_today':happening_today})
 
 @login_required(login_url='account_login')
 def save_property(request):
@@ -330,20 +364,24 @@ def save_property(request):
 
 @login_required(login_url='account_login')
 def property_listing_form(request):
-	if request.user.pro_business_profile.pro_category =='PCAT1' :
+	if request.user.pro_business_profile.professional_category.professional_group.slug =='real-estate-services' :
+		open_house_iformset = inlineformset_factory( models.Home , models.PropertyOpenHouse, forms.OpenHouseForm,
+		 					max_num=10, min_num=1, extra=0, can_order = True,can_delete=True, exclude=('home',))
 		if request.method =='POST':
 				PropertyForm = forms.ListingForm(request.POST, request.FILES)
 				PhotoForm = forms.PhotoForm(request.POST, request.FILES)
 				images = request.FILES.getlist('photo')#name of field
 				VideoForm = forms.VideoForm(request.POST, request.FILES)
 				videos = request.FILES.getlist('video')#name of field
+				open_house_formset = open_house_iformset(request.POST or None, request.FILES or None)
 				# Authenticate form
-				if PropertyForm.is_valid() and PhotoForm.is_valid() and VideoForm.is_valid():
+				if PropertyForm.is_valid() and PhotoForm.is_valid() and VideoForm.is_valid() and open_house_formset.is_valid():
 					instance = PropertyForm.save(commit=False)
 					# Associate listing with user
 					instance.owner = request.user
 					# finally save to db
 					instance.save()
+					open_house_formset.save()
 
 					for img in images:
 						file_instance = models.PropertyPhoto(photo = img, home = models.Home.objects.get(id=instance.id))
@@ -360,10 +398,12 @@ def property_listing_form(request):
 			PropertyForm = forms.ListingForm()
 			PhotoForm = forms.PhotoForm()
 			VideoForm = forms.VideoForm()
+			open_house_formset = open_house_iformset()
 	else:
 		messages.error(request,'Restricted. Your account type is not allowed to access this service.')
 		return redirect('profiles:account')
-	return render(request, 'listings/property_listing_form.html', {'PropertyForm': PropertyForm, 'ImageForm': PhotoForm, 'VideoForm':VideoForm,})
+	return render(request, 'listings/property_listing_form.html', {'PropertyForm': PropertyForm, 'ImageForm': PhotoForm,
+	 		'VideoForm':VideoForm,'open_house_formset':open_house_formset})
 
 @login_required(login_url='account_login')
 def property_update(request, property_category, pk):
@@ -381,17 +421,22 @@ def property_update(request, property_category, pk):
 	video_iformset = inlineformset_factory(models.Home, models.PropertyVideo, forms.VideoForm,
 						max_num=1, min_num=1,extra=0,can_order = True,exclude=('home',)
 						)
+	open_house_iformset = inlineformset_factory( models.Home , models.PropertyOpenHouse, forms.OpenHouseForm,
+	 					max_num=10, min_num=1, extra=0, can_order = True,can_delete=True, exclude=('home',)
+	 					)
 	if request.user == listing.owner:
 		if request.method=='POST':
 			PropertyForm = forms.ListingForm(request.POST, request.FILES, instance=listing)
 			img_formset = image_iformset(request.POST or None, request.FILES or None, instance=listing)
 			vid_formset = video_iformset(request.POST or None, request.FILES or None,  instance=listing)
-			if PropertyForm.is_valid() and img_formset.is_valid() and vid_formset.is_valid():
+			open_house_formset = open_house_iformset(request.POST or None, request.FILES or None, instance=listing)
+			if PropertyForm.is_valid() and img_formset.is_valid() and vid_formset.is_valid() and open_house_formset.is_valid():
 				listing = PropertyForm.save(commit=False)
 				listing.owner = request.user
 				listing.save()
 				img_formset.save()
 				vid_formset.save()
+				open_house_formset.save()
 
 				messages.success(request, 'Update Successull')
 				return redirect('profiles:account')
@@ -401,9 +446,11 @@ def property_update(request, property_category, pk):
 			PropertyForm = forms.ListingForm(instance=listing)
 			img_formset = image_iformset(instance=listing)
 			vid_formset = video_iformset(instance=listing)
+			open_house_formset = open_house_iformset(instance=listing)
 	else:
 		raise PermissionDenied
-	return render(request, 'listings/update_form.html', {'PropertyForm':PropertyForm, 'listing':listing, 'img_formset':img_formset, 'vid_formset':vid_formset})
+	return render(request, 'listings/update_form.html', {'PropertyForm':PropertyForm, 'listing':listing,
+	 	'img_formset':img_formset, 'vid_formset':vid_formset,'open_house_formset':open_house_formset})
 
 @login_required(login_url='account_login')
 def property_delete(request,property_category,pk):
@@ -422,3 +469,44 @@ def property_delete(request,property_category,pk):
 	else:
 		raise PermissionDenied
 		return redirect('profiles:account')
+
+@login_required(login_url='account_login')
+def set_open_house_reminder(request):
+	if request.method == 'POST':
+		user = request.user.id
+		event_id = request.POST.get('openHouseEventId')
+		openhouse = get_object_or_404(models.PropertyOpenHouse, pk=event_id)
+		_reminder_set = openhouse.reminder_list.filter(pk=user).exists()
+		if _reminder_set:
+			openhouse.reminder_list.remove(user)
+			reminder_set = 'Set reminder'
+			message = 'Reminder removed. You will not be alerted on this event.'
+		else:
+			openhouse.reminder_list.add(user)
+			reminder_set = 'Remove reminder'
+			message = 'Reminder set. We will alert you when the event nears.'
+		if request.is_ajax():
+			return JsonResponse({'reminder_set':reminder_set,'message':message,})
+	else:
+		messages.error(request, 'Invalid Request!')
+		return redirect('listings:homepage')
+
+@login_required(login_url='account_login')
+def save_search(request):
+	if request.method == 'POST':
+		search_query_string = request.POST.get('queryString','')
+		# try:
+		search_object = models.SavedSearch.objects.create(
+			user = request.user,
+			search_url = search_query_string
+			)
+		search_object.save()
+		message = 'sucess'
+		# except:
+		# 	message = 'error'
+
+		if request.is_ajax():
+			return JsonResponse({'message':message,})
+	else:
+		messages.error(request, 'Invalid Request!')
+		return redirect('listings:homepage')

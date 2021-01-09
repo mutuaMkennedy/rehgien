@@ -1,0 +1,435 @@
+{% extends 'base.html'%}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+{% block head_title %} <title>Rehgien|Post a job</title>{% endblock %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(document).on('change', '#jb_title input', function(e){
+      e.preventDefault()
+      var title = $('#jb_title input').val();
+      if (title.split(' ').length > 3) {
+        $.ajax({
+        type : 'get',
+        url : '{% url "markets:ajax_search_pros"%}',
+        data : {
+           'job_title':$('#jb_title input').val(),
+        },
+        success: function(response) {
+            $('#check_pros_msg').removeClass('fail');
+            $('#check_pros_msg').addClass(response['message']);
+            $('#check_pros_msg').html(response['msg_body']);
+            if (response['pro_services'] != undefined) {
+            var bd = $("#popularServices");
+            var svcArray = response['pro_services'];
+            for (var i = 0; i < svcArray.length; i++) {
+               let svc = svcArray[i].split('_').join(' ');
+              bd.append(
+                "<button type='button' name='"+ svcArray[i] +"' value='" + svc + "'>" + svc+ "<span class='material-icons'>add</span></button>"
+                )
+            };
+          }
+        },
+        error: function(rs,e){
+          $('#check_pros_msg').removeClass('pass')
+          $('#check_pros_msg').addClass('fail')
+          $('#check_pros_msg').html('Something went wrong while checking pros availlable try again later')
+        },
+      });
+    }else {
+      $('#check_pros_msg').removeClass('pass')
+      $('#check_pros_msg').addClass('fail')
+      $('#check_pros_msg').html('That title is a bit short. Add a more descriptive title to increase the chances of finding a match.')
+    };
+    });
+
+    $('#jdSpecialityareas input').tagsInput({
+          // min/max number of characters
+          minChars: 2,
+          maxChars:null,
+          // max number of tags
+          limit:null,
+          // RegExp
+          validationPattern:null,
+          // duplicate validation
+          unique:true,
+
+          // // allows new tags
+          interactive: true,
+          // // custom placeholder
+          placeholder: 'Search services or add your own',
+          // // width/height
+          width: 'auto',
+          height: 'auto',
+          // // hides the regular input field
+          hide: true,
+          // // custom delimiter
+          delimiter: ',',
+          // // removes tags with backspace
+          removeWithBackspace: true,
+          // // an array of whitelisted values
+          whitelist: null,
+          'autocomplete': {
+            source: "{% url 'markets:ajax_search_service' %}"
+          },
+          onAddTag: (inp, tg)=>{
+            $('#id_skill_areas_tagsinput').append( $('#id_skill_areas_tagsinput').find($('.tag')) );
+            let tags = $('#id_skill_areas_tagsinput').find('.tag-text');
+            let tagsArray = [];
+            $.each(tags, function( index, tag ) {
+              tagsArray.push(tag.innerHTML);
+            });
+            $('#jdSpecialityareas input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+
+            $('.jbSquickSuggestions').find($('[name=' + tg.toLowerCase(). split(' ').join('_') + ']') ).css('display','none');
+          },
+          onRemoveTag: (inp, tg)=>{
+            $('#id_skill_areas_tagsinput').append($('#id_skill_areas_tagsinput').find($('.tag')) );
+           let tags = $('#id_skill_areas_tagsinput').find('.tag-text');
+           var tagsArray = [];
+           $.each(tags, function( index, tag ) {
+             tagsArray.push(tag.innerHTML);
+           });
+           $('#jdSpecialityareas input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+           $('.jbSquickSuggestions').find($('[name=' + tg.toLowerCase(). split(' ').join('_') + ']')).css('display','flex');
+         },
+          onChange: ()=>{
+             let tags = $('#id_skill_areas_tagsinput').find('.tag-text');
+             let tagsArray = [];
+             $.each(tags, function( index, tag ) {
+               tagsArray.push(tag.innerHTML);
+             });
+             $('#jdSpecialityareas input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+          }
+    });
+
+    $(document).on('click', '.jbSquickSuggestions button', function(){
+       let value = $(this).val();
+       $('#jdSpecialityareas input').addTag(value).trigger('#jdSpecialityareas input');
+    });
+
+    $('#jb_location input').tagsInput({
+          // min/max number of characters
+          minChars: 2,
+          maxChars:null,
+          // max number of tags
+          limit:null,
+          // RegExp
+          validationPattern:null,
+          // duplicate validation
+          unique:true,
+
+          // // allows new tags
+          interactive: true,
+          // // custom placeholder
+          placeholder: 'Search towns and regions or add your own',
+          // // width/height
+          width: 'auto',
+          height: 'auto',
+          // // hides the regular input field
+          hide: true,
+          // // custom delimiter
+          delimiter: ',',
+          // // removes tags with backspace
+          removeWithBackspace: true,
+          // // an array of whitelisted values
+          whitelist: null,
+          'autocomplete': {
+            source: [{% for name in town_names %}'{{name}}',{% endfor %}]
+          },
+          onAddTag: (inp, tg)=>{
+            $('#id_location_tagsinput').append($('#id_location_tagsinput').find($('.tag')) );
+            let tags = $('#id_location_tagsinput').find('.tag-text');
+            let tagsArray = [];
+            $.each(tags, function( index, tag ) {
+              tagsArray.push(tag.innerHTML);
+            });
+            $('#jb_location input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+          },
+          onRemoveTag: (inp, tg)=>{
+            $('#id_location_tagsinput').append($('#id_location_tagsinput').find($('.tag')));
+           let tags = $('#id_location_tagsinput').find('.tag-text');
+           let tagsArray = [];
+           $.each(tags, function( index, tag ) {
+             tagsArray.push(tag.innerHTML);
+           });
+           $('#jb_location input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+         },
+          onChange: ()=>{
+             let tags = $('#id_location_tagsinput').find('.tag-text');
+             let tagsArray = [];
+             $.each(tags, function( index, tag ) {
+               tagsArray.push(tag.innerHTML);
+             });
+             $('#jb_location input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+          }
+    });
+
+    $('.tagsinput input').attr('type','search');
+
+    $(document).on('change', '.jbFormStepsBox select,.jbFormStepsBox input,.jbFormStepsBox textarea', function(){
+        let field = $(this);
+        let fieldVal = field.val();
+        if (field.attr('name') === 'project_duration') {
+            fieldVal = field.siblings('span').html();
+        }
+        $('.jb_formReviewFields').find('.jb_'+ field.attr('name')).html(fieldVal.toString().toLowerCase())
+    })
+  });
+</script>
+<div class='jobPostSc'>
+  <div class="container">
+    <div class="jobScHead">
+      <img src="{% static 'img/rehgien_logo_r.png'%}" alt="rehgien-logo">
+        <h1>Let pros find you, post a job now.</h1>
+    </div>
+    <div class="row">
+      <div class="jbFormHead">
+        <a href="{% url 'profiles:account'%}">
+          <button type="button" class="modal-close">
+            <span class="material-icons">west</span> &nbsp
+            Back to account
+          </button>
+        </a>
+      </div>
+      <form autocomplete="off" action="{% url 'markets:job_post_create' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="jbFormStepsBox">
+        <div class="jbFormStep">
+          <div class="jbFormStepHead">
+            <h5>Welcome!</h5>
+            <div class="StepIndicatorBox">
+              <div class="progressBox"><div class="progressBar" style="width:0;"></div></div>1/6
+            </div>
+          </div>
+          <div class="jbform_fields">
+              <div id="jb_title" class="jbtitle">
+                <p>Write a detailed job title to find the best candidates.</p>
+                {{job_post_form.title|as_crispy_field}}
+                <div id="check_pros_msg"></div>
+              </div>
+              <br>
+              <div class="jbtitleEx">
+                <p>Examples</p>
+                <ul>
+                  <li>Property Valuer needed to value a commercial complex</li>
+                  <li>Land surveyor needed for a land subdivision exercise</li>
+                  <li>Architectural House plan design task</li>
+                  <li>Interior and exterior house cleaning exercise</li>
+                  <li>Solar system installation and repair</li>
+                </ul>
+              </div>
+          </div>
+        </div>
+
+        <div class="jbFormStep">
+          <div class="jbFormStepHead">
+            <h5>Skills</h5>
+            <div class="StepIndicatorBox">
+              <div class="progressBox"><div class="progressBar" style="width:20%;"></div></div>2/6
+            </div>
+          </div>
+          <div class="jbform_fields">
+            <div id='jdSpecialityareas' class="jbskill_areas">
+              <p>What areas of expertise or specialization are you looking for?</p>
+              {{job_post_form.skill_areas}}
+            </div>
+
+            <div class="jbskill_suggested">
+              <p>Popular services</p>
+              <div id="popularServices" class='jbSquickSuggestions'>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="jbFormStep">
+            <div class="jbFormStepHead">
+              <h5>Job details</h5>
+              <div class="StepIndicatorBox">
+                <div class="progressBox"><div class="progressBar" style="width:40%;"></div></div>3/6
+              </div>
+            </div>
+            <div class="jbform_fields">
+              <div class="jbproject_size">
+                  <p>What's the size of your project</p>
+                  {{job_post_form.project_size|as_crispy_field}}
+              </div>
+              <div class="jbproject_duration">
+                  <p>How long will your project last?</p>
+                  {{job_post_form.project_duration|as_crispy_field}}
+              </div>
+            </div>
+        </div>
+
+        <div class="jbFormStep">
+              <div class="jbFormStepHead">
+                <h5>Job Description</h5>
+                <div class="StepIndicatorBox">
+                  <div class="progressBox"><div class="progressBar" style="width:60%;"></div></div>4/6
+                </div>
+              </div>
+              <div class="jbform_fields">
+                <div class="jbdescription">
+                  <p>
+                    Describe your job
+                    <span>Include key project details and a bit about who/what you're looking for.</span>
+                  </p>
+                  {{job_post_form.description|as_crispy_field}}
+                </div>
+                <br>
+                <div class="jbtitleEx">
+                  <p>Example excerpts</p>
+                  <ul>
+                    <li>Looking for a 2 bedroom apartment in south b. The apartment should be fully furnished <br>
+                     and should be close to...</li>
+                    <li>Looking for an architect to help in designing a 3 bedroom bungalow. The design should feature<br>
+                    modern styles but also be affordable and...</li>
+                    <li>Im relocating to kisumu soon and i need movers who can be able to help in moving my items. Care <br>
+                    is a priority as most of my items are fragile and also ...</li>
+                  </ul>
+                </div>
+              </div>
+        </div>
+
+        <div class="jbFormStep">
+              <div class="jbFormStepHead">
+                <h5>Location</h5>
+                <div class="StepIndicatorBox">
+                  <div class="progressBox"><div class="progressBar" style="width:80%;"></div></div>5/6
+                </div>
+              </div>
+              <div class="jbform_fields">
+                <div id="jb_location" class="jbSlocation">
+                  <p>Select your location preferences.</p>
+                  {{job_post_form.location|as_crispy_field}}
+                </div>
+                <br>
+                <div class="jbtitleEx">
+                  <p>About preferences</p>
+                  <ul>
+                    <li>We showcase your job post to all candidates who operate in the <br>specified location preferences.</li>
+                    <li>These location preferences will be displayed to all candidates, but <br>anyone can submit proposals</li>
+                    <li>If you provide a location not in the search results, make sure <br> the location is well known and not too local.</li>
+                  </ul>
+                </div>
+              </div>
+        </div>
+
+        <div class="jbFormStep">
+          <div class="jbFormStepHead">
+            <h5>Final step</h5>
+            <div class="StepIndicatorBox">
+              <div class="progressBox"><div class="progressBar" style="width:100%;"></div></div>6/6
+            </div>
+          </div>
+          <div class="jb_formReview">
+            <h6>Review and finish your post</h6>
+          <div class="jb_formReviewFields">
+            <div class="jbFrmRvw_sc">
+              <p>Job title</p>
+              <div class="jb_title jbfmRvwField"></div>
+            </div>
+            <div class="jbFrmRvw_sc">
+              <p>Areas of expertise</p>
+              <div class="jb_skill_areas jbfmRvwField"></div>
+            </div>
+            <div class="jbFrmRvw_sc">
+              <p>Project Size</p>
+              <div class="jb_project_size jbfmRvwField"></div>
+            </div>
+            <div class="jbFrmRvw_sc">
+              <p>Project duration</p>
+              <div class="jb_project_duration jbfmRvwField"></div>
+            </div>
+            <div class="jbFrmRvw_sc">
+              <p>Project description</p>
+              <div class="jb_description jbfmRvwField"></div>
+            </div>
+            <div class="jbFrmRvw_sc">
+              <p>Location preferences</p>
+              <div class="jb_location jbfmRvwField"></div>
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <div class="_jbFormStepBtns" style="overflow:auto;">
+            <button type="button" id="jbprevStepBtn" onclick="nextPrev(-1)">Previous</button>
+            <button type="button" id="jbnextStepBtn" onclick="nextPrev(1)">Next</button>
+            <input type="submit" value="Finish & Submit">
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("jbFormStep");
+  x[n].style.display = "block";
+  //... and fix the Previous/Next buttons:
+  if (n == 0) {
+      $("#jbprevStepBtn").css('display','none')
+  } else {
+    $("#jbprevStepBtn").css('display','inline')
+  }
+  if (n == (x.length - 1)) {
+    $("#jbnextStepBtn").css('display','none');
+    $("._jbFormStepBtns input").css('display','inline');
+  } else {
+    $("#jbnextStepBtn")
+    .css('display','inline')
+    .attr('type','button')
+    .html("Next");
+    $("._jbFormStepBtns input").css('display','none');
+  }
+
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("jbFormStep");
+  // Exit the function if any field in the current tab is invalid:
+  if (n == 1 && !validateForm()) return false;
+  // Hide the current tab:
+  x[currentTab].style.display = "none";
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function validateForm() {
+  // This function deals with validation of the form fields
+  var x, y, i, valid = true;
+  x = document.getElementsByClassName("jbFormStep");
+  y = x[currentTab].getElementsByTagName("input");
+  // A loop that checks every input field in the current tab:
+  for (i = 0; i < y.length; i++) {
+    // If a field is empty...
+    if (y[i].type === 'text') {
+      if (y[i].value == "") {
+        // add an "invalid" class to the field:
+        y[i].className += " invalid";
+        // and set the current valid status to false
+        valid = false;
+      }
+    }else {
+      valid = true;
+    }
+  }
+  return valid; // return the valid status
+}
+
+</script>
+
+
+{% endblock %}

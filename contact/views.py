@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
 from django.core.mail import send_mail, BadHeaderError
 from django.template.loader import render_to_string
@@ -9,7 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from twilio.base.exceptions import TwilioRestException
 from .services.twilio_service import TwilioService
 from . import models
-
+from listings import models as listings_models
 
 def about_us(request):
     pass
@@ -42,6 +42,8 @@ def build_pro_message(sender_message, sender_name, sender_phone_number, sender_e
 
 
 def contact_listing_agent(request):
+    propertyId = request.POST.get('currentListingLocation', '')
+
     name = request.POST.get('name', '')
     phone_number = request.POST.get('phone_number', '')
     subject = 'Rehgien Lead alert on Listing'
@@ -70,10 +72,28 @@ def contact_listing_agent(request):
                      }
             htmlMessage = render_to_string('contact/ListingLeadMessage.html', context)
 
-            # send_mail(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email], fail_silently=False)
             message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email])
             message.attach_alternative(htmlMessage, "text/html")
             message.send()
+
+            # After a successfull send update the property's leads field with the user
+            home_object = get_object_or_404(listings_models.Home, pk=str(propertyId) )
+            # we don't need this check but we will have it as a precaution. Object should already exist b4 the user reaches this view
+            try:
+                interaction = get_object_or_404(listings_models.PropertyInteraction, user=request.user)
+                _views_count = interaction.views_count
+                listings_models.PropertyInteraction.objects.filter(home=home_object, user=request.user)\
+                            .update( is_lead =  True )
+            except:
+                interaction_obj = listings_models.PropertyInteraction.objects.create(
+                                        home = home_object,
+                                        user = request.user,
+                                        is_lead =  True,
+                                        has_viewed = True,
+                                        views_count = 1
+                                        )
+                interaction_obj.save()
+
         except BadHeaderError:
             messages.error(request, 'Something went wrong! Could not complete request. Try again later')
             return redirect(current_listing_path)

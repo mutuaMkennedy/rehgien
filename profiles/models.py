@@ -1,15 +1,12 @@
 """
     <---How pros are added--->
-        Pros create an account and are added as normal users then they make a request to have their
-        account updgraded to pro. We take the request verify it and add their account
-        to a pro category
+        Pros create an account and are added as client users then they make a request to have their
+        account updgraded to pro. We take the request verify heir credentials and add upgrade their account
+        to pro
     <---How pros are stored--->
         A pro is saved in a pro category predefined by rehgien
         then they can select their speciality from the list availlable to them and
         lastryle specify their services
-    <---To do--->
-        merge pro tables to one table with a field for specifying pro business listing
-        category, area of speciality and services.
 """
 #Speciality field represents field of expertise for the pro
 
@@ -71,135 +68,52 @@ class User(AbstractUser):
         return "%s"%(total)
 
 #Professional model tables from here
+class ProfessionalGroup(models.Model):
+    group_name = models.CharField(max_length=100, blank=False)
+    group_image =  models.ImageField(upload_to='proGroupImages/',blank=False)
+    slug = models.SlugField(max_length=250, blank=True)
+
+    class Meta:
+        verbose_name_plural = "ProfessionalGroups"
+
+    def __str__(self):
+        return self.group_name
+
+class ProfessionalCategory(models.Model):
+    professional_group = models.ForeignKey(ProfessionalGroup, on_delete=models.PROTECT,\
+                                    default = None, related_name='pro_category_group')
+    category_name = models.CharField(max_length=100, blank=False)
+    category_image =  models.ImageField(upload_to='proCategoryImages/', blank=False)
+    slug = models.SlugField(max_length=250, blank=True)
+
+    class Meta:
+        verbose_name_plural = "ProfessionalCategories"
+
+    def __str__(self):
+        return self.category_name
+
+class ProfessionalService(models.Model):
+    service_name = models.CharField(max_length=100, blank=False)
+    service_image =  models.ImageField(upload_to='proServiceImages/',blank=False)
+    slug = models.SlugField(max_length=250, blank=True)
+
+    class Meta:
+        verbose_name_plural = "ProfessionalServices"
+
+    def __str__(self):
+        return self.service_name
+
 
 class BusinessProfile(models.Model):
-    # general worded categories are to be used to refer to pro specilities
-    # that are mainly homogenous and do not contain major subcategories
-
-    PRO_CATEGORY_CHOICES = (
-    ('PCAT1', 'realestate services' ),
-    ('PCAT2','surveying and construction'),
-    ('PCAT3', 'architecture and building design'),
-    ('PCAT4', 'general services'),
-    ('PCAT5', 'renovation and remodeling'),
-    ('PCAT6','appliances and systems'),
-    ('PCAT7','cleaning services')
-    )
-
-    PRO_SPECIALITY_CATEGORIZED = (
-        ('PCAT1', (
-                ('VALUERS', 'valuers'),
-                ('REALESTATE_AGENTS', 'realestate agents'),
-                ('PROPERTY_MANAGERS', 'property managers'),
-                ('FACILITY_MANAGERS', 'facility managers'),
-                ('BUILDING_INSPECTORS', 'building inspectors'),
-            )
-        ),
-        ('PCAT2',(
-                ('LAND_SURVEYORS', 'land surveyors'),
-                ('QUANTITY_SURVEYORS', 'quantity surveyors'),
-                ('CONSTRUCTION_MANAGERS', 'construction managers'),
-            )
-        ),
-        ('PCAT3', (
-                ('ARCHITECTS', 'architects'),
-                ('LANDSCAPE_ARCHITECTS', 'landscape architects'),
-                ('LANDSCAPE_DESIGNERS', 'landscape designers'),
-                ('GENERAL_CONTRACTORS', 'general contrators'),
-                ('LANDSCAPE_CONTRACTORS', 'landscape contractors'),
-                ('INTERIOR_DESIGNERS_AND_DECORATORS', 'interior designers and decorators'),
-            )
-        ),
-        ('PCAT4', (
-                ('PHOTOGRAPHERS', 'photographers'),
-                ('MOVERS', 'movers'),
-            )
-        ),
-        ('PCAT5', (
-                ('CARPENTERS', 'carpenters'),
-                ('DOOR_DEALERS', 'door dealers'),
-                ('CARPET_DEALERS', 'carpet dealers'),
-                ('BUILDING_SUPPLIES_DEALERS', 'building supplies dealers'),
-            )
-        ),
-        ('PCAT6',(
-                ('PLUMBERS', 'plumbers'),
-                ('HOME_AUTOMATION_AND_HOME_MEDIA', 'home automation and home media'),
-                ('ELECTRICIANS', 'electricians'),
-                ('SOLAR_ENERGY_SYSTEMS', 'solar energy systems'),
-            )
-        ),
-        ('PCAT7',(
-                ('HOUSE_CLEANERS', 'house cleaners'),
-                ('CARPET_AND_UPHOLSTERY_CLEANERS', 'carpet and upholstery cleaners'),
-                ('WINDOW_CLEANERS', 'window cleaners'),
-                ('GARBAGE_CLEANERS', 'garbage cleaners'),
-                ('PEST_CONTROL', 'pest control'),
-                ('EXTERIOR_CLEANERS', 'exterior cleaners'),
-            )
-        )
-    )
-
-    PRO_SPECIALITY_CHOICES = (
-        # for PCAT1
-        ('VALUERS', 'valuers'),
-        ('REALESTATE_AGENTS', 'realestate agents'),
-        ('PROPERTY_MANAGERS', 'property managers'),
-        ('FACILITY_MANAGERS', 'facility managers'),
-        ('BUILDING_INSPECTORS', 'building inspectors'),
-        # for PCAT2
-        ('LAND_SURVEYORS', 'land surveyors'),
-        ('QUANTITY_SURVEYORS', 'quantity surveyors'),
-        ('CONSTRUCTION_MANAGERS', 'construction managers'),
-        # for PCAT3
-        ('ARCHITECTS', 'architects'),
-        ('LANDSCAPE_ARCHITECTS', 'landscape architects'),
-        ('LANDSCAPE_DESIGNERS', 'landscape designers'),
-        ('GENERAL_CONTRACTORS', 'general contrators'),
-        ('LANDSCAPE_CONTRACTORS', 'landscape contractors'),
-        ('INTERIOR_DESIGNERS_AND_DECORATORS', 'interior designers and decorators'),
-        # for PCAT4
-        ('PHOTOGRAPHERS', 'photographers'),
-        ('MOVERS', 'movers'),
-        # for PCAT5
-        ('CARPENTERS', 'carpenters'),
-        ('DOOR_DEALERS', 'door dealers'),
-        ('CARPET_DEALERS', 'carpet dealers'),
-        ('BUILDING_SUPPLIES_SUPPLIERS', 'building supplies suppliers'),
-        # for PCAT6
-        ('PLUMBERS', 'plumbers'),
-        ('HOME_AUTOMATION_AND_HOME_MEDIA', 'home automation and home media'),
-        ('ELECTRICIANS', 'electricians'),
-        ('SOLAR_ENERGY_SYSTEMS', 'solar energy systems'),
-        # for PCAT7
-        ('HOUSE_CLEANERS', 'house cleaners'),
-        ('CARPET_AND_UPHOLSTERY_CLEANERS', 'carpet and upholstery cleaners'),
-        ('WINDOW_CLEANERS', 'window cleaners'),
-        ('GARBAGE_CLEANERS', 'garbage cleaners'),
-        ('PEST_CONTROL', 'pest control'),
-        ('EXTERIOR_CLEANERS', 'exterior cleaners'),
-    )
-
-    PRO_SERVICES_CHOICES = (
-    ('REALESTATE_VALUATION','realestate valuation'),
-    ('LAND_VALUATION','land valuation'),
-    ('PROPERTY_CONSULTANCY','property consultancy'),
-    ('BUYING_AND_SELLING_PROPERTY','buying and selling property'),
-    ('PROPERTY_LISTING','property listing'),
-    ('PROPERTY_MANAGEMENT','property management'),
-    ('FACILITY_MANAGEMENT','facility management'),
-    ('BUILDING_CONDITION_ASSESSMENT','building condition asessment'),
-    ('LAND_SURVEYING','land surveying'),
-    )
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,\
             default = None, related_name='pro_business_profile')
 
     # the catgory the pro belongs to
-    pro_category = models.CharField(max_length = 100, choices = PRO_CATEGORY_CHOICES, default = None, blank=False)
-
-    # the speciality of the pro. We use forms to filter what choices will be rendered to the pro based on their pro_category
-    pro_speciality = models.CharField(choices = PRO_SPECIALITY_CHOICES, default = None, max_length=100, null=True, blank=False)
+    professional_category = models.ForeignKey(ProfessionalCategory, on_delete=models.SET_NULL,\
+                            default = None, related_name='pro_business_category', blank=False, null=True)
+    professional_services = models.ManyToManyField(ProfessionalService, blank = True, \
+                            related_name='pro_business_services')
 
     # personal & contact information
     business_profile_image = models.ImageField(upload_to = 'business_profile_images/', blank = True)
@@ -220,7 +134,6 @@ class BusinessProfile(models.Model):
     about_video = EmbedVideoField(blank = True, null = True)
     about = models.TextField(blank=True, null=True)
     service_areas = ArrayField(models.CharField(max_length=100, blank=True),blank=True, null=True)
-    services = MultiSelectField(choices = PRO_SERVICES_CHOICES, default = None, null=True, blank=True)
 
     #network features
     saves = models.ManyToManyField(settings.AUTH_USER_MODEL, blank = True, \
@@ -231,11 +144,12 @@ class BusinessProfile(models.Model):
     # admin reserved
     member_since = models.DateTimeField(auto_now=False, auto_now_add=True)
     featured = models.BooleanField(default=False, null=True, blank=True)
+    verified = models.BooleanField(default=False)
 
     @property
     def percentage_complete(self):
         percent = {
-        'business_profile_image': 10, 'pro_speciality':10, 'phone':5, 'business_email':10,
+        'business_profile_image': 10, 'professional_category':10, 'phone':5, 'business_email':10,
         'address':10, 'website_link':5, 'facebook_page_link': 5,
         'twitter_page_link': 5, 'linkedin_page_link':5, 'instagram_page_link':5,
         'location':10, 'about':20
@@ -243,8 +157,8 @@ class BusinessProfile(models.Model):
         total = 0
         if self.business_profile_image:
             total += percent.get('business_profile_image', 0)
-        if self.pro_speciality:
-            total += percent.get('pro_speciality', 0)
+        if self.professional_category:
+            total += percent.get('professional_category', 0)
         if self.phone:
             total += percent.get('phone', 0)
         if self.address:
@@ -286,7 +200,7 @@ class BusinessProfile(models.Model):
 
     @property
     def average_rating(self):
-        return self.pro_business_review.all().aggregate(Avg('rating')).get('rating__avg', 0.00)
+        return self.pro_business_review.all().aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
 
 class Client(models.Model):
     business_profile = models.ForeignKey(BusinessProfile, related_name = 'pro_business_client', on_delete = models.CASCADE)
@@ -327,7 +241,7 @@ class BusinessHours(models.Model):
                 self.from_hour, self.to_hour)
 
 class Review(models.Model):
-    rating_choices = (
+    recommendation_rating_choices = (
         (1, 'Never'),(2, 'Not likely'),
         (3, 'Mybe'),(4, 'Likely'),
         (5, 'Highly likely'),
@@ -340,10 +254,6 @@ class Review(models.Model):
         (1, 'Very poor'),(2, 'Poor'),(3, 'Average'),
         (4, 'Good'),(5, 'Very good'),
     )
-    negotiation_rating_choices = (
-        (1, 'Very poor'),(2, 'Poor'),(3, 'Average'),
-        (4, 'Good'),(5, 'Very good'),
-    )
     professionalism_rating_choices = (
         (1, 'Very poor'),(2, 'Poor'),(3, 'Average'),
         (4, 'Good'),(5, 'Very good'),
@@ -352,64 +262,32 @@ class Review(models.Model):
         (1, 'Very poor'),(2, 'Poor'),(3, 'Average'),
         (4, 'Good'),(5, 'Very good'),
     )
-    creativity_choices = (
-        (1, 'Very poor'),(2, 'Poor'),(3, 'Average'),
-        (4, 'Good'),(5, 'Very good'),
-    )
-    attention_to_detail_choices = (
-        (1, 'Very poor'),(2, 'Poor'),(3, 'Average'),
-        (4, 'Good'),(5, 'Very good'),
-    )
-    service_choices = (
-        ('1', 'Helped me sell my home.'),('2', 'Helped me find tenants.'),
-        ('3', 'Helped me buy a home.'),('4', 'Helped me find a rental.'),
-        ('5', 'Consultation.'),('6', 'Listed my property on Rehgien.'),
-        ('7', 'None. Reached out but never responded.'),('8', 'Managed(s) my property.'),
-    )
 
     profile = models.ForeignKey(BusinessProfile, related_name='pro_business_review', on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField(choices=rating_choices, null=True)
+    recommendation_rating = models.PositiveIntegerField(choices=recommendation_rating_choices, null=True)
     responsive_rating = models.PositiveIntegerField(choices=responsive_rating_choices, null=True)
     knowledge_rating = models.PositiveIntegerField(choices=knowledge_rating_choices, null=True)
-    negotiation_rating = models.PositiveIntegerField(choices=negotiation_rating_choices, null=True)
     professionalism_rating = models.PositiveIntegerField(choices=professionalism_rating_choices, null=True)
-    quality_rating = models.PositiveIntegerField(choices=quality_rating_choices, null=True)
-    creativity = models.PositiveIntegerField(choices=creativity_choices, null=True)
-    attention_to_detail = models.PositiveIntegerField(choices=attention_to_detail_choices, null=True)
-    service = models.CharField(choices=service_choices, max_length=50, null=True)
+    quality_of_service_rating = models.PositiveIntegerField(choices=quality_rating_choices, null=True)
     comment = models.TextField(null=True)
-    date_of_service = models.DateField(null=True)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_review', blank=True)
     reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='pro_reviewer', on_delete=models.CASCADE, null=True)
     review_date = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
-        return  'User ID: ' + str(self.profile.user.pk) + ' - ' + self.profile.user.email + ' - ' + 'Rated: '+ str(self.rating)
+        return  'User ID: ' + str(self.profile.user.pk) + ' - ' + self.profile.user.email + ' - ' + 'Rated: '+ str(self.recommendation_rating)
 
     class Meta:
         verbose_name_plural = 'Reviews'
 
-#Pro projects and portfolios
+    @property
+    def average_rating(self):
+        return self.all().aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
+
+#Portfolio consists projects
 class PortfolioItemBase(models.Model):
-    PORTFOLIO_ITEM_TYPE_CHOICE = (
-        ('PROPERTY_MANAGEMENT', 'property management'),
-        ('DESIGN_PROJECT', 'design project'),
-        ('CONSTRUCTION_PROJECT', 'construction project'),
-        ('PROJECT_SALE', 'project sale'),
-        ('PROPERTY_SALE', 'property sale'),
-    )
-    PROGRESS_CHOICES = (
-        ('COMPLETE', 'complete'),
-        ('ONGOING', 'ongoing'),
-        ('STALLED', 'stalled'),
-    )
-    porfolio_item_type = models.CharField(max_length = 100, choices = PORTFOLIO_ITEM_TYPE_CHOICE, blank = False, null = True)
     name = models.CharField(max_length = 50, blank = False, null = True)
-    worth = models.PositiveIntegerField(blank= False, null = True)
-    year = models.CharField(max_length = 4, blank = False, null = True,validators=[RegexValidator(r'^\d{1,10}$')])
     description = models.TextField(blank = False, null = True)
-    address = models.CharField(max_length = 200, blank = False, null = True)
-    map_point = models.PointField(srid=4326, null=True)
-    progress = models.CharField(max_length = 100,default = None,choices = PROGRESS_CHOICES, blank = False, null = True)
     video = EmbedVideoField(blank = True, null = True)
     created_at = models.DateTimeField(auto_now = False, auto_now_add = True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, default = None, on_delete = models.CASCADE,
@@ -422,18 +300,10 @@ class PortfolioItemBase(models.Model):
         abstract = True
 
     def __str__(self):
-        return self.created_by.username + '-' + self.name + '-' + self.address + '-' + str(self.worth)
-
-    @property
-    def longitude(self):
-        return self.property_name.x
-
-    @property
-    def latitude(self):
-        return self.property_name.y
+        return self.created_by.username + '-' + self.name
 
 class PortfolioItem(PortfolioItemBase):
-    # we will reserve this for the future just incase conditions chang
+    # we will reserve this for the future just incase conditions change
     # needing us to have unique fields and properties
     class Meta:
         verbose_name_plural = 'PortfolioItem'
@@ -459,7 +329,7 @@ class PortfolioItemPhoto(models.Model):
 
 @receiver(pre_delete, sender=PortfolioItemPhoto)
 def porfolio_item_photo_delete(sender, instance, **kwargs):
-	cloudinary.uploader.destroy(instance.photo.public_id)
+	cloudinary.uploader.destroy(instance.project_photo.public_id)
 
 #professional teammates
 class TeammateConnection(models.Model):

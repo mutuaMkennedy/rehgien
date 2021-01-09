@@ -9,6 +9,9 @@ from django.forms import ClearableFileInput
 # referencing the custom user model
 User = get_user_model()
 
+class FileInput(forms.FileInput):
+    input_type = 'image'
+
 class profile_form(forms.ModelForm):
     class Meta:
         model = models.User
@@ -23,26 +26,26 @@ class profile_form(forms.ModelForm):
 
 
 class UserEditForm(forms.ModelForm):
+    profile_image = forms.ImageField(widget=forms.FileInput,required=False)
     class Meta:
         model = models.User
         fields = ['username','first_name', 'last_name','email','profile_image']
 
-class BusinessPageEditForm(forms.ModelForm):
-    about = forms.CharField(widget=CKEditorUploadingWidget(config_name='agent_profile'))
-    class Meta:
-        model = models.BusinessProfile
-        exclude = ['user','pro_category', 'featured', 'saves','followers',
-                    'member_since'
-                   ]
-        fields = '__all__'
-        widgets = {'location':LeafletWidget()}
+# class BusinessPageEditForm(forms.ModelForm):
+#     about = forms.CharField(widget=CKEditorUploadingWidget(config_name='agent_profile'))
+#     class Meta:
+#         model = models.BusinessProfile
+#         exclude = ['user', 'featured', 'saves','followers',
+#                     'member_since'
+#                    ]
+#         fields = '__all__'
+#         widgets = {'location':LeafletWidget()}
 
 class PortfolioItemForm(forms.ModelForm):
     class Meta:
         model = models.PortfolioItem
         exclude =  ['created_at', 'created_by']
         fields = '__all__'
-        widgets = {'map_point':LeafletWidget()}
 
 class PortfolioItemPhotoForm(forms.ModelForm):
 	class Meta:

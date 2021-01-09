@@ -1,0 +1,5 @@
+{% load static %}
+{% load cloudinary %}
+{% for vids in videos %}
+<video src="{% cloudinary_url vids.video VideoTransformation %}" type="video/mp4" class="videos" controls="controls"/>
+{% endfor %}

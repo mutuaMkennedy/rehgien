@@ -1,0 +1,198 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block header%} {% include 'header.html' %} {% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<div class="jbdtl_wrapper rgJdbDetailsWrp">
+  <div id="jbdtPageAcScs" class="_upfPageAcScs">
+  </div>
+  <div id="jbdtPageAcErr" class="_upfPageAcErr">
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class=" col s12 md8 l8 xl8">
+          <div class="card">
+            <div class="jbdtl_head">
+                <h4>Project Details</h4>
+                {% if job.verified %}
+                  <h6>
+                    <span class="material-icons" style="color:#4caf50;">done_all</span>
+                    Verified
+                  </h6>
+                {% endif %}
+            </div>
+            <div class="jbdtl_head_dsc">
+              <div class="jdtlUser">
+                <img src="
+                 {% if job.job_poster.profile_image %}
+                  {{job.job_poster.profile_image.url }}
+                 {% else %}
+                  {% static 'img/avatar.png' %}
+                 {% endif %}
+                 " alt="">
+                <div class="jdtlUserDt">
+                    <h5>{{job.job_poster.username|capfirst}}</h5>
+                    <h6>{% if job.job_poster.user_type == 'PRO' %}Rehgien pro {% else %} Rehgien user{% endif %}</h6>
+                </div>
+              </div>
+              <div class="jbdtR">
+                <div class="jbdtTmSz">
+                  <h6>Project size</h6>
+                  <div class="jbdtl_desc_fld">
+                    {{job.project_size|lower|capfirst}}
+                  </div>
+                </div>
+                <div class="jbdtTmSz">
+                  <h6>Project duration</h6>
+                  <div class="jbdtl_desc_fld">
+                    {{job.get_project_duration_display|capfirst}}
+                  </div>
+                </div>
+                <div class="jbdtTmSz">
+                  <h6>Job post date</h6>
+                  <div class="jbdtl_desc_fld">
+                    {{job.job_update_date.date}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="jbdtl_body">
+              <div class="jbdtl_desc">
+                <div class="jbdtl_desc_fld">
+                  <b>{{job.title|capfirst}}</b>
+                </div>
+                <h6>Target areas of expertise</h6>
+                <div class="jbdtl_desc_fld">
+                  {% for skill in job.skill_areas %}
+                    <form  action="{% url 'rehgien_pro:jobs_list'%}" method="get">
+                      <button type="button" name="expertise_areas" value="{{skill}}">{{skill|capfirst}}</button>
+                    </form>
+                  {% endfor %}
+                </div>
+                <h6>Location preference</h6>
+                <div class="jbdtl_desc_fld">
+                  {% for loc in job.location %}
+                    <form action="{% url 'rehgien_pro:jobs_list'%}" method="get">
+                      <button type="button" name="location_target" value="{{loc}}">{{loc|capfirst}}</button>
+                    </form>
+                  {% endfor %}
+                </div>
+                <h6>More on the project</h6>
+                <div class="jbdtl_desc_fld jbdtl_lngDsc">
+                  {{job.description|capfirst}}
+                </div>
+
+              </div>
+            </div>
+            <div class="jbdtl_footer">
+                <div class="jbdt_Int">
+                  <div class="jbdtVwImWrp">
+                    {% if job.job_viewers.all.count != 0 %}
+                      {% for viewer in job.job_viewers.all|slice:':2' %}
+                        <div class="jbdtVwIm{{forloop.counter}}">
+                          <img src="
+                            {% if viewer.profile_image %}
+                              {{viewer.profile_image.url}}
+                            {% else %}
+                            {%static 'img/avatar.png'%}
+                            {% endif %}
+                          " alt="avatar">
+                        </div>
+                      {% endfor %}
+                    {% else %}
+                        <img src="{%static 'img/avatar.png'%}" alt="">
+                    {% endif %}
+
+                  </div>
+                  <div class="jbdtIntCount">
+                      <div class="jbdtIntVwCount">
+                        {{job.job_viewers.count}}
+                        <span>Views</span>
+                      </div>
+                      <div class="jbdtIntPpsCount">
+                        {{job.job_post_proposal.count}}
+                        <span>Proposals</span>
+                      </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+       </div>
+       <div class="col s12 md4 l4 xl4">
+         <div class="jbpst_repliesWrapper">
+           <h2>Proposals <span>{{job.job_post_proposal.count}}</span></h2>
+           {% if job.job_post_proposal.count != 0 %}
+              {% for reply in job.job_post_proposal.all %}
+                <div class="card">
+                  <div class="replyHeader">
+                    <img src="
+                     {% if reply.proposal_sender.pro_business_profile.business_profile_image %}
+                      {{reply.proposal_sender.pro_business_profile.business_profile_image.url }}
+                     {% else %}
+                      {% static 'img/avatar.png' %}
+                     {% endif %}
+                     " alt="">
+                     <div class="replyUser">
+                         <h5>{{reply.proposal_sender.pro_business_profile.business_name}}</h5>
+                          <div class="jbReply-rating">
+                            {% if reply.proposal_sender.pro_business_profile.average_rating %}
+                                {% if reply.proposal_sender.pro_business_profile.average_rating  > 4.5  and reply.proposal_sender.pro_business_profile.average_rating <= 5 %}
+                                <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                                {%elif reply.proposal_sender.pro_business_profile.average_rating > 3.5 and reply.proposal_sender.pro_business_profile.average_rating <= 4.5 %}
+                                <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                                {% elif reply.proposal_sender.pro_business_profile.average_rating > 2.5 and reply.proposal_sender.pro_business_profile.average_rating <= 3.5 %}
+                                <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                {% elif reply.proposal_sender.pro_business_profile.average_rating > 1.5 and reply.proposal_sender.pro_business_profile.average_rating <= 2.5 %}
+                                <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                {% elif reply.proposal_sender.pro_business_profile.average_rating > 0 and reply.proposal_sender.pro_business_profile.average_rating <= 1.5 %}
+                                <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                {% else %}
+                                <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                                {% endif %}
+                              {% else %}
+                              <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                              {% endif %}
+                          </div>
+
+                     </div>
+                  </div>
+                  <div class="jbpstReplyMsg proposal{{forloop.counter}}">
+                    {{reply.message}}
+                  </div>
+
+                  <script type="text/javascript">
+
+                    $(document).ready(function(){
+                      let msg{{forloop.counter}} = $('.proposal{{forloop.counter}}');
+                      let innitialMsg{{forloop.counter}} = msg{{forloop.counter}}.html();
+                      let sliced{{forloop.counter}} = innitialMsg{{forloop.counter}}.slice(0, 250);
+                      if (innitialMsg{{forloop.counter}}.length > 250) {
+                        msg{{forloop.counter}}.html('')
+                        msg{{forloop.counter}}.html(sliced{{forloop.counter}})
+                        msg{{forloop.counter}}.append("<a id='msgRdMore{{forloop.counter}}' style='cursor:pointer'>...Read more</a>");
+                        $(document).on('click','#msgRdMore{{forloop.counter}}',function(){
+                          msg{{forloop.counter}}.html(innitialMsg{{forloop.counter}}).append("<a id='msgRdLess{{forloop.counter}}' style='cursor:pointer'>Read less</a>")
+                        })
+                        $(document).on('click','#msgRdLess{{forloop.counter}}', function(){
+                          msg{{forloop.counter}}.html(sliced{{forloop.counter}}).append("<a id='msgRdMore{{forloop.counter}}' style='cursor:pointer'>...Read more</a>")
+                        })
+                      };
+                    })
+                  </script>
+                  <div class="replyFooter">
+                    <a href="{{reply.proposal_sender.pro_business_profile.get_absolute_url}}">
+                        <button type="button" name="button">View my profile for more</button>
+                    </a>
+                  </div>
+                </div>
+              {% endfor %}
+          {% else %}
+              <p class="jbpstno_replies">No replies yet. We will notify you when a pro responds.</p>
+          {% endif %}
+         </div>
+       </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

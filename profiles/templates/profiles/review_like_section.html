@@ -1,0 +1,6 @@
+{% load static %}
+<form class="_likeRvwFm">
+  {% csrf_token %}
+    Was this review helpful?
+  <button class="review_like_btn {% if request.user in reviews.likes.all %}liked{% endif %}" type="submit" name="like_review" value="{{reviews.id}}" ><span class="material-icons">thumb_up</span>Yes</button>
+</form>

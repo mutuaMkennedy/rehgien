@@ -1,0 +1,126 @@
+{% extends 'pro_base.html'%}
+{% load static %}
+{% block head_title %}<title>Tools & solutions built for professionals|Rehgien Pro</title>{% endblock %}
+{% block header %}{% include 'pro_header.html'%}{% endblock %}
+{% block content %}
+
+<div id="pro_Hero_background" class="pro_mainHome_Bn_xcrs" style="background-image:url({%static 'img/pro1.jpg' %})">
+   <div class="pro_Bn_xcrsoverlay">
+      <div class="container">
+          <div class="row">
+            <div class="col s12 pro_home_Bnr_tt">
+              <h1>Tools and solutions <br>built to help <br>grow your business.</h1>
+              <p>Create wonderfull experiences with your customers</p>
+              <div class="_pro_Bnr_catwRP">
+                <div class="_home_Bnr_catBtns">
+                  <a href="{% url 'rehgien_pro:jobs_list' %}"><button type="button" name="button">Get Started</button></a>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<section>
+  <div class="proMainHomeWrpx">
+      <div class="container">
+          <div class="row">
+
+            <div class="proSltnHiglh _rwRvs">
+                <div class="proSltnExplainer">
+                  <h6>Find customers</h6>
+                  <h2>Your next client is just clicks away</h2>
+                  <p>
+                    Connect with new clients and work together on the next
+                    job or project. Set your preferences, see what jobs
+                    are in your area that match your expertise and respond to them directly.
+                    We actively save you time by verifying jobs posted by clients.
+                  </p>
+                  <div class="proSltnExplainerCta">
+                    <a href="#"><button type="button" name="button">Start now</button></a>
+                  </div>
+                </div>
+                <div class="proSltnExplainerHighImg">
+                  <img src="{% static 'img/signupCover.jpg'%}" alt="">
+                </div>
+            </div>
+
+            <div class="proSltnHiglh">
+              <div class="proSltnExplainerHighImg">
+                <img src="{% static 'img/signupCover.jpg'%}" alt="">
+              </div>
+                <div class="proSltnExplainer">
+                  <h6>Customer Experience <span>In development</span></h6>
+                  <h2>Manage your conversations in one place</h2>
+                  <p>
+                    Chat live, have videos calls, group your conversations right on rehgien. Forget broken
+                    communications, work together with your
+                    customers in a collected and organized way towards completion of your goals.
+                  </p>
+                  <div class="proSltnExplainerCta disabled">
+                    <a href="#"><button type="button" name="button">Start now</button></a>
+                  </div>
+                </div>
+            </div>
+
+            <div class="proSltnHiglh _rwRvs">
+                <div class="proSltnExplainer">
+                  <h6>Project Management <span>In development</span></h6>
+                  <h2>Organize projects, build teams and collaborate.</h2>
+                  <p>
+                    Collaboration is key to any business success. With rehgien project
+                    management, bring all your teams together and maximize your
+                    productivity. Share documents, schedule tasks and manage teams for all types
+                    of tasks.
+                  </p>
+                  <div class="proSltnExplainerCta disabled">
+                    <a href="#"><button type="button" name="button">Start now</button></a>
+                  </div>
+                </div>
+                <div class="proSltnExplainerHighImg">
+                  <img src="{% static 'img/signupCover.jpg'%}" alt="">
+                </div>
+            </div>
+
+            <div class="proSltnHiglh">
+              <div class="proSltnExplainerHighImg">
+                <img src="{% static 'img/signupCover.jpg'%}" alt="">
+              </div>
+                <div class="proSltnExplainer">
+                  <h6>Virtual Experiences <span>In development</span></h6>
+                  <h2>Experiences that bring the best out of your work</h2>
+                  <p>
+                    Speak less and just share the Experience
+                    with your customers.
+                    Go 3d with rehgien VR experiences on your next project.
+                  </p>
+                  <div class="proSltnExplainerCta disabled">
+                    <a href="#"><button type="button" name="button">Start now</button></a>
+                  </div>
+                </div>
+            </div>
+
+            <div class="proSltnHiglh _rwRvs">
+                <div class="proSltnExplainer">
+                  <h6>Marketing Options <span>In development</span></h6>
+                  <h2>Reach out to more homeowners looking to hire</h2>
+                  <p>
+                    With targeted advertising reach the right people and
+                    get hired. Target locations and projects you are interested in.
+                  </p>
+                  <div class="proSltnExplainerCta disabled">
+                    <a href="#"><button type="button" name="button">Start now</button></a>
+                  </div>
+                </div>
+                <div class="proSltnExplainerHighImg">
+                  <img src="{% static 'img/signupCover.jpg'%}" alt="">
+                </div>
+            </div>
+
+          </div>
+      </div>
+  </div>
+</section>
+
+{% endblock %}

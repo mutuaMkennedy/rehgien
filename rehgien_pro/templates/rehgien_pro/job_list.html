@@ -1,0 +1,250 @@
+{% extends 'pro_base.html' %}
+{% load static %}
+{% block head_title %}<title>Find customers|Rehgien Pro</title>{% endblock %}
+{% block header%}{% include 'pro_header2.html' %}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'JqueryUI/jquery-ui.min.js'%}"></script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#jblsLoc").autocomplete({
+      source:[{% for name in town_names %}'{{name}}',{% endfor %}],
+      appendTo:'#jdfhYSgdsf_jblsLoc',
+      autoFocus: true,
+      minLength: 2,
+    })
+
+    var pageNumber = $('.pagination-current').attr('data-pagenumber');
+    $(document).on('click', '._pageNumber', function (event) {
+      event.preventDefault()
+      pageNumber = $(this).attr('data-PageNumber');
+      filter();
+    });
+
+    $(document).on("change", ".jblsFilterForm input", function(event){
+       event.preventDefault()
+       filter();
+    });
+
+    function filter(){
+      $(".JBLSlOADING").css('display','flex');
+      $.ajax({
+          type: "GET",
+          url: './',
+          data:{
+              'location_target':$('.form_1 input').val(),
+              'project_size':$('.form_2 input:checked').val(),
+              'project_duration':$('.form_3 input:checked').val(),
+              'skill_areas':$('.form_4 input:checked').val(),
+              'page':pageNumber
+          },
+          success: function (data) {
+                  $("#jobListWrp").html($(data).find('.job_list_cards'));
+                  var q_string = $(data).find('#jbls_PRO').val();
+                  window.history.pushState({qs : q_string }, null, "?" + q_string );
+                  $(".JBLSlOADING").css('display','none');
+              }
+          });
+    };
+  });
+</script>
+<data id="jbls_PRO" hidden value="{{query_string}}"></data>
+<div class="job_list_wrpx">
+    <div class="container">
+      <div class="row">
+        <div class="col s12 md3 l3 xl3">
+          <div class="jblFilterBox">
+            <h2>Filter options</h2>
+            <form class="jblsFilterForm form_1" action="{% url 'rehgien_pro:jobs_list'%}" method="get" autocomplete="off">
+              <div class="jblsFormField">
+                <h6>Specify town or region</h6>
+                <div id="jdfhYSgdsf_jblsLoc" class="jblsFormFieldWrp jlbsLocIn">
+                  <input id="jblsLoc" type="text" name="location_target" value="{{search_params.location_target}}" placeholder="Enter town or region name">
+                    <span class="material-icons">search</span>
+                </div>
+              </div>
+            </form>
+            <form class="jblsFilterForm form_2" action="{% url 'rehgien_pro:jobs_list'%}" method="get" autocomplete="off">
+              <div class="jblsFormField">
+                 <h6>Project size</h6>
+                 <div class="jblsFormFieldWrp">
+                     <label>
+                       <input type="radio" name="project_size" value="large" {% if search_params.project_size == 'large' %} checked {% endif %}>
+                       <span>Large</span>
+                     </label>
+                     <label>
+                       <input type="radio" name="project_size" value="medium" {% if search_params.project_size == 'medium' %} checked {% endif %}>
+                       <span>Medium</span>
+                     </label>
+                     <label>
+                       <input type="radio" name="project_size" value="small" {% if search_params.project_size == 'small' %} checked {% endif %}>
+                       <span>Small</span>
+                     </label>
+                 </div>
+              </div>
+            </form>
+            <form class="jblsFilterForm form_3" action="{% url 'rehgien_pro:jobs_list'%}" method="get" autocomplete="off">
+              <div class="jblsFormField">
+                 <h6>Project duration</h6>
+                 <div class="jblsFormFieldWrp">
+                     <label>
+                       <input type="radio" name="project_duration" value="1" {% if search_params.project_duration == '1' %} checked {% endif %}>
+                       <span>Less than a week</span>
+                     </label>
+                     <label>
+                       <input type="radio" name="project_duration" value="2" {% if search_params.project_duration == '2' %} checked {% endif %}>
+                       <span>Less than 1 month</span>
+                     </label>
+                     <label>
+                       <input type="radio" name="project_duration" value="3" {% if search_params.project_duration == '3' %} checked {% endif %}>
+                       <span>1 to 3 months</span>
+                     </label>
+                     <label>
+                       <input type="radio" name="project_duration" value="4" {% if search_params.project_duration == '4' %} checked {% endif %}>
+                       <span>3 to 6 months</span>
+                     </label>
+                     <label>
+                       <input type="radio" name="project_duration" value="5" {% if search_params.project_duration == '5' %} checked {% endif %}>
+                       <span>More than 6 months</span>
+                     </label>
+                 </div>
+              </div>
+            </form>
+            <form class="jblsFilterForm form_4" action="{% url 'rehgien_pro:jobs_list'%}" method="get" autocomplete="off">
+              <div class="jblsFormField">
+                 <h6>Skill areas</h6>
+                <div class="jblsFormFieldWrp skill_tags">
+                  {% for skill in skill_areas%}
+                    <label>
+                      <input type="checkbox" name="skill_areas" value="{{skill}}" {% if skill in expertise_areas %} checked {% endif %}>
+                      <span>{{skill|capfirst}}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col s12 md9 l9 xl9">
+            <div class="job_cards_wrpx">
+              <div class="JBLSlOADING">
+                <img src="{% static 'img/ajax-loader.gif'%}" alt="loading">
+              </div>
+                <div id="jobListWrp" class="job_cards_wrapper">
+                  <div class="job_list_cards">
+                      {% if jobs_p %}
+                          {% for job in jobs_p %}
+                            <div class="card">
+
+                              <div class="jbLs_body">
+                                <div class="jbLs_bodyDt">
+                                  <div class="jblsUser">
+                                    <div class="jbLs_imgWrp">
+                                      <img src="
+                                       {% if job.job_poster.profile_image %}
+                                        {{job.job_poster.profile_image.url }}
+                                       {% else %}
+                                        {% static 'img/avatar.png' %}
+                                       {% endif %}
+                                       " alt="">
+                                    </div>
+                                    <div class="userDtls">
+                                      <h5>{{job.job_poster.username}}</h5>
+                                      <h6>{% if job.job_poster.user_type == 'PRO' %}Rehgien pro {% else %} Rehgien user{% endif %}</h6>
+                                    </div>
+                                  </div>
+                                  <div class="jbLs_Hd_right">
+                                    <div>Project size <span>{{job.project_size|lower}}</span></div>
+                                    <div>Project duration <span>{{job.get_project_duration_display|lower}}</span></div>
+                                    <div>Job post date <span>{{job.job_update_date.date}}</span></div>
+                                  </div>
+                                </div>
+                                  <div class="jbls_verifc">
+                                    {% if job.verified %}
+                                      <h6 class="verified">
+                                        <span class="material-icons" style="color:#4caf50;">done_all</span>
+                                        Verified
+                                      </h6>
+                                    {% else %}
+                                      <h6>
+                                        <span class="material-icons" style="color:#ddd;">done_all</span>
+                                        unverified
+                                      </h6>
+                                    {% endif %}
+                                  </div>
+
+                                <h2>{{job.title}}</h2>
+                                <div class="jbLs_locTagsWrapper">
+                                  Target areas of expertise include
+                                  <div class="jbLs_locTags">
+                                    {% for skill_area in job.skill_areas|slice:':4' %}
+                                      <button>{{skill_area|capfirst}}</button>
+                                    {% endfor %}
+                                    {% if job.skill_areas|length > 4 %}
+                                      <span>+{{ job.skill_areas|length|add:"-4" }} more</span>
+                                    {% endif%}
+                                  </div>
+                                </div>
+                                <p>{{job.description|truncatechars:'100'}}</p>
+                                <div class="jbLs_Footer">
+                                    <div class="jbLs_Int">
+                                      <div class="jbLsVwImWrp">
+                                        {% if job.job_viewers.all.count != 0 %}
+                                          {% for viewer in job.job_viewers.all|slice:':2' %}
+                                            <div class="jbLsVwIm{{forloop.counter}}">
+                                              <img src="
+                                                {% if viewer.profile_image %}
+                                                  {{viewer.profile_image.url}}
+                                                {% else %}
+                                                {%static 'img/avatar.png'%}
+                                                {% endif %}
+                                              " alt="avatar">
+                                            </div>
+                                          {% endfor %}
+                                        {% else %}
+                                            <img src="{%static 'img/avatar.png'%}" alt="">
+                                        {% endif %}
+
+                                      </div>
+                                      <div class="jbLsIntCount">
+                                          <div class="jbLsIntVwCount">
+                                            {{job.job_viewers.count}}
+                                            <span>Views</span>
+                                          </div>
+                                          <div class="jbLsIntPpsCount">
+                                            {{job.job_post_proposal.count}}
+                                            <span>
+                                              Proposals
+                                              {% for proposal in job.job_post_proposal.all|slice:':1' %}
+                                                {% if request.user == proposal.proposal_sender%}
+                                                  <small>You replied</small>
+                                                {% endif %}
+                                              {% endfor %}
+                                            </span>
+                                          </div>
+                                      </div>
+                                    </div>
+                                    <a href="{% url 'rehgien_pro:job_detail' pk=job.pk %}"><button type="button" name="button">See more</button></a>
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        <div id="jbsPagBox" class="jbs_pgination_bar">
+                          {% include 'rehgien_pro/pagination.html' with objects=jobs_p %}
+                        </div>
+                      {% else %}
+                        <div class="jblsEmpty">
+                          <p>Ooops!. No jobs are availlable at the moment. Try again later or adjust your filters.</p>
+                        </div>
+                      {% endif %}
+                  </div>
+                </div>
+            </div>
+        </div>
+
+      </div>
+    </div>
+</div>
+
+{% endblock %}

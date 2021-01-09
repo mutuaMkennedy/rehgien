@@ -160,3 +160,17 @@ class Universities(models.Model):
 
     def __str__(self):
         return self.name + '-' + self.descriptio
+
+class KenyaTown(models.Model):
+    area = models.FloatField()
+    perimeter = models.FloatField()
+    town_name = models.CharField(max_length=254)
+    town_id = models.FloatField()
+    town_type = models.CharField(max_length=254)
+    geom = models.MultiPointField(srid=4326)
+
+    class Meta:
+        verbose_name_plural = 'KenyaTowns'
+
+    def __str__(self):
+        return self.town_name + '-' + self.town_type

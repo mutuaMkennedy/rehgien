@@ -1,0 +1,37 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block content %}
+<div class="container pstPrp_hlp_xsauelp">
+  <div class="row">
+    <h1>Sell or rent on Rehgien <span>We are always creating new ways that
+      help you sell your home in a faster & safer way</span></h1>
+    <div class="col s12 md6 l6 xl6">
+      <div class="card">
+        <div class="post_form_sv_arwXpsm">
+          <img src="{% static 'img/post_property.svg'%}">
+        </div>
+        <h6>Work with an agent</h6>
+        <p>
+          Get clients faster on rehgien by listing with an agent. Agents get you more value
+          from your property.
+        </p>
+        <button type="button" name="button">Find an agent now</button>
+      </div>
+    </div>
+    <div class="col s12 md6 l6 xl6">
+        <div class="card">
+          <div class="post_form_sv_arwXpsm">
+            <img src="{% static 'img/for_sale_rafiki.svg'%}" alt="">
+          </div>
+          <h6>Sell it yourself</h6>
+          <p>
+            Because of safety concerns to our users,we currenlty don't allow FSBO properties. However, we are working
+            on a safer way to support this feature.
+          </p>
+          <button type="button" name="button">Learn more</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,157 +1,149 @@
-{%extends 'base1.html'%}
+{%extends 'base.html'%}
 {%load static%}
+{% block head_title %}<title>Rehgien|Find property experts & services </title>{% endblock %}
+{% block header %}{% include 'header_section.html' %}{% endblock%}
 {%block content%}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    const pro_heros = [
+      "{%static 'img/carpeter_hero_webv.png' %}",
+      "{%static 'img/photgrapher_hero_webv.png' %}",
+      "{%static 'img/realtor_hero_wbv.png' %}",
+      "{%static 'img/plumber_hero_webv.png' %}",
+    ]
 
-    <div class="HomePgBanner" style="background-image:url({%static 'img/b8.jpg' %});">
-        <div class="HmBannerOverlay">
-          <h3>Find your dream Home</h3>
-          <div id="search-section" class="container">
-            <div class="row">
-                <form class="HomeSearchBar" action="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale'%}" method="GET">
-                  <div id="s_geocoder">
+    const node = document.getElementById("main_Hero_background");
 
-                  </div>
-                  <button type="submit"><img src="{% static 'img/search.svg'%}" alt="search"></button>
-                </form>
+    const cycleImages = (images, container, step) => {
+        images.forEach((image, index) => (
+        setTimeout(() => {
+            container.style.backgroundImage = `url(${image})`
+        }, step * (index + 1))
+      ))
+      setTimeout(() => cycleImages(images, container, step), step * images.length)
+    }
+
+    cycleImages(pro_heros, node, 10000);
+
+    $(".owl-carousel").owlCarousel({
+        loop:true,
+        margin:10,
+        nav:true,
+        responsiveClass:true,
+        responsive:{
+           0:{
+               items:1,
+               nav:true
+           },
+           480:{
+               items:4,
+               nav:false
+           },
+           768:{
+               items:4,
+               nav:true,
+           }
+       }
+      });
+
+});
+</script>
+<div id="main_Hero_background" class="_mainHome_Bn_xcrs" style="background-image:url({%static 'img/plumber_hero_webv.png' %})">
+   <div class="_mH_Bn_xcrsoverlay">
+      <div class="container">
+          <div class="row">
+            <div class="col s12 _home_Bnr_tt">
+          <h1>Find property services & service providers <br> in one place</h1>
+          <p>No more doubts, work only with verified and qualified pros on the next home project
+          or service.</p>
+          <div class="_home_Bnr_catwRP">
+            <span>Popular picks:</span> &nbsp &nbsp
+            <div class="_home_Bnr_catBtns">
+              <a href="{% url 'listings:property_homepage' %}"><button type="button" name="button">Find a home</button></a>
+              <a href="{% url 'profiles:business_homepage' %}"><button type="button" name="button">Find professionals</button></a>
             </div>
-        </div>
-      </div>
-      <i id="down-arrow" class="material-icons">keyboard_arrow_down</i>
-      <i id="down-arrow2" class="material-icons">keyboard_arrow_down</i>
-    </div>
-<section>
-    <div class="svgCardsContainer container">
-        <div class="svgRow row">
-          <div class="HmPgTdsc">
-            <div style='width:2px;height:50px;background:#fb5f3d;border-radius:25px'></div>
-            <h1 class="svg-title center">
-               Do more on rehgien
-             </h1>
           </div>
-          <div class="svg-cardsWrp col s12 md4 l4">
-            <div class="svg-card card">
-              <div class="s-c-wrp">
-                <img src="{%static 'img/4241603.png'%}" alt="looking for a house?">
-              </div>
-              <div class="s-c-cnt">
-                <div style='width:30px;height:10px;background:#fb5f3d;border-radius:25px'>
-                </div>
-                <h6>Find your next home in a <br>few clicks</h6>
-                <p>
-                  Choose from two ways to get the property you want.
-                  We have made it easy for you to make the best decision
-                </p>
-                <div class='hm-CtA-bWrap'>
-                  <a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale'%}">
-                    <button class="hm-CtA-browse" type="button" name="button">
-                      Browse
-                    </button>
-                  </a>
-                  <a href="{% url 'markets:property_request'%}">
-                    <button class="hm-CtA-request" type="button" name="button">
-                      Make a Request
-                    </button>
-                  </a>
-                </div>
-              </div>
             </div>
           </div>
-          <div class="svg-cardsWrp col s12 md4 l4">
-            <div class="svg-card card">
-              <div class="s-c-wrp">
-                <img src="{%static 'img/58068.png'%}" alt="pros">
-              </div>
-              <div class="s-c-cnt">
-                <div style='width:30px;height:10px;background:#fb5f3d;border-radius:25px'>
-                </div>
-                <h6>Find qualified proffesionals <br> the easy way</h6>
-                <p>
-                  We are making the real estate network smaller by allowing you to easily find
-                  verified pros to work with
-                <div class='hm-CtA-bWrap'>
-                  <a href="{% url 'markets:proffesional_request'%}">
-                    <button class="hm-CtA-findAg" type="button" name="button">
-                      Make a Request
-                    </button>
-                  </a>
-                  <a href="#">
-                    <button class="hm-CtA-learnMore" type="button" name="button">
-                      Browse professionals
-                    </button>
-                  </a>
-                </div>
-              </div>
-          </div>
-
-          </div>
-          <div class="svg-cardsWrp col s12 md4 l4">
-            <div class="svg-card card">
-              <div class="s-c-wrp">
-                <img src="{%static 'img/virtual-tour.png'%}" alt="vr1">
-              </div>
-              <div class="s-c-cnt">
-                <div style='width:30px;height:10px;background:#fb5f3d;border-radius:25px'>
-                </div>
-                <h6>Selling or Renting doesn't <br> have to be hard</h6>
-                <p>
-                  Let people visit your home without leaving theirs.
-                  Get an interactive 3D video walkthrough when you list with our agents
-                </p>
-                <div class='hm-CtA-bWrap'>
-                  <a href="#">
-                  <button class="hm-CtA-findAg" type="button" name="button">
-                    Find an agent
-                  </button>
-                  </a>
-                </div>
-              </div>
-          </div>
-
-          </div>
-    </div>
-</section>
-<section>
-  <div class="HmPg-neighborhoods" style="background-image:url({%static 'img/4306898.png' %});">
-    <div class="HmPg-nh-contentWrp">
-      <div class="Hm-nh-TextContent">
-        <h1>Rehgien neighbourhoods</h1>
-        <div style='width:100px;height:10px;background:#fb5f3d;border-radius:25px'></div>
-        <p>
-          Getting to know an area before moving is a very important step in real estate.
-          Thats why we are investing heavily on building the home search experience around unlocking information about locations
-          first.<br>
-          <span><b>Why neighbourhoods:-</b></span><br>
-          <span><i class="fas fa-chevron-right"></i>See what people have said about an area.</span><br>
-          <span><i class="fas fa-chevron-right"></i>See various metrics like the crime rate, proximity to schools e.t.c.</span><br>
-          <span><i class="fas fa-chevron-right"></i>Understand property values in an area.
-          </span><br>
-          <span><i class="fas fa-chevron-right"></i>Basically, make your decisions out of facts not speculation.</span>
-        </p>
       </div>
-      <div class="hm-nh-ActBtns">
-          <button type="button" name="button">See our road map <i class="fas fa-arrow-right"></i></button>
-      </div>
-    </div>
   </div>
-</section>
-<section>
-  <div class="HmPg-Pros">
-    <div class="HmPg-pros-contentWrp">
-      <div class="Hm-pros-TextContent">
-        <h1>Rehgien proffesionals</h1>
-        <div style='width:100px;height:10px;background:#fb5f3d;border-radius:25px'></div>
-          <p>
-          We are focussed on offering a credible and quality service experience accross our entire platform. That's why our process is built for and backed by verified real estate proffesionals.
+</div>
 
-        </p>
-        <div class="hmpg-pros-ActBtns">
-            <a href="/pro/home"><button type="button" name="button">Rehgien Pro <i class="fas fa-arrow-right"></i></button></a>
+<div class="container main_home_cCotainer">
+  <div class="row">
+    <div class="col s12">
+      <h2>Shop by category <a href="{% url 'listings:shop_category'%}"><span>View all</span></a></h2>
+      <div class="owl-carousel">
+        <a href="{% url 'listings:property_homepage' %}">
+            <div class="card">
+              <img src="{%static 'img/thumbnails/home.jpg' %}">
+              <div class="DtsWrapper_">
+                <h6>Sale & rental Homes</h6>
+              </div>
+            </div>
+        </a>
+        <div class="card disabled">
+          <img src="{%static 'img/thumbnails/furniture.jpg' %}">
+          <div class="DtsWrapper_">
+            <h6>Furniture</h6>
+            <button><span class="material-icons">handyman</span>Coming soon</button>
+          </div>
+        </div>
+        <div class="card disabled">
+          <img src="{%static 'img/thumbnails/artwork.jpg' %}">
+          <div class="DtsWrapper_">
+            <h6>Home decor</h6>
+            <button><span class="material-icons">handyman</span>Coming soon</button>
+          </div>
+        </div>
+        <div class="card disabled">
+          <img src="{%static 'img/thumbnails/architecture.jpg' %}">
+          <div class="DtsWrapper_">
+            <h6>Architectural Designs</h6>
+            <button><span class="material-icons">handyman</span>Coming soon</button>
+          </div>
+        </div>
+        <div class="card disabled">
+          <img src="{%static 'img/thumbnails/home_improvement.jpg' %}">
+          <div class="DtsWrapper_">
+            <h6>Home improvement</h6>
+            <button><span class="material-icons">handyman</span>Coming soon</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
+<div class="container main_home_cCotainer">
+  <div class="row">
+    <div class="col s12">
+      <h2>Browse local professionals <a href="{% url 'profiles:business_homepage' %}#allPros"><span>View all</span></a></h2>
+      <div class="owl-carousel">
+        {% for group in professional_groups%}
+          <a href="{% url 'profiles:business_list'%}?p_cat={{group.slug}}">
+            <div class="card">
+              <img src="{{group.group_image.url}}">
+              <div class="DtsWrapper_">
+                <h6>{{group.group_name|capfirst}}</h6>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'profiles/popular_pro_services.html'%}
+
+{% include 'profiles/recommended_pro_services.html'%}
+
+<br>
+<br>
+<br>
+<br>
 <section>
   <div class="container">
     <div class="getApp-card-row row">
@@ -191,61 +183,5 @@
     </div>
   </div>
 </section>
-<script type="text/javascript">
-mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
-var geocoder = new MapboxGeocoder({
-accessToken: mapboxgl.accessToken,
-types: 'country,region,place,postcode,locality,neighborhood',
-countries:'KE',
-placeholder:'Enter an address, city, neighborhood or postcode.'
-});
-
-geocoder.addTo('#s_geocoder');
-</script>
-<script type="text/javascript">
-  document.querySelector(".mapboxgl-ctrl-geocoder--input").name="location";
-</script>
 {%endblock%}
-
-{% block footer %}
-<footer id="hpf">
- <section id="footer" class="section section-follow black-text">
-   <div class="container" style="width:100%;">
-     <div class="row">
-       <div class="f-details center">
-         <a href="#"> Privacy Policy</a>
-         <a href="#"> Terms & Conditions</a>
-         <a href="#"> Advertise</a>
-         <a href="#"> Mobile App</a>
-         <a href="#"> FAQ'S</a>
-         <a href="#"> Contact Us</a>
-         <a href="{% url 'contact:about_us'%}"> About Us</a>
-       </div>
-       <div id="footer-details" class="col s12 center">
-         <a href="#" class="black-text">
-           <i class="fab fa-facebook fa-2x"></i>
-         </a>
-         <a href="#" class="black-text">
-           <i class="fab fa-twitter fa-2x"></i>
-         </a>
-         <a href="#" class="black-text">
-           <i class="fab fa-linkedin fa-2x"></i>
-         </a>
-         <a href="#" class="black-text">
-           <i class="fab fa-instagram fa-2x"></i>
-         </a>
-         <p>While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy.</p>
-       </div>
-       <p class="flow-text black-text center" id="c-year"></p>
-       <script type="text/javascript">
-         var d = new Date();
-         document.getElementById("c-year").innerHTML= 'Copyright '+ d.getFullYear();
-       </script>
-     </div>
-   </div>
- </section>
- <div class="ft-bk-sl">
-   <img src="{% static 'img/nairobi-skyline.png'%}">
- </div>
-</footer>
-{% endblock %}
+{% block footer %}{% include 'footer_section.html' %}{% endblock %}

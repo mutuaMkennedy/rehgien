@@ -1,0 +1,27 @@
+<div id="jbs_pagination" class="ls_pagination">
+    {% if objects.has_previous %}
+        <a class="pagination-action _pageNumber" data-PageNumber="1" href="#">
+            <span class="material-icons">first_page</span>
+        </a>
+        <a id="_pPrevPageLink" data-PageNumber="{{ objects.previous_page_number }}" class="pagination-action _pageNumber" href="#">
+            <span class="material-icons">chevron_left</span>
+        </a>
+    {% endif %}
+    {% for num in objects.paginator.page_range %}
+        {% if objects.number == num %}
+            <span class="pagination-number pagination-current" data-PageNumber="{{ num }}">{{ num }}</span>
+        {% elif num > objects.number|add:'-3' and num < objects.number|add:'3' %}
+            <a class="pagination-number _pageNumber" data-PageNumber="{{ num }}" href="#">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+        {% if objects.has_next %}
+        <span class="pagination-of">...</span>
+        <span class="pagination-total"> {{ objects.paginator.num_pages }}</span>
+        <a id="_pNextPageLink" data-PageNumber="{{ objects.next_page_number }}" class="pagination-action _pageNumber" href="#">
+          <span class="material-icons">chevron_right</span>
+        </a>
+        <a class="pagination-action _pageNumber" data-PageNumber="{{ objects.paginator.num_pages }}" href="#">
+          <span class="material-icons">last_page</span>
+        </a>
+    {% endif %}
+</div>

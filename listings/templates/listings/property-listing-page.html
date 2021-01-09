@@ -5,356 +5,366 @@
 {% block content%}
 
 <section id="_listingPageElements_">
-
+  <div id="upfPageAcScs" class="_upfPageAcScs">
+  </div>
+  <div id="upfPageAcErr" class="_upfPageAcErr">
+  </div>
+  <data id="_sQstring_ospamxcpl" hidden value="{{query_string}}"></data>
   <div class="ListingsMapWrapper">
-    <div id="asCont" class="container">
-        <div id="filter-cont" class="container">
-          <fieldset id="fieldset">
-                <form id="_lsRsFl_Form" autocomplete='off' class="ResultsFilterBar" >
-                  {%csrf_token%}
-                  <div class="_ResultsFilterBarFWr">
-                      <div class="_ResultsFilterFld" style='width:auto; padding:0;'>
-                        <div id='geocoder' class='geocoder'></div>
-                      </div>
-                      <div class="_ResultsFilterFld">
-                        <ul class="collapsible">
-                          <li>
-                            <button class="collapsible-header" type="button" name="button">Price</button>
-                            <div class="collapsible-body">
-                              <div style='width:auto; padding:0;'>
-                                <h6 class="fltr-h-helper">Select a price range</h6>
-                                {% if listing_type == 'for_sale' %}
-                                  <div id="price-slider">
-                                    <div id="price-from" class="input-field">
-                                     <select name='min_price'>
-                                       <option value="" disabled>Price From</option>
-                                       <option value="0" selected>No min</option>
-                                       <option value="1000000">1M+</option>
-                                       <option value="2000000">2M+</option>
-                                       <option value="3000000">3M+</option>
-                                       <option value="4000000">4M+</option>
-                                       <option value="6000000">6M+</option>
-                                       <option value="10000000">10M+</option>
-                                       <option value="15000000">15M+</option>
-                                       <option value="30000000">30M+</option>
-                                       <option value="60000000">60M+</option>
-                                       <option value="100000000">100M+</option>
-                                     </select>
-                                   </div>
-                                   <div class="dash-separator">
-                                     -
-                                   </div>
-                                   <div id="price-to" class="input-field col s12">
-                                    <select name='max_price'>
-                                      <option value="" disabled>Price To</option>
-                                      <option value="1000000">1M</option>
-                                      <option value="2000000">2M</option>
-                                      <option value="3000000">3M</option>
-                                      <option value="4000000">4M</option>
-                                      <option value="6000000">6M</option>
-                                      <option value="10000000">10M</option>
-                                      <option value="15000000">15M</option>
-                                      <option value="30000000">30M</option>
-                                      <option value="60000000">60M</option>
-                                      <option value="100000000">100M</option>
-                                      <option value="All" selected>No max</option>
-                                    </select>
-                                  </div>
-                                  </div>
-                                {% else %}
-                                  <div id="price-slider">
-                                    <div id="price-from" class="input-field col s12">
-                                     <select name='min_price'>
-                                       <option value="" disabled>Price From</option>
-                                       <option value="0"selected>No min</option>
-                                       <option value="50000">5K+</option>
-                                       <option value="10000">10K+</option>
-                                       <option value="20000">10K+</option>
-                                       <option value="50000">50K+</option>
-                                       <option value="100000">100K+</option>
-                                       <option value="150000">150K+</option>
-                                       <option value="300000">30K+</option>
-                                       <option value="600000">600K+</option>
-                                       <option value="1000000">1M+</option>
-                                      <option value="10000000">10M+</option>
-                                     </select>
-                                   </div>
-                                   <div class="dash-separator">
-                                     -
-                                   </div>
-                                   <div id="price-to" class="input-field col s12">
-                                    <select name='max_price'>
-                                      <option value="" disabled>Price To</option>
-                                      <option value="50000">5K+</option>
-                                      <option value="10000">10K+</option>
-                                      <option value="20000">10K+</option>
-                                      <option value="50000">50K+</option>
-                                      <option value="100000">100K+</option>
-                                      <option value="150000">150K+</option>
-                                      <option value="300000">300K+</option>
-                                      <option value="600000">600K+</option>
-                                      <option value="1000000">1M+</option>
-                                      <option value="10000000">10M+</option>
-                                      <option value="All" selected>No max</option>
-                                    </select>
-                                  </div>
-                                  </div>
-                                {% endif %}
-
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="_ResultsFilterFld" style='width:auto; padding:0;'>
-                        <div id="type-filter" class="input-field">
-                           <select name="property_type">
-                             <option value="All" selected>All Home Types</option>
-                             <option value="Apartment">Apartment</option>
-                             <option value="Bungalow">Bungalow</option>
-                             <option value="Singlefamily">Single family</option>
-                             <option value="Townhouse">Townhouse</option>
-                             <option value="Condominium">Condo</option>
-                             <option value="Duplex">Duplex</option>
-                             <option value="Dormitory">Dormitory</option>
-                             <option value="Terraced">Terraced</option>
-                             <option value="Mansion">Mansion</option>
-                             <option value="Other">Other</option>
-                           </select>
-                         </div>
-                      </div>
-                      <div class="_ResultsFilterFld" style='width:auto; padding:0;'>
-                        <ul class='collapsible'>
-                            <li>
-                                <button class='collapsible-header' name="button" type='button'> More</button>
-                                <div class="collapsible-body">
-                                     <div style='width:auto; padding:0;'>
-                                       <h6 class="fltr-h-helper">Beds and baths</h6>
-                                       <div class="bdba-input">
-                                         <div id="beds" class="input-field">
-                                           <span>bedrooms</span>
-                                          <select name='bedrooms'>
-                                            <option value="0" selected>All beds</option>
-                                            <option value="1">1+</option>
-                                            <option value="2">2+</option>
-                                            <option value="3">3+</option>
-                                          </select>
-                                        </div>
-                                        <div id="baths" class="input-field">
-                                          <span>Bathrooms</span>
-                                         <select name='bathrooms'>
-                                           <option value="0" selected>All baths</option>
-                                           <option value="1">1+</option>
-                                           <option value="2">2+</option>
-                                           <option value="3">3+</option>
-                                         </select>
-                                       </div>
-                                       </div>
-                                     </div>
-                                </div>
-                            </li>
-                        </ul>
-                      </div>
-                      <div class="_ResultsFilterSbt" style="width:auto; padding:0;">
-                        <button class="saveSearch_button" type="button" name="saveSearch"> Save Search</button>
-                      </div>
+    <div id="filter-cont" class="propertyLs_flter_container">
+      <fieldset id="fieldset">
+            <form id="_lsRsFl_Form" autocomplete='off' class="ResultsFilterBar"
+              action="{% url 'listings:property-listings' property_category=property_category property_listing_type=property_listing_type %}" method="get"
+              >
+              <div class="_ResultsFilterBarFWr">
+                  <div class="_ResultsFilterFld geocoderInWrap_dflt" style='width:auto; padding:0;'>
+                    <div id='geocoder' class='geocoder'></div>
                   </div>
-                  <input id="submit_f_button" type="submit" name="" hidden>
-                </form>
-          </fieldset>
-        </div>
+                  <div id="collapsFilters" class="collapsibleExtraFilters">
+                    <div class="_ResultsFilterFld">
+                      <ul class="collapsible">
+                        <li>
+                          <button class="collapsible-header" type="button" name="button">Price</button>
+                          <div class="collapsible-body left_di_open">
+                            <div style='width:auto; padding:0;'>
+                              <h6 class="fltr-h-helper">Select a price range</h6>
+                              {% if property_listing_type == 'for_sale' %}
+                                <div id="price-slider">
+                                  <div id="price-from" class="input-field">
+                                   <select id="" name='min_price'>
+                                     <option value="" disabled>Price From</option>
+                                     <option value="0" selected>No min</option>
+                                     <option value="1000000">1M+</option>
+                                     <option value="2000000">2M+</option>
+                                     <option value="3000000">3M+</option>
+                                     <option value="4000000">4M+</option>
+                                     <option value="6000000">6M+</option>
+                                     <option value="10000000">10M+</option>
+                                     <option value="15000000">15M+</option>
+                                     <option value="30000000">30M+</option>
+                                     <option value="60000000">60M+</option>
+                                     <option value="100000000">100M+</option>
+                                   </select>
+                                 </div>
+                                 <div class="dash-separator">
+                                   -
+                                 </div>
+                                 <div id="price-to" class="input-field col s12">
+                                  <select id="dsfsdfs" name='max_price'>
+                                    <option value="" disabled>Price To</option>
+                                    <option value="1000000">1M</option>
+                                    <option value="2000000">2M</option>
+                                    <option value="3000000">3M</option>
+                                    <option value="4000000">4M</option>
+                                    <option value="6000000">6M</option>
+                                    <option value="10000000">10M</option>
+                                    <option value="15000000">15M</option>
+                                    <option value="30000000">30M</option>
+                                    <option value="60000000">60M</option>
+                                    <option value="100000000">100M</option>
+                                    <option value="All" selected>No max</option>
+                                  </select>
+                                </div>
+                                </div>
+                              {% else %}
+                                <div id="price-slider">
+                                  <div id="price-from" class="input-field col s12">
+                                   <select name='min_price'>
+                                     <option value="" disabled>Price From</option>
+                                     <option value="0"selected>No min</option>
+                                     <option value="50000">5K+</option>
+                                     <option value="10000">10K+</option>
+                                     <option value="20000">10K+</option>
+                                     <option value="50000">50K+</option>
+                                     <option value="100000">100K+</option>
+                                     <option value="150000">150K+</option>
+                                     <option value="300000">30K+</option>
+                                     <option value="600000">600K+</option>
+                                     <option value="1000000">1M+</option>
+                                    <option value="10000000">10M+</option>
+                                   </select>
+                                 </div>
+                                 <div class="dash-separator">
+                                   -
+                                 </div>
+                                 <div id="price-to" class="input-field col s12">
+                                  <select name='max_price'>
+                                    <option value="" disabled>Price To</option>
+                                    <option value="50000">5K</option>
+                                    <option value="10000">10K</option>
+                                    <option value="20000">10K</option>
+                                    <option value="50000">50K</option>
+                                    <option value="100000">100K</option>
+                                    <option value="150000">150K</option>
+                                    <option value="300000">300K</option>
+                                    <option value="600000">600K</option>
+                                    <option value="1000000">1M</option>
+                                    <option value="10000000">10M</option>
+                                    <option value="All" selected>No max</option>
+                                  </select>
+                                </div>
+                                </div>
+                              {% endif %}
 
-        <button  id='revealMap' class='show-map-btn show-on-medium-and-down'>
-          Map
-        </button>
-      <div id="all-content" class='all-content'>
-          {% if listings %}
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="_ResultsFilterFld" style='width:auto; padding:0;'>
+                      <div id="type-filter" class="input-field">
+                         <select name="property_type">
+                           <option value="All" selected>All Home Types</option>
+                           <option value="Apartment">Apartment</option>
+                           <option value="Bungalow">Bungalow</option>
+                           <option value="Singlefamily">Single family</option>
+                           <option value="Townhouse">Townhouse</option>
+                           <option value="Condominium">Condo</option>
+                           <option value="Duplex">Duplex</option>
+                           <option value="Dormitory">Dormitory</option>
+                           <option value="Terraced">Terraced</option>
+                           <option value="Mansion">Mansion</option>
+                           <option value="Other">Other</option>
+                         </select>
+                       </div>
+                    </div>
+                    <div class="_ResultsFilterFld" style='width:auto; padding:0;'>
+                      <ul class='collapsible'>
+                          <li>
+                              <button class='collapsible-header' name="button" type='button'> More</button>
+                              <div class="collapsible-body right_di_open">
+                                   <div style='width:auto; padding:0;'>
+                                     <h6 class="fltr-h-helper">Beds and baths</h6>
+                                     <div class="bdba-input">
+                                       <div id="beds" class="input-field">
+                                         <span>bedrooms</span>
+                                        <select name='bedrooms'>
+                                          <option value="0" selected>All beds</option>
+                                          <option value="1">1+</option>
+                                          <option value="2">2+</option>
+                                          <option value="3">3+</option>
+                                        </select>
+                                      </div>
+                                      <div id="baths" class="input-field">
+                                        <span>Bathrooms</span>
+                                       <select name='bathrooms'>
+                                         <option value="0" selected>All baths</option>
+                                         <option value="1">1+</option>
+                                         <option value="2">2+</option>
+                                         <option value="3">3+</option>
+                                       </select>
+                                     </div>
+                                     </div>
+                                   </div>
+                              </div>
+                          </li>
+                      </ul>
+                    </div>
+                    <div class="_ResultsFilterSbt" style="width:auto; padding:0;">
+                      <button id="saveSearch_button_dk" class="saveSearch_button" type="button" name="saveSearch"> Save Search</button>
+                    </div>
+                  </div>
+              </div>
+              <input id="submit_f_button" type="submit" name="" hidden>
+            </form>
+      </fieldset>
+    </div>
+    <div class="pLSPg_fResults_container">
+      <div id="asCont">
+
+        <div id="all-content" class='all-content'>
+            {% if listings %}
               <div id="_listingItemsLoading">
                 {% include 'listings/listingPlaceholder.html' %}
               </div>
-              <div id="all-row2">
-                  <div id="page-head" class="page-head">
-                    <h2>Real Estate for {% if listing.listing_type == 'for_sale' %} sale {% else %} rent {% endif %} in {{location_address}}.</h2>
-                      <h3>{{listings_count}} results.</h3>
-                  </div>
-                  <div class="_listingsVwSummary">
-                    <div class="_listingsVS_ct">
-                      <div class="ls_inStsHpr">
-                          <span class="material-icons">help</span>
-                          <div class="ls_inStsHpr-Txt">
-                            These insights are based on public listings in our database which
-                            offer a significant reflection of the areas activity.
-                          </div>
-                      </div>
-                      <h5><span class="material-icons">insights</span> &nbsp Area insights.</h5>
-                      <p id="_listingsVS_ctTxt"></p>
-                      <div class="_listingsVS_Bxs">
-                          <div class="_ls_Bx1">
-                            1 &nbsp bed
-                            <div id="_ls_Bx1Stats" class="_ls_BxStats">
-                              <p id="_ls_Bx1StatsPg"></p>
-                              {% if insight_stats.Onebd_median_price > 0 %}
-                                <span class='material-icons'>trending_up</span>
-                              {% elif insight_stats.Onebd_median_price == 0%}
-                                <span class='material-icons'>trending_flat</span>
-                              {% else %}
-                                <span class='material-icons'>trending_down</span>
-                              {% endif %}
+                <div id="all-row2">
+                    <div id="page-head" class="page-head">
+                      <h2>Real Estate for {% if listing.listing_type == 'for_sale' %} sale {% else %} rent {% endif %} in {{location_address}}.</h2>
+                        <h3>{{listings_count}} results.</h3>
+                    </div>
+                    <div class="_listingsVwSummary">
+                      <div class="_listingsVS_ct">
+                        <div class="ls_inStsHpr">
+                            <span class="material-icons">help</span>
+                            <div class="ls_inStsHpr-Txt">
+                              These insights are based on public listings in our database which
+                              offer a significant reflection of the areas activity.
                             </div>
-                          </div>
-                          <div class="_ls_BxS-dr"></div>
-                          <div class="_ls_Bx2">
-                            2 &nbsp beds
-                            <div id="_ls_Bx2Stats" class="_ls_BxStats">
-                              <p id="_ls_Bx2StatsPg"></p>
-                              {% if insight_stats.Twobd_median_price > 0 %}
-                                <span class='material-icons'>trending_up</span>
-                              {% elif insight_stats.Twobd_median_price == 0%}
-                                <span class='material-icons'>trending_flat</span>
-                              {% else %}
-                                <span class='material-icons'>trending_down</span>
-                              {% endif %}
+                        </div>
+                        <h5><span class="material-icons">insights</span> &nbsp Area insights.</h5>
+                        <p id="_listingsVS_ctTxt"></p>
+                        <div class="_listingsVS_Bxs">
+                            <div class="_ls_Bx1">
+                              1 &nbsp bed
+                              <div id="_ls_Bx1Stats" class="_ls_BxStats">
+                                <p id="_ls_Bx1StatsPg"></p>
+                                {% if insight_stats.Onebd_median_price > 0 %}
+                                  <span class='material-icons'>trending_up</span>
+                                {% elif insight_stats.Onebd_median_price == 0%}
+                                  <span class='material-icons'>trending_flat</span>
+                                {% else %}
+                                  <span class='material-icons'>trending_down</span>
+                                {% endif %}
+                              </div>
                             </div>
-                          </div>
                             <div class="_ls_BxS-dr"></div>
-                          <div class="_ls_Bx3">
-                            3+ &nbsp beds
-                            <div id="_ls_Bx3pStats" class="_ls_BxStats">
-                              <p id="_ls_Bx3StatsPg"></p>
-                              {% if insight_stats.threebd_plus_price_trend > 0 %}
-                                <span class='material-icons'>trending_up</span>
-                              {% elif insight_stats.threebd_plus_price_trend == 0%}
-                                <span class='material-icons'>trending_flat</span>
-                              {% else %}
-                                <span class='material-icons'>trending_down</span>
-                              {% endif %}
+                            <div class="_ls_Bx2">
+                              2 &nbsp beds
+                              <div id="_ls_Bx2Stats" class="_ls_BxStats">
+                                <p id="_ls_Bx2StatsPg"></p>
+                                {% if insight_stats.Twobd_median_price > 0 %}
+                                  <span class='material-icons'>trending_up</span>
+                                {% elif insight_stats.Twobd_median_price == 0%}
+                                  <span class='material-icons'>trending_flat</span>
+                                {% else %}
+                                  <span class='material-icons'>trending_down</span>
+                                {% endif %}
+                              </div>
                             </div>
-                          </div>
-                            <div class="_ls_BxS-dr"></div>
-                          <div class="_ls_Bx4">
-                            All
-                            <div id="_ls_BxAllStats" class="_ls_BxStats">
-                              <p id="_ls_BxAllStatsPg"></p>
-                              {% if insight_stats.all_prices_trend > 0 %}
-                                <span class='material-icons'>trending_up</span>
-                              {% elif insight_stats.all_prices_trend == 0%}
-                                <span class='material-icons'>trending_flat</span>
-                              {% else %}
-                                <span class='material-icons'>trending_down</span>
-                              {% endif %}
+                              <div class="_ls_BxS-dr"></div>
+                            <div class="_ls_Bx3">
+                              3+ &nbsp beds
+                              <div id="_ls_Bx3pStats" class="_ls_BxStats">
+                                <p id="_ls_Bx3StatsPg"></p>
+                                {% if insight_stats.threebd_plus_price_trend > 0 %}
+                                  <span class='material-icons'>trending_up</span>
+                                {% elif insight_stats.threebd_plus_price_trend == 0%}
+                                  <span class='material-icons'>trending_flat</span>
+                                {% else %}
+                                  <span class='material-icons'>trending_down</span>
+                                {% endif %}
+                              </div>
                             </div>
-                          </div>
+                              <div class="_ls_BxS-dr"></div>
+                            <div class="_ls_Bx4">
+                              All
+                              <div id="_ls_BxAllStats" class="_ls_BxStats">
+                                <p id="_ls_BxAllStatsPg"></p>
+                                {% if insight_stats.all_prices_trend > 0 %}
+                                  <span class='material-icons'>trending_up</span>
+                                {% elif insight_stats.all_prices_trend == 0%}
+                                  <span class='material-icons'>trending_flat</span>
+                                {% else %}
+                                  <span class='material-icons'>trending_down</span>
+                                {% endif %}
+                              </div>
+                            </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div id="sort-input" class="input-field">
-                    <div class="sortItemWrpr">
-                    <span>Sort by:</span>
-                     <select>
-                       <option value="jfy" selected>Just for you</option>
-                       <option value="newer">Newer</option>
-                       <option value="older">Older</option>
-                       <option value="pricelh">Price (Low to high)</option>
-                       <option value="pricehl">Price (High to Low)</option>
-                       <option value="beds">Beds</option>
-                       <option value="baths">Baths</option>
-                       <option value="sqft">Square feet</option>
-                     </select>
-                     </div>
-                  </div>
-                  <div id="_listingItemsBox" class="_listingItemsBox row">
-                      <div id="obj" class="col s12 md6 l6 xl4">
+                    <div id="sort-input" class="input-field">
+                      <div class="sortItemWrpr">
+                      <span>Sort by:</span>
+                       <select>
+                         <option value="jfy" selected>Just for you</option>
+                         <option value="newer">Newer</option>
+                         <option value="older">Older</option>
+                         <option value="pricelh">Price (Low to high)</option>
+                         <option value="pricehl">Price (High to Low)</option>
+                         <option value="beds">Beds</option>
+                         <option value="baths">Baths</option>
+                         <option value="sqft">Square feet</option>
+                       </select>
+                       </div>
+                    </div>
+                    <div id="_listingItemsBox" class="_listingItemsBox row">
+                        <div id="obj" class="col s12 md6 l6 xl4">
 
-                      </div>
-                  </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="_ls_paginationWrpr">
+                {% include 'listings/pagination.html' with listings=listings %}
+                </div>
+            {% else %}
+                <div id="page-head" class="page-head _empty_listings">
+                  <h2>No matching results for {{location_address}}.</h2>
+                    <h3>Try another location or refine your search.</h3>
+                </div>
+            {% endif %}
+            <p id="help-text0" class="center" style='display:none;'>
+              <span>No matching results</span> Try Refining your search by changing the filters or zooming the map.
+            </p>
+        </div>
+        <footer class="listings-footer">
+          <div class="container" style="width:100%; margin:0px;">
+            <div class="footer-content center">
+              <div class="row">
+                <div class="f-details center">
+                  <a href="#"> Privacy Policy</a>
+                  <a href="#"> Terms & Conditions</a>
+                  <a href="#"> Advertise</a>
+                  <a href="#"> Mobile App</a>
+                  <a href="#"> FAQ'S</a>
+                  <a href="#"> Contact Us</a>
+                  <a href="{% url 'contact:about_us'%}"> About Us</a>
+                </div>
+                <div id="footer-details" class="col s12 center">
+                  <a href="#" class="black-text">
+                    <i class="fab fa-facebook fa-2x"></i>
+                  </a>
+                  <a href="#" class="black-text">
+                    <i class="fab fa-twitter fa-2x"></i>
+                  </a>
+                  <a href="#" class="black-text">
+                    <i class="fab fa-linkedin fa-2x"></i>
+                  </a>
+                  <a href="#" class="black-text">
+                    <i class="fab fa-instagram fa-2x"></i>
+                  </a>
+                  <p>While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy.</p>
+                </div>
+                <p class="flow-text black-text center" id="c-year"></p>
+                <script type="text/javascript">
+                  var d = new Date();
+                  document.getElementById("c-year").innerHTML= 'Copyright '+ d.getFullYear();
+                </script>
               </div>
-              <div id="_ls_paginationWrpr">
-              {% include 'listings/pagination.html' with listings=listings %}
-              </div>
-          {% else %}
-              <div id="page-head" class="page-head _empty_listings">
-                <h2>No matching results for {{location_address}}.</h2>
-                  <h3>Try another location or refine your search.</h3>
-              </div>
-          {% endif %}
-          <p id="help-text0" class="center" style='display:none;'>
-            <span>No matching results</span> Try Refining your search by changing the filters or zooming the map.
-          </p>
-      </div>
-      <footer class="listings-footer">
-        <div class="container" style="width:100%; margin:0px;">
-          <div class="footer-content center">
-            <div class="row">
-              <div class="f-details center">
-                <a href="#"> Privacy Policy</a>
-                <a href="#"> Terms & Conditions</a>
-                <a href="#"> Advertise</a>
-                <a href="#"> Mobile App</a>
-                <a href="#"> FAQ'S</a>
-                <a href="#"> Contact Us</a>
-                <a href="{% url 'contact:about_us'%}"> About Us</a>
-              </div>
-              <div id="footer-details" class="col s12 center">
-                <a href="#" class="black-text">
-                  <i class="fab fa-facebook fa-2x"></i>
-                </a>
-                <a href="#" class="black-text">
-                  <i class="fab fa-twitter fa-2x"></i>
-                </a>
-                <a href="#" class="black-text">
-                  <i class="fab fa-linkedin fa-2x"></i>
-                </a>
-                <a href="#" class="black-text">
-                  <i class="fab fa-instagram fa-2x"></i>
-                </a>
-                <p>While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy.</p>
-              </div>
-              <p class="flow-text black-text center" id="c-year"></p>
-              <script type="text/javascript">
-                var d = new Date();
-                document.getElementById("c-year").innerHTML= 'Copyright '+ d.getFullYear();
-              </script>
             </div>
           </div>
-        </div>
-        <div class="ft-bk-sl">
-          <img src="{% static 'img/nairobi-skyline.png'%}">
-        </div>
-      </footer>
-    </div>
-    <div class="container" id="map-container">
-      <div id='map'>
-
+          <div class="ft-bk-sl">
+            <img src="{% static 'img/nairobi-skyline.png'%}">
+          </div>
+        </footer>
+        <button id='revealMap' class='show-map-btn'>
+          <span class="material-icons">map</span> Map
+        </button>
       </div>
-      {% if listings %}
-        <button type="button" id="hideMapbtn"  class="show-on-medium-and-down" style="background-image:url({%static 'img/close.svg' %});"></button>
-        <!-- Dropdown Trigger -->
-        <a id='map-btn' class='dropdown-trigger btn-small blue' href='#' data-target='map-dropdown'><i class="small material-icons">school</i></a>
+      <div id="map-container">
+            <div id='map'>
+            </div>
+            {% if listings %}
+              <button type="button" id="hideMapbtn"  class="">
+                <span class="material-icons">list</span> List
+              </button>
+              <!-- Dropdown Trigger -->
+              <a id='map-btn' class='dropdown-trigger btn-small blue' href='#' data-target='map-dropdown'><i class="small material-icons">school</i></a>
 
-        <ul id='map-dropdown' class='dropdown-content'>
-          <li id="menu-items"></li>
-        </ul>
-        <div id="mapResultshelp-text1" class="help-text1 center" >
-          <img src="{%static 'img/ajax-loader.gif'%}" alt="loading..">
-        </div>
-        <div id="_MapsMenu">
-              <ul class="collapsible">
-                <li>
-                    <button class="collapsible-header" type="button" name="button">Map</button>
-                    <div class="collapsible-body">
-                        <label for="ckh7o1zaj16uf19livwuytxlq">
-                            <input id="ckh7o1zaj16uf19livwuytxlq" type="radio" name="rtoggle" value="streets" checked="checked"/>
-                            <span>streets</span>
-                        </label>
-                        <label for="ckh9k2ug82cxr19mv54mrosin">
-                            <input id="ckh9k2ug82cxr19mv54mrosin" type="radio" name="rtoggle" value="satellite" />
-                            <span>satellite</span>
-                        </label>
-                    </div>
-                </li>
+              <ul id='map-dropdown' class='dropdown-content'>
+                <li id="menu-items"></li>
               </ul>
-        </div>
-      {%endif%}
+              <div id="mapResultshelp-text1" class="help-text1 center" >
+                <img src="{%static 'img/ajax-loader.gif'%}" alt="loading..">
+              </div>
+              <div id="_MapsMenu">
+                    <ul class="collapsible">
+                      <li>
+                          <button class="collapsible-header" type="button" name="button">Map</button>
+                          <div class="collapsible-body">
+                              <label for="ckh7o1zaj16uf19livwuytxlq">
+                                  <input id="ckh7o1zaj16uf19livwuytxlq" type="radio" name="rtoggle" value="streets" checked="checked"/>
+                                  <span>streets</span>
+                              </label>
+                              <label for="ckh9k2ug82cxr19mv54mrosin">
+                                  <input id="ckh9k2ug82cxr19mv54mrosin" type="radio" name="rtoggle" value="satellite" />
+                                  <span>satellite</span>
+                              </label>
+                          </div>
+                      </li>
+                    </ul>
+              </div>
+            {%endif%}
+      </div>
     </div>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <div id="_lsPage_AllFeatureLoadScriptsWrpr">
@@ -991,6 +1001,7 @@
       {% endif %}
       </script>
     </div>
+    </div>
   </div>
   <div id="_lsPage_scriptsWrpr">
     <div id="_lsPage_scripts" >
@@ -999,6 +1010,7 @@
           var listingsWrapper = document.getElementById('all-row2');
           var listingALLC = document.getElementById('all-content');
           var paginatorBar = document.getElementById('_ls_paginationWrpr');
+          var serverEmptyResults = document.getElementsByClassName('_empty_listings');
 
           var listingEl = document.getElementById('obj');
 
@@ -1115,9 +1127,13 @@
               }
 
               else {
-                  loader.style.display='none';
-                  listingsWrapper.style.display = 'none';
-                  noMatchingResults.style.display ='block';
+                    if (loader != null && listingsWrapper != null) {
+                      loader.style.display='none';
+                      listingsWrapper.style.display = 'none';
+                    };
+                    if (serverEmptyResults.length === 0) {
+                        noMatchingResults.style.display ='block';
+                    };
                   }
           };
 
@@ -1305,6 +1321,7 @@
                     //Ajax Filter
                     $('#_lsRsFl_Form').on('change', ' input , select', function(){
                       $('#submit_f_button')[0].click(function(){})
+
                     });
 
                 // This method acts as the base filter method
@@ -1322,7 +1339,6 @@
                           var mainFilterForm = document.getElementById('_lsRsFl_Form');
                           var _filterFormData = $(this).serializeArray()
                               _filterFormData = JSON.stringify(_filterFormData);
-
                           //Query the features rendered on the map
                           var features = map.queryRenderedFeatures({layers: ['flPoints']});
 
@@ -1342,38 +1358,37 @@
                             listingsWrapper.style.display = 'none';
                             //hiding the pagination bar untill new results are rendered to the dom
                             paginatorBar.style.display = 'none';
-
                             //Make call to the server
                               $.ajax({
-                                  type: "POST",
+                                  type: "GET",
                                   url: './',
                                   data:{
                                       'filterFormData':_filterFormData,
                                       'sort':sortValue,
                                       'page': pageNumber,
-                                      'pk_array':pk_array,
-                                      'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                      'properties_array':pk_array,
                                   },
-                                  headers: { "X-CSRFToken": getCookie("csrftoken")},
                                   success: function (data) {
                                     //re-render our desired potions on the page with new data
-                                    // setTimeout(function(){
                                         $("#_lsPage_scriptsWrpr").html($(data).find('#_lsPage_scripts'));
                                         $("#_ls_paginationWrpr").html($(data).find('#ls_pagination'));
-                                        // }, 2000);
+                                        $('#_sQstring_ospamxcpl').val( $(data).find('#_sQstring_ospamxcpl').val() );
+                                        var q_string = $(data).find('#_sQstring_ospamxcpl').val();
+                                        window.history.pushState({qs : q_string }, null, "?" + q_string );
                                       }
                                   });
 
                           }
                         }else {
-                          $.ajax({
-                              type: "GET",
-                              url: './',
-                              data:{
-                                  'location':newLocationInputValue,
-                              },
-                              success: function (data) {}
-                              });
+                          console.log('here');
+                            $.ajax({
+                                type: "GET",
+                                url: './',
+                                data:{
+                                    'location':newLocationInputValue,
+                                },
+                                success: function (data) {}
+                                });
                         }
                     })
 
@@ -1520,29 +1535,60 @@
 
               })
             {%endif %}
+              $(document).on('click', '#saveSearch_button_dk', function(){
+                var successmsgBody = $('#upfPageAcScs');
+                var errmsgBody = $('#upfPageAcErr');
+                  $.ajax({
+                    type: "POST",
+                    url: "{% url 'listings:save_search' %}",
+                    data:{
+                      'queryString':'{{request.build_absolute_uri}}',
+                      'csrfmiddlewaretoken':'{{csrf_token}}'
+                    },
+                    success: function (response) {
+                        if (response['message'] === 'sucess') {
+                          successmsgBody.html("<span class='material-icons'>check_circle_outline</span> Success. Search saved.")
+                          successmsgBody.css({'display': 'flex','bottom':'10px'})
+                          setTimeout(function(){
+                             successmsgBody.css('bottom','-100px');
+                          }, 6000);
+                        }else {
+                          errmsgBody.html("<span class='material-icons'>error_outline</span> Something went wrong. We could not save your search.")
+                          errmsgBody.css({'display': 'flex','bottom':'10px'})
+                          setTimeout(function(){
+                             errmsgBody.css('bottom','-100px');
+                          }, 6000);
+                        };
+                      }
+                  });
+              });
           </script>
           <script type="text/javascript">
-              document.querySelector(".mapboxgl-ctrl-geocoder--input").value="{{location_address}}";
-              document.querySelector(".mapboxgl-ctrl-geocoder--input").name="location";
-              var openMapBtn = document.getElementById('revealMap');
-              var closeMapBtn = document.getElementById('hideMapbtn');
+            $(document).ready(function(){
+                document.querySelector(".mapboxgl-ctrl-geocoder--input").value="{{location_address}}";
+                document.querySelector(".mapboxgl-ctrl-geocoder--input").name="location";
+                $('#price-from select').val('{{filter_fields.min_price}}');
+                $('#price-to select').val('{{filter_fields.max_price}}');
+                $('#type-filter select').val('{{filter_fields.property_type}}');
+                $('#beds select').val('{{filter_fields.bedrooms}}');
+                $('#baths select').val('{{filter_fields.bathrooms}}');
+                $('#sort-input select').val('{{filter_fields.sort}}');
 
-              openMapBtn.addEventListener('click',function() {
-                  var mapContainer = document.getElementById("map-container");
-                      mapContainer.style.position="fixed";
-                      mapContainer.style.width="100%";
-                      mapContainer.style.height="100vh";
-                      mapContainer.style.background="#fff";
+                var openMapBtn = document.getElementById('revealMap');
+                var closeMapBtn = document.getElementById('hideMapbtn');
+
+                openMapBtn.addEventListener('click',function() {
+                    var mapContainer = document.getElementById("map-container");
+                        mapContainer.style.display="flex";
+                    });
+
+                closeMapBtn.addEventListener('click', function(){
+                    var mapContainer = document.getElementById("map-container");
+                        mapContainer.style.display="none";
                   });
-
-              closeMapBtn.addEventListener('click', function(){
-                  var mapContainer = document.getElementById("map-container");
-                      mapContainer.style.width="0";
-                      mapContainer.style.height="0";
-                });
+              });
           </script>
     </div>
-  </div>
   </div>
 </section>
 {% endblock %}

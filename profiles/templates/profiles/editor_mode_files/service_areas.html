@@ -2,9 +2,9 @@
 
 {% if bs_profile.service_areas %}
   {% for service_area in bs_profile.service_areas%}
-    <form class="_ag-svcAreafORM" action="{% url 'profiles:business_list' slug=bs_profile.pro_speciality %}" method="get">
+    <form class="_ag-svcAreafORM" action="{% url 'profiles:business_list'%}" method="get">
       {%csrf_token%}
-        <button type="submit" name="ag-location" value="{{service_area}}">{{service_area}}</button>
+        <button type="submit" name="pro_location" value="{{service_area}}">{{service_area}}</button>
     </form>
 
   {% endfor %}

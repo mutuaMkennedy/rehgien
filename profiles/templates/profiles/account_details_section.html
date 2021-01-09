@@ -1,0 +1,17 @@
+{% load static %}
+<div class="_pfl-acct-ElpflOv">
+    <div class="_pfl-acct-ElpFImg">
+      <img src="
+      {% if user.profile_image%}
+        {{ user.profile_image.url}}
+      {% else %}
+        {% static 'img/avatar.png'%}
+      {% endif %}
+      " alt="{{user.username}}">
+    </div>
+    <div class="_pfl-acct-ElpSnap">
+      <h3>{% if user.get_full_name %}{{user.get_full_name}}{%else%}{{user.username}}{% endif %}</h3>
+      <h5>{{user.pro_business_profile.professional_category.professional_group}}</h5>
+      <h6>{{user.pro_business_profile.professional_category|capfirst}}</h6>
+    </div>
+</div>

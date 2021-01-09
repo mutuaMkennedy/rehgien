@@ -1,0 +1,95 @@
+{% extends 'pro_base.html' %}
+{% load static %}
+{% load cloudinary %}
+{% block title %}<title>Rehgien pro blog|Rehgien Pro</title>{% endblock %}
+{% block header%}{% include 'pro_header.html' %}{% endblock %}
+{%  block content %}
+<script src="{% static 'JqueryUI/jquery-ui.min.js'%}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#blgpdtTitleSearch").autocomplete({
+    source:"{% url 'rehgien_pro:ajax_blog_post_autocomplete'%}",
+    appendTo:'#blgPstForm',
+    autoFocus: true,
+    minLength: 2,
+  });
+})
+</script>
+<div class="blog_mainHome_Bn_xcrs" style="background-image:url({%static 'img/blogger2.jpg' %})">
+   <div class="blog_Bn_xcrsoverlay">
+      <div class="container">
+          <div class="row">
+            <div class="col s12 blog_Bnr_tt">
+              <div class="BlgPstCtIntr">
+                <h1>{{q_category.category_name}}</h1>
+                <p>{{q_category.description}}</p>
+                <div class="blgcont_filter">
+                  <form id="blgPstForm" action="{% url 'rehgien_pro:blog_posts'%}" method="get">
+                    <div class="BlgPstFformsFields">
+                      <input id="blgpdtTitleSearch" type="text" name="q_articles" placeholder="Try some keywords" value="{{blog_article}}">
+                    </div>
+                    <div class="BlgPstFformsFieldsInputSelcts">
+                      <select name="blog_category">
+                        {% for category in all_blog_categories %}
+                          <option value="{{category.slug}}" {% if q_category == category %}selected{% endif %}>{{category.category_name}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <button type="submit">
+                      <p >Search</p>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="ProRscBlogsContainer">
+  <div class="container">
+    <div class="row">
+        <div class="BlgPstHeader">
+          <h2>{{posts.count}} Result {{ posts|pluralize}} in {{q_category.category_name}}</h2>
+        </div>
+        <div class="BlgPstCards">
+          <div class="BlgPstCardsWrp">
+            {% if posts %}
+              {% for post in posts %}
+                <a href="{{post.get_absolute_url}}">
+                  <div class="card">
+                  <div class="blgPstThumb">
+                      {% cloudinary post.thumbnail ImageTransformation %}
+                  </div>
+                  <div class="blgPstBody">
+                    <div class="blgPstBodyCenter">
+                      <h6>{{post.blog_category.category_name}}</h6>
+                      <h2>{{post.title}}</h2>
+                    </div>
+                    <div class="blgPstBodyFooter">
+                      <p>
+                        <span class="material-icons" style="color:hsl(198deg 82% 55% / 50%)">date_range</span>
+                        {{post.publishdate.date}}
+                      </p>
+                      {% if post.featured %}
+                        <p>
+                          <span class="material-icons" style="color:#cc0000;">stars</span>
+                          Featured
+                        </p>
+                      {% endif %}
+                    </div>
+                  </div>
+                  </div>
+                </a>
+              {% endfor %}
+            {% else %}
+            <p class="no-blog-posts">
+              We cannot find any posts at the moment. <br> Try refining your filters.
+            </p>
+            {% endif %}
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

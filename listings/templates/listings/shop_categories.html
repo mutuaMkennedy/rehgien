@@ -1,0 +1,66 @@
+{%extends 'base.html'%}
+{% load static %}
+{% block head_title %}  <title>Rehgien|Shop products</title>{% endblock %}
+{%block content%}
+{% include 'header_section.html' %}
+
+  <div class="shopBnr" style="background-image:url({%static 'img/shop1.jpg' %})">
+     <div class="_mH_Bn_xcrsoverlay">
+        <div class="container">
+            <div class="row">
+              <div class="col s12 _home_Bnr_tt">
+              <h1>Browse & Shop products listed by our professionals</h1>
+              <p>
+                Whether looking to buy/rent a home or shopping basic home products find what you want<br> in one place.
+              </p>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="container shop_link_cont">
+    <div class="row">
+      <div class="col s12">
+        <div class="_shopCatg_cards">
+          <a href="{% url 'listings:property_homepage' %}">
+              <div class="card">
+                <img src="{%static 'img/thumbnails/home.jpg' %}">
+                <div class="DtsWrapper_">
+                  <h6>Sale & rental Homes</h6>
+                </div>
+              </div>
+          </a>
+          <div class="card disabled">
+            <img src="{%static 'img/thumbnails/furniture.jpg' %}">
+            <div class="DtsWrapper_">
+              <h6>Furniture</h6>
+              <button><span class="material-icons">handyman</span>Coming soon</button>
+            </div>
+          </div>
+          <div class="card disabled">
+            <img src="{%static 'img/thumbnails/artwork.jpg' %}">
+            <div class="DtsWrapper_">
+              <h6>Home decor</h6>
+              <button><span class="material-icons">handyman</span>Coming soon</button>
+            </div>
+          </div>
+          <div class="card disabled">
+            <img src="{%static 'img/thumbnails/architecture.jpg' %}">
+            <div class="DtsWrapper_">
+              <h6>Architectural Designs</h6>
+              <button><span class="material-icons">handyman</span>Coming soon</button>
+            </div>
+          </div>
+          <div class="card disabled">
+            <img src="{%static 'img/thumbnails/home_improvement.jpg' %}">
+            <div class="DtsWrapper_">
+              <h6>Home improvement</h6>
+              <button><span class="material-icons">handyman</span>Coming soon</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% include 'footer_section.html' %}
+{% endblock %}

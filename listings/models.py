@@ -1,6 +1,9 @@
 import sys
 from django.db import models
+from django.db.models import Avg, Sum
+import datetime
 from django.conf import settings
+from django.utils import timezone
 # from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
@@ -15,6 +18,8 @@ from cloudinary.models import CloudinaryField
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
 import cloudinary
+from .regression import trendline as trend
+
 
 class PropertyTypeImage(models.Model):
 	apartment = models.ImageField(upload_to='categoryImages/', null=True, blank=True)
@@ -54,10 +59,19 @@ class PropertyBase(models.Model):
 		related_name='%(app_label)s_%(class)s_owner_related', \
 		related_query_name="%(app_label)s_%(class)s_owner", \
 		on_delete=models.CASCADE)#related_name=listings_home_owner_related, related_query_name = listings_home_owner
-
+	featured = models.BooleanField(default=False, null=True, blank=True)
 	phone = models.CharField(max_length=13)
 	email = models.EmailField(blank=None)
 	publishdate = models.DateTimeField(auto_now=False, auto_now_add=True)
+	# This will be turn to False after 30 days from the publishdate
+	is_active = models.BooleanField(default=True)
+	# only displayed in the update form
+	DEAL_CLOSED_CHOICES = (
+		('YES', 'yes'),
+		('NO', 'No'),
+	)
+	deal_closed = models.CharField( choices=DEAL_CLOSED_CHOICES, max_length = 3, default='YES')
+	final_closing_offer = models.PositiveIntegerField(default=None, blank=True, null=True)
 
 	class Meta:
 		abstract = True
@@ -76,6 +90,10 @@ class PropertyBase(models.Model):
 	@property
 	def totalsaves(self):
 		return self.saves.count()
+
+	@property
+	def active_until(self):
+		return self.publishdate + datetime.timedelta(days = 30 )
 
 class Home(PropertyBase):
 	# Lists for multiple choice fields
@@ -218,14 +236,60 @@ class Home(PropertyBase):
 	roof = MultiSelectField(choices = ROOF_CHOICES, default = None, blank = True)
 	view = MultiSelectField(choices = VIEW_CHOICES, default = None, blank = True)
 
-
-	def get_absolute_url(self):
-		return reverse( 'listings:property_detail', kwargs={'pk':self.pk, 'property_category':self.property_category} )
-
-
 	class Meta:
 		verbose_name_plural = 'Homes'
 
+	def get_absolute_url(self):
+		return reverse( 'listings:property_detail', kwargs={'pk':self.pk, 'property_category':self.property_category.lower()} )
+
+	@property
+	def similar_homes_this_area(self):
+		homes = Home.objects.filter(	\
+								price__range = (self.price - self.price * 0.2, self.price + self.price * 0.2),
+								location_name__icontains = self.location_name.split(',')[-1]
+								).exclude(id = self.id)[:10]
+		return homes
+	@property
+	def similar_homes_this_region(self):
+		home = Home.objects.filter(	\
+						price__range = (self.price - self.price * 0.2, self.price + self.price * 0.2),
+						location_name__icontains = self.location_name.split(',')[0]
+						).exclude(id = self.id)[:10]
+		return home
+
+	@property
+	def total_views_count(self):
+		count = self.home_interactions.all().aggregate(Sum('views_count')).get('views_count__sum', 0)
+		if count == None:
+			return 0
+		else:
+			return count
+
+	@property
+	def recent_views_count(self):
+		count = self.home_interactions.filter(created_at__gte =  timezone.now() - datetime.timedelta(hours = 24) )\
+				.aggregate(Sum('views_count')).get('views_count__sum', 0)
+		if count == None:
+			return 0
+		else:
+			return count
+
+	@property
+	def views_trend(self):
+		tt_views_array = []
+		for n_days in range(0,25): # in the last 24 hours
+			total_views = self.home_interactions.filter(created_at__gte = timezone.now() - datetime.timedelta(hours = n_days) )\
+							.aggregate(Sum('views_count')).get('views_count__sum', 0)
+			if total_views == None:
+				total_views = 0
+			tt_views_array.append(total_views)
+		views_index = list(range(1,len(tt_views_array)+1 ) )
+		trend_line = trend(views_index,tt_views_array)
+		return trend_line
+
+	@property
+	def all_leads(self):
+		return self.home_interactions.filter(is_lead=True)
 
 class PropertyPhoto(models.Model):
 	home = models.ForeignKey(Home, on_delete=models.CASCADE, related_name='home_photos', null=True)
@@ -269,7 +333,7 @@ def photo_delete(sender, instance, **kwargs):
 
 class PropertyVideo(models.Model):
 	home = models.ForeignKey(Home, on_delete=models.CASCADE, related_name= 'home_video', null=True)
-	video = CloudinaryField('video', resource_type='video', folder='Property_Video', null=True, validators=[validate_video_extension])
+	video = CloudinaryField('video', resource_type='video', folder='Property_Video', null=True, validators=[validate_video_extension], blank=True)
 
 	class Meta:
 		verbose_name_plural = 'PropertyVideo'
@@ -277,3 +341,32 @@ class PropertyVideo(models.Model):
 @receiver(pre_delete, sender=PropertyVideo)
 def video_delete(sender, instance, **kwargs):
 	cloudinary.uploader.destroy(instance.video.public_id)
+
+class PropertyOpenHouse(models.Model):
+	home = models.ForeignKey(Home, on_delete=models.CASCADE, related_name= 'home_openhouse', null=True)
+	date = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True,default=None)
+	start_time = models.TimeField(auto_now=False, auto_now_add=False, blank=True, null=True, default=None)
+	end_time = models.TimeField(auto_now=False, auto_now_add=False, blank=True, null=True, default=None)
+	reminder_list = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name = 'open_house_reminder_list', blank=True, default=None)
+
+	class Meta:
+		verbose_name_plural = 'PropertyOpenHouses'
+
+class PropertyInteraction(models.Model):
+	home = models.ForeignKey(Home, on_delete=models.CASCADE, related_name= 'home_interactions', null=True)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="user_property_interation", null=True, default=None)
+	is_lead = models.BooleanField(default=False, null=True, blank=True)
+	has_viewed = models.BooleanField(default=False, null=True, blank=True)
+	views_count = models.PositiveIntegerField(default=None, null=True,blank=True)
+	created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+
+	class Meta:
+		verbose_name_plural = 'PropertyInteractions'
+
+	def __str__(self):
+		return str(self.user.username) + ' ' +  str(self.is_lead) + ' ' + str(self.has_viewed)
+
+class SavedSearch(models.Model):
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, related_name= 'user_saved_search')
+	search_url = models.TextField(blank=False,default=None, null=True)

@@ -6,6 +6,7 @@
 {% leaflet_js plugins="forms" %}
 {% leaflet_css plugins="forms" %}
 {% load crispy_forms_tags%}
+{% block head_title %} <title>Rehgien|My account</title>{% endblock %}
 
 <section>
   <div id="pfl-pg-cont" class="container">
@@ -14,96 +15,60 @@
     <div id="upfPageAcErr" class="_upfPageAcErr">
     </div>
     <div id="pfl-page-row">
-        <div class="pfl-page-Sc-1" >
+        <div id="acct_left_navg" data-isOpen='True' class="pfl-page-Sc-1" >
             <div class="ptfl-page-Sc-Overlay">
               <div class="pfl-acct-ElBox">
-                  <div class="_pfl-acct-ElpflOv">
-                      <div class="_pfl-acct-ElpFImg">
-                        <img src="
-                        {% if user.profile_image%}
-                          {{ user.profile_image.url}}
-                        {% else %}
-                          {% static 'img/avatar.png'%}
-                        {% endif %}
-                        " alt="{{user.username}}">
-                      </div>
-                      <div class="_pfl-acct-ElpSnap">
-                        <h3>{% if user.get_full_name %}{{user.get_full_name}}{%else%}{{user.username}}{% endif %}</h3>
-                        <h5>{{user.pro_business_profile.get_pro_category_display}}</h5>
-                        <h6>{{user.pro_business_profile.pro_speciality}}</h6>
-                      </div>
+                  <div id="kdaIPOb_OXpimg">
+                    {% include 'profiles/account_details_section.html'%}
                   </div>
                   <div class="pfl-acct-BtnsWrps">
                       <div class="pfl-acct-actionBtnsWrp">
-                          <div class="pfl-acct-actionBtns">
-                                <a href="{% url 'listings:homepage'%}">
+                          <div id="AcsNavLinks" class="pfl-acct-actionBtns">
+                                <a href="{% url 'homepage'%}">
                                   <span class="material-icons">home</span>&nbsp &nbsp
-                                  Home
+                                  <p>Home</p>
                                 </a>
                                 <a href="#" class="dashboardTabLink">
                                   <span class="material-icons">dashboard</span>&nbsp &nbsp
-                                  Dashboard
+                                  <p>Dashboard</p>
                                 </a>
                                 <a href="#" class="dashboardTabLink" onclick="openPage(event, '_dashbordListings')">
                                   <span class="material-icons">list_alt</span>&nbsp &nbsp
-                                  Listings
+                                  <p>Listings</p>
                                 </a>
                                 <a href="#"  id="defaultOpen" class="dashboardTabLink" onclick="openPage(event, '_dashbordAccount')">
                                   <span class="material-icons">account_circle</span>&nbsp &nbsp
-                                  Account
+                                  <p>Account</p>
                                 </a>
-                                <a href="#" class="dashboardTabLink" onclick="openPage(event, '_dashbordAdvertise')">
+                                <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="dashboardTabLink">
                                   <span class="material-icons">business_center</span>&nbsp &nbsp
-                                  Rehgien Pro
+                                  <p>Rehgien Pro</p>
                                 </a>
-                                <!-- <a href="#" class="dashboardTabLink" onclick="openPage(event, '_dashbordAdvertise')">
-                                  <span class="material-icons">campaign</span>&nbsp &nbsp
-                                  Advertising
-                                </a>
-                                <a href="/pro/messaging">
-                                  <span class="material-icons">chat_bubble_outline</span>&nbsp &nbsp
-                                  Chat
-                                </a>
-                                <a href="/pro/markets/leads/property_requests">
-                                  <span class="material-icons">storefront</span>&nbsp &nbsp
-                                  Lead Marketplace
-                                </a> -->
                           </div>
                       </div>
                   </div>
               </div>
             </div>
         </div>
-        <div class="pfl-d">
+        <div id="acct_right_content" class="pfl-d">
           <div class="pfl-acct-stg">
               <div class="profileDashHeader">
                   <div class='pflDashHdLeft'>
                     <div class="_uAcc_logo">
-                      <button type="button" name="button"><span class='material-icons'>dehaze</span></button>
+                      <button id="upNav-control" type="button" name="button"><span class='material-icons'>dehaze</span></button>
                       &nbsp &nbsp
-                      <a href="{% url 'listings:homepage'%}">
+                      <a href="{% url 'homepage'%}">
                         <img src="{% static 'img/rehgien_logo_r.png' %}" alt="rehgien-logo">
                       </a>
                     </div>
                   </div>
                   <div class="pflDashHdRight">
                       <div class="notificationsTab">
-                        <span class="material-icons">group</span>
-                        <span class="material-icons">notifications</span>
+                        <a href="{% url 'profiles:notifications'%}"><span class="material-icons">group</span></a>
+                        <a href="{% url 'profiles:notifications'%}"><span class="material-icons">notifications</span></a>
                       </div>
-                      <div class="accountTab">
-                        <div class="pfl-card-img">
-                            <img src="
-                            {% if user.profile_image%}
-                              {{ user.profile_image.url}}
-                            {% else %}
-                              {% static 'img/avatar.png'%}
-                            {% endif %}
-                            " alt="{{user.username}}">
-                        </div>
-                        <div class="dab-links-wrapper">
-                            Hi, {{user.username}}
-                        </div>
+                      <div id="acctGreet_odsyb">
+                          {% include 'profiles/account_greet.html'%}
                       </div>
                   </div>
               </div>
@@ -118,20 +83,9 @@
 
                         <div class="_userProfileMiddle">
                               <div class="_userProfileImgNw">
-                                <div id="_uProgress">
-                                  <div class="_userProfileImg">
-                                    <img src="
-                                      {% if user.profile_image %}
-                                        {{ user.profile_image.url}}
-                                      {% else %}
-                                        {% static 'img/avatar.png' %}
-                                      {% endif %}" alt="avatar">
-                                      <div class="_userProfileCompletion">
-                                        <h5>{{user.percentage_complete}} <sup>%</sup></h5>
-                                      </div>
-                                  </div>
+                                <div id="_PcntComplSc_opsnc">
+                                  {% include 'profiles/account_completion_section.html'%}
                                 </div>
-                                <h5>{% if user.get_full_name %} {{user.get_full_name}}{% else %} {{user.username}}{%endif%}<span class="material-icons">verified</span></h5>
                                 <div class="_userProfileEnd">
                                   <a href="#e-profile-Modal" class="modal-trigger"><button type="button" name="button">Update account</button></a>
                                 </div>
@@ -287,7 +241,7 @@
                                 </div>
                                 <div class="_userConnectionsAvatars">
                                       {% if user.pro_business_profile.followers%}
-                                          {% for follower in user.agent_profile.followers.all %}
+                                          {% for follower in user.pro_business_profile.followers.all %}
                                             <div class="_userCAvImg{{forloop.counter}}">
                                               <img src="
                                                 {% if follower.profile_image %}
@@ -298,9 +252,9 @@
                                               " alt="avatar">
                                             </div>
                                           {% endfor %}
-                                          {% if user.agent_profile.followers|length > 3 %}
+                                          {% if user.pro_business_profile.followers|length > 3 %}
                                             <div class="_userCAvImgExtra">
-                                              +{{ user.agent_profile.followers|length|add:"-3" }} <span>more</span>
+                                              +{{ user.pro_business_profile.followers|length|add:"-3" }} <span>more</span>
                                             </div>
                                           {% else %}
                                             <div class="_userCAvImgExtra">
@@ -398,7 +352,7 @@
                             <p>Deactivate your account or manage your privacy settings. </p>
                         </div>
                         <div class="_accSgCardEnd">
-                          <a href="#e-profile-Modal" class="modal-trigger"><button type="button" name="button">Manage Settings</button></a>
+                          <a href="#" class="modal-trigger"><button type="button" name="button">Manage Settings</button></a>
                         </div>
                     </div>
                   </div>
@@ -409,7 +363,7 @@
               <div  id="pfl-d-sw">
                 <ul id="pfl-pg-switch" class="tabs">
                     <li class="tab col s3"><a href="#_dashMyListings">Property</a></li>
-                    <li class="tab col s3"><a href="#_dashRequests">Requests</a></li>
+                    <li class="tab col s3"><a href="#_dashRequests">Job Posts</a></li>
                     <li class="tab col s3"><a href="#_dashMyFavs">Saved Property</a></li>
                     {% if user.user_type == 'PRO'%}
                       <li class="tab col s3"><a href="#_dashMyPortfolio">Portfolio</a></li>
@@ -417,8 +371,8 @@
                 </ul>
               </div>
               <div class="pfl-dtl">
-                <div id="_dashMyListings" class="pfl-listings">
-                    {% if user.pro_business_profile.pro_category == 'PCAT1'%}
+                <div id="_dashMyListings" class="pfl-listings pfl_itemsSection_post">
+                    {% if user.pro_business_profile.professional_category.professional_group.slug == 'real-estate-services'%}
                       <div  id="MyListingsSwWr">
                         <ul id="MyListings-switch" class="tabs">
                             <li class="tab col s3"><a href="#MySaleListings">For sale</a></li>
@@ -445,78 +399,94 @@
                                           </tr>
                                         </thead>
                                         {% for onsale_listings in user_sale_posts %}
-                                        <tr>
-                                            <td>
-                                                <div id="rec-card" class="card">
-                                                <div id="rec-img" class="card-image">
-                                                  <a href="{{onsale_listings.get_absolute_url}}">
-                                                    {% for home_photo in onsale_listings.home_photos.all %}
-                                                      {% if forloop.last %}
-                                                        {% cloudinary home_photo.photo ImageTransformation %}
+                                          <tr>
+                                              <td>
+                                                  <div id="rec-card" class="card">
+                                                  <div id="rec-img" class="card-image">
+                                                    <a href="{{onsale_listings.get_absolute_url}}">
+                                                      {% for home_photo in onsale_listings.home_photos.all %}
+                                                        {% if forloop.last %}
+                                                          {% cloudinary home_photo.photo ImageTransformation %}
+                                                        {% endif %}
+                                                      {% endfor %}
+                                                  </a>
+                                                  </div>
+                                                  <div id="rec-content" class="card-content">
+                                                    <ol>
+                                                      <li class="rec-h-name">{{onsale_listings.property_name}}</li>
+                                                      <li class="rec-h-location">{{onsale_listings.location_name}}</li>
+                                                      <li class="rec-h-features">{{onsale_listings.bathrooms}} ba| {{onsale_listings.bedrooms}} bds| {{onsale_listings.floor_area}} {{onsale_listings.size_units}}</li>
+                                                      <li class="rec-h-price">Ksh: {{onsale_listings.price}}</li>
+                                                    </ol>
+                                                  </div>
+                                                  </div>
+                                              </td>
+                                              <td>
+                                                <div class="_dashlistingLeads">
+
+                                                  {{onsale_listings.all_leads.count}} till now
+                                                  <div class="_dashLsgLdUsers">
+                                                     {% for lead in onsale_listings.all_leads %}
+                                                        <div class="_dashLsgLdUserImg{{forloop.counter}}">
+                                                          <img src="
+                                                            {% if lead.user.profile_image %}
+                                                              {{lead.user.profile_image.url}}
+                                                            {% else %}
+                                                              {% static 'img/avatar.png'%}
+                                                            {% endif %}
+                                                          " alt="">
+                                                        </div>
+                                                      {%endfor%}
+                                                      {% if onsale_listings.all_leads.count > 4 %}
+                                                        <div class="_dashLsgLdUserExtra">
+                                                          +{{ onsale_listings.all_leads.count|add:"-4" }}
+                                                        </div>
+                                                      {% else %}
+                                                        <div class="_dashLsgLdUserExtra">
+                                                          +0
+                                                        </div>
                                                       {% endif %}
-                                                    {% endfor %}
-                                                </a>
-                                                </div>
-                                                <div id="rec-content" class="card-content">
-                                                  <ol>
-                                                    <li class="rec-h-name">{{onsale_listings.property_name}}</li>
-                                                    <li class="rec-h-location">{{onsale_listings.location_name}}</li>
-                                                    <li class="rec-h-features">{{onsale_listings.bathrooms}} ba| {{onsale_listings.bedrooms}} bds| {{onsale_listings.floor_area}} {{onsale_listings.size_units}}</li>
-                                                    <li class="rec-h-price">Ksh: {{onsale_listings.price}}</li>
-                                                  </ol>
-                                                </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                              <div class="_dashlistingLeads">
-                                                20 till now
-                                                <div class="_dashLsgLdUsers">
-                                                  <div class="_dashLsgLdUserImg1">
-                                                    <img src="{% static 'img/av1.jpg'%}" alt="">
-                                                  </div>
-                                                  <div class="_dashLsgLdUserImg2">
-                                                    <img src="{% static 'img/av2.jpg'%}" alt="">
-                                                  </div>
-                                                  <div class="_dashLsgLdUserImg3">
-                                                    <img src="{% static 'img/av3.jpg'%}" alt="">
-                                                  </div>
-                                                  <div class="_dashLsgLdUserImg4">
-                                                    <img src="{% static 'img/av4.jpg'%}" alt="">
-                                                  </div>
-                                                  <div class="_dashLsgLdUserExtra">
-                                                    +20
+
                                                   </div>
                                                 </div>
-                                              </div>
-                                            </td>
-                                            <td>
-                                              <div class="_dashLsgAcStats">
-                                                  <span class="material-icons">trending_up</span>
-                                                  <div class="_dashLsgAcStd">
-                                                    <h4>300 &nbsp + &nbsp<span>12</span></h4>
-                                                    <h5>Total Views</h5>
-                                                  </div>
-                                              </div>
-                                            </td>
-                                            <td>
-                                              <span id="rec-date" class="card-title"><p>{{onsale_listings.publishdate.date}}</p></span>
-                                            </td>
-                                            <td>
-                                              <div class="_dashLsgAcStatus">
-                                                  <span>Active</span>
-                                                  Till to 15, June
-                                              </div>
-                                            </td>
-                                            <td>
-                                              <div class="card-links">
-                                                  <form action="{% url 'listings:property_delete' property_category=onsale_listings.property_category pk=onsale_listings.pk%}" method="post">
-                                                    {% csrf_token %}
-                                                    <button id="link-del" type="submit" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button>
-                                                  </form>
-                                                  <a href="{% url 'listings:property_update' property_category=onsale_listings.property_category pk=onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
-                                              </div>
-                                            </td>
-                                        </tr>
+                                              </td>
+                                              <td>
+                                                <div class="_dashLsgAcStats">
+                                                  {% if onsale_listings.views_trend > 0 %}
+                                                    <span class="material-icons">trending_up</span>
+                                                  {% else %}
+                                                    <span class="material-icons">trending_flat</span>
+                                                  {% endif %}
+                                                    <div class="_dashLsgAcStd">
+                                                      <h4>{{onsale_listings.total_views_count}} &nbsp + &nbsp<span>{{onsale_listings.recent_views_count}}</span></h4>
+                                                      <h5>Total Views</h5>
+                                                    </div>
+                                                </div>
+                                              </td>
+                                              <td>
+                                                <span id="rec-date" class="card-title"><p>{{onsale_listings.publishdate.date}}</p></span>
+                                              </td>
+                                              <td>
+                                                <div class="_dashLsgAcStatus">
+                                                    {% if onsale_listings.is_active %}
+                                                      <span>Active</span>
+                                                      Till {{onsale_listings.active_until|date}}
+                                                    {% else %}
+                                                      <span>Inactive</span>
+                                                      From {{onsale_listings.publishdate|date}}
+                                                    {% endif %}
+                                                </div>
+                                              </td>
+                                              <td>
+                                                <div class="card-links">
+                                                    <form action="{% url 'listings:property_delete' property_category=onsale_listings.property_category|lower pk=onsale_listings.pk%}" method="post">
+                                                      {% csrf_token %}
+                                                      <button id="link-del" type="submit" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button>
+                                                    </form>
+                                                    <a href="{% url 'listings:property_update' property_category=onsale_listings.property_category|lower pk=onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
+                                                </div>
+                                              </td>
+                                          </tr>
                                         {% endfor %}
                                       </table>
                                     </div>
@@ -571,31 +541,39 @@
                                         </td>
                                         <td>
                                           <div class="_dashlistingLeads">
-                                            20 till now
+                                            {{rentals.all_leads.count}} till now
                                             <div class="_dashLsgLdUsers">
-                                              <div class="_dashLsgLdUserImg1">
-                                                <img src="{% static 'img/av1.jpg'%}" alt="">
-                                              </div>
-                                              <div class="_dashLsgLdUserImg2">
-                                                <img src="{% static 'img/av2.jpg'%}" alt="">
-                                              </div>
-                                              <div class="_dashLsgLdUserImg3">
-                                                <img src="{% static 'img/av3.jpg'%}" alt="">
-                                              </div>
-                                              <div class="_dashLsgLdUserImg4">
-                                                <img src="{% static 'img/av4.jpg'%}" alt="">
-                                              </div>
-                                              <div class="_dashLsgLdUserExtra">
-                                                +20
-                                              </div>
-                                            </div>
+                                               {% for lead in rentals.all_leads %}
+                                                  <div class="_dashLsgLdUserImg{{forloop.counter}}">
+                                                    <img src="
+                                                      {% if lead.user.profile_image %}
+                                                        {{lead.user.profile_image.url}}
+                                                      {% else %}
+                                                        {% static 'img/avatar.png'%}
+                                                      {% endif %}
+                                                    " alt="">
+                                                  </div>
+                                                {%endfor%}
+                                                {% if rentals.all_leads.count > 4 %}
+                                                  <div class="_dashLsgLdUserExtra">
+                                                    +{{ rentals.all_leads.count|add:"-4" }}
+                                                  </div>
+                                                {% else %}
+                                                  <div class="_dashLsgLdUserExtra">
+                                                    +0
+                                                  </div>
+                                                {% endif %}
                                           </div>
                                         </td>
                                         <td>
                                           <div class="_dashLsgAcStats">
+                                            {% if rentals.views_trend > 0 %}
                                               <span class="material-icons">trending_up</span>
+                                            {% else %}
+                                              <span class="material-icons">trending_flat</span>
+                                            {% endif %}
                                               <div class="_dashLsgAcStd">
-                                                <h4>300 &nbsp + &nbsp<span>12</span></h4>
+                                                <h4>{{rentals.total_views_count}} &nbsp + &nbsp<span>{{rentals.recent_views_count}}</span></h4>
                                                 <h5>Total Views</h5>
                                               </div>
                                           </div>
@@ -605,17 +583,22 @@
                                         </td>
                                         <td>
                                           <div class="_dashLsgAcStatus">
+                                            {% if rentals.is_active %}
                                               <span>Active</span>
-                                              Till to 15, June
+                                              Till {{rentals.active_until|date}}
+                                            {% else %}
+                                              <span>Inactive</span>
+                                              From {{rentals.publishdate|date}}
+                                            {% endif %}
                                           </div>
                                         </td>
                                         <td>
                                           <div class="card-links">
-                                            <form action="{% url 'listings:property_delete' property_category=rentals.property_category pk=rentals.pk%}" method="post">
+                                            <form action="{% url 'listings:property_delete' property_category=rentals.property_category|lower pk=rentals.pk%}" method="post">
                                               {% csrf_token %}
                                               <button id="link-del" type="submit" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button>
                                             </form>
-                                            <a href="{% url 'listings:property_update' property_category=rentals.property_category pk=rentals.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
+                                            <a href="{% url 'listings:property_update' property_category=rentals.property_category|lower pk=rentals.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
                                             </div>
                                         </td>
                                     </tr>
@@ -632,13 +615,13 @@
                     {% else %}
                       <div class="empty-list">
                         <p>You are not allowed to have property posts.
-                          <br> We currently do not allow FSBO properties. To list find a <a href="{% url 'profiles:agent_list' %}"><u>Agent</u></a> or <a href="{% url 'profiles:pm_list' %}"><u>Property Manager</u></a><br>
+                          <br> We currently do not allow FSBO properties. To list find a <a href="{% url 'profiles:business_list' %}?p_cat=real-estate-agents" target="_blank"><u>Agent</u></a> or <a href="{% url 'profiles:business_list' %}?p_cat=property-managers" target="_blank"><u>Property Manager</u></a><br>
                            Want to learn more <a href="#"><u>Visit here.</u></a>
                          </p>
                       </div>
                     {% endif %}
                 </div>
-                <div id="_dashMyFavs" class="favourites-sc">
+                <div id="_dashMyFavs" class="favourites-sc pfl_itemsSection_post">
                   <div class="pfl-listings">
                       <div  id="MyListingsSwWr">
                         <ul id="MyListings-switch" class="tabs">
@@ -782,94 +765,124 @@
                       </div>
                   </div>
                 </div>
-                <div id="_dashRequests" class="requests-sc">
+                <div id="_dashRequests" class="requests-sc pfl_itemsSection_post">
                       <div  id="MyListingsSwWr">
                         <ul id="MyListings-switch" class="tabs">
+                              <li class="tab col s3"><a href="#MyLeadRequests">Posted </a></li>
                           {% if user.user_type == 'PRO' %}
-                              <li class="tab col s3"><a href="#MyLeadRequests">Lead Requests</a></li>
-                              <li class="tab col s3"><a href="#MyAgentPropertyRequests">Property Request</a></li>
-                          {% else %}
-                              <li class="tab col s3"><a href="#MyPropertyRequests">Property Requests</a></li>
-                              <li class="tab col s3"><a href="#MyProRequests">Pro Requests</a></li>
-                              <li class="tab col s3"><a href="#MyOtherRequests">Other Requests</a></li>
+                              <li class="tab col s3"><a href="#MyOtherRequests">Replied to</a></li>
                           {% endif %}
                         </ul>
                       </div>
-                      {% if user.user_type == 'PRO' %}
-                            <div id="MyLeadRequests">
+                      <div id="MyLeadRequests">
                               <div class="MyLsgHd">
-                                <p>My Lead Requests <span>Showing {{ag_lead_requests.count}} results.</span></p>
-                                <a href="{% url 'markets:agent_lead_request'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new request</button></a>
+                                <p>My job posts <span>Showing {{job_post.count}} results.</span></p>
+                                <a href="{% url 'markets:job_post_create'%}"><button type="button" name="button"><span class="material-icons">add</span>Post a job</button></a>
                               </div>
                               <div class="requests-list ler">
-                                {% if ag_lead_requests %}
-                                    {% for ag_lead_requests in ag_lead_requests %}
+                                {% if job_post %}
+                                    {% for post in job_post %}
                                       <div class="requestCard card">
-                                        <div class="_rqVerified">
-                                          <span class="material-icons" style="color:green;">done_all</span>
-                                        </div>
-                                        <div class="requestCardAcct">
-                                          <span>
-                                            {% if ag_lead_requests.profile_image%}
-                                            <img src="{{ag_lead_requests.profile_image}}" alt="avatar">
-                                            {% else %}
-                                            <img src="{% static 'img/avatar.png'%}" alt="avatar">
-                                            {% endif %}
-                                            <div class="requestCardDtls">
-                                              <h5>{{ag_lead_requests.name}}</h5>
-                                              <p>Looking for a {{ag_lead_requests.ownership}}</p>
-                                            </div>
-                                          </span>
-                                        </div>
-                                        <div class="requestCardAcct">
-                                            <div class="requestInfoPreVw">
-                                              Looking for a buyer for (a) {{ag_lead_requests.property_type}} located
-                                              in {{ag_lead_requests.location_name}}. Request active till {{ag_lead_requests.timeline}}.
-                                            </div>
-                                        </div>
-                                        <div class="requestCardAcct">
-                                          <div class="rqInteractions">
-                                              <div class="requestClaimsImgW">
-                                                  <div class="requestClaimsImg1">
-                                                    <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                  </div>
-                                                  <div class="requestClaimsImg2">
-                                                    <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                  </div>
-                                                  <div class="requestClaimsImg3">
-                                                    <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                  </div>
-                                                  <div class="requestClaimsImg4">
-                                                    <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                  </div>
-                                                  <div class="requestClaimsImg5">
-                                                    <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                  </div>
+                                        <div class="requestCard_body">
+                                          <div class="requestCardAcct jbRqstHeader">
+                                            <span>
+                                              <img src="
+                                              {% if post.job_poster.profile_image %}
+                                                {{post.job_poster.profile_image.url}}
+                                              {% else %}
+                                                {% static 'img/avatar.png'%}
+                                              {% endif %}
+                                              " alt="{{post.job_poster.username}}">
+                                              <div class="requestCardDtls">
+                                                <h5>{% if post.job_poster.get_full_name %} {{post.job_poster.get_full_name}} {% else %} {{post.job_poster.username}} {% endif %}</h5>
+                                                <p>{% if post.job_poster.user_type == 'PRO' %} Rehgien Pro {% else %} Rehgien user {% endif %}</p>
                                               </div>
-                                              <div class="_rCrRW">
-                                                  <div class="requestClaims">
-                                                    + {{ag_lead_requests.claimer|length}}
-                                                    <span>Claims</span>
-                                                  </div>
-                                                  <div class="requestReferals">
-                                                    + {{ag_lead_requests.referrer|length}}
-                                                    <span>Referals</span>
-                                                  </div>
+                                            </span>
+                                            <div class="jbRqs_Hd_right">
+                                              <div>Project size <span>{{post.project_size|lower}}</span></div>
+                                              <div>Project duration <span>{{post.get_project_duration_display|lower}}</span></div>
+                                              <div>Job post date <span>{{post.job_update_date.date}}</span></div>
+                                            </div>
+                                          </div>
+                                          <div class="_rqVerified">
+                                                {% if post.verified %}
+                                                  <h6 class="vrf">
+                                                    <span class="material-icons" style="color:#4caf50;">done_all</span>
+                                                    Verified
+                                                  </h6>
+                                                {% else %}
+                                                  <h6>
+                                                    <span class="material-icons" style="color:#ddd;">done_all</span>
+                                                    Unverified
+                                                  </h6>
+                                                {% endif %}
+
+                                          </div>
+                                          <div class="requestCardAcct">
+                                              <div class="requestInfoPreVw">
+                                                <h6>{{post.title}}</h6>
+                                                <div class="rq_ExtgAre">
+                                                    <h6>Target areas of expertise include</h6>
+                                                    <div class="rq_ExtgAreBtns">
+                                                      {% for skill_area in post.skill_areas|slice:':4' %}
+                                                        <button>{{skill_area}}</button>
+                                                      {% endfor %}
+                                                      {% if post.skill_areas|length > 4 %}
+                                                        <span>+{{ post.skill_areas|length|add:"-2" }} more</span>
+                                                      {% endif%}
+                                                    </div>
+                                                </div>
                                               </div>
+                                          </div>
+                                          <div class="requestCardAcct">
+                                            <div class="rqInteractions">
+                                                <div class="requestClaimsImgW">
+                                                  {% if post.job_viewers.all.count != 0 %}
+                                                  {% for viewer in post.job_viewers.all|slice:':2' %}
+                                                    <div class="requestClaimsImg{{forloop.counter}}">
+                                                      <img src="
+                                                        {% if viewer.profile_image %}
+                                                          {{viewer.profile_image.url}}
+                                                        {% else %}
+                                                        {%static 'img/avatar.png'%}
+                                                        {% endif %}
+                                                      " alt="avatar">
+                                                    </div>
+                                                  {% endfor %}
+                                                  {% else %}
+                                                      <img src="{%static 'img/avatar.png'%}" alt="">
+                                                  {% endif %}
+                                                </div>
+                                                <div class="_rCrRW">
+                                                    <div class="requestClaims">
+                                                      {{post.job_viewers.count}}
+                                                      <span>Views</span>
+                                                    </div>
+                                                    <div class="requestReferals">
+                                                      {{post.job_post_proposal.count}}
+                                                      <span>Proposals</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                           </div>
                                         </div>
                                         <div class="requestActionBtns">
-                                            <form action="{% url 'markets:agent_lead_request_deactivate' ag_lead_requests.pk%}" method="post">
+                                            <form action="{% url 'markets:job_post_deactivate' post.pk%}" method="post">
                                               {% csrf_token %}
                                               <button type="submit" name="button">
-                                                <i class="fas fa-power-off fa-lg" style="color:red"></i>
+                                                <i class="fas fa-power-off fa-lg"></i>
                                                 Turn Off
                                               </button>
                                             </form>
-                                          <a href="{% url 'markets:agent_lead_request_update' ag_lead_requests.pk%}">
+                                          <a href="{% url 'markets:job_post_update' post.pk%}">
                                             <button type="button" name="button">
-                                              <i class="far fa-edit fa-lg" style="color:blue"></i>
+                                              <i class="far fa-edit fa-lg" ></i>
                                                 Update
+                                            </button>
+                                          </a>
+                                          <a href="{% url 'markets:job_post_detail' post.pk%}" target="_blank">
+                                            <button type="button" name="button">
+                                                View replies
                                             </button>
                                           </a>
                                         </div>
@@ -877,436 +890,195 @@
                                     {% endfor %}
                                 {% else %}
                                 <div class="empty-list">
-                                  <p>You currently dont have any requests. Requests you post will appear here.</p>
+                                  <p>You currently dont have any job posts. Your job post will appear here once you have them.</p>
                                 </div>
                                 {%endif%}
                               </div>
-                            </div>
-                            <div id="MyAgentPropertyRequests">
-                              <div class="MyLsgHd">
-                                <p>My Property Requests <span>Showing {{ag_property_requests.count}} results.</span></p>
-                                <a href="{% url 'markets:agent_property_request'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new request</button></a>
-                              </div>
-                              <div class="requests-list agp">
-                                {% if ag_property_requests %}
-                                    {% for ag_property_requests in ag_property_requests %}
-                                    <div class="requestCard card">
-                                      <div class="_rqVerified">
-                                        <span class="material-icons" style="color:green;">done_all</span>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                        <span>
-                                          {% if ag_property_requests.profile_image%}
-                                          <img src="{{ag_property_requests.profile_image}}" alt="avatar">
-                                          {% else %}
-                                          <img src="{% static 'img/avatar.png'%}" alt="avatar">
-                                          {% endif %}
-                                          <div class="requestCardDtls">
-                                            <h5>{{ag_property_requests.name}}</h5>
-                                            <p>Looking to {{ag_property_requests.ownership}}</p>
-                                          </div>
-                                        </span>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                          <div class="requestInfoPreVw">
-                                            Looking for (a) {{ag_property_requests.property_type}}
-                                            in {{ag_property_requests.location_name}}. Request active till {{ag_property_requests.timeline}}.
-                                          </div>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                        <div class="rqInteractions">
-                                            <div class="requestClaimsImgW">
-                                                <div class="requestClaimsImg1">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg2">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg3">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg4">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg5">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                            </div>
-                                            <div class="_rCrRW">
-                                                <div class="requestClaims">
-                                                  + {{ag_property_requests.claimer|length}}
-                                                  <span>Claims</span>
-                                                </div>
-                                                <div class="requestReferals">
-                                                  + {{ag_property_requests.referrer|length}}
-                                                  <span>Referals</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                      </div>
-                                      <div class="requestActionBtns">
-                                        <a href="{% url 'markets:agent_prop_request_deactivate' ag_property_requests.pk %}">
-                                          <button type="button" name="button">
-                                            <i class="fas fa-power-off fa-lg"></i>
-                                            Turn Off
-                                          </button>
-                                        </a>
-                                        <a href="{% url 'markets:agent_prop_request_update' ag_property_requests.pk%}">
-                                          <button type="button" name="button">
-                                            <i class="far fa-edit fa-lg"></i>
-                                              Update
-                                          </button>
-                                        </a>
-                                      </div>
-                                    </div>
-
-                                    {% endfor %}
-                                {% else %}
-                                <div class="empty-list">
-                                  <p>You currently dont have any requests. Requests you post will appear here.</p>
-                                </div>
-                                {%endif%}
-                              </div>
-                            </div>
-                      {% else %}
-                            <div id="MyPropertyRequests">
-                              <div class="MyLsgHd">
-                                <p>My Property Requests <span>Showing {{property_requests.count}} results.</span></p>
-                                <a href="{% url 'markets:property_request'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new request</button></a>
-                              </div>
-                              <div class="requests-list prop">
-                                {% if property_requests %}
-                                  {% for property_requests in property_requests %}
-                                  <div class="requestCard card">
-                                    <div class="_rqVerified">
-                                      <span class="material-icons" style="color:green;">done_all</span>
-                                    </div>
-                                    <div class="requestCardAcct">
+                      </div>
+                      {% if user.user_type == 'PRO' %}
+                        <div id="MyOtherRequests">
+                          <div class="MyLsgHd">
+                            <p>Job posts you replied to <span>Showing {{job_post_proposal.count}} results.</span></p>
+                          </div>
+                          <div class="requests-list oth">
+                            {% if my_job_replies %}
+                                {% for post in my_job_replies %}
+                                <div class="requestCard card">
+                                  <div class="requestCard_body">
+                                    <div class="requestCardAcct jbRqstHeader">
                                       <span>
-                                        {% if property_requests.profile_image%}
-                                        <img src="{{property_requests.profile_image}}" alt="avatar">
+                                        <img src="
+                                        {% if post.job_post.job_poster.profile_image %}
+                                          {{post.job_post.job_poster.profile_image.url}}
                                         {% else %}
-                                        <img src="{% static 'img/avatar.png'%}" alt="avatar">
+                                          {% static 'img/avatar.png'%}
                                         {% endif %}
+                                        " alt="{{post.job_post.job_poster.username}}">
                                         <div class="requestCardDtls">
-                                          <h5>{{property_requests.name}}</h5>
-                                          <p>Looking to {{property_requests.ownership}}</p>
+                                          <h5>{% if post.job_post.job_poster.get_full_name %} {{post.job_post.job_poster.get_full_name}} {% else %} {{post.job_post.job_poster.username}} {% endif %}</h5>
+                                          <p>{% if post.job_post.job_poster.user_type == 'PRO' %} Rehgien Pro {% else %} Rehgien user {% endif %}</p>
                                         </div>
                                       </span>
+                                      <div class="jbRqs_Hd_right">
+                                        <div>Project size <span>{{post.job_post.project_size|lower}}</span></div>
+                                        <div>Project duration <span>{{post.job_post.get_project_duration_display|lower}}</span></div>
+                                        <div>Job post date <span>{{post.job_post.job_update_date.date}}</span></div>
+                                      </div>
+                                    </div>
+                                    <div class="_rqVerified">
+                                          {% if post.job_post.verified %}
+                                            <h6 class="vrf">
+                                              <span class="material-icons" style="color:#4caf50;">done_all</span>
+                                              Verified
+                                            </h6>
+                                          {% else %}
+                                            <h6>
+                                              <span class="material-icons" style="color:#ddd;">done_all</span>
+                                              Unverified
+                                            </h6>
+                                          {% endif %}
+
                                     </div>
                                     <div class="requestCardAcct">
                                         <div class="requestInfoPreVw">
-                                          Looking for (a) {{property_requests.property_type}}
-                                          in {{property_requests.location}}. Request active till {{property_requests.timeline}}.
+                                          <h6>{{post.job_post.title}}</h6>
+                                          <div class="rq_ExtgAre">
+                                              <h6>Target areas of expertise include</h6>
+                                              <div class="rq_ExtgAreBtns">
+                                                {% for skill_area in post.job_post.skill_areas|slice:':4' %}
+                                                  <button>{{skill_area}}</button>
+                                                {% endfor %}
+                                                {% if post.job_post.skill_areas|length > 4 %}
+                                                  <span>+{{ post.job_post.skill_areas|length|add:"-2" }} more</span>
+                                                {% endif%}
+                                              </div>
+                                          </div>
                                         </div>
                                     </div>
                                     <div class="requestCardAcct">
                                       <div class="rqInteractions">
                                           <div class="requestClaimsImgW">
-                                              <div class="requestClaimsImg1">
-                                                <img src="{%static 'img/av1.jpg'%}" alt="avatar">
+                                            {% if post.job_post.job_viewers.all.count != 0 %}
+                                            {% for viewer in post.job_post.job_viewers.all|slice:':2' %}
+                                              <div class="requestClaimsImg{{forloop.counter}}">
+                                                <img src="
+                                                  {% if viewer.profile_image %}
+                                                    {{viewer.profile_image.url}}
+                                                  {% else %}
+                                                  {%static 'img/avatar.png'%}
+                                                  {% endif %}
+                                                " alt="avatar">
                                               </div>
-                                              <div class="requestClaimsImg2">
-                                                <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                              </div>
-                                              <div class="requestClaimsImg3">
-                                                <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                              </div>
-                                              <div class="requestClaimsImg4">
-                                                <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                              </div>
-                                              <div class="requestClaimsImg5">
-                                                <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                              </div>
+                                            {% endfor %}
+                                            {% else %}
+                                                <img src="{%static 'img/avatar.png'%}" alt="">
+                                            {% endif %}
                                           </div>
                                           <div class="_rCrRW">
                                               <div class="requestClaims">
-                                                + {{property_requests.claimer|length}}
-                                                <span>Claims</span>
+                                                {{post.job_post.job_viewers.count}}
+                                                <span>Views</span>
                                               </div>
                                               <div class="requestReferals">
-                                                + {{property_requests.referrer|length}}
-                                                <span>Referals</span>
+                                                {{post.job_post.job_post_proposal.count}}
+                                                <span>Proposals</span>
                                               </div>
                                           </div>
                                       </div>
                                     </div>
-                                    <div class="requestActionBtns">
-                                      <a href="{% url 'markets:property_request_deactivate' property_requests.pk %}">
-                                        <button type="button" name="button">
-                                          <i class="fas fa-power-off fa-lg"></i>
-                                          Turn Off
-                                        </button>
-                                      </a>
-                                      <a href="{% url 'markets:property_request_update' property_requests.pk %}">
-                                        <button type="button" name="button">
-                                          <i class="far fa-edit fa-lg"></i>
-                                            Update
-                                        </button>
-                                      </a>
-                                    </div>
                                   </div>
-                                  {% endfor%}
-                                {% else %}
-                                <div class="empty-list">
-                                  <p>You currently dont have any requests. Requests you post will appear here.</p>
+                                  <div class="requestActionBtns">
+                                    <a href="{% url 'rehgien_pro:job_detail' post.job_post.pk %}" target="_blank">
+                                      <button type="button" name="button">
+                                          View job
+                                      </button>
+                                    </a>
+                                  </div>
                                 </div>
-                                {%endif%}
-                              </div>
-                            </div>
-                            <div id="MyProRequests">
-                              <div class="MyLsgHd">
-                                <p>My Pro Requests <span>Showing {{proffesional_requests.count}} results.</span></p>
-                                <a href="{% url 'markets:proffesional_request'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new request</button></a>
-                              </div>
-                              <div class="requests-list pro">
-                                {% if proffesional_requests %}
-                                    {% for proffesional_requests in proffesional_requests %}
-                                    <div class="requestCard card">
-                                      <div class="_rqVerified">
-                                        <span class="material-icons" style="color:green;">done_all</span>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                        <span>
-                                          {% if proffesional_requests.profile_image%}
-                                          <img src="{{proffesional_requests.profile_image}}" alt="avatar">
-                                          {% else %}
-                                          <img src="{% static 'img/avatar.png'%}" alt="avatar">
-                                          {% endif %}
-                                          <div class="requestCardDtls">
-                                            <h5>{{proffesional_requests.name}}</h5>
-                                            <p>Looking for a {{proffesional_requests.type_of_proffesional}}</p>
-                                          </div>
-                                        </span>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                          <div class="requestInfoPreVw">
-                                            Looking for (a) {{proffesional_requests.type_of_proffesional}}
-                                            in {{proffesional_requests.location}}. Request active till {{proffesional_requests.timeline}}.
-                                          </div>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                        <div class="rqInteractions">
-                                            <div class="requestClaimsImgW">
-                                                <div class="requestClaimsImg1">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg2">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg3">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg4">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg5">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                            </div>
-                                            <div class="_rCrRW">
-                                                <div class="requestClaims">
-                                                  + {{proffesional_requests.claimer|length}}
-                                                  <span>Claims</span>
-                                                </div>
-                                                <div class="requestReferals">
-                                                  + {{proffesional_requests.referrer|length}}
-                                                  <span>Referals</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                      </div>
-                                      <div class="requestActionBtns">
-                                        <a href="{% url 'markets:pro_request_deactivate' proffesional_requests.pk %}">
-                                          <button type="button" name="button">
-                                            <i class="fas fa-power-off fa-lg"></i>
-                                            Turn Off
-                                          </button>
-                                        </a>
-                                        <a href="{% url 'markets:pro_request_update' proffesional_requests.pk%}">
-                                          <button type="button" name="button">
-                                            <i class="far fa-edit fa-lg"></i>
-                                              Update
-                                          </button>
-                                        </a>
-                                      </div>
-                                    </div>
-                                    {% endfor %}
-                                {% else %}
+                                {% endfor %}
+                            {% else %}
                                 <div class="empty-list">
-                                  <p>You currently dont have any requests. Requests you post will appear here.</p>
+                                  <p>There are currently no active job posts you have replied to.</p>
                                 </div>
-                                {%endif%}
-                              </div>
-                            </div>
-                            <div id="MyOtherRequests">
-                              <div class="MyLsgHd">
-                                <p>Other Requests <span>Showing {{other_requests.count}} results.</span></p>
-                                <a href="{% url 'markets:other_request'%}"><button type="button" name="button"><span class="material-icons">add</span>Post new request</button></a>
-                              </div>
-                              <div class="requests-list oth">
-                                {% if other_requests %}
-                                    {% for other_requests in other_requests %}
-                                    <div class="requestCard card">
-                                      <div class="_rqVerified">
-                                        <span class="material-icons" style="color:green;">done_all</span>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                        <span>
-                                          {% if other_requests.profile_image%}
-                                          <img src="{{other_requests.profile_image}}" alt="avatar">
-                                          {% else %}
-                                          <img src="{% static 'img/avatar.png'%}" alt="avatar">
-                                          {% endif %}
-                                          <div class="requestCardDtls">
-                                            <h5>{{other_requests.name}}</h5>
-                                          </div>
-                                        </span>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                          <div class="requestInfoPreVw">
-                                            {{other_requests.service_details|truncatechars:70}}
-                                            in {{proffesional_requests.location}}. Request active till {{proffesional_requests.timeline}}.
-                                          </div>
-                                      </div>
-                                      <div class="requestCardAcct">
-                                        <div class="rqInteractions">
-                                            <div class="requestClaimsImgW">
-                                                <div class="requestClaimsImg1">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg2">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg3">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg4">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                                <div class="requestClaimsImg5">
-                                                  <img src="{%static 'img/av1.jpg'%}" alt="avatar">
-                                                </div>
-                                            </div>
-                                            <div class="_rCrRW">
-                                                <div class="requestClaims">
-                                                  + {{other_requests.claimer|length}}
-                                                  <span>Claims</span>
-                                                </div>
-                                                <div class="requestReferals">
-                                                  + {{other_requests.referrer|length}}
-                                                  <span>Referals</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                      </div>
-                                      <div class="requestActionBtns">
-                                        <a href="{% url 'markets:other_request_deactivate' other_requests.pk %}">
-                                          <button type="button" name="button">
-                                            <i class="fas fa-power-off fa-lg"></i>
-                                            Turn Off
-                                          </button>
-                                        </a>
-                                        <a href="{% url 'markets:other_request_update' other_requests.pk %}">
-                                          <button type="button" name="button">
-                                            <i class="far fa-edit fa-lg"></i>
-                                              Update
-                                          </button>
-                                        </a>
-                                      </div>
-                                    </div>
-                                    {% endfor %}
-                                {% else %}
-                                    <div class="empty-list">
-                                      <p>You currently dont have any requests. Requests you post will appear here.</p>
-                                    </div>
-                                {%endif%}
-                              </div>
-                            </div>
+                            {%endif%}
+                          </div>
+                        </div>
                       {% endif %}
-                </div>
+                      </div>
                 {% if user.user_type == 'PRO'%}
-                <div id="_dashMyPortfolio">
-                  <div class="MyLsgHd">
-                      <p>My portfolio <span>Showing {{portfolio_items.count}} items</span></p>
-                      <a href="#c-portfolio-Modal" class="modal-trigger"><button type="button" name="button"><span class="material-icons">add</span>Add new item</button></a>
+                <div id="_dashMyPortfolio" class="pfl_itemsSection_post">
+                  <div  id="MyListingsSwWr">
+                    <ul id="MyListings-switch" class="tabs">
+                        <li class="tab col s3"><a href="#myPortflioItems">Projects</a></li>
+                    </ul>
                   </div>
-                  <div class="profile-sale">
-                    {% if portfolio_items %}
-                      <div id="pfl-sal">
-                          <table>
-                            <thead>
-                              <tr>
-                                <th>Item</th>
-                                <th>Item type</th>
-                                <th>Stats</th>
-                                <th>Posted on</th>
-                                <th>Actions</th>
-                              </tr>
-                            </thead>
-                            {% for portfolio_item in portfolio_items %}
-                            <tr>
-                                <td>
-                                    <div id="rec-card" class="card">
-                                      <div id="rec-img" class="card-image">
-                                        {% for thumb in portfolio_item.portfolio_item_photo.all%}
-                                          {% if forloop.last %}
-                                            <a href="#">{% cloudinary thumb.photo ImageTransformation %}</a>
-                                          {% endif %}
-                                        {% endfor %}
-                                      </div>
-                                      <div id="rec-content" class="card-content">
-                                        <ol>
-                                          <li class="rec-h-name">{{portfolio_item.name}}</li>
-                                          <li class="rec-h-location">{{portfolio_item.address}}</li>
-                                          <li class="rec-h-price">Worth:<br>Ksh {{portfolio_item.worth}}</li>
-                                        </ol>
-                                      </div>
-                                    </div>
-                                </td>
-                                <td>
-                                  <span id="rec-date"><p>{{portfolio_item.porfolio_item_type}}</p></span>
-                                </td>
-                                <td>
-                                  <div class="_dashLsgAcStats">
-                                      <span class="material-icons">trending_up</span>
-                                      <div class="_dashLsgAcStd">
-                                        <h4>300 &nbsp + &nbsp<span>12</span></h4>
-                                        <h5>Total Views</h5>
-                                      </div>
-                                  </div>
-                                </td>
-                                <td>
-                                  <span id="rec-date" class="card-title"><p>{{portfolio_item.created_at.date}}</p></span>
-                                </td>
-                                <td>
-                                  <div class="card-links">
-                                    <a href="#"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
-                                    <a href="{% url 'profiles:portfolio_item_update' portfolio_item.pk %}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
-                                  </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                          </table>
+                  <div id="myPortflioItems">
+                      <div class="MyLsgHd">
+                        <p>My portfolio items <span>Showing {{portfolio_items.count}} items</span></p>
+                        <a href="#c-portfolio-Modal" class="modal-trigger"><button type="button" name="button"><span class="material-icons">add</span>Add new item</button></a>
                       </div>
-                    {% else %}
-                      <div class="empty-list">
-                        <p>You currently dont have any items in your portfolio list. Items you add will appear here.</p>
+                      <div class="profile-sale">
+                        {% if portfolio_items %}
+                          <div id="pfl-sal">
+                              <table>
+                                <thead>
+                                  <tr>
+                                    <th>Item</th>
+                                    <th>Stats</th>
+                                    <th>Posted on</th>
+                                    <th>Actions</th>
+                                  </tr>
+                                </thead>
+                                {% for portfolio_item in portfolio_items %}
+                                <tr>
+                                    <td>
+                                        <div id="rec-card" class="card">
+                                          <div id="rec-img" class="card-image">
+                                            {% for thumb in portfolio_item.portfolio_item_photo.all%}
+                                              {% if forloop.last %}
+                                                <a href="#">{% cloudinary thumb.photo ImageTransformation %}</a>
+                                              {% endif %}
+                                            {% endfor %}
+                                          </div>
+                                          <div id="rec-content" class="card-content">
+                                            <ol>
+                                              <li class="rec-h-name">{{portfolio_item.name}}</li>
+                                            </ol>
+                                          </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                      <div class="_dashLsgAcStats">
+                                          <span class="material-icons">trending_up</span>
+                                          <div class="_dashLsgAcStd">
+                                            <h4>300 &nbsp + &nbsp<span>12</span></h4>
+                                            <h5>Total Views</h5>
+                                          </div>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <span id="rec-date" class="card-title"><p>{{portfolio_item.created_at.date}}</p></span>
+                                    </td>
+                                    <td>
+                                      <div class="card-links">
+                                        <a href="#"><button id="link-del" type="button" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button></a>
+                                        <!-- <a href="#"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a> -->
+                                      </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                              </table>
+                          </div>
+                        {% else %}
+                          <div class="empty-list">
+                            <p>You currently dont have any items in your portfolio list. Items you add will appear here.</p>
+                          </div>
+                        {% endif %}
                       </div>
-                    {% endif %}
                   </div>
                 </div>
                 {% endif %}
               </div>
-          </div>
-          <div id="_dashbordAdvertise" class="advertising-sc _dashboardTabContent">
-            <div class="a-content">
-              <p>Under construction stay tuned! <br>
-                Advertise like a PRO. <br>
-                Can't wait? Sign up to our Rehgien Insider Programme and have access to new features first.
-              </p>
-              <button type="button" name="button">Join Insider Programme</button>
-            </div>
           </div>
         </div>
 
@@ -1315,10 +1087,9 @@
 
 <section class="_userPfPageModals">
   <div id="e-profile-Modal" class="modal">
-      <section class="ed_profile_section">
         <div class="ed_profile_cont">
           <div class="ed_profile_row">
-              <form class="user-pf-form" action="{% url 'profiles:edit_basic_profile' %}" method="post" enctype="multipart/form-data">
+              <form id="userAccountForm_Flds_lajdu" autocomplete="off" class="user-pf-form" action="{% url 'profiles:edit_basic_profile' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="u-pf-details">
                   <div class="upf-header">
@@ -1328,13 +1099,24 @@
                     </button>
                   </div>
                   <div class="upf-fieldWrappers row">
-                    <div class="upf-start-box col s12 md4 l4 xl4">
+                    <div class="upf-start-box col s12">
+                        <div class="upf-profile_image">
+                          {% if basic_form.instance.profile_image %}
+                            <img id="__currentPImg" class="__currentPImg" src="{{basic_form.instance.profile_image.url}}" alt="{{user.username}}" style="width:150px;height:150px;object-fit:cover;">
+                          {% else %}
+                            <img id="__currentPImg" class="__currentPImg" src="{%static 'img/avatar.png'%}" alt="{{user.username}}" style="width:150px;height:150px;object-fit:cover;">
+                          {% endif %}
+                          <div class="upf-profile_imageSlt">
+                            {{basic_form.profile_image}}
+                          </div>
+                          <div id="__selectedImageWrp">
+                            <img id="__selectedImage" src="" alt="New Image">
+                          </div>
+                        </div>
                         <div class="upf-username">
                           <p>Your username</p>
                           {{basic_form.username}}
                         </div>
-                    </div>
-                    <div class="upf-middle-box col s12 md4 l4 xl4">
                         <div class="upf-first_name">
                           <p>Your first name</p>
                           {{basic_form.first_name}}
@@ -1348,67 +1130,46 @@
                           {{basic_form.email}}
                         </div>
                     </div>
-                    <div class="upf-end-box col s12 md4 l4 xl4">
-                        <div class="upf-profile_image">
-                          <p>Your profile image</p>
-                          {{basic_form.profile_image}}
-                        </div>
-                    </div>
                   </div>
                 </div>
                 <div class="s-prof">
-                  <button type="submit" name="button">Save Changes</button>
+                    <button id="updatePageProfile" type="submit" name="button">
+                      <img src="{% static 'img/ajax-loader.gif'%}" alt="Saving">
+                      Save
+                    </button>
                 </div>
               </form>
           </div>
 
         </div>
-      </section>
-  </div>
-
-  <div id="e-business-profile-Modal" class="modal">
   </div>
 
   <div id="c-portfolio-Modal" class="modal">
     <div class="c-portfolio-helper">
       <div class="upf-header">
+        <h5>Showcase your best work</h5>
         <button type="button" class="modal-close">
           <span class="material-icons">close</span>
         </button>
       </div>
-      <h1>Showcase your best work</h1>
         <div class="c-portfolio-hp-t">
-              Showcasing your best work is the surest way to tell potential clients you are the person
-              they are looking for.
-              <br><b>We show your portfolio on your business page.</b>
-              <br>
-              <br>
-               Select a relevant category below and then click the add item button to begin.
+                Your portfolio is where your most creative and skillfull work lives.<br> Create projects
+                for just about anything and show potential clients you are the right person
+                they are looking for.
                <br>
                <br>
+               <a href="{% url 'profiles:portfolio_item_create'%}">
+                 <button type="button" name="button">
+                     Add Project
+                 </button>
+               </a>
         </div>
-         {% if user.user_type == 'PRO' %}
-            <form class="portfolio-category-form_" action="{% url 'profiles:portfolio_item_create' slug='category'%}" method="get">
-                <div class="_ptf-catg-wrpr_xchs input-field">
-                  <select name="_ptf-catg-choice">
-                    {% for choice in porfolio_categories%}
-                      <option value="{{choice|slugify}}" selected>{{choice|lower}}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-              <button type="submit" name="button">
-                  Add item
-              </button>
-              <span>or | <a href="#">Suggest a category</a></span>
-            </form>
-        {% endif %}
+
     </div>
   </div>
 </section>
 
-<script src="{% static 'progressBar/progressbar.js'%}"></script>
-<script src="{% static 'progressBar/progressbar.min.js'%}"></script>
-  <script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
 function openPage(event,pageName) {
   var i, dashboardTabContent, dashboardTabLinks;
@@ -1423,30 +1184,10 @@ function openPage(event,pageName) {
   document.getElementById(pageName).style.display = "block";
    event.currentTarget.className += " active";
 }
-
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 
-//progress bar
-var profilePercentComplete = {{user.percentage_complete}}/100;
-function showProfileProgress(){
-  var bar = new ProgressBar.Circle(_uProgress, {
-    strokeWidth: 7,
-    easing: 'easeInOut',
-    duration: 1400,
-    color: 'rgb(44 178 234 / 90%)',
-    trailColor: 'rgb(44 178 234 / 40%)',
-    trailWidth: 7,
-    svgStyle: null
-  });
-
-  bar.animate(profilePercentComplete,{
-    duration: 3000
-  }); // Number from 0.0 to 1.0
-};
-
 var bsProfilePercentComplete = {% if user.user_type == 'PRO'%}{{user.pro_business_profile.percentage_complete}}{% else %}0{% endif %};
-
 
 function showBsProfileProgress(){
   var bar = new ProgressBar.Circle(_bspProgress, {
@@ -1463,43 +1204,154 @@ function showBsProfileProgress(){
     duration: 3500
   }); // Number from 0.0 to 1.0
 };
-showProfileProgress();
 showBsProfileProgress();
 
-//remove property from saves
-//property save method
-$(document).on('click', '._removeSavedlsUpf', function(){
-      var savedProperty = $(this);
-      var pk = savedProperty.attr('data-propertypk')
-      var rowID = $('#_isSavedLsUpf_id_' + pk )
-      var successmsgBody = $('#upfPageAcScs')
-      var errmsgBody = $('#upfPageAcScs')
+$(document).ready(function(){
 
-      $.ajax({
-          type: "POST",
-          url: "{% url 'listings:save_property'%}",
-          data: {
-              'pk': pk,
-              'property_category':'homes',
-              'csrfmiddlewaretoken': '{{ csrf_token }}',
-          },
-          success: function (responseData) {
-              rowID.css('display','none')
-              successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + 'Successfully removed home from saved!')
-              successmsgBody.css('display', 'flex')
-              setTimeout(function(){
-                 successmsgBody.css('display', 'none');
-              }, 6000);
-          },
-          error: function(rs,e){
-            errmsgBody.html("<span class='material-icons'>error_outline</span>" + 'Something went wrong unable to unsave property!')
-            errmsgBody.css('display', 'flex')
-            setTimeout(function(){
-               errmsgBody.css('display', 'none');
-            }, 6000);
-          },
-    });
+  var loaderImg = $('#updatePageProfile img');
+      loaderImg.hide();
+
+  $('#userAccountForm_Flds_lajdu').on('submit', function(event){
+     event.preventDefault();
+     var formData = new FormData(this);
+
+     loaderImg.show();
+     var saveBtn = $('#updatePageProfile');
+      saveBtn.attr('disabled', 'disabled');
+      saveBtn.css({'background': '#fff', 'color':'#eee'});
+
+     $.ajax({
+       type : $(this).attr('method'),
+       url : $(this).attr('action'),
+       data :formData,
+       cache: false,
+       contentType: false,
+       processData: false,
+       // success
+       success: function(response) {
+          $('#kdaIPOb_OXpimg').html(response['ac_details']);
+          $('#acctGreet_odsyb').html(response['ac_greet']);
+          $('#_PcntComplSc_opsnc').html(response['profile_completion']);
+
+          $('#__selectedImageWrp')
+            .css('display','none');
+
+          $('#__currentPImg')
+            .attr('src', $("#__selectedImage").attr('src'))
+
+            let msgBody;
+            if (response['success'] != undefined ) {
+             msgBody = $('#upfPageAcScs');
+             msgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['success'])
+             msgBody.css({'display':'flex', 'z-index':'1003'});
+           }else {
+             msgBody = $('#upfPageAcErr');
+             msgBody.html("<span class='material-icons'>error_outline</span>" + response['error']);
+             msgBody.css({'display':'flex', 'z-index':'1003'});
+           };
+
+           setTimeout(function(){
+              msgBody.css('display', 'none');
+           }, 6000);
+
+         loaderImg.hide();
+         saveBtn.removeAttr('disabled');
+         saveBtn.css({'background': '#eee', 'color':'#000'});
+
+       },
+       error: function(response,e){
+         $('#upfPageAcErr').html("<span class='material-icons'>error_outline</span>" + 'Something went wrong. Try again later');
+
+         $('#upfPageAcErr').css('display', 'flex');
+         setTimeout(function(){
+            $('#_epPaImg_reponse_msg_err').css({'display':'flex', 'z-index':'1003'});
+         }, 6000);
+
+         loaderImg.hide();
+         saveBtn.removeAttr('disabled');
+         saveBtn.css({'background': '#eee', 'color':'#000'});
+
+       },
+     });
+  });
+
+  $('#id_profile_image').change(function () {
+  if ($(this)[0].files && $(this)[0].files[0]) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      $('#__selectedImage')
+        .attr('src', e.target.result)
+        .width(70)
+        .height(70)
+        .css('object-fit','cover');
+
+      $('#__selectedImageWrp')
+      .css('display','flex');
+    };
+    reader.readAsDataURL($(this)[0].files[0]);
+  };
+
 });
+
+  $(document).on('click', '._removeSavedlsUpf', function(){
+        var savedProperty = $(this);
+        var pk = savedProperty.attr('data-propertypk')
+        var rowID = $('#_isSavedLsUpf_id_' + pk )
+        var successmsgBody = $('#upfPageAcScs')
+        var errmsgBody = $('#upfPageAcScs')
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'listings:save_property'%}",
+            data: {
+                'pk': pk,
+                'property_category':'homes',
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            success: function (responseData) {
+                rowID.css('display','none')
+                successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + 'Successfully removed home from saved!')
+                successmsgBody.css('display', 'flex')
+                setTimeout(function(){
+                   successmsgBody.css('display', 'none');
+                }, 6000);
+            },
+            error: function(rs,e){
+              errmsgBody.html("<span class='material-icons'>error_outline</span>" + 'Something went wrong unable to unsave property!')
+              errmsgBody.css('display', 'flex')
+              setTimeout(function(){
+                 errmsgBody.css('display', 'none');
+              }, 6000);
+            },
+      });
+  });
+
+//
+
+  $('#upNav-control').on('click', function(){
+    let lNav = $('#acct_left_navg');
+    let rCon = $('#acct_right_content');
+    let lPtx = $('#AcsNavLinks p');
+    let lacTg = $('#AcsNavLinks a');
+    let lacTgActive = $('#AcsNavLinks a.active');
+    let lNavPimage = $('#kdaIPOb_OXpimg');
+   if (lNav.attr('data-isOpen') === 'True') {
+     lNav.css('width','5%');
+     rCon.css('width','95%');
+     lPtx.css('display','none');
+     lNavPimage.css('display','none');
+     lacTg.addClass('navIsOpen');
+     lNav.attr('data-isOpen','False');
+   }else{
+     lNav.css('width','18%');
+     lPtx.css('display','block');
+     lNavPimage.css('display','block')
+     lacTg.removeClass('navIsOpen');
+     rCon.css('width','82%');
+     lNav.attr('data-isOpen','True');
+   }
+});
+})
 </script>
 
 {% endblock %}

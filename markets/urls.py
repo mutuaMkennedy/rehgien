@@ -5,22 +5,13 @@ from . import views
 app_name = 'markets'
 
 urlpatterns = [
-    path('requests_list/', views.request_list, name = 'request_list'),
-    path('property_request/create', views.property_request_lead, name = 'property_request'),
-    path('proffesional_request/create', views.proffesional_request_lead, name = 'proffesional_request'),
-    path('other_request/create', views.other_request_lead, name = 'other_request'),
-    path('agent_lead_request/create', views.agent_lead_request, name = 'agent_lead_request'),
-    path('agent_property_request/create', views.agent_property_request, name = 'agent_property_request'),
-    # update views
-    path('property_request/<int:pk>/update', views.property_request_lead_update, name = 'property_request_update'),
-    path('proffesional_request/<int:pk>/update', views.proffesional_request_lead_update, name = 'pro_request_update'),
-    path('other_request/<int:pk>/update', views.other_request_lead_update, name = 'other_request_update'),
-    path('agent_lead_request/<int:pk>/update', views.agent_lead_request_update, name = 'agent_lead_request_update'),
-    path('agent_property_request/<int:pk>/update', views.agent_property_request_update, name = 'agent_prop_request_update'),
-    #Deactivate views
-    path('property_request/<int:pk>/deactivate', views.property_request_lead_deactivate, name = 'property_request_deactivate'),
-    path('proffesional_request/<int:pk>/deactivate', views.proffesional_request_lead_deactivate, name = 'pro_request_deactivate'),
-    path('other_request/<int:pk>/deactivate', views.other_request_lead_deactivate, name = 'other_request_deactivate'),
-    path('agent_lead_request/<int:pk>/deactivate', views.agent_lead_request_deactivate, name = 'agent_lead_request_deactivate'),
-    path('agent_property_request/<int:pk>/deactivate', views.agent_property_request_deactivate, name = 'agent_prop_request_deactivate')
+    path('job_post/', views.job_post_home, name = 'job_post_home'),
+    path('job_post/create/', views.job_post_create, name = 'job_post_create'),
+    path('job_post/<int:pk>/update/', views.job_post_update, name = 'job_post_update'),
+    path('job_post/<int:pk>/deactivate/', views.job_post_deactivate, name = 'job_post_deactivate'),
+    path('job_post/search_pros/', views.ajax_search_pros, name = 'ajax_search_pros'),
+    path('job_post/search_service/', views.ajax_search_service, name = 'ajax_search_service'),
+    path('job_post/<int:pk>/', views.job_post_detail, name = 'job_post_detail'),
+    path('find_customers/jobs/submit_proposal/<int:pk>/', views.submit_proposal, name = 'submit_proposal'),
+
 ]

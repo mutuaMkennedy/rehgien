@@ -1,0 +1,52 @@
+{% load static %}
+{% if job_proposal %}
+<div class="jbdt_userReplied">
+  <div class="replied_message_scss">
+    <span class='material-icons'>check_circle_outline</span>
+    <h6>Message sent successfully!</h6>
+    <p>The client will reach out to you if you are a match.</p>
+  </div>
+  <div class="replied_message">
+    {% for proposal in job_proposal%}
+      <div class="replied_msgHd">
+        <img src="
+         {% if proposal.proposal_sender.profile_image %}
+          {{proposal.proposal_sender.profile_image.url }}
+         {% else %}
+          {% static 'img/avatar.png' %}
+         {% endif %}
+         " alt="">
+         <div class="replied_msgUsdtls">
+           <h5>{{proposal.proposal_sender.username|capfirst}}</h5>
+           <h6>{{proposal.proposal_send_date.date}}</h6>
+         </div>
+      </div>
+      <div class="jbdtRspMessage">
+          {{proposal.message}}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% else %}
+<div class="jbdltFrmWrapper">
+  <h6>Send a short message to the client telling them why they should hire you</h6>
+  <form id="jpReplyForm" action="{% url 'markets:submit_proposal' pk=job.pk%}" method="post">
+    {% csrf_token %}
+    <div class="jpReplyField">
+      <textarea name="post_reply" rows="8" cols="80" placeholder="Tell the client why they should hire you"></textarea>
+      <span>You can only send one message. Make sure you capture important things the client should know about you.</span>
+    </div>
+    <div class="jpReplyBtn">
+      <button type="submit" name="button"><img id="msgSendLoader" src="{% static 'img/ajax-loader.gif'%}" alt="loading"> Send message</button>
+    </div>
+  </form>
+  <div class="jbdtHelpText">
+    <h2>How your message is handled</h2>
+    <ul>
+      <li>Your message is treated as a proposal and sent to the client.</li>
+      <li>We build and attach to your message your profile and a link to it.</li>
+      <li>The client will review your profile and contact you for further info if you are a match.</li>
+    </ul>
+  </div>
+</div>
+{% endif %}

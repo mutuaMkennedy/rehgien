@@ -1,26 +1,27 @@
-<div class="ls_pagination">
+<div id="prls_pagination" class="ls_pagination">
     {% if listings.has_previous %}
-        <a class="pagination-action" href="?page=1">
-            <i class="fa fa-angle-double-left" aria-hidden="true"></i> </a>
-        <a class="pagination-action" href="?page={{ listings.previous_page_number }}">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
+        <a class="pagination-action _pageNumber" data-PageNumber="1" href="#">
+            <span class="material-icons">first_page</span>
+        </a>
+        <a id="_pPrevPageLink" data-PageNumber="{{ listings.previous_page_number }}" class="pagination-action _pageNumber" href="#">
+            <span class="material-icons">chevron_left</span>
         </a>
     {% endif %}
     {% for num in listings.paginator.page_range %}
         {% if listings.number == num %}
-            <span class="pagination-number pagination-current">{{ num }}</span>
+            <span class="pagination-number pagination-current" data-PageNumber="{{ num }}">{{ num }}</span>
         {% elif num > listings.number|add:'-3' and num < listings.number|add:'3' %}
-            <a class="pagination-number" href="?page={{ num }}">{{ num }}</a>
+            <a class="pagination-number _pageNumber" data-PageNumber="{{ num }}" href="#">{{ num }}</a>
         {% endif %}
     {% endfor %}
         {% if listings.has_next %}
         <span class="pagination-of">...</span>
         <span class="pagination-total"> {{ listings.paginator.num_pages }}</span>
-        <a class="pagination-action" href="?page={{ listings.next_page_number }}">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
+        <a id="_pNextPageLink" data-PageNumber="{{ listings.next_page_number }}" class="pagination-action _pageNumber" href="#">
+          <span class="material-icons">chevron_right</span>
         </a>
-        <a class="pagination-action" href="?page={{ listings.paginator.num_pages }}">
-            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+        <a class="pagination-action _pageNumber" data-PageNumber="{{ listings.paginator.num_pages }}" href="#">
+          <span class="material-icons">last_page</span>
         </a>
     {% endif %}
 </div>

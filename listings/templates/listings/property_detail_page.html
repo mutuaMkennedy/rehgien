@@ -4,67 +4,222 @@
 {% block content %}
 {% load cloudinary %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
-      <script type="text/javascript">
-        $(document).ready(function(event){
-          $(document).on('click','#ajxFav', function(event){
-             event.preventDefault();
-             var pk = $(this).attr('value');
-             $.ajax({
-               type : 'post',
-               url : '{% url "listings:save_property"%}',
-               data : {
-                  'pk':pk,
-                  'property_category':'homes',
-                  'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-               },
-               success: function(response) {
-                 $('#dtl-fav-btn').html(response['form'])
-               },
-               error: function(rs,e){
-                 console.log(rs.responseText)
-               },
-             });
-          });
+<script src="{% static 'calendar/js/caleandar.js'%}"></script>
+<script type="text/javascript">
+  $(document).ready(function(event){
+    $(document).on('click','#ajxFav', function(event){
+       event.preventDefault();
+       var pk = $(this).attr('value');
+       $.ajax({
+         type : 'post',
+         url : '{% url "listings:save_property"%}',
+         data : {
+            'pk':pk,
+            'property_category':'homes',
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+         },
+         success: function(response) {
+           $('#dtl-fav-btn').html(response['form'])
+         },
+         error: function(rs,e){
+         },
+       });
+    });
+    $(document).on('click','#_OphRmndrAlrt', function(event){
+       event.preventDefault();
+       var successmsgBody = $('#upfPageAcScs');
+       var errmsgBody = $('#upfPageAcErr');
+       var button = $(this);
+       var pk = button.attr('value');
+       $.ajax({
+         type : 'post',
+         url : '{% url "listings:set_openhouse_reminder"%}',
+         data : {
+            'openHouseEventId':pk,
+            'csrfmiddlewaretoken':'{{csrf_token}}',
+         },
+         success: function(response) {
+           button.html('<span class="material-icons">add_alert</span>' + response['reminder_set'])
+           successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+           successmsgBody.css({'display': 'flex','bottom':'10px'})
 
-          //OwlCarousel
-          $(".owl-carousel").owlCarousel({
-              loop:true,
-              margin:10,
-              nav:true,
-              responsiveClass:true,
-              responsive:{
-                 0:{
-                     items:1,
-                     nav:true
-                 },
-                 480:{
-                     items:3,
-                     nav:false
-                 },
-                 768:{
-                     items:3,
-                     nav:true,
-                     loop:false
-                 }
-             }
-            });
+           setTimeout(function(){
+              successmsgBody.css('bottom','-100px');
+           }, 6000);
+         },
+         error: function(rs,e){
+         },
+       });
+    });
+
+    $(".owl-carousel").owlCarousel({
+        loop:false,
+        margin:10,
+        nav:true,
+        responsiveClass:true,
+        responsive:{
+           0:{
+               items:1,
+               nav:true
+           },
+           480:{
+               items:2,
+               nav:false
+           },
+           768:{
+               items:2,
+               nav:true,
+               loop:false
+           }
+       }
+      });
+
+    $(document).on('click','._add-to-following', function(event){
+       event.preventDefault();
+       var pk = $(this).attr('value');
+       var successmsgBody = $('#upfPageAcScs')
+       var errmsgBody = $('#upfPageAcErr')
+       var formBox= $('#Pro-follow-box-ldsiwxcy');
+
+       $.ajax({
+         type : 'post',
+         url : '{% url "profiles:follow_pro"%}',
+         data : {
+            'pk':pk,
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+         },
+         dataType: 'json',
+         // success
+         success: function(response) {
+
+           formBox.html(response['form']);
+           successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+           successmsgBody.css({'display': 'flex','bottom':'10px'})
+
+           setTimeout(function(){
+              successmsgBody.css('bottom','-100px');
+           }, 6000);
+
+         },
+         error: function(response,e){
+             errmsgBody.html("<span class='material-icons'>error_outline</span>" + response['err_message'])
+             errmsgBody.css({'display': 'flex','bottom':'10px'})
+             setTimeout(function(){
+                errmsgBody.css('bottom','-100px');
+             }, 6000);
+         },
+       });
+    });
+
+    $(document).on('click','#_jkdfsClckCal', function(event){
+       var dataType = $(this).attr('data-type');
+       $.ajax({
+         type : 'get',
+         url : './',
+         data : {
+           'dataType':dataType,
+         },
+         success: function(response) {
+           $('.prof-card-content').html( "<span class='material-icons'>call</span> &nbsp" + response['phone_number'])
+         },
+         error: function(rs,e){
+         },
+       });
+    });
+
+    $(document).on('click','._extraMedia', function(event){
+       event.preventDefault();
+       var dataType = $(this).attr('data-type');
+       var errmsgBody = $('#upfPageAcScs')
+       var vidBox= $('#vid');
+       var vrBox= $('#vr');
+       console.log(dataType);
+       //checking if media type is already in loadead in the dom to prevent unneeded db requests
+       if (dataType === 'media_video') {
+         if (vidBox.children().length === 0) {
+           getData()
+         };
+       }else if (dataType === 'media_vr'){
+         if (vrBox.children().length === 0) {
+           getData()
+         };
+       }
+       function getData() {
+         $.ajax({
+         type : 'get',
+         url : './',
+         data :{
+           "dataType":dataType,
+         },
+         dataType: 'json',
+         success: function(response) {
+           if (dataType ==='media_video') {
+              vidBox.html(response['html']);
+           }else if (dataType ==='media_vr') {
+              vrBox.html(response['html']);
+           }
+         },
+         error: function(response,e){},
+       });
+        }
+    });
+
+    var addTabs = document.getElementsByClassName('add-details');
+    var addTabsBox = document.getElementById('soeYisoNSDXYJKLP');
+    var shm = document.getElementById('__showMr');
+        shm.style.display = 'none';
+    var shl = document.getElementById('__showls');
+        shl.style.display = 'none';
+
+    if (addTabs.length > 1) {
+        shm.style.display = 'flex';
+        shm.addEventListener('click', function(){
+          for (var i = 0; i < addTabs.length; i++) {
+            if (i != 0 ) {
+              addTabs[i].style.display = 'block';
+            };
+            shm.style.display = 'none';
+            shl.style.display = 'flex';
+          };
         });
-      </script>
 
+        shl.addEventListener('click', function(){
+          for (var i = 0; i < addTabs.length; i++) {
+            if (i != 0 ) {
+              addTabs[i].style.display = 'none';
+            };
+            shm.style.display = 'flex';
+            shl.style.display = 'none';
+          };
+        });
+    };
+
+  });
+</script>
 <section id="d-bd">
+    <div id="upfPageAcScs" class="_upfPageAcScs">
+    </div>
+    <div id="upfPageAcErr" class="_upfPageAcErr">
+    </div>
     <div class="container">
-      <div id="ca-row" class="row">
-        <nav class="breadc-nav">
-          <div class="nav-wrapper-bread">
-            <div class="col s12">
-              <a href="{% url 'listings:homepage'%}" class="breadcrumb">Home</a>
-              <a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale' %}" class="breadcrumb">Buy</a>
-              <a class="breadcrumb">{{listing.property_name}}</a>
-            </div>
+      <nav class="breadc-nav">
+        <div class="nav-wrapper-bread">
+          <div class="d-bd-Nav-Wrpr-brd">
+            <a href="{% url 'listings:homepage'%}" class="breadcrumb">Home</a>
+            <a href="{% url 'listings:property-listings' property_category=listing.property_category|lower property_listing_type=listing.listing_type|lower %}" class="breadcrumb">
+              {% if listing.listing_type == 'FOR_SALE'%}
+              Buy
+              {% else %}
+              Rent
+              {% endif %}
+            </a>
+            <a class="breadcrumb">{{listing.property_name}}</a>
           </div>
-        </nav>
-        <div id="c-slide" class="col s12 md8 l8 xl8">
-          <div id="c-slider" class="carousel carousel-slider" data-indicators="true">
+        </div>
+      </nav>
+      <div id="ca-row" class="row">
+        <div class="col s12 md9 l9 xl9 c-slide">
+          <div class="carousel carousel-slider c-slider" data-indicators="true">
             <h4 class="listing-title-d">{{listing.property_name}}</h4>
             <div class="fa-sh-btns">
               <div id="dtl-fav-btn">
@@ -72,7 +227,7 @@
               </div>
               <div class="share-button">
                 <a class="modal-trigger" href="#socialShareModal">
-                  <img src="{% static 'img/share.svg'%}" alt="share">
+                  <span class="material-icons">forward</span>
                     Share
                 </a>
               </div>
@@ -87,11 +242,17 @@
             <div class="next">
               <img src="{% static 'img/circled_next_arrow.svg'%}" alt="next">
             </div>
+
+            <div class="_x_sclistingExtraMedia">
+              <a href="#vid" class="modal-trigger"><button class="vid-btn _extraMedia" data-type='media_video' type="button" name="button"><i class="material-icons">play_circle_outline</i></button></a>
+              <a href="#vr" class="modal-trigger"><button class="vr-btn _extraMedia" data-type='media_vr' type="button" name="button"><i class="material-icons">3d_rotation</i></button></a>
+            </div>
+
           </div>
         </div>
-        <div id="contact-form1" class="col s12 md4 l4 xl4">
-              <div id="cont-card" class="card horizontal">
-                <div id="c-img" class="card-image">
+        <div class="col s12 md3 l3 xl3 contact-form1">
+              <div class="card cont-card col s12">
+                <div class="card-image c-img">
                   {%if listing.owner.profile_image %}
                   <img src="{{listing.owner.profile_image.url}}" alt="{{listing.owner.first_name}}">
                   {% else %}
@@ -99,19 +260,17 @@
                   {% endif %}
                 </div>
                 <div class="card-stacked">
+                  <h6>{% if listing.owner.get_full_name %}{{listing.owner.get_full_name}}{%else%}{{listing.owner.username}}{%endif%}<span class="material-icons">verified</span></h6>
                   <div class="prof-card-content">
-                    <h6><b>{{listing.owner.first_name}} </b></h6>
-                    <li>{{listing.phone}}</li>
-                  </div>
-                  <div class="verified-agent">
-                  <li> Verified by Rehgien</li>
+                    <button type="button" name="button" data-type ="phone_number" id="_jkdfsClckCal" ><span class="material-icons">call</span> Call</button>
                   </div>
                 </div>
               </div>
-              <form id="agentContactForm1" action="{% url 'contact:contact_listing_agent' %}" class="col s12" method="POST">
-                <h6 class="black-text" style='font-size:12px; font-family:Roboto,Arial;'><b>Contact this agent</b></h6>
+              <form  action="{% url 'contact:contact_listing_agent' %}" class="col s12 agentContactForm1" method="POST">
+                <h6 class="black-text col s12">Or send a message to {% if listing.owner.first_name %} {{listing.owner.first_name}} {% else %}this agent{%endif%}</h6>
                 {% csrf_token %}
-                <div class="MsglistingDetails">
+                <div class="MsglistingDetails col s12">
+                  <input type="hidden" name="listingID" value="{{listing.PK}}">
                   <input id="recepient" type="hidden" name="recepient" value="{{listing.email}}" class="validate">
                   <input type="hidden" name="recepientPhoneNumber" value="{{listing.phone}}">
                   <input type="hidden" name="currentListingPath" value="{{ request.build_absolute_uri }}">
@@ -120,29 +279,25 @@
                 </div>
                 <div id="name_phone" class="row">
                     <div class="input-field col s12">
-                      <input id="name" type="text" name="name" class="validate" placeholder="Your Name">
+                      <input type="text" name="name" class="validate" placeholder="Your Name">
                     </div>
                     <div class="input-field col s12">
-                      <input id="phone_number" type="number" name="phone_number" min="0" class="validate" placeholder="Phone number">
+                      <input type="number" name="phone_number" min="0" class="validate" placeholder="Phone number">
                     </div>
                 </div>
                 <div id="fEmail" class="row">
                   <div class="input-field col s12">
-                    <input id="from_email" type="email" name="from_email" class="validate" placeholder="Your Email">
+                    <input type="email" name="from_email" class="validate" placeholder="Your Email" validate value={{request.user.email}}>
                   </div>
                 </div>
                 <div id="eMessage" class="row">
                   <div class="input-field col s12">
-                    <textarea id="message" rows="4" name="message" cols="80"></textarea>
-                    <script type="text/javascript">
-                      document.getElementById("message").defaultValue="Hello i'm interested in a property you are selling in {{listing.location_name}}";
-                    </script>
-                  </div>
+                    <textarea rows="4" name="message" cols="80">Hello i'm interested in {{listing.property_name}} situated in {{listing.location_name}}</textarea>
                 </div>
                 <button id="agentSendButton" type="submit" name="button"> Send Message</button>
               </form>
-              <div class="cont-terms">
-                <p>By clicking send you agree that Rehgien and Real Estate professionals may contact you via phone/text
+              <div class="cont-terms col s12">
+                <p>By clicking send or call you agree that Rehgien and Real Estate professionals may contact you via phone/text
                 about your inquiry, which may involve the use of automated means. You are not required to consent as a
               condition of purchasing any property, goods or services. Note local data rates for texts/messages may apply.
               You also agree to our terms of service</p>
@@ -200,289 +355,423 @@
 </section>
 
 <section>
-  <div class="container">
+  <div class="container m-dtl-cont-lstyr">
     <div class="row">
-      <div class="col s12 md4 l4 xl4">
-        <div class="facts1">
-          <li class="dtl-price" >Ksh {{listing.price}}</li>
-          <li class="dtl-features"> <i class="fas fa-shower fa-lg"></i>{{listing.bathrooms}} ba | <i class="fas fa-bed fa-lg"></i> {{listing.bedrooms}} bd | <i class="fas fa-ruler-combined fa-lg"></i>{{listing.floor_area}} {{listing.size_units}}</li>
-          <li class="dtl-hometype">{{listing.type|lower}}</li>
+      <div class="col s12 md9 l9 xl9 _startcolumnYhskTJSKO">
+        <div class="_basicHomeFacts_dtlVloay">
+            <div class="facts1">
+              <li class="dtl-price" >Ksh {{listing.price}}</li>
+              <li class="dtl-features">{{listing.bathrooms}} ba | {{listing.bedrooms}} bd | {{listing.floor_area}} Sqft</li>
+              <li class="dtl-hometype">{{listing.type|lower}}</li>
+            </div>
+            <div class="facts2">
+              <li><b>Year Built:</b> {{listing.year_built}}</li>
+              {% if listing.remodel_year%}
+              <li><b>Remodel Year:</b> {{listing.remodel_year}}</li>
+              {% else %}
+              <li><b>Remodel Year:</b> None</li>
+              {% endif %}
+            </div>
+        </div>
+        <div class="_hsyiLohdtation">
+          <h5>Location, {{listing.location_name|lower}}</h5>
+          <div id='detail-map'>
+
+          </div>
+          <script type="text/javascript">
+            mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+            if (!mapboxgl.supported()) {
+              alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
+              } else {
+                var map = new mapboxgl.Map({
+                    container: 'detail-map',
+                    style: 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
+                    minZoom: 10,
+                    maxZoom:14,
+                    center: [{{ listing.location.x }}, {{ listing.location.y }}]
+              });
+            }
+            // disable map rotation using right click + drag
+            map.dragRotate.disable();
+
+            // disable map rotation using touch rotation gesture
+            map.touchZoomRotate.disableRotation();
+
+            // Adds geolocate control to the map.
+            map.addControl(new mapboxgl.GeolocateControl({
+                positionOptions: {
+                    enableHighAccuracy: true
+                },
+                trackUserLocation: true
+            }));
+
+            // Adds zoom and rotation controls to the map.
+            map.addControl(new mapboxgl.NavigationControl());
+
+            var geojson = {
+            type: 'FeatureCollection',
+            features: [
+                {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [{{ listing.location.x }}, {{ listing.location.y }}]
+                },
+                properties: {
+                    title: '{{ listing.property_name }}',
+                    thumb:
+                    {% for home_photo in listing.home_photos.all %}
+                      {% if forloop.last %}
+                      '{% cloudinary_url home_photo.photo ImageTransformation %}'
+                      {% endif %}
+                    {% endfor %}
+                    ,
+                    location_name:'{{listing.location_name}}',
+                    price:'{{listing.price}}',
+                }
+                },
+            ]
+            };
+
+            map.on('load', function() {
+              map.addSource('property',{
+                "type": "geojson",
+                "data": geojson
+              });
+              map.addLayer({
+              "id": "points",
+              "source": 'property',
+              "type": "circle",
+              "paint": {
+                  "circle-radius": 6,
+                  "circle-stroke-width": 1.5,
+                  "circle-color": "#2ECC71",
+                  "circle-stroke-color":"blue"
+              },
+            });
+          })
+          </script>
+        </div>
+        <div class="description-d">
+          <h5>Home Description</h5>
+          <p>{{listing.description}}</p>
+        </div>
+        <div class="add-details-cont">
+          <h5>Additional details</h5>
+          <div id="soeYisoNSDXYJKLP" class="_dsipAddiOkdDetails">
+              <div class="add-details visible">
+                  <h6># Other Home Facts</h6>
+                  <div class="add_details_items_bx_ioxlc">
+                    {% if listing.floor_number%}
+                      <div class="add_details_items_bx_itms">
+                        <h5><b>Floor:</b></h5>
+                        <li>{{listing.floor_number}}</li>
+                      </div>
+                    {% endif %}
+                    {% if listing.total_rooms%}
+                    <div class="add_details_items_bx_itms">
+                      <h5><b>Total Rooms:</b></h5>
+                      <li>{{listing.total_rooms}}</li>
+                    </div>
+                    {% endif %}
+                    {% if listing.garage_sqm%}
+                    <div class="add_details_items_bx_itms">
+                      <h5><b>Garage Size:</b></h5>
+                      <li>{{listing.garage_sqm}} Sqft</li>
+                    </div>
+                    {% endif %}
+                    {% if listing.number_of_units%}
+                    <div class="add_details_items_bx_itms">
+                      <h5><b>Units Available:</b></h5>
+                      <li>{{listing.number_of_units}}</li>
+                    </div>
+                    {% endif %}
+                    {% if listing.number_of_stories%}
+                    <div class="add_details_items_bx_itms">
+                      <h5><b>Storeys:</b></h5>
+                      <li>{{listing.number_of_stories}}</li>
+                    </div>
+                    {% endif %}
+                    {% if listing.parking_spaces%}
+                    <div class="add_details_items_bx_itms">
+                      <h5><b>Parking:</b></h5>
+                      <li>{{listing.parking_spaces}}</li>
+                    </div>
+                    {% endif %}
+                  </div>
+              </div>
+              <div class="add-details">
+                <h6># Indoor Features</h6>
+                <div class="add_details_items_bx_ioxlc">
+                  {% if listing.appliances %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Pre-installed Appliances:</b></h5>
+                    <li>{{listing.appliances}}</li>
+                  </div>
+                  {% endif %}
+                  {% if listing.basement %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Basement:</b></h5>
+                    <li>{{listing.basement}}</li>
+                  </div>
+                  {% endif %}
+                  {% if listing.floor_covering %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Floor Covering:</b></h5>
+                    <li>{{listing.floor_covering}}</li>
+                  </div>
+                  {% endif %}
+                  {% if listing.rooms %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Rooms:</b></h5>
+                    <li>{{listing.rooms}}</li>
+                  </div>
+                  {% endif %}
+                  {% if listing.indoor_features %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Indoor Features:</b> </h5>
+                    <li>{{listing.indoor_features}}</li>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="add-details">
+                <h6># Utility Details</h6>
+                <div class="add_details_items_bx_ioxlc">
+                  {% if listing.cooling_type %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Cooling Type:</b> </h5>
+                    <li>{{listing.cooling_type}}</li>
+                  </div>
+                  {% endif %}
+                  {% if listing.heating_type %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Heating Type:</b></h5>
+                    <li>{{listing.heating_type}}</li>
+                  </div>
+                  {% endif %}
+                  {% if listing.heating_fuel %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Heating Fuel:</b></h5>
+                    <li>{{listing.heating_fuel}}</li>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="add-details">
+                <h6># Building Details</h6>
+                <div class="add_details_items_bx_ioxlc">
+                  {% if listing.building_amenities %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Amenities:</b></h5>
+                    <li>{{listing.building_amenities}}</li>
+                  </div>
+                  {% endif%}
+                  {% if listing.exterior %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Exterior:</b></h5>
+                    <li>{{listing.exterior}}</li>
+                  </div>
+                  {% endif%}
+                  {% if listing.outdoor_amenities %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Outdoor Amenities:</b></h5>
+                    <li>{{listing.outdoor_amenities}}</li>
+                  </div>
+                  {% endif%}
+                  {% if listing.parking %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Available Parking:</b></h5>
+                    <li>{{listing.parking}}</li>
+                  </div>
+                  {% endif%}
+                  {% if listing.roof %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>Roof Type</b></h5>
+                    <li>{{listing.roof}}</li>
+                  </div>
+                  {% endif%}
+                  {% if listing.view %}
+                  <div class="add_details_items_bx_itms">
+                    <h5><b>View Type</b> </h5>
+                    <li>{{listing.view}}</li>
+                  </div>
+                  {% endif%}
+                </div>
+              </div>
+              <button id="__showMr" class="_adShMore_xytlaxcs" type="button" name="button"><span class="material-icons">expand_more</span>View more</button>
+              <button id="__showls" class="_adShMore_xytlaxcs" type="button" name="button"><span class="material-icons">expand_less</span>Show less</button>
+          </div>
         </div>
       </div>
+      <div class="col s12 md3 l3 xl3">
+        <div class="_sdflOpenHouse_cont">
+          <h6>Open house events</h6>
+            <p>{{openhouse_dates.count}} upcoming, {{happening_today.count}} happening today.
+              .
+            </p>
+            <div id="fdskldOoPJSI" class="openxfhkhsCarousel">
+                <div class="carousel-item _openksjahousedlfrm">
+                    <div id="jsaouido" class="_kdsOphStsTime_Lsdtlsc">
+                    </div>
+                    <script type="text/javascript">
+                      var settings = {
+                            Color: '',
+                            LinkColor: '',
+                            NavShow: true,
+                            NavVertical: false,
+                            NavLocation: '',
+                            DateTimeShow: true,
+                            DateTimeFormat: 'mmm, yyyy',
+                            DatetimeLocation: '',
+                            EventClick: '',
+                            EventTargetWholeDay: true,
+                            DisabledDays: [],
+                            ModelChange: 'model',
 
-    <div class="col s12 md4 l4 xl4">
-      <div class="facts2">
-        <li><b>Year Built:</b> {{listing.year_built}}</li>
-        {% if listing.remodel_year%}
-        <li><b>Remodel Year:</b> {{listing.remodel_year}}</li>
-        {% else %}
-        <li><b>Remodel Year:</b> None</li>
+                        };
+                        var events = [
+                            {% if openhouse_dates %}
+                              {% for openhouse in openhouse_dates %}
+                              {'Date': new Date({{openhouse.date.year}}, {{openhouse.date.month|add:'-1'}}, {{openhouse.date.day}}),
+                              'Title': 'Set for {{openhouse.date|date}} from {{openhouse.start_time}} to {{openhouse.end_time}}' +
+                              '<button id="_OphRmndrAlrt" value="{{openhouse.id}}" type="button">' +
+                              '<span class="material-icons">add_alert</span>'+
+                              {% if request.user in openhouse.reminder_list.all %}'Remove reminder'{%else%}'Set reminder'{%endif%} +
+                              '</button>'},
+                              {% endfor %}
+                            {% endif %}
+                          ];
+                        var element = document.getElementById('jsaouido');
+                        caleandar(element, events,settings);
+                    </script>
+                </div>
+
+            </div>
+        </div>
+        <div class="_seBsCardsllg_cont">
+          <h6>Follow our business page</h6>
+            <div class="_seBsCardsllg_aCardW">
+                <div class="card _seBsCardsllg_aCardElm">
+                  <a href="{{listing.owner.pro_business_profile.get_absolute_url}}">
+                    <img src="
+                    {%if listing.owner.pro_business_profile.business_profile_image %}
+                      {{listing.owner.pro_business_profile.business_profile_image.url}}
+                    {% else %}
+                      {% static 'img/avatar.png'%}
+                    {% endif %}
+                  " alt="{{listing.owner.pro_business_profile.business_name}}">
+                    <h6>{{listing.owner.pro_business_profile.business_name}}</h6>
+                  </a>
+                  <div class="rating_stars">
+                    {% if listing.owner.pro_business_profile.average_rating %}
+                      {% if listing.owner.pro_business_profile.average_rating > 4.5  and listing.owner.pro_business_profile.average_rating <= 5 %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                      {%elif listing.owner.pro_business_profile.average_rating > 3.5 and listing.owner.pro_business_profile.average_rating <= 4.5 %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                      {% elif listing.owner.pro_business_profile.average_rating > 2.5 and listing.owner.pro_business_profile.average_rating <= 3.5 %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                      {% elif listing.owner.pro_business_profile.average_rating > 1.5 and listing.owner.pro_business_profile.average_rating <= 2.5 %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                      {% elif listing.owner.pro_business_profile.average_rating > 0 and listing.owner.pro_business_profile.average_rating <= 1.5 %}
+                      <li> <span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                      {% else %}
+                      <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                      {% endif %}
+                    {%else%}
+                    <li> <span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                    {%endif%}
+                    <a href="javascript:void(0)"> {{listing.owner.pro_business_profile.pro_business_review.all.count}} reviews.</a>
+                  </div>
+                  <div class="_ksjkFlexIntbTSN-acts">
+                      <button type="button" name="button"><span>{{listing.owner.pro_business_profile.followers.all.count}}</span> &nbsp Followers</button>
+                      <button type="button" name="button"><span>{{listing.owner.pro_business_profile.saves.all.count}}</span> &nbsp Saves</button>
+                  </div>
+                  <div class="_bsfLSdcatkixyg">
+                    <div id="Pro-follow-box-ldsiwxcy">
+                      {%include 'profiles/pro-follow-section.html' with pro=listing.owner.pro_business_profile%}
+                    </div>
+                    or
+                    <a href="{{listing.owner.pro_business_profile.get_absolute_url}}"> Visit page to learn more</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div
+</section>
+
+
+<div id="vid" class="modal"></div>
+<div id="vr" class="modal"></div>
+
+<section>
+  <div class="container _ngbRfdsiu_smlc">
+    <div class="row">
+      <div class="col s12 md9 l9 xl9">
+        {% if listing.similar_homes_this_area %}
+        <h1 class="sld-h" >We found this similar {{listing.property_category|lower}} in this area.</h1>
+        <div class="owl-carousel sld">
+          {% for similar_property in listing.similar_homes_this_area%}
+          <a href="{{similar_property.get_absolute_url}}">
+            <div id="similar-Lcard" class="card">
+              <div class="slc-img-wrapper">
+                <li>Last update on: {{similar_property.publishdate.date}}</li>
+                {% for home_photo in similar_property.home_photos.all %}
+                  {% if forloop.last %}
+                  {% cloudinary home_photo.photo ImageTransformation %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <div class="smlc_coOVy-kjlsXusaoibdf">
+                <div class="slc-f-wrapper">
+                    <h5>{{similar_property.property_name}}</h5>
+                    <h3>Ksh:{{similar_property.price}} {% if similar_property.listing_type == 'FOR_RENT'%}p/m{%endif%}</h3>
+                    <h4>
+                      {{similar_property.bathrooms}}ba {{similar_property.bedrooms}}bd {{similar_property.floor_area}} Sqft
+                      <span>{{similar_property.location_name}}</span>
+                    </h4>
+                </div>
+              </div>
+            </div>
+          </a>
+        {% endfor%}
+        </div>
+        {% endif %}
+        {% if listing.similar_homes_this_region %}
+        <h1 class="sld-h" >Also check out this similar {{listing.property_category|lower|capfirst}} around {{listing.location_name|lower|capfirst}}</h1>
+          <div class="owl-carousel sld">
+            {% for similar_property in listing.similar_homes_this_region%}
+            <a href="{{similar_property.get_absolute_url}}">
+              <div id="similar-Lcard" class="card">
+                <div class="slc-img-wrapper">
+                  <li>Last update on: {{similar_property.publishdate.date}}</li>
+                  {% for home_photo in similar_property.home_photos.all %}
+                    {% if forloop.last %}
+                    {% cloudinary home_photo.photo ImageTransformation %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <div class="smlc_coOVy-kjlsXusaoibdf">
+                  <div class="slc-f-wrapper">
+                      <h5>{{similar_property.property_name}}</h5>
+                      <h3>Ksh:{{similar_property.price}} {% if similar_property.listing_type == 'FOR_RENT'%}p/m{%endif%}</h3>
+                      <h4>
+                        {{similar_property.bathrooms}}ba {{similar_property.bedrooms}}bd {{similar_property.floor_area}} Sqft
+                        <span>{{similar_property.location_name}}</span>
+                      </h4>
+                  </div>
+                </div>
+              </div>
+            </a>
+          {% endfor%}
+          </div>
         {% endif %}
       </div>
     </div>
-
-      <div class="col s12 md4 l4 xl4">
-          <div class=" facts3">
-            <a href="#vid" class="modal-trigger"><button class="vid-btn" type="button" name="button"><i class="material-icons">play_circle_filled</i></button></a>
-            <a href="#vr" class="modal-trigger"><button class="vr-btn" type="button" name="button"><i class="material-icons">3d_rotation</i></button></a>
-          </div>
-      </div>
-    </div>
-  </div>
-  <!-- pop up video-->
-  <div id="vid" class="modal">
-    {% for vids in videos %}
-    <video src="{% cloudinary_url vids.video VideoTransformation %}" type="video/mp4" class="videos" controls="controls"/>
-
-    {% endfor %}
-  </div>
-  <!-- popup vr-->
-  <div id="vr" class="modal">
-    <iframe width="100%" height="100%" src="{{listing.virtual_tour_url}}" frameborder="0" allowfullscreen allowvr></iframe>
   </div>
 </section>
-
-<section>
-  <div id="m-dtl-cont" class="container">
-    <div class="row">
-      <h4 class="dtl-location">{{listing.location_name}}</h4>
-      <div id='detail-map'>
-
-      </div>
-    </div>
-  </div>
-  <script type="text/javascript">
-    mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
-    if (!mapboxgl.supported()) {
-      alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
-      } else {
-        var map = new mapboxgl.Map({
-            container: 'detail-map',
-            style: 'mapbox://styles/reykennedy/cjr359eyw0t9n2rrzr4fbv8uy',
-            minZoom: 10,
-            maxZoom:14,
-            center: [{{ listing.location.x }}, {{ listing.location.y }}]
-      });
-    }
-    // disable map rotation using right click + drag
-    map.dragRotate.disable();
-
-    // disable map rotation using touch rotation gesture
-    map.touchZoomRotate.disableRotation();
-
-    // Adds geolocate control to the map.
-    map.addControl(new mapboxgl.GeolocateControl({
-        positionOptions: {
-            enableHighAccuracy: true
-        },
-        trackUserLocation: true
-    }));
-
-    // Adds zoom and rotation controls to the map.
-    map.addControl(new mapboxgl.NavigationControl());
-
-    var geojson = {
-    type: 'FeatureCollection',
-    features: [
-        {
-        type: 'Feature',
-        geometry: {
-            type: 'Point',
-            coordinates: [{{ listing.location.x }}, {{ listing.location.y }}]
-        },
-        properties: {
-            title: '{{ listing.property_name }}',
-            thumb:
-            {% for home_photo in listing.home_photos.all %}
-              {% if forloop.last %}
-              '{% cloudinary_url home_photo.photo ImageTransformation %}'
-              {% endif %}
-            {% endfor %}
-            ,
-            location_name:'{{listing.location_name}}',
-            price:'{{listing.price}}',
-        }
-        },
-    ]
-    };
-
-    map.on('load', function() {
-      map.addSource('property',{
-        "type": "geojson",
-        "data": geojson
-      });
-      map.addLayer({
-      "id": "points",
-      "source": 'property',
-      "type": "circle",
-      "paint": {
-          "circle-radius": 6,
-          "circle-stroke-width": 1.5,
-          "circle-color": "#2ECC71",
-          "circle-stroke-color":"blue"
-      },
-    });
-  })
-  </script>
-</section>
-
-<section>
-  <div class="container">
-    <div class="row">
-      <div class="description-d">
-        <h5>Home Description</h5>
-        <p>{{listing.description}}</p>
-      </div>
-    </div>
-  </div>
-</section>
-<section>
-  <div class="container add-details-cont">
-    <div class="row">
-        <div id="add-details" class="col s12 md3 l3 xl3">
-            <h6><b>Additional Home Facts</b></h6>
-            {% if listing.floor_number%}
-            <h5><b>Floor:</b></h5>
-            <li>{{listing.floor_number}}</li>
-            {% endif %}
-            {% if listing.total_rooms%}
-            <h5><b>Total Rooms:</b></h5>
-            <li>{{listing.total_rooms}}</li>
-            {% endif %}
-            {% if listing.garage_sqm%}
-            <h5><b>Garage Size:</b></h5>
-            <li>{{listing.garage_sqm}} SqM</li>
-            {% endif %}
-            {% if listing.number_of_units%}
-            <h5><b>Units Available:</b></h5>
-            <li>{{listing.number_of_units}}</li>
-            {% endif %}
-            {% if listing.number_of_stories%}
-            <h5><b>Storeys:</b></h5>
-            <li>{{listing.number_of_stories}}</li>
-            {% endif %}
-            {% if listing.parking_spaces%}
-            <h5><b>Parking:</b></h5>
-            <li>{{listing.parking_spaces}}</li>
-            {% endif %}
-        </div>
-        <div id="add-details" class="col s12 md3 l3 xl3">
-          <h6><b>Indoor Features</b></h6>
-          <h5><b>Pre-installed Appliances:</b></h5>
-          <li>{{listing.appliances}}</li>
-          <h5><b>Basement:</b></h5>
-          <li>{{listing.basement}}</li>
-          <h5><b>Floor Covering:</b></h5>
-          <li>{{listing.floor_covering}}</li>
-          <h5><b>Rooms:</b></h5>
-          <li>{{listing.rooms}}</li>
-          <h5><b>Indoor Features:</b> </h5>
-          <li>{{listing.indoor_features}}</li>
-        </div>
-        <div id="add-details" class="col s12 md3 l3 xl3">
-          <h6><b>Utility Details</b></h6>
-          <h5><b>Cooling Type:</b> </h5>
-          <li>{{listing.cooling_type}}</li>
-          <h5><b>Heating Type:</b></h5>
-          <li>{{listing.heating_type}}</li>
-          <h5><b>Heating Fuel:</b></h5>
-          <li>{{listing.heating_fuel}}</li>
-        </div>
-        <div id="add-details" class="col s12 md3 l3 xl3">
-          <h6><b>Building Details</b></h6>
-          <h5><b>Amenities:</b></h5>
-          <li>{{listing.building_amenities}}</li>
-          <h5><b>Exterior:</b></h5>
-          <li>{{listing.exterior}}</li>
-          <h5><b>Outdoor Amenities:</b></h5>
-          <li>{{listing.outdoor_amenities}}</li>
-          <h5><b>Available Parking:</b></h5>
-          <li>{{listing.parking}}</li>
-          <h5><b>Roof Type</b></h5>
-          <li>{{listing.roof}}</li>
-          <h5><b>View Type</b> </h5>
-          <li>{{listing.view}}</li>
-        </div>
-    </div>
-    </div>
-</section>
-
-<section>
-<div class="container">
-  <div class="row">
-    {% if similar_listings %}
-    <h1 class="sld-h" >Similar Homes Around Nairobi You May Like</h1>
-    <div class="owl-carousel sld">
-      {% for similar_property in similar_listings%}
-      <a href="{{similar_property.get_absolute_url}}">
-        <div id="similar-Lcard" class="card">
-          <div class="slc-img-wrapper">
-            <li>Last update on: {{similar_property.publishdate.date}}</li>
-            {% for home_photo in similar_property.home_photos.all %}
-              {% if forloop.last %}
-              '{% cloudinary home_photo.photo ImageTransformation %}'
-              {% endif %}
-            {% endfor %}
-          </div>
-          <div class="slc-f-wrapper">
-            <li>Ksh:{{similar_property.price}}</li>
-            <span class="slc-f-properties">
-              <li><i class="fas fa-shower"></i>{{similar_property.bathrooms}}
-              <i class="fas fa-bed"></i>{{similar_property.bedrooms}}
-              <i class="fas fa-ruler-combined"></i>{{similar_property.floor_area}} {{similar_property.size_units}}</li>
-            </span>
-            <span class="slc-f-properties2">
-              <li>{{similar_property.property_name}}</li>
-              <li>{{similar_property.location_name}}</li>
-            </span>
-          </div>
-        </div>
-      </a>
-    {% endfor%}
-    </div>
-    {% endif %}
-  </div>
-</div>
-</section>
-
-<section>
-<div class="container">
-  <div class="row">
-    {% if similar_listings_in_area %}
-    <h1 class="sld-h" >Similar Homes In This Area You May Like</h1>
-    <div class="owl-carousel sld">
-      {% for similar_property in similar_listings_in_area%}
-      <a href="{{similar_property.get_absolute_url}}">
-        <div id="similar-Lcard" class="card">
-          <div class="slc-img-wrapper">
-            <li>Last update on: {{similar_property.publishdate.date}}</li>
-            {% for home_photo in similar_property.home_photos.all %}
-              {% if forloop.last %}
-              '{% cloudinary home_photo.photo ImageTransformation %}'
-              {% endif %}
-            {% endfor %}
-          </div>
-          <div class="slc-f-wrapper">
-            <li>Ksh:{{similar_property.price}}</li>
-            <span class="slc-f-properties">
-              <li><i class="fas fa-shower"></i>{{similar_property.bathrooms}}
-              <i class="fas fa-bed"></i>{{similar_property.bedrooms}}
-              <i class="fas fa-ruler-combined"></i>{{similar_property.floor_area}} {{similar_property.size_units}}</li>
-            </span>
-            <span class="slc-f-properties2">
-              <li>{{similar_property.property_name}}</li>
-              <li>{{similar_property.location_name}}</li>
-            </span>
-          </div>
-        </div>
-      </a>
-    {% endfor%}
-    </div>
-    {% endif %}
-  </div>
-</div>
-</section>
-
 {% endblock %}
 {% block footer %}
 <footer >

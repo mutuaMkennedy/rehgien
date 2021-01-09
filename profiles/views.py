@@ -7,22 +7,22 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from markets.models import (
-                    PropertyRequestLead,
-                    ProffesionalRequestLead,
-                    OtherServiceLead,
-                    AgentLeadRequest,
-                    AgentPropertyRequest
-                    )
+from markets import models as markets_models
+from location import models as location_models
 from django.core.exceptions import PermissionDenied
 from . import forms
 from . import models
 from listings import models as listings_models
-from django.db.models import Avg
+from django.db.models import Avg,Count
 from django.db.models import Prefetch
 from django.db.models import Q
 from django.forms import modelformset_factory
-
+try:
+	from django.utils import simplejson as simplejson
+except ImportError:
+	import json
+from django.utils.http import urlencode
+from django.core.exceptions import ObjectDoesNotExist
 
 # referencing the custom user model
 User = get_user_model()
@@ -42,46 +42,38 @@ def account_page(request):
 	format = "jpeg",
 	transformation = [
 		dict(height=112, width=200, crop="fill",quality="auto", gravity="center",
-		 format="auto", dpr="auto"),
-			]
-		)
+		format="auto", dpr="auto"),
+		]
+	)
 	user = request.user
 
 	user_sale_posts = listings_models.Home.objects.all().filter(owner=request.user, listing_type__icontains='FOR_SALE')
-	user_rental_posts =  listings_models.Home.objects.all().filter(owner=request.user, listing_type__icontains='FOR_SALE')
+	user_rental_posts =  listings_models.Home.objects.all().filter(owner=request.user, listing_type__icontains='FOR_RENT')
 
 	user_sale_favs = user.listings_home_saves_related.filter(listing_type__icontains='FOR_SALE')
-	user_rental_favs =  user.listings_home_saves_related.filter(listing_type__icontains='FOR_SALE')
+	user_rental_favs =  user.listings_home_saves_related.filter(listing_type__icontains='FOR_RENT')
 
-	#requests
-	property_requests = PropertyRequestLead.objects.all().filter(active=True).filter(owner=request.user)
-	proffesional_requests = ProffesionalRequestLead.objects.all().filter(active=True).filter(owner=request.user)
-	other_requests = OtherServiceLead.objects.all().filter(active=True).filter(owner=request.user)
-	ag_lead_requests = AgentLeadRequest.objects.all().filter(active=True).filter(owner=request.user)
-	ag_property_requests = AgentPropertyRequest.objects.all().filter(active=True).filter(owner=request.user)
+	job_post = markets_models.JobPost.objects.filter(active=True,job_poster=request.user)
+	my_job_replies = markets_models.JobPostProposal.objects.filter(job_post__active=True, proposal_sender=request.user)
 
 	#porfolio
 	portfolio_items = models.PortfolioItem.objects.all().filter(created_by=request.user)
-	porfolio_categories = []
-	for choice in models.PortfolioItem.PORTFOLIO_ITEM_TYPE_CHOICE:
-		porfolio_categories.append(choice[0].replace('_',' '))
 
 	#connections
-	pro_connections = models.TeammateConnection.objects.filter(Q(requestor=request.user, receiver_accepted = 'No')|Q(receiver = request.user, receiver_accepted = 'No'))
+	pro_connections = models.TeammateConnection.objects.filter(Q(requestor=request.user, receiver_accepted = 'Yes')|Q(receiver = request.user, receiver_accepted = 'Yes'))
 
 	#pros the user is following
 	following = user.business_page_followers.all()
 
-	#account & profile edit forms
-	user_account_form = forms.UserEditForm(instance=user)
+	#account edit forms
+	basic_form = forms.UserEditForm(instance=user)
 
 	return render(request, 'profiles/user_profile.html', {
 	'user': user, 'user_sale_posts':user_sale_posts, 'user_rental_posts':user_rental_posts,
 	'user_sale_favs':user_sale_favs, 'user_rental_favs':user_rental_favs, 'ImageTransformation':ImageTransformation,
-	"property_requests":property_requests,"proffesional_requests":proffesional_requests,
-    "other_requests":other_requests,"ag_lead_requests":ag_lead_requests,"ag_property_requests":ag_property_requests,
-	"user_account_form":user_account_form,"pro_connections":pro_connections,'following':following,
-	'portfolio_items':portfolio_items,'porfolio_categories':porfolio_categories
+	"job_post":job_post,"my_job_replies":my_job_replies,
+	"basic_form":basic_form,"pro_connections":pro_connections,'following':following,
+	'portfolio_items':portfolio_items
 	})
 
 @login_required(login_url='account_login')
@@ -91,77 +83,137 @@ def edit_basic_profile(request):
 				basic_form = forms.UserEditForm(request.POST, request.FILES, instance=request.user)
 				if basic_form.is_valid():
 					basic_form.save()
-
-					messages.success(request, 'Profile Updated Successfully!')
-					return redirect('profiles:account')
+					context = {
+					'user':request.user,
+					'basic_form':basic_form
+					}
+					message = 'Profile Updated Successfully!'
+					if request.is_ajax():
+						ac_details = render_to_string('profiles/account_details_section.html', context, request=request)
+						ac_greet = render_to_string('profiles/account_greet.html', context, request=request)
+						profile_completion = render_to_string('profiles/account_completion_section.html', context, request=request)
+						return JsonResponse({'ac_details':ac_details ,'ac_greet':ac_greet, 'profile_completion':profile_completion,
+							'success':message})
+					else:
+						return redirect('profiles:account')
 				else:
-					messages.error(request,'Could not complete request!')
+					context = {
+					'user':request.user,
+					'basic_form':basic_form
+					}
+					message = 'Invalid submission. Could not update!'
+					if request.is_ajax():
+						ac_details = render_to_string('profiles/account_details_section.html', context, request=request)
+						ac_greet = render_to_string('profiles/account_greet.html', context, request=request)
+						profile_completion = render_to_string('profiles/account_completion_section.html', context, request=request)
+						return JsonResponse({'ac_details':ac_details ,'ac_greet':ac_greet,'profile_completion':profile_completion,
+							'error':message})
+					else:
+						return redirect('profiles:account')
 		else:
 			basic_form = forms.UserEditForm(instance=request.user)
 	else:
 		raise PermissionDenied
-	return render(request, 'profiles/user_profile.html', {'basic_form':basic_form})
+		return render(request, 'profiles/user_profile.html', {'basic_form':basic_form})
 
-def business_list(request, slug):
-	if slug !='':
-		type_of_pro = slug.replace('-', ' ')
-		print(type_of_pro)
-		business_list = models.BusinessProfile.objects.filter(pro_speciality__iexact= type_of_pro)
-		featured_b_list = models.BusinessProfile.objects.filter(pro_speciality__iexact = type_of_pro, featured=True)
-		_related_services = []
-		for business in business_list:
-			_related_services += business.get_services_display().split(',')
-		related_services = list(set(_related_services)) #removing dulpicate words
-		location_address = 'Nairobi,Kenya'
-		location = request.GET.get('bs-location')
-		name = request.GET.get('bs-name-input')
-		service = request.GET.get('bs-service-input')
-		if check_q_valid(location):
-			loc_icontains = location.split(',')
-			business_list = business_list.filter(address__icontains = loc_icontains[0])
-			featured_b_list = featured_b_list.filter(address__icontains = loc_icontains[0])
-			location_address = location
-			business_list_count = business_list.count()
-		if check_q_valid(name):
-			business_list = business_list.filter(business_name__icontains = name)
-			featured_b_list = featured_b_list.filter(business_name__icontains = name)
-			name=name
-			business_list_count = business_list.count()
-		if check_q_valid(service):
-			business_list = business_list.filter(pro_speciality__icontains = str(service))
-			featured_b_list = featured_b_list.filter(pro_speciality__icontains = str(service))
-			service=service
-			business_list_count = business_list.count()
-		else:
-			business_list = business_list.filter(address__icontains = 'Nairobi')
-			featured_b_list = featured_b_list.filter(address__icontains = 'Nairobi')
-			location_address = 'Nairobi,Kenya'
-			business_list_count = business_list.count()
-		paginator_bs = Paginator(business_list, 3)
-		bs_page = request.GET.get('page')
-		business_list = paginator_bs.get_page(bs_page)
-		return render(request, 'profiles/business_list.html', {
-		'business_list':business_list,'location_address':location_address,'name':name, 'service':service,
-		'featured_b_list':featured_b_list,'business_list_count':business_list_count,
-		'type_of_pro':type_of_pro,'slug':slug, 'related_services':related_services
-		})
+def business_homepage(request):
+	popular_services = models.ProfessionalService.objects.all()[:10]
+	recommended_services = models.ProfessionalService.objects.all()[:10]
+	pro_group = models.ProfessionalGroup.objects.all()
+	context = {
+	"popular_services":popular_services,
+	"recommended_services":recommended_services,
+	"pro_group":pro_group
+	}
+	return render(request,'profiles/professionals_homepage.html',context)
+
+def ajax_autocomplete(request):
+	if request.is_ajax():
+		query = str(request.GET.get('term', ''))
+		services = models.ProfessionalService.objects.filter(service_name__icontains = query)
+		results = []
+		for service in services:
+			results.append(service.service_name.capitalize())
+		data = json.dumps(results)
 	else:
-		messages.error(request, 'The path you requested does not exist')
-		return redirect('listings:homepage')
+		data = 'fail'
+	mimetype = 'application/json'
+	return HttpResponse(data, mimetype)
+
+def business_list(request):
+	all_pro_categories = models.ProfessionalCategory.objects.all()
+	all_services = models.ProfessionalService.objects.all()
+
+	business_list = models.BusinessProfile.objects.all()
+	featured_b_list = ''
+
+	town_names = []
+	for town in location_models.KenyaTown.objects.all():
+		town_names.append(town.town_name)
+
+	q_pro_category = str( request.GET.get('p_cat', '') )
+	service = str( request.GET.get('q_service', '') )
+	location = str( request.GET.get('pro_location', 'Nairobi') )
+	job_rating = int( request.GET.get('job_rating',0) )
+	sort = str( request.GET.get('sort','') )
+	bs_page = request.GET.get('page', '1')
+
+	if check_q_valid(q_pro_category):
+		business_list = business_list.filter(professional_category__category_name__icontains = q_pro_category)
+		featured_b_list = business_list.filter(professional_category__category_name__icontains = q_pro_category, featured=True)
+	if check_q_valid(location):
+		business_list = business_list.filter(service_areas__icontains = location)
+		featured_b_list = business_list.filter(service_areas__icontains = location)
+		business_list_count = business_list.count()
+	if check_q_valid(service):
+		business_list = business_list.filter(professional_services__slug__icontains = service)
+		featured_b_list = business_list.filter(professional_services__slug__icontains = service)
+		business_list_count = business_list.count()
+	if check_q_valid(job_rating):
+		business_list = business_list.annotate(avg_rating=Avg('pro_business_review__recommendation_rating')).filter(avg_rating__gte=job_rating)
+		featured_b_list = business_list.annotate(avg_rating=Avg('pro_business_review__recommendation_rating')).filter(avg_rating__gte=job_rating)
+		business_list_count = business_list.count()
+
+	if sort == 'mostProjects':
+		business_list = business_list.annotate(num_projects=Count('user__profiles_portfolioitem_createdby',distinct=True)).order_by('-num_projects')
+	elif sort == 'mostFollowers':
+		business_list = business_list.order_by('followers')
+	elif sort == 'mostSaved':
+		business_list = business_list.order_by('saves')
+
+	paginator_bs = Paginator(business_list, 20)
+	business_list = paginator_bs.get_page(bs_page)
+
+	search_params = {}
+	search_params['p_cat'] = q_pro_category
+	search_params['q_service'] = service
+	search_params['pro_location'] = location
+	search_params['job_rating'] = job_rating
+	search_params['sort'] = sort
+	search_params['page'] = bs_page
+
+	query_string = urlencode(search_params)
+	q_pro_category = q_pro_category.replace('-',' ')
+	return render(request, 'profiles/business_list.html', {
+	'business_list':business_list,'featured_b_list':featured_b_list,
+	'business_list_count':business_list_count, 'all_services':all_services,
+	'all_pro_categories':all_pro_categories,'q_pro_category':q_pro_category,
+	'town_names':town_names,"query_string":query_string,'search_params':search_params
+	})
 
 @login_required(login_url='account_login')
 def business_detail(request, pk):
 	ImageTransformation = dict(
 	format = "jpg",
 	transformation = [
-		dict(height=333, width=500, crop="fill",quality="auto", gravity="center",
-		 format="auto", dpr="auto", fl="progressive"),
+				dict(height=333, width=500, crop="fill",quality="auto", gravity="center",
+				format="auto", dpr="auto", fl="progressive"),
 			]
 		)
 	business = get_object_or_404( models.BusinessProfile, pk=pk )
 
 	all_connections = models.TeammateConnection.objects.all()
-	pro_teammates = all_connections.filter(Q(requestor=business.user, receiver_accepted = 'No')|Q(receiver = business.user, receiver_accepted = 'No'))
+	pro_teammates = all_connections.filter(Q(requestor=business.user, receiver_accepted = 'Yes')|Q(receiver = business.user, receiver_accepted = 'Yes'))
 
 	user_2 = business.user
 	user_1 = request.user
@@ -178,97 +230,144 @@ def business_detail(request, pk):
 		for connection_object in connection_request:
 			connection = connection_object
 		request_exists = True
-
-	sale_listings = listings_models.Home.objects.filter(owner=business.user)
-	rental_listings = listings_models.Home.objects.filter(owner=business.user)
-	management_portfolio = models.PortfolioItem.objects.filter(created_by = business.user)
-	pro_reviews = business.pro_business_review.all()
-
-	average_rating = pro_reviews.aggregate(Avg('rating'))
-	responsive_avg_rating = pro_reviews.aggregate(Avg('responsive_rating'))
-	knowledge_avg_rating = pro_reviews.aggregate(Avg('knowledge_rating'))
-	negotiation_avg_rating = pro_reviews.aggregate(Avg('negotiation_rating'))
-	professionalism_avg_rating = pro_reviews.aggregate(Avg('professionalism_rating'))
-	reviews_count = pro_reviews.count()
+	all_listings = listings_models.Home.objects.filter(owner=business.user).order_by('-publishdate')
+	sale_listings = all_listings.filter(owner=business.user,listing_type__icontains='FOR_SALE')
+	rental_listings = all_listings.filter(owner=business.user,listing_type__icontains='FOR_RENT')
 	s_count = sale_listings.count()
 	r_count = rental_listings.count()
 	s_r_total = int(s_count) + int(r_count)
-	s_paginator = Paginator(sale_listings, 3) #show the first 3
+
+	s_paginator = Paginator(sale_listings, 3)
 	sales_page = request.GET.get('page')
 	sale_listings_p = s_paginator.get_page(sales_page)
-	r_paginator = Paginator(rental_listings, 3) #show the first 3
+	r_paginator = Paginator(rental_listings, 3)
 	rentals_page = request.GET.get('page')
 	rental_listings_p = r_paginator.get_page(rentals_page)
-	return render(request, 'profiles/business_detail.html', {'business':business, 'sale_listings': sale_listings,
-				'rental_listings':rental_listings, 'sale_listings_p':sale_listings_p, 'rental_listings_p':rental_listings_p,
-				's_r_total':s_r_total, 's_count':s_count,'r_count':r_count, 'pro_reviews':pro_reviews,
-				'reviews_count':reviews_count, 'average_rating':average_rating, 'responsive_avg_rating':responsive_avg_rating,
-				'knowledge_avg_rating':knowledge_avg_rating,'negotiation_avg_rating':negotiation_avg_rating,
-				'professionalism_avg_rating':professionalism_avg_rating, 'ImageTransformation':ImageTransformation,
-				'management_portfolio':management_portfolio, "is_saved":is_saved, "is_following":is_following,
-				"request_exists":request_exists, "connection": connection,
-				"pro_teammates":pro_teammates,
-				})
+
+	projects = models.PortfolioItem.objects.filter(created_by = business.user).order_by('-created_at')
+
+	# Review objects
+	pro_reviews = business.pro_business_review.all().order_by('review_date')
+
+	recommendation_rating_avg = pro_reviews.aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
+	responsive_rating_avg = pro_reviews.aggregate(Avg('responsive_rating')).get('responsive_rating__avg', 0.00)
+	knowledge_rating_avg = pro_reviews.aggregate(Avg('knowledge_rating')).get('knowledge_rating__avg', 0.00)
+	professionalism_rating_avg = pro_reviews.aggregate(Avg('professionalism_rating')).get('professionalism_rating__avg', 0.00)
+	quality_of_service_rating_avg = pro_reviews.aggregate(Avg('quality_of_service_rating')).get('quality_of_service_rating__avg', 0.00)
+
+	five_star_ratings = pro_reviews.filter(recommendation_rating=5).count()
+	four_star_ratings = pro_reviews.filter(recommendation_rating=4).count()
+	three_star_ratings = pro_reviews.filter(recommendation_rating=3).count()
+	two_star_ratings = pro_reviews.filter(recommendation_rating=2).count()
+	one_star_ratings = pro_reviews.filter(recommendation_rating=1).count()
+
+	five_star_ratings_avg = five_star_ratings/ pro_reviews.count() * 100
+	four_star_ratings_avg = four_star_ratings / pro_reviews.count() * 100
+	three_star_ratings_avg = three_star_ratings / pro_reviews.count() * 100
+	two_star_ratings_avg = two_star_ratings / pro_reviews.count() * 100
+	one_star_ratings_avg = one_star_ratings / pro_reviews.count() * 100
+
+	reviews_count = pro_reviews.count()
+
+	review_page = request.GET.get('review_page','1')
+	review_sort = request.GET.get('review_sort','most relevant')
+
+	if review_sort == 'most relevant':
+		pro_reviews = pro_reviews.order_by('likes')
+	elif review_sort == 'highest rated':
+		pro_reviews == pro_reviews.order_by('-recommendation_rating')
+	elif review_sort == 'lowest rated':
+		pro_reviews = pro_reviews.order_by('recommendation_rating')
+	elif review_sort == 'newest first':
+		pro_reviews = pro_reviews.order_by('-review_date')
+	elif review_sort == 'oldest first':
+		pro_reviews = pro_reviews.order_by('review_date')
+
+	review_paginator = Paginator(pro_reviews, 5)
+	pro_reviews = review_paginator.get_page(review_page)
+
+	search_params = {}
+	search_params['review_sort'] = review_sort
+	search_params['review_page'] = review_page
+
+	query_string = urlencode(search_params)
+
+	params_context = {
+		'review_sort':review_sort,
+	}
+
+	context ={'business':business, "all_listings":all_listings,'sale_listings': sale_listings,
+			'rental_listings':rental_listings, 'sale_listings_p':sale_listings_p, 'rental_listings_p':rental_listings_p,
+			's_r_total':s_r_total, 's_count':s_count,'r_count':r_count, 'pro_reviews':pro_reviews,
+			'reviews_count':reviews_count, 'recommendation_rating_avg':recommendation_rating_avg, 'responsive_rating_avg':responsive_rating_avg,
+			'knowledge_rating_avg':knowledge_rating_avg,'professionalism_rating_avg':professionalism_rating_avg,
+			'quality_of_service_rating_avg':quality_of_service_rating_avg, 'ImageTransformation':ImageTransformation,
+			'projects':projects, "is_saved":is_saved, "is_following":is_following,
+			"request_exists":request_exists, "connection": connection, "five_star_ratings":five_star_ratings,
+			"four_star_ratings":four_star_ratings, "three_star_ratings":three_star_ratings,
+			"two_star_ratings":two_star_ratings, "one_star_ratings":one_star_ratings,
+			"pro_teammates":pro_teammates,'all_listings':all_listings,
+			"five_star_ratings_avg":five_star_ratings_avg, "four_star_ratings_avg":four_star_ratings_avg,
+			"three_star_ratings_avg":three_star_ratings_avg,"two_star_ratings_avg":two_star_ratings_avg,
+			"one_star_ratings_avg":one_star_ratings_avg,"query_string":query_string,"params_context":params_context
+			}
+	return render(request, 'profiles/business_detail.html', context)
 
 @login_required(login_url='account_login')
 def business_review(request):
 	if request.method=='POST':
-		subject_company = request.POST.get('subject-company')
-		rating = request.POST.get('rating-1')
+		subject_pro = request.POST.get('pro_id')
+		recommendation_rating = request.POST.get('rating-1')
 		responsive_rating = request.POST.get('rating-2')
 		knowledge_rating = request.POST.get('rating-5')
-		negotiation_rating = request.POST.get('rating-4')
 		professionalism_rating = request.POST.get('rating-3')
-		service = request.POST.get('service-dlv')
+		quality_of_service_rating = request.POST.get('rating-4')
+
 		comment = request.POST.get('comment')
-		date_of_service = request.POST.get('dos')
 
-		if check_q_valid(subject_company) and check_q_valid(rating
+		if check_q_valid(subject_pro) and check_q_valid(recommendation_rating
 		) and check_q_valid(responsive_rating) and check_q_valid(knowledge_rating
-		) and check_q_valid(negotiation_rating) and check_q_valid(professionalism_rating
-		) and check_q_valid(comment) and check_q_valid(service) and check_q_valid(date_of_service):
+		) and check_q_valid(professionalism_rating) and check_q_valid(quality_of_service_rating
+		) and check_q_valid(comment):
 
-			if CompanyProfile.objects.filter(pk=int(subject_company)).exists():
-				if check_value_valid(int(rating)) and check_value_valid(int(responsive_rating)) and check_value_valid(int(knowledge_rating)
-				) and check_value_valid(int(negotiation_rating)) and check_value_valid(int(professionalism_rating)
-				) and check_service_valid(int(service)):
+			if models.BusinessProfile.objects.filter(pk=int(subject_pro)).exists():
+				if check_value_valid(int(recommendation_rating)) and check_value_valid(int(responsive_rating)) and check_value_valid(int(knowledge_rating)
+				) and check_value_valid(int(professionalism_rating)) and check_value_valid(int(quality_of_service_rating)):
 
-					company_profile = get_object_or_404(CompanyProfile, pk=int(subject_company))
-					review = CompanyReviews.objects.create(
-						profile=company_profile,
-						rating = int(rating),
-						responsive_rating = int(responsive_rating),
-						knowledge_rating = int(knowledge_rating),
-						negotiation_rating = int(negotiation_rating),
-						professionalism_rating = int(professionalism_rating),
-						service = str(service),
-						comment = str(comment),
-						date_of_service = date_of_service,
-						user = request.user
-						)
+					pro_profile = get_object_or_404(models.BusinessProfile, pk=int(subject_pro))
+					review = models.Review.objects.create(
+							profile=pro_profile,
+							recommendation_rating = int(recommendation_rating),
+							responsive_rating = int(responsive_rating),
+							knowledge_rating = int(knowledge_rating),
+							professionalism_rating = int(professionalism_rating),
+							quality_of_service_rating = int(quality_of_service_rating),
+							comment = str(comment),
+							reviewer = request.user
+							)
 
 					review.save()
 
 					messages.success(request, 'Review posted. Thank you!')
-					return redirect(company_profile.get_absolute_url())
+					return redirect(pro_profile.get_absolute_url())
 				else:
 					messages.error(request, 'Value entry does not exist!')
 					return redirect('profiles:business_list')
 			else:
-				messages.error(request,'Business does not exist!')
+				messages.error(request,'The pro you requested does not exist!')
 				return redirect('profiles:business_list')
 		else:
-			messages.error(request, 'Invalid entry! Make sure you dont have empty entries.')
-			return redirect('profiles:business_list')
+			messages.error(request, 'Invalid entry! Make sure you dont have empty fields.')
+			return redirect('profiles:business_review')
 
 	elif request.method == 'GET':
-		company_id = request.GET.get('bsr')
-		if check_q_valid(company_id):
-			if CompanyProfile.objects.filter(pk=int(company_id)).exists():
-				company = CompanyProfile.objects.get(pk=int(company_id))
-				company_reviews = company.company_review.all()
-				average_rating = company_reviews.aggregate(Avg('rating'))
-				reviews_count = company_reviews.count()
+		subject_pro = request.GET.get('bsr')
+		if check_q_valid(subject_pro):
+			if models.BusinessProfile.objects.filter(pk=int(subject_pro)).exists():
+				pro = models.BusinessProfile.objects.get(pk=int(subject_pro))
+				pro_reviews = pro.pro_business_review.all()
+				recommendation_rating_avg = pro_reviews.aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
+				reviews_count = pro_reviews.count()
 			else:
 				messages.error(request,'Business does not exist!')
 				return redirect('profiles:business_list')
@@ -276,18 +375,45 @@ def business_review(request):
 			return redirect('profiles:business_list')
 	else:
 		return redirect('profiles:business_list')
-	return render(request, 'profiles/business_review.html',{'company':company, 'average_rating':average_rating, 'reviews_count':reviews_count})
+	return render(request, 'profiles/business_review.html',{'pro':pro, 'recommendation_rating_avg':recommendation_rating_avg, 'reviews_count':reviews_count})
 
-
-#Pro projects and portfolios CRUD VIEWS
 @login_required(login_url='account_login')
-def portfolio_item_create(request, slug):
+def like_review(request):
+	if request.method == 'POST':
+		user_id = request.user.pk
+		review_object = request.POST.get('like_review','')
+		message = ''
+		try:
+			review  = get_object_or_404(models.Review, pk= int(review_object))
+			if review.likes.filter(pk=user_id).exists():
+				review.likes.remove(user_id)
+				message = 'Success'
+			else:
+				review.likes.add(user_id)
+				message = 'Success'
+			context = {
+				"reviews":review,
+				}
+			if request.is_ajax():
+				html = render_to_string('profiles/review_like_section.html', context, request=request)
+				return JsonResponse({'form':html, 'message':message})
+
+		except ObjectDoesNotExist as e:
+			print(e)
+			message = 'Error'
+			if request.is_ajax():
+				return JsonResponse({'message':message})
+	else:
+		return redirect('profiles:business_detail')
+
+@login_required(login_url='account_login')
+def portfolio_item_create(request):
 	if request.user.user_type =='PRO':
 		if request.method =='POST':
-			category_type = slug
 			PortfolioForm = forms.PortfolioItemForm(request.POST, request.FILES)
 			ImageForm = forms.PortfolioItemPhotoForm(request.POST, request.FILES)
-			images = request.FILES.getlist('photo')#name of field
+			images = [request.FILES.get('photo[%d]' % i) for i in range(0, len(request.FILES))]
+			print( request.FILES)
 			# Authenticate form
 			if PortfolioForm.is_valid() and ImageForm.is_valid():
 				instance = PortfolioForm.save(commit=False)
@@ -295,25 +421,19 @@ def portfolio_item_create(request, slug):
 				instance.save()
 
 				for img in images:
-					file_instance = PortfolioItemPhotoForm(property_image = img, portfolio=models.PortfolioItem.objects.get(id=instance.id))
+					file_instance = models.PortfolioItemPhoto(photo = img, portfolio_item=models.PortfolioItem.objects.get(id=instance.id))
 					file_instance.save()
-				messages.success(request, 'Post Successfull!')
-				return redirect('profiles:account')
+				messages.success(request, 'Project adedd Successfully!')
+				return redirect('profiles:portfolio_item_create')
 			else:
 				messages.error(request,'Could not complete request. Request Invalid.')
 		else:
-			if slug == 'category':
-				category_type = request.GET.get('_ptf-catg-choice')
-				PortfolioForm = forms.PortfolioItemForm()
-				ImageForm = forms.PortfolioItemPhotoForm()
-			else:
-				messages.error(request,'Invalid path request.')
-				return redirect('profiles:account')
+			PortfolioForm = forms.PortfolioItemForm()
+			ImageForm = forms.PortfolioItemPhotoForm()
 	else:
 		messages.error(request,'Restricted. You dont have permissions for this request.')
 		return redirect('profiles:account')
-	return render(request, 'profiles/pro_portfolio_create_form.html', {"PortfolioForm": PortfolioForm, "PoImageForm": ImageForm,
-                    'category_type':category_type})
+	return render(request, 'profiles/pro_portfolio_create_form.html', {"PortfolioForm": PortfolioForm, "PoImageForm": ImageForm})
 
 @login_required(login_url='account_login')
 def portfolio_item_update(request, pk):
@@ -444,7 +564,7 @@ def pro_follow(request):
 
 """
 function that adds a pro to another pro's team connection list.
-Here we just create the unaccepted object instance. Approval is done by another function
+Here we just create the unaccepted object instance.
 """
 @login_required(login_url='account_login')
 def request_connection(request):
@@ -530,8 +650,8 @@ def remove_connection(request):
 			context = {
 			'removed':removed,
 			'target_user':user_2,
-            'connection':connection,
-            'message':message
+			'connection':connection,
+			'message':message
 			}
 			if request.is_ajax():
 				html = render_to_string('profiles/remove_connection.html', context, request=request)
@@ -540,12 +660,40 @@ def remove_connection(request):
 			messages.error(request, 'You are not authorized for this action!')
 			return redirect('profiles:account')
 
+def connection_request_action(request):
+	if request.method == 'POST':
+		if request.user.user_type != 'NormalUser':
+			#users usernames for creating the model instance
+			removed = False
+			object_id = int(request.POST.get('rq_id'))
+
+			try:
+				connection_object = get_object_or_404(models.TeammateConnection, pk='object_id')
+				if connection_object.receiver == request.user:
+					connection_object.delete()
+					removed = True
+					message = 'Success'
+					if request.is_ajax():
+						return JsonResponse({'error':message, 'removed':removed})
+				else:
+					if request.is_ajax():
+						message ='Permission Denied!'
+						return JsonResponse({'error':message,'removed':removed})
+			except:
+				message ='Failed. Try again later'
+				if request.is_ajax():
+					html = render_to_string('profiles/remove_connection.html', context, request=request)
+					return JsonResponse({'form':html, 'error':message})
+	else:
+		messages.error(request, 'You are not authorized for this action!')
+		return redirect('profiles:account')
+
 @login_required(login_url = 'account_login')
 def user_connections(request):
 	if request.method =='GET':
 		all_connections = models.TeammateConnection.objects.filter(Q(requestor=request.user, receiver_accepted = 'No')|Q(receiver = request.user, receiver_accepted = 'No'))
 		connections = models.TeammateConnection.objects.filter(Q(requestor=request.user, receiver_accepted = 'No')|Q(receiver = request.user, receiver_accepted = 'No'))
-        #filtering
+		#filtering
 		name = str(request.GET.get('_myConName', ''))
 		if name !='':
 			#check if name is username
@@ -571,20 +719,33 @@ def user_connections(request):
 @login_required(login_url='account_login')
 def user_followers(request):
 	# The pro's followers
-    # Since only pros can have followers we fetch their followers from their business profile
-    # and if the requesting user is not a pro we assign and empty string since
-    # non-pro users dont have a business profile so they cant have followers
-    # Therefore we return an instance of the pro users
+	# Since only pros can have followers we fetch their followers from their business profile
+	# and if the requesting user is not a pro we assign and empty string since
+	# non-pro users dont have a business profile so they cant have followers
+	# Therefore we return an instance of the pro users
 	followers = ''
 	if request.user.user_type == 'PRO':
 		followers = request.user.pro_business_profile.followers.all()
 
 	# The user's following
 	# any user can follow a pro i.e. even pros can follow each other
-    # So here we just fetch all the business pages the user is followng
-    # Therefore we return an instance of the profile object
+	# So here we just fetch all the business pages the user is followng
+	# Therefore we return an instance of the profile object
 	following = ''
 	if request.user.business_page_followers:
 		following = request.user.business_page_followers.all()
 
 	return render(request, 'profiles/user_followers_list.html', {'followers':followers, 'my_following':following})
+
+@login_required(login_url='account_login')
+def notifications(request):
+	pending_connections = models.TeammateConnection.objects.filter(
+							receiver = request.user ,receiver_accepted = 'No'
+						)
+	notifications_count = 0
+	notifications_count = pending_connections.count()
+	context = {
+	'pending_connections':pending_connections,
+	'notifications_count':notifications_count
+	}
+	return render(request,'profiles/notifications.html',context)

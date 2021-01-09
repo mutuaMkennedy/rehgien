@@ -1,0 +1,41 @@
+{% load static %}
+<div id="_uProgress">
+
+      <div class="_userProfileImg">
+        <img src="
+          {% if user.profile_image %}
+            {{ user.profile_image.url}}
+          {% else %}
+            {% static 'img/avatar.png' %}
+          {% endif %}" alt="avatar">
+          <div class="_userProfileCompletion">
+            <h5>{{user.percentage_complete}} <sup>%</sup></h5>
+          </div>
+      </div>
+
+</div>
+<h5>{% if user.get_full_name %} {{user.get_full_name}}{% else %} {{user.username}}{%endif%}<span class="material-icons">verified</span></h5>
+
+<script src="{% static 'progressBar/progressbar.js'%}"></script>
+<script src="{% static 'progressBar/progressbar.min.js'%}"></script>
+<script type="text/javascript">
+
+  //progress bar
+  var profilePercentComplete = {{user.percentage_complete}}/100;
+  function showProfileProgress(){
+    var bar = new ProgressBar.Circle(_uProgress, {
+      strokeWidth: 7,
+      easing: 'easeInOut',
+      duration: 1400,
+      color: 'rgb(44 178 234 / 90%)',
+      trailColor: 'rgb(44 178 234 / 40%)',
+      trailWidth: 7,
+      svgStyle: null
+    });
+
+    bar.animate(profilePercentComplete,{
+      duration: 3000
+    }); // Number from 0.0 to 1.0
+  };
+  showProfileProgress();
+</script>

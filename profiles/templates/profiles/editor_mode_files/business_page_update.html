@@ -96,57 +96,6 @@
           </div>
           <div class="ag-d-second-content">
               <div  class="Pr-about-vw" id='ag-about-vw'>
-                <div class="ag_featuredListings">
-                  <div class="_pf_sectionHeader">
-                    <h1>Featured listings  <a href="#"><span class="material-icons">add</span></a></h1>
-                  </div>
-                  <div class="{% if bs_profile%}owl-carousel{% endif %} ag_featuredCarousel">
-                      {% if bs_profile%}
-                        <div class="_pf_FeaturedItem card">
-
-                            <div class="_pf_FeaturedItemImg">
-                              <img src="{%static 'img/place1.jpg'%}">
-                            </div>
-                            <div class="_pf_FeaturedCtOvy">
-                              <div class="_pf_FeaturedItemDt">
-                                <h5>Bream View townhouse</h5>
-                                <h3>Ksh: 25,000,000</h3>
-                                <h4>3ba 5bd 120sqm <span>Muthaiga, Nairobi, Kenya</span></h4>
-                              </div>
-                          </div>
-                        </div>
-                        <div class="_pf_FeaturedItem card">
-                            <div class="_pf_FeaturedItemImg">
-                              <img src="{%static 'img/place2.jpg'%}">
-                            </div>
-                            <div class="_pf_FeaturedCtOvy">
-                              <div class="_pf_FeaturedItemDt">
-                                <h5>Bream View townhouse</h5>
-                                <h3>Ksh: 25,000,000</h3>
-                                <h4>3ba 5bd 120sqm <span>Muthaiga, Nairobi, Kenya</span></h4>
-                              </div>
-                          </div>
-                        </div>
-                        <div class="_pf_FeaturedItem card">
-                            <div class="_pf_FeaturedItemImg">
-                              <img src="{%static 'img/place3.jpg'%}">
-                            </div>
-                            <div class="_pf_FeaturedCtOvy">
-                              <div class="_pf_FeaturedItemDt">
-                                <h5>Bream View townhouse</h5>
-                                <h3>Ksh: 25,000,000</h3>
-                                <h4>3ba 5bd 120sqm <span>Muthaiga, Nairobi, Kenya</span></h4>
-                              </div>
-                          </div>
-                        </div>
-                      {%else%}
-                          <div class="pflpages-no-results">
-                            <img src="{%static 'img/note.svg'%}" alt="empty">
-                            <p>Nothing yet. <br> Featured listings will appear here</p>
-                          </div>
-                      {%endif%}
-                  </div>
-                </div>
                 <div class="ag-about ">
                   <div class="_pf_sectionHeader">
                     <h1>Who we are</h1>
@@ -279,11 +228,11 @@
                 {% for review in pro_reviews%}
                   <div class="_ag-cns-user">
                     <div class="_ag-cns-imgWrp">
-                        <img src="{% if review.user.profile_image %}{{review.user.profile_image.url}}{% else %} {% static 'img/avatar.png' %}{% endif %}">
+                        <img src="{% if review.reviewer.profile_image %}{{review.reviewer.profile_image.url}}{% else %} {% static 'img/avatar.png' %}{% endif %}">
                     </div>
                     <div class="_ag-cns-Dtls">
-                        <h5>{% if review.user.get_full_name %}{{review.user.get_full_name}} {% else %} {{review.user.username}}{% endif %}</h5>
-                        <h6>{% if review.user.user_type == 'NormalUser' %}Rehgien User {%else%}{{review.user.user_type}}{%endif%}</h6>
+                        <h5>{% if review.reviewer.get_full_name %}{{review.reviewer.get_full_name}} {% else %} {{review.reviewer.username}}{% endif %}</h5>
+                        <h6>{% if review.reviewer.user_type == 'CLIENT' %}Rehgien User {%else%}{{review.reviewer.user_type}}{%endif%}</h6>
                     </div>
                     <div class="_ag-cns-Cta">
                       <button type="button" name="button">
@@ -794,7 +743,7 @@
                   <h5>Service Categories</h5>
                     <div class="u_bsF-speciality">
                       <p>Select services you offer.</p>
-                      {{services_form.services}}
+                      {{services_form.professional_services}}
                       <span class="_field_helper_text">
                         We use services to connect you with the right people.
                         Giving wrong information will result in poor job deliverly and a bad reputation

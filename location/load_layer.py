@@ -3,7 +3,7 @@ from django.contrib.gis.utils import LayerMapping
 from .models import (Districts, Divisions,
                     KenyaNationalPolytechnics, KenyaPrimarySchools, PrivateColleges,
                     PrivateUniversities, PublicColleges, UniversitiesColleges,
-                    SecondarySchools, TeachersTrainingColleges, Universities
+                    SecondarySchools, TeachersTrainingColleges, Universities,KenyaTown
                     )
 
 
@@ -179,4 +179,20 @@ Ken_universities_shp = os.path .abspath(os.path.join(os.path.dirname(__file__), 
 
 def universities_run(verbose=True):
 	lm = LayerMapping(Universities, Ken_universities_shp, universities_mapping, transform=False, encoding='iso-8859-1')
+	lm.save(strict=True, verbose=verbose)
+
+# Kenya all towns
+kenyatowns_mapping = {
+    'area': 'AREA',
+    'perimeter': 'PERIMETER',
+    'town_name': 'TOWN_NAME',
+    'town_id': 'TOWN_ID',
+    'town_type': 'TOWN_TYPE',
+    'geom': 'MULTIPOINT',
+}
+
+kenya_all_towns_shp = os.path .abspath(os.path.join(os.path.dirname(__file__), 'GisData/kenya_all_towns/kenya_all_towns.shp'))
+
+def add_towns(verbose=True):
+	lm = LayerMapping(KenyaTown, kenya_all_towns_shp, kenyatowns_mapping, transform=False, encoding='iso-8859-1')
 	lm.save(strict=True, verbose=verbose)

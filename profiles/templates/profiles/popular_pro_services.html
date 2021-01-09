@@ -1,0 +1,20 @@
+{% load static %}
+<div class="container main_home_cCotainer">
+  <div class="row">
+    <div class="col s12">
+      <h2>Popular professional services</h2>
+      <div class="owl-carousel">
+        {% for service in popular_services%}
+          <a href="{% url 'profiles:business_list'%}?q_service={{service.slug}}">
+            <div class="card">
+              <img src="{{service.service_image.url}}">
+              <div class="DtsWrapper_">
+              <h6>{{service.service_name|capfirst}}</h6>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from profiles import models as profiles_models
 from listings import models as listings_models
 from listings.apis import serializers as listings_serializers
+from django.db.models import Avg
 
 # referencing the custom user model
 User = get_user_model()
@@ -23,12 +24,10 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = profiles_models.Review
         fields = [
-        'pk','rating_choices','responsive_rating_choices','knowledge_rating_choices',
-        'negotiation_rating_choices','professionalism_rating_choices',
-        'service_choices','profile','rating','responsive_rating',
-        'knowledge_rating','negotiation_rating','professionalism_rating',
-        'quality_rating', 'creativity', 'attention_to_detail',
-        'service','comment','date_of_service','reviewer','review_date'
+        'pk','recommendation_rating_choices', 'responsive_rating_choices', 'knowledge_rating_choices',
+        'professionalism_rating_choices', 'quality_rating_choices', 'profile', 'recommendation_rating',
+        'responsive_rating', 'knowledge_rating', 'professionalism_rating', 'quality_of_service_rating',
+        'comment', 'likes', 'reviewer', 'review_date'
         ]
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -47,21 +46,64 @@ class BusinessHoursSerializer(serializers.ModelSerializer):
         ]
 
 class BusinessProfileSerializer(WritableNestedModelSerializer):
-    services = serializers.MultipleChoiceField(choices=profiles_models.BusinessProfile.PRO_SERVICES_CHOICES, required=False)
     pro_business_client = ClientSerializer(many=True)
     pro_business_hours = BusinessHoursSerializer(many=True)
     pro_business_review = ReviewSerializer(many=True)
+    _pro_average_rating_ = serializers.SerializerMethodField()
+    _business_profile_percentage_complete_ = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.BusinessProfile
         fields = [
-        "PRO_CATEGORY_CHOICES", "PRO_SPECIALITY_CHOICES","PRO_SERVICES_CHOICES",
-        "pk","user", "business_profile_image",
-        "pro_category",'pro_speciality',"business_name","phone","business_email", "address",
+        "pk","user", "business_profile_image","professional_category","professional_services",
+        "business_name","phone","business_email", "address",
         "website_link", "facebook_page_link", "twitter_page_link", "linkedin_page_link",
-        "instagram_page_link", "location", "about_video","about", "service_areas", "services",
+        "instagram_page_link", "location", "about_video","about", "service_areas",
         "saves", "followers", "member_since", "featured","pro_business_client",
-        "pro_business_hours","pro_business_review"
+        "pro_business_hours","pro_business_review","_pro_average_rating_","_business_profile_percentage_complete_"
         ]
+
+    def get__pro_average_rating_(self,obj):
+        rating = obj.pro_business_review.all().aggregate(Avg('rating')).get('rating__avg', 0.00)
+        if rating:
+            return 0
+        else:
+            return rating
+
+
+    def get__business_profile_percentage_complete_(self,obj):
+        percent = {
+        'business_profile_image': 10, 'pro_speciality':10, 'phone':5, 'business_email':10,
+        'address':10, 'website_link':5, 'facebook_page_link': 5,
+        'twitter_page_link': 5, 'linkedin_page_link':5, 'instagram_page_link':5,
+        'location':10, 'about':20
+        }
+        total = 0
+        if obj.business_profile_image:
+            total += percent.get('business_profile_image', 0)
+        if obj.pro_speciality:
+            total += percent.get('pro_speciality', 0)
+        if obj.phone:
+            total += percent.get('phone', 0)
+        if obj.address:
+            total += percent.get('address', 0)
+        if obj.business_email:
+            total += percent.get('business_email', 0)
+        if obj.website_link:
+            total += percent.get('website_link', 0)
+        if obj.facebook_page_link:
+            total += percent.get('facebook_page_link', 0)
+        if obj.twitter_page_link:
+            total += percent.get('twitter_page_link', 0)
+        if obj.linkedin_page_link:
+            total += percent.get('linkedin_page_link', 0)
+        if obj.instagram_page_link:
+            total += percent.get('instagram_page_link', 0)
+        if obj.location:
+            total += percent.get('location', 0)
+        if obj.about:
+            total += percent.get('about', 0)
+        return "%s"%(total)
+
 
 class PortfolioItemPhotoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -93,11 +135,28 @@ class UserAccountSerializer(WritableNestedModelSerializer):
     connection_requestor = TeammateConnectionSerializer(many=True)
     connection_request_receiver = TeammateConnectionSerializer(many=True)
     listings_home_owner_related = listings_serializers.HomeSerializer(many=True)
+    _user_account_percentage_complete_ = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.User
         fields = [
         'user_type_choices','account_type_choices','pk', 'username', 'first_name',
         'last_name', 'email', 'user_type','account_type', 'profile_image', "pro_business_profile",
         "profiles_portfolioitem_createdby_related", "connection_requestor",
-        "connection_request_receiver", "listings_home_owner_related",
+        "connection_request_receiver", "listings_home_owner_related",'_user_account_percentage_complete_'
         ]
+
+    def get__user_account_percentage_complete_(self,obj):
+        percent = { 'username': 10, 'first_name': 15, 'last_name': 15, 'email': 20,
+        'profile_image': 30, 'user_type':5,'account_type':5}
+        total = 0
+        if obj.username:
+            total += percent.get('username', 0)
+        if obj.first_name:
+            total += percent.get('first_name', 0)
+        if obj.last_name:
+            total += percent.get('last_name', 0)
+        if obj.email:
+            total += percent.get('email', 0)
+        if obj.profile_image:
+            total += percent.get('profile_image', 0)
+        return "%s"%(total)

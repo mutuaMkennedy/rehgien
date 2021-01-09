@@ -5,6 +5,11 @@ from leaflet.forms.widgets import LeafletWidget
 from cloudinary.forms import CloudinaryFileField
 #from haystack.forms import FacetedSearchForm
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class TimeInput(forms.TimeInput):
+    input_type = 'text'
 
 class ListingForm(forms.ModelForm):
 	appliances = forms.MultipleChoiceField(required=False, choices = models.Home.APPLIANCES_CHOICES, widget = forms.SelectMultiple())
@@ -21,13 +26,14 @@ class ListingForm(forms.ModelForm):
 	roof = forms.MultipleChoiceField(required=False, choices = models.Home.ROOF_CHOICES, widget = forms.SelectMultiple())
 	view = forms.MultipleChoiceField(required=False, choices = models.Home.VIEW_CHOICES, widget = forms.SelectMultiple())
 	basement = forms.ChoiceField(required = False, choices =models.Home.BASEMENT_CHOICES, widget=forms.RadioSelect())
+	deal_closed = forms.ChoiceField(required = False, choices =models.Home.DEAL_CLOSED_CHOICES, widget=forms.RadioSelect())
 	class Meta:
 		model = models.Home
 		fields = [	'listing_type','property_name', 'price', 'type','virtual_tour_url','location_name', 'location', 'bathrooms', 'bedrooms', 'total_rooms',
 					'floor_number','floor_area', 'number_of_units', 'number_of_stories',
 					'parking_spaces', 'year_built', 'remodel_year','garage_sqm', 'appliances', 'basement', 'floor_covering',
 					'rooms', 'indoor_features', 'cooling_type', 'heating_type', 'heating_fuel', 'building_amenities', 'exterior',
-					'outdoor_amenities', 'parking', 'roof', 'view', 'related_website', 'phone', 'email', 'description'
+					'outdoor_amenities', 'parking', 'roof', 'view', 'related_website', 'phone', 'email', 'description', 'deal_closed','final_closing_offer'
 			]
 		widgets = {'location':LeafletWidget()}
 
@@ -53,4 +59,12 @@ class VideoForm(forms.ModelForm):
 		fields = ['video',]
 		widgets = {
 			'video': ClearableFileInput(attrs={'multiple':False})
+		}
+
+class OpenHouseForm(forms.ModelForm):
+	class Meta:
+		model = models.PropertyOpenHouse
+		fields = ['date','start_time','end_time']
+		widgets = {
+			'date': DateInput(),'start_time':TimeInput(),'end_time':TimeInput()
 		}

@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_social_share',
     'markets',
+    'rehgien_pro',
+    'resource_center',
     'embed_video',
     #'haystack',
     # 'tastypie',
@@ -184,7 +186,7 @@ CKEDITOR_BROWSE_SHOW_DIRS = True
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
 CKEDITOR_CONFIGS = {
-    'agent_profile': {
+    'blog-post': {
         'skin': 'n1theme',
         'removePlugins':['elementspath', 'iframe'],
         'allowedContent': True,
@@ -198,28 +200,28 @@ CKEDITOR_CONFIGS = {
             ['Undo', 'Redo'], '/',
             ['Youtube'],
             ['Link', 'Unlink', 'Preview'],
-            # {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
-            # {'name': 'forms',
-            #  'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
-            #            'HiddenField']},
-            # '/',
-            # {'name': 'paragraph',
-            #  'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
-            #            'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
-            #            'Language']},
-            # {'name': 'insert','items': ['Image']},
-            # '/',
-            # {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
-            # {'name': 'colors', 'items': ['TextColor', 'BGColor']},
-            # {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
-            # {'name': 'about', 'items': ['About']},
-            # '/',  # put this to force next toolbar on new line
-            # {'name': '', 'items': [
-            #     # put the name of your editor.ui.addButton here
-            #     'Bold','Italic','Link','Undo', 'Redo',
-            #     'Templates','Preview','Maximize','Print','Youtube',
-            #
-            # ]},
+            {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
+            {'name': 'forms',
+             'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                       'HiddenField']},
+            '/',
+            {'name': 'paragraph',
+             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+                       'Language']},
+            {'name': 'insert','items': ['Image']},
+            '/',
+            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            {'name': 'about', 'items': ['About']},
+            '/',  # put this to force next toolbar on new line
+            {'name': '', 'items': [
+                # put the name of your editor.ui.addButton here
+                'Bold','Italic','Link','Undo', 'Redo',
+                'Templates','Preview','Maximize','Print','Youtube',
+
+            ]},
         ],
         'toolbar': 'agentprofile',  # put selected toolbar config here
         # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],

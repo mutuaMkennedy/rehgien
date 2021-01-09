@@ -1,7 +1,7 @@
 {% load static %}
 
-{% if bs_profile.services %}
-  {% for speciality in bs_profile.services %}
+{% if bs_profile.professional_services %}
+  {% for speciality in bs_profile.professional_services.all %}
     <button type="button" name="button">
       {{speciality}}
     </button>

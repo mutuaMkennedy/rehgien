@@ -206,6 +206,66 @@
                 {{PropertyForm.remodel_year|as_crispy_field}}
               </div>
           </div>
+
+          <h5>Open House</h5>
+          <div id="_ldfjsljoiSDkf" class="_sjkawfp-form-row1">
+            <p>Having an open house soon? Tell us the date and time. Open houses are a great way to
+            showcase a home and gain more attention.</p>
+              <table>
+                <thead>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th hidden></th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  {% for form in open_house_formset %}
+                    <tr class="dskdjOpendlkksHse-rw">
+                      <td>Date {{form.date}}</td>
+                      <td>Start time {{form.start_time}}</td>
+                      <td>End time {{form.end_time}}</td>
+                      <td hidden>
+                        {{form.id}}
+                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                      </td>
+                      <td></td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {{open_house_formset.management_form}}
+            <script>
+              $(document).ready(function(){
+                  $('.dskdjOpendlkksHse-rw').formset({
+                    prefix: '{{ open_house_formset.prefix }}'
+                  });
+                  $('.dskdjOpendlkksHse-rw input[type=text]').timepicker({
+                    timeFormat: 'HH:mm',
+                    interval: 60,
+                    minTime: '12:00am',
+                    maxTime: '23:00pm',
+                    dynamic: true,
+                    dropdown: true,
+                    scrollbar: true
+                  }); //disabled materialize timepicker which was overriding this plugin
+                  $(document).on('focus', '.add-row', function(){
+                    setTimeout(function(){
+                      $('.dskdjOpendlkksHse-rw input[type=text]').timepicker({
+                      timeFormat: 'HH:mm',
+                      interval: 60,
+                      minTime: '12:00am',
+                      maxTime: '23:00pm',
+                      dynamic: true,
+                      dropdown: true,
+                      scrollbar: true
+                    });
+                    }, 100);
+                  });
+                })
+            </script>
+
+          </div>
       </div>
 
       <div class="ListingFormStep">

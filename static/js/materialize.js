@@ -6887,7 +6887,7 @@ $jscomp.polyfill = function (e, r, p, m) {
   M.Autocomplete = Autocomplete;
 
   if (M.jQueryLoaded) {
-    M.initializeJqueryWrapper(Autocomplete, 'autocomplete', 'M_Autocomplete');
+    // M.initializeJqueryWrapper(Autocomplete, 'autocomplete', 'M_Autocomplete'); ### Manually disabled ###
   }
 })(cash);
 ;(function ($) {

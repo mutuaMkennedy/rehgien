@@ -1,0 +1,15 @@
+{% load static %}
+<div class="accountTab">
+  <div class="pfl-card-img">
+      <img src="
+      {% if user.profile_image%}
+        {{ user.profile_image.url}}
+      {% else %}
+        {% static 'img/avatar.png'%}
+      {% endif %}
+      " alt="{{user.username}}">
+  </div>
+  <div class="dab-links-wrapper">
+      Hi, {{user.username}}
+  </div>
+</div>

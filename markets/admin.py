@@ -1,22 +1,14 @@
 from django.contrib import admin
-from leaflet.admin import LeafletGeoAdmin
-from .models import (
-                    PropertyRequestLead,
-                    ProffesionalRequestLead,
-                    OtherServiceLead,
-                    AgentLeadRequest,
-                    AgentPropertyRequest
-                    )
+from . import models
 
+class JobPostInline(admin.StackedInline):
+    model = models.JobPostProposal
 
-class AgentLeadRequestAdmin(LeafletGeoAdmin):
-	list_display = ('property_type','ownership','qualified')
+class JobPostAdmin(admin.ModelAdmin):
+    inlines = [JobPostInline]
+    list_display = (
+        "title", "project_size", "project_duration", "location",
+        "verified","active",
+    )
 
-class AgentPropertyRequestAdmin(LeafletGeoAdmin):
-	list_display = ('property_type','ownership','qualified')
-
-admin.site.register(PropertyRequestLead)
-admin.site.register(ProffesionalRequestLead)
-admin.site.register(OtherServiceLead)
-admin.site.register(AgentLeadRequest, AgentLeadRequestAdmin)
-admin.site.register(AgentPropertyRequest, AgentPropertyRequestAdmin)
+admin.site.register(models.JobPost, JobPostAdmin)

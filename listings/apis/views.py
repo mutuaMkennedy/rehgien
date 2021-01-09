@@ -17,7 +17,7 @@ from rest_framework.permissions import  (
                     IsAdminUser,
                     IsAuthenticatedOrReadOnly
                     )
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly,IsUserOrReadOnly
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
@@ -79,4 +79,54 @@ class HomeSavesSerializer(RetrieveUpdateAPIView):
 class HomeDeleteApi(DestroyAPIView):
     queryset = models.Home.objects.all()
     serializer_class = serializers.HomeSerializer
+    permission_classes = [IsAuthenticated]
+
+class PropertyInteractionListApi(ListAPIView):
+    queryset = models.PropertyInteraction.objects.all()
+    serializer_class = serializers.PropertyInteractionSerializer
+
+class PropertyInteractionCreateApi(CreateAPIView):
+    queryset = models.PropertyInteraction.objects.all()
+    serializer_class = serializers.PropertyInteractionSerializer
+    permission_classes = [IsAuthenticated]
+    def perform_create(self,serializer):
+        serializer.save(user=self.request.user)
+
+class PropertyInteractionDetailApi(RetrieveAPIView):
+    queryset =  models.PropertyInteraction.objects.all()
+    serializer_class = serializers.PropertyInteractionSerializer
+
+class PropertyInteractionUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.PropertyInteraction.objects.all()
+    serializer_class = serializers.PropertyInteractionSerializer
+    permission_classes = [IsUserOrReadOnly]
+
+class PropertyInteractionDeleteApi(DestroyAPIView):
+    queryset = models.PropertyInteraction.objects.all()
+    serializer_class = serializers.PropertyInteractionSerializer
+    permission_classes = [IsAuthenticated]
+
+class PropertyOpenHouseListApi(ListAPIView):
+    queryset = models.PropertyOpenHouse.objects.all()
+    serializer_class = serializers.PropertyOpenHouseSerializer
+
+class PropertyOpenHouseCreateApi(CreateAPIView):
+    queryset = models.PropertyOpenHouse.objects.all()
+    serializer_class = serializers.PropertyOpenHouseSerializer
+    permission_classes = [IsAuthenticated]
+    def perform_create(self,serializer):
+        serializer.save(user=self.request.user)
+
+class PropertyOpenHouseDetailApi(RetrieveAPIView):
+    queryset =  models.PropertyOpenHouse.objects.all()
+    serializer_class = serializers.PropertyOpenHouseSerializer
+
+class PropertyOpenHouseUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.PropertyOpenHouse.objects.all()
+    serializer_class = serializers.PropertyOpenHouseSerializer
+    permission_classes = [IsUserOrReadOnly]
+
+class PropertyOpenHouseDeleteApi(DestroyAPIView):
+    queryset = models.PropertyOpenHouse.objects.all()
+    serializer_class = serializers.PropertyOpenHouseSerializer
     permission_classes = [IsAuthenticated]

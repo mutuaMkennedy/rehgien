@@ -1,0 +1,319 @@
+{% load static %}
+<header id="main_hdr_hmpg_aiuu">
+  <div class="navbar-fixed">
+    <nav role="navigation">
+    <div class="nav-wrapper">
+      <a id="logo-wrapper" href="{% url 'homepage'%}" class="brand-logo left" style="height:60px;">
+        <img class="logo" src="{%static 'img/Rehgien Regular-w.png' %}">
+      </a>
+      <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul id="nav-base1"class="left hide-on-med-and-down">
+        <li><a href="#" id='ag-trigger' class="dropdown-trigger" data-target='ag-dropdown'>Find professionals</a></li>
+        <li><a href="#" class="dropdown-trigger" data-target='marketplace-dropdown'>Shop by category</a></li>
+        <li><a href="{% url 'markets:job_post_home'%}" >Post a Job</a></li>
+      </ul>
+
+      <div id="marketplace-dropdown" class="dropdown-content hide-on-med-and-down _XnavDrop_dwn">
+        <div class="container">
+          <div class="row_box">
+            <h6><b>Shop categories</b><div></div> <span><a href="{% url 'listings:shop_category' %}">View all categories</a></span></h6>
+            <div class="row">
+              <div class="col s12 md6 l6 xl6 _nav_drd_lItems_sxui_col">
+                <div class="_nav_drd_lItems_wrpx col s12">
+                  <div class="_nav_drd_lItems_sxui col s12">
+                      <span class="col s12">Real estate</span>
+                        <ul class="col s12">
+                          <li><a href="{% url 'listings:property_homepage' %}">Sale & rental homes</a></li>
+                          <li><a href="#" class="link_disabled">Architectural Designs</a></li>
+                        </ul>
+                      <span class="col s12">Furniture</span>
+                        <ul class="col s12">
+                          <li><a href="#" class="link_disabled">Bedroom</a></li>
+                          <li><a href="#" class="link_disabled">Kitchen</a></li>
+                          <li><a href="#" class="link_disabled">Living room</a></li>
+                        </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col s12 md6 l6 xl6 _nav_drd_lItems_sxui_col">
+                <div class="_nav_drd_lItems_wrpx col s12">
+                  <div class="_nav_drd_lItems_sxui col s12">
+                      <span class="col s12">Home improvement</span>
+                        <ul class="col s12">
+                          <li><a href="#" class="link_disabled">Tile </a></li>
+                          <li><a href="#" class="link_disabled">Building materials </a></li>
+                        </ul>
+                        <span class="col s12">Home Decor</span>
+                          <ul class="col s12">
+                            <li><a href="#" class="link_disabled">Artwork</a></li>
+                            <li><a href="#" class="link_disabled">Wall decor</a></li>
+                          </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="ag-dropdown" class="dropdown-content hide-on-med-and-down _XnavDrop_dwn">
+
+          <div class="container">
+            <div class="row_box">
+              <h6><b>Professional categories</b> <div></div> <span><a href="{% url 'profiles:business_homepage' %}">View all categories</a></span></h6>
+              <div class="row">
+                <div class="col s12 md3 l3 xl3 nav_pro_list_col _nav_drd_lItems_sxui_col ">
+                    <div class="_nav_drd_lItems_wrpx col s12">
+                        <div class="_nav_pro_list _nav_drd_lItems_sxui col s12">
+                            <span class="col s12">Real Estate Services</span>
+                              <ul class="col s12">
+                                  <li><a href="{% url 'profiles:business_list'%}?p_cat=valuers">valuers</a></li>
+                                  <li><a href="{% url 'profiles:business_list'%}?p_cat=real-estate-agents">realestate agents</a></li>
+                                  <li><a href="{% url 'profiles:business_list'%}?p_cat=property-managers">property managers</a></li>
+                                  <li><a href="{% url 'profiles:business_list'%}?p_cat=facility-managers">facility managers</a></li>
+                                  <li><a href="{% url 'profiles:business_list'%}?p_cat=building-inspectors">building-inspectors</a></li>
+                              </ul>
+                              <span class="col s12">Surveying and construction</span>
+                              <ul class="col s12">
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=land-surveyors">land surveyors</a></li>
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=quantity-surveyors">quantity surveyors</a></li>
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=construction-managers">construction managers</a></li>
+                              </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 md3 l3 xl3 nav_pro_list_col _nav_drd_lItems_sxui_col">
+                    <div class="_nav_drd_lItems_wrpx col s12">
+                        <div class="_nav_pro_list _nav_drd_lItems_sxui col s12">
+                            <span class="col s12">Architecture and building design</span>
+                              <ul class="col s12">
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=architects">architects</a></li>
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=landscape-architects">landscape architects</a></li>
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=landscape-designers">landscape designers</a></li>
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=general-contrators">general contrators</a></li>
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=interior-designers-and-decorators">interior designers and decorators</a></li>
+                              </ul>
+                            <span class="col s12">General services</span>
+                            <ul class="col s12">
+                              <li><a href="{% url 'profiles:business_list'%}?p_cat=photographers">photographers</a></li>
+                              <li><a href="{% url 'profiles:business_list'%}?p_cat=movers">movers</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 md3 l3 xl3 nav_pro_list_col _nav_drd_lItems_sxui_col">
+                    <div class="_nav_drd_lItems_wrpx col s12">
+                        <div class="_nav_pro_list _nav_drd_lItems_sxui col s12">
+                            <span class="col s12">Renovation and remodeling</span>
+                              <ul class="col s12">
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=carpenters">carpenters</a></li>
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=door-dealers">door dealers</a></li>
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=carpet-dealers">carpet dealers</a></li>
+                                <li><a href="{% url 'profiles:business_list'%}?p_cat=building-supplies-suppliers">building supplies dealers</a></li>
+                              </ul>
+                            <span class="col s12">Appliances and systems</span>
+                            <ul class="col s12">
+                              <li><a href="{% url 'profiles:business_list'%}?p_cat=plumbers">plumbers</a></li>
+                              <li><a href="{% url 'profiles:business_list'%}?p_cat=home-automation-and-home-media">home automation and home media</a></li>
+                              <li><a href="{% url 'profiles:business_list'%}?p_cat=electricians">electricians</a></li>
+                              <li><a href="{% url 'profiles:business_list'%}?p_cat=solar-energy-systems">solar energy systems</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 md3 l3 xl3 nav_pro_list_col _nav_drd_lItems_sxui_col">
+                  <div class="_nav_drd_lItems_wrpx col s12">
+                      <div class="_nav_pro_list _nav_drd_lItems_sxui col s12">
+                        <span class="col s12">Cleaning services</span>
+                        <ul class="col s12">
+                          <li><a href="{% url 'profiles:business_list'%}?p_cat=house-cleaners">house cleaners</a></li>
+                          <li><a href="{% url 'profiles:business_list'%}?p_cat=carpet-and-upholstery-cleaners">carpet and upholstery cleaners</a></li>
+                          <li><a href="{% url 'profiles:business_list'%}?p_cat=window-cleaners">window cleaners</a></li>
+                          <li><a href="{% url 'profiles:business_list'%}?p_cat=garbage-cleaners">garbage cleaners</a></li>
+                          <li><a href="{% url 'profiles:business_list'%}?p_cat=pest-control">pest control</a></li>
+                        </ul>
+                        <span class="col s12" style='margin-top:25px;'>Are you a pro?</span>
+                        <ul class="col s12 catRe_pros">
+                          <li><a href="#">Join as a pro</a></li>
+                          <li><a href="#">Join insider programme</a></li>
+                          <li><a href="#">Partner with us</a></li>
+                        </ul>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <ul id="nav-base2" class="right hide-on-med-and-down">
+        <li><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">Rehgien Pro</a></li>
+        {% if not request.user.is_authenticated %}
+        <li><a href="{% url 'account_login' %}" class="modal-trigger"> LogIn</a></li>
+        <li>or</li>
+        <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+        {% else %}
+        <li><a id='ac-trigger'>
+            <span class="material-icons">account_circle</span>
+          </a>
+      </li>
+
+      </ul>
+      {% endif %}
+    </div>
+  </nav>
+    <div id="ac-dropdown" class="hide-on-med-and-down">
+      <button id="acDropdownClose" type="button" style="background-image:url({%static 'img/close.svg' %});"></button>
+      <div class="ac-drd-img valign-wrapper">
+      <div class="ac-drd-img-wrapper">
+        {% if request.user.profile_image%}
+        <img src="{{request.user.profile_image.url}}" alt="profile.img" style="width:40px">
+        {% else %}
+        <img src="{% static 'img/avatar.png'%}" alt="avatar.png"style="width:40px">
+        {% endif %}
+      </div>
+        <div class="ac-drd-li-wrapper">
+          <li>Hello {{request.user.first_name}}</li>
+        </div>
+      </div>
+      <div class="ac-drd-linkItems">
+        <li><a href="{% url 'profiles:account'%}">Account</a></li>
+        <li><a href="{% url 'account_logout' %}">Logout</a></li>
+      </div>
+    </div>
+
+    <ul id="mobile-nav" class="sidenav">
+      <ul class="Mnav-logoUl">
+        <li><a href="{% url 'listings:homepage'%}" class="brand-logo center Mnav-logoWrapper"><img class="logo" src="{%static 'img/rehgien_logo_r.png'%}"></a>
+        </li>
+      </ul>
+      <ul class="Mnav-UlItems collapsible">
+        <li><a href="{%url 'homepage'%}">Home</a></li>
+        <li>
+          <div class="collapsible-header Mnav-collapsible-header"><h6>Find professionals</h6><i class="fas fa-chevron-right"></i></div>
+          <div class="collapsible-body Mnav-collapsible-body">
+            <ul>
+              <span><a href="{% url 'profiles:business_homepage' %}">View all categories</a></span>
+              <div class="Mnav-re_pros">
+                <h6>Real Estate Services</h6>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=valuers">valuers</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=real-estate-agents">realestate agents</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=property-managers">property managers</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=facility-managers">facility managers</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=building-inspectors">building-inspectors</a></li>
+                <h6>Surveying and construction</h6>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=land-surveyors">land surveyors</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=quantity-surveyors">quantity surveyors</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=construction-managers">construction managers</a></li>
+                <h6>Architecture and building design</h6>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=architects">architects</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=landscape-architects">landscape architects</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=landscape-designers">landscape designers</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=general-contrators">general contrators</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=interior-designers-and-decorators">interior designers and decorators</a></li>
+                <h6>General services</h6>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=photographers">photographers</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=movers">movers</a></li>
+                <h6>Renovation and remodeling</h6>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=carpenters">carpenters</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=door-dealers">door dealers</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=carpet-dealers">carpet dealers</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=building-supplies-suppliers">building supplies dealers</a></li>
+                <h6>Appliances and systems</h6>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=plumbers">plumbers</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=home-automation-and-home-media">home automation and home media</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=electricians">electricians</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=solar-energy-systems">solar energy systems</a></li>
+                <h6>Cleaning services</h6>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=house-cleaners">house cleaners</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=carpet-and-upholstery-cleaners">carpet and upholstery cleaners</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=window-cleaners">window cleaners</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=garbage-cleaners">garbage cleaners</a></li>
+                <li><a href="{% url 'profiles:business_list'%}?p_cat=pest-control">pest control</a></li>
+                <h6>Are you a pro?</h6>
+                <li><a href="#">Join as a pro</a></li>
+                <li><a href="#">Join insider programme</a></li>
+                <li><a href="#">Partner with us</a></li>
+              </div>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="collapsible-header Mnav-collapsible-header"><h6>Shop by category</h6><i class="fas fa-chevron-right"></i></div>
+          <div class="collapsible-body Mnav-collapsible-body">
+            <ul>
+              <span><a href="{% url 'listings:shop_category' %}">View all categories</a></span>
+              <div class="Mnav-re_pros">
+                <h6>Real estate</h6>
+                <li><a href="{% url 'listings:property_homepage' %}">Sale & rental homes</a></li>
+                <li><a href="#" class="link_disabled">Architectural Designs</a></li>
+                <h6>Furniture</h6>
+                <li><a href="#" class="link_disabled">Bedroom</a></li>
+                <li><a href="#" class="link_disabled">Kitchen</a></li>
+                <li><a href="#" class="link_disabled">Living room</a></li>
+                <h6>Home Decor</h6>
+                <li><a href="#" class="link_disabled">Artwork</a></li>
+                <li><a href="#" class="link_disabled">Wall decor</a></li>
+              </div>
+            </ul>
+          </div>
+        </li>
+        <li><a href="{% url 'markets:job_post_home'%}">Post a Job</a></li>
+        <li><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">Rehgien Pro</a></li>
+        {% if not request.user.is_authenticated %}
+        <ul>
+          <div class="Mnav-authWrapper">
+            <li>You are not signed in</li>
+            <div class="Mnav-authLinks">
+              <li><a href="{% url 'account_login' %}" class="modal-trigger">LogIn</a></li>
+              <li>or</li>
+              <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+            </div>
+          </div>
+        </ul>
+        {% else %}
+
+        <li>
+          <div class="collapsible-header Mnav-collapsible-header">
+              <a style="color:#000;"><span class="material-icons">account_circle</span></a>
+              <i class="fas fa-chevron-right"></i>
+          </div>
+          <div class="collapsible-body Mnav-collapsible-body">
+            <ul>
+              <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
+              <li><a href="{% url 'account_logout' %}">Logout</a></li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+      </ul>
+
+    </ul>
+  </div>
+</header>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(document).on( 'click', '#ac-trigger', function() {
+        $('#ac-dropdown').css('display','block');
+    });
+    $(document).on('click', '#acDropdownClose', function() {
+        $('#ac-dropdown').css('display','none')
+    });
+
+    const black_logo =   "{%static 'img/rehgien_logo_r.png' %}";
+    const white_logo = "{%static 'img/Rehgien Regular-w.png' %}";
+
+    $(window).scroll(function() {
+      if($(this).scrollTop() > 1) {
+          $('header').removeAttr('id');
+          $('#logo-wrapper img').attr('src',black_logo)
+      } else {
+          $('header').attr('id','main_hdr_hmpg_aiuu');
+          $('#logo-wrapper img').attr('src',white_logo)
+      }
+    });
+
+});
+</script>

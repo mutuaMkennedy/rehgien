@@ -29,11 +29,10 @@ class BusinessProfileAbout(forms.ModelForm):
         ]
 
 class BusinessProfileServices(forms.ModelForm):
-    services = forms.MultipleChoiceField(required=False, choices = models.BusinessProfile.PRO_SERVICES_CHOICES, widget = forms.SelectMultiple())
     class Meta:
         model = models.BusinessProfile
         fields = [
-        'services'
+        'professional_services'
         ]
 
 class BusinessProfileServiceAreas(forms.ModelForm):
