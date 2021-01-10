@@ -1,6 +1,8 @@
 from homey.settings.base import *
 import os
 
+# python manage.py runserver --settings=homey.settings.local
+
 if os.name == 'nt':
     import platform
     OSGEO4W = r'C:\OSGeo4W'
