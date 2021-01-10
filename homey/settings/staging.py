@@ -1,19 +1,15 @@
 from homey.settings.base import *
-import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+DEBUG = False
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'rehgiendb',
-        'USER':'admin',
-        'PASSWORD': 'admin$$',
+        'NAME': 'rehgienTestDb',
+        'USER': 'rehgienAdmin ',
+        'PASSWORD': 'admin20$$',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5412',
     }
 }

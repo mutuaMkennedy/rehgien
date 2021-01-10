@@ -8,7 +8,33 @@
   <div class="container">
       <div class="row">
         <div class="blPdt_Header">
-          <h5><span class="material-icons">arrow_back</span>Back to posts</h5>
+          <a href="{% url 'rehgien_pro:blog_posts'%}?blog_category={{post.blog_category.slug}}"><h5><span class="material-icons">arrow_back</span>Back to posts</h5></a>
+        </div>
+
+        <div class="col s12 md8 l8 xl8">
+          <div class="blPdt_BodyWrap">
+              <div class="blPdt_BodyArticle">
+                <h1>{{post.title}}</h1>
+                <div class="blPdt_BodyTop">
+                  <div class="publisher_details">
+                    <div class="publisherPfImg">
+                      <img src="
+                      {% if post.publisher.profile_image %}
+                        {{post.publisher.profile_image.url}}
+                      {% else %}
+                        {% static 'img/avatar.png' %}
+                      {% endif %}
+                      " alt="">
+                    </div>
+                    <div class="publisherPfAct">
+                      <h5>{{post.publisher.get_full_name}}</h5>
+                      <h6>{{post.publishdate.date}}</h6>
+                    </div>
+                  </div>
+                </div>
+                {{post.text|safe}}
+              </div>
+          </div>
         </div>
       </div>
   </div>
