@@ -173,7 +173,7 @@ SIGNUP_REDIRECT_URL = ('listing:homepage')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
-    os.path.join(BASE_DIR, 'chat-frontend/build/static'),
+    # os.path.join(BASE_DIR, 'chat-frontend/build/static'),
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets_new')

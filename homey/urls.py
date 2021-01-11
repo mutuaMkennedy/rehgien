@@ -58,7 +58,7 @@ urlpatterns += [
     url(r'^apis/rest-auth/', include('rest_auth.urls')),
     url(r'^apis/rest-auth/', include('rest_auth.urls')),
     url(r'^apis/rest-auth/registration/', include('rest_auth.registration.urls')),
-    re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name = 'index.html')),
+    # re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name = 'index.html')),
 ]
 
 sitemaps = {
