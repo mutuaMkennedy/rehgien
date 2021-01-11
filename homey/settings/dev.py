@@ -2,7 +2,7 @@ from homey.settings.base import *
 import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -18,4 +18,4 @@ DATABASES = {
     }
 }
 
-# STATICFILES_STORAGE = 'django_forgiving_collecstatic.storages.ForgivingManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'homey.storage.ForgivingManifestStaticFilesStorage'
