@@ -18,4 +18,4 @@ DATABASES = {
     }
 }
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'django_forgiving_collecstatic.storages.ForgivingManifestStaticFilesStorage'
