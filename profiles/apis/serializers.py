@@ -24,10 +24,9 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = profiles_models.Review
         fields = [
-        'pk','recommendation_rating_choices', 'responsive_rating_choices', 'knowledge_rating_choices',
-        'professionalism_rating_choices', 'quality_rating_choices', 'profile', 'recommendation_rating',
-        'responsive_rating', 'knowledge_rating', 'professionalism_rating', 'quality_of_service_rating',
-        'comment', 'likes', 'reviewer', 'review_date'
+        'pk',"recommendation_rating_choices","responsive_rating_choices","knowledge_rating_choices","professionalism_rating_choices",
+        "quality_rating_choices","profile","recommendation_rating","responsive_rating","knowledge_rating","professionalism_rating",
+        "quality_of_service_rating","comment","likes","reviewer","review_date",
         ]
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -54,16 +53,16 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
     class Meta:
         model = profiles_models.BusinessProfile
         fields = [
-        "pk","user", "business_profile_image","professional_category","professional_services",
-        "business_name","phone","business_email", "address",
-        "website_link", "facebook_page_link", "twitter_page_link", "linkedin_page_link",
-        "instagram_page_link", "location", "about_video","about", "service_areas",
-        "saves", "followers", "member_since", "featured","pro_business_client",
-        "pro_business_hours","pro_business_review","_pro_average_rating_","_business_profile_percentage_complete_"
+        "pk","user","professional_category","professional_services","business_profile_image",
+        "business_name","phone","business_email","address","location","website_link",
+        "facebook_page_link","twitter_page_link","linkedin_page_link","instagram_page_link",
+        "about_video","about","service_areas","saves","followers","member_since",
+        "featured","verified","pro_business_client","pro_business_hours","pro_business_review",
+        "_pro_average_rating_","_business_profile_percentage_complete_",
         ]
 
     def get__pro_average_rating_(self,obj):
-        rating = obj.pro_business_review.all().aggregate(Avg('rating')).get('rating__avg', 0.00)
+        rating = obj.pro_business_review.all().aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
         if rating:
             return 0
         else:
@@ -72,7 +71,7 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
 
     def get__business_profile_percentage_complete_(self,obj):
         percent = {
-        'business_profile_image': 10, 'pro_speciality':10, 'phone':5, 'business_email':10,
+        'business_profile_image': 10, 'professional_category':10, 'phone':5, 'business_email':10,
         'address':10, 'website_link':5, 'facebook_page_link': 5,
         'twitter_page_link': 5, 'linkedin_page_link':5, 'instagram_page_link':5,
         'location':10, 'about':20
@@ -80,8 +79,8 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
         total = 0
         if obj.business_profile_image:
             total += percent.get('business_profile_image', 0)
-        if obj.pro_speciality:
-            total += percent.get('pro_speciality', 0)
+        if obj.professional_category:
+            total += percent.get('professional_category', 0)
         if obj.phone:
             total += percent.get('phone', 0)
         if obj.address:
@@ -115,9 +114,7 @@ class PortfolioItemSerializer(WritableNestedModelSerializer):
     class Meta:
         model = profiles_models.PortfolioItem
         fields = [
-        "PORTFOLIO_ITEM_TYPE_CHOICE", "PROGRESS_CHOICES", "porfolio_item_type",
-        "name", "worth", "year", "description", "address", "map_point",
-        "progress", "video", "portfolio_item_photo","created_at", "created_by"
+        "name","description","video","portfolio_item_photo","created_at","created_by",
         ]
 
 class TeammateConnectionSerializer(serializers.ModelSerializer):
