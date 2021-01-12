@@ -23,22 +23,22 @@ User = get_user_model()
 # PropertyRequestLead CRUD
 class JobPostListApi(ListAPIView):
     queryset = models.JobPost.objects.all()
-    serializer_class = serializers.JobPostProposalSerializer
+    serializer_class = serializers.JobPostSerializer
 
 class JobPostCreateApi(CreateAPIView):
     queryset = models.JobPost.objects.all()
-    serializer_class = serializers.JobPostProposalSerializer
+    serializer_class = serializers.JobPostSerializer
     permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(job_poster=self.request.user)
 
 class JobPostDetailApi(RetrieveAPIView):
     queryset = models.JobPost.objects.all()
-    serializer_class = serializers.JobPostProposalSerializer
+    serializer_class = serializers.JobPostSerializer
 
 class JobPostUpdateApi(RetrieveUpdateAPIView):
     queryset = models.JobPost.objects.all()
-    serializer_class = serializers.JobPostProposalSerializer
+    serializer_class = serializers.JobPostSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
 class JobPostViewerUpdateApi(RetrieveUpdateAPIView):
