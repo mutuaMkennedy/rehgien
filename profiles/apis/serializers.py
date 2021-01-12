@@ -19,6 +19,21 @@ class UserSerializer(serializers.ModelSerializer):
         'profile_image','listings_home_owner_related',
         ]
 
+class ProfessionalGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = profiles_models.ProfessionalGroup
+        fields = ['pk',"group_image","slug"]
+
+class ProfessionalCategorySerializer(serializers.ModelSerializer):
+    professional_group = ProfessionalGroupSerializer(many=False, read_only=True)
+    class Meta:
+        model = profiles_models.ProfessionalCategory
+        fields = ['pk', "category_name","category_image","slug","professional_group",]
+
+class ProfessionalServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = profiles_models.ProfessionalService
+        fields = ['pk',"service_name","service_image","slug"]
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,6 +60,8 @@ class BusinessHoursSerializer(serializers.ModelSerializer):
         ]
 
 class BusinessProfileSerializer(WritableNestedModelSerializer):
+    professional_category = ProfessionalCategorySerializer(many=False)
+    professional_services = ProfessionalServiceSerializer(many=True)
     pro_business_client = ClientSerializer(many=True)
     pro_business_hours = BusinessHoursSerializer(many=True)
     pro_business_review = ReviewSerializer(many=True)

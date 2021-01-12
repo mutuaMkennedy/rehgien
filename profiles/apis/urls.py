@@ -7,7 +7,9 @@ urlpatterns = [
     path('user/account/list/', api_views.UsersListAPI.as_view(), name='user_list' ),
     path('user/account/<int:pk>/edit/', api_views.UserAccountEditApi.as_view(), name='edit_account'),
     path('user/listings/property/homes/', api_views.UserListingsListApi.as_view(), name='listings_list'),
-
+    path('profiles/professional_group/list/', api_views.ProfessionalGroupListApi.as_view(), name='ProfessionalGroupListApi'),
+    path('profiles/professional_category/list/', api_views.ProfessionalCategoryListApi.as_view(), name='ProfessionalCategoryListApi'),
+    path('profiles/professional_service/list/', api_views.ProfessionalServiceListApi.as_view(), name='ProfessionalServiceListApi'),
     path('profiles/business_profile/list/', api_views.BusinessProfileListApi.as_view(), name='business_profile_list'),
     path('profiles/business_profile/<int:pk>/retrieve/', api_views.BusinessProfileDetailApi.as_view(), name='business_profile_retrieve'),
     path('profiles/business_profile/<int:pk>/edit/', api_views.BusinessProfileUpdateApi.as_view(), name='business_profile_update'),

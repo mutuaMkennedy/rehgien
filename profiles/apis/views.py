@@ -31,10 +31,21 @@ class UserAccountEditApi(RetrieveUpdateAPIView):
     serializer_class = serializers.UserAccountSerializer
     permission_classes = [AccountOwnerOrReadOnly]
 
-
 class UserListingsListApi(ListAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+
+class ProfessionalGroupListApi(ListAPIView):
+    queryset = models.ProfessionalGroup.objects.all()
+    serializer_class = serializers.ProfessionalGroupSerializer
+
+class ProfessionalCategoryListApi(ListAPIView):
+    queryset = models.ProfessionalCategory.objects.all()
+    serializer_class = serializers.ProfessionalCategorySerializer
+
+class ProfessionalServiceListApi(ListAPIView):
+    queryset = models.ProfessionalService.objects.all()
+    serializer_class = serializers.ProfessionalServiceSerializer
 
 #Busines profile
 class BusinessProfileListApi(ListAPIView):
