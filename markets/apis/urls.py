@@ -8,4 +8,5 @@ urlpatterns = [
     path('markets/job_post/<int:pk>/', views.JobPostDetailApi.as_view(), name='JobPostDetailApi'),
     path('markets/job_post/<int:pk>/update/', views.JobPostUpdateApi.as_view(), name='JobPostUpdateApi'),
     path('markets/job_post/<int:pk>/add_viewer/', views.JobPostViewerUpdateApi.as_view(), name='JobPostViewerUpdateApi'),
+    path('markets/job_post_proposal/create/', views.JobPostProposalCreateApi.as_view(), name='JobPostProposalCreateApi'),
 ]
