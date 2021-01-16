@@ -38,7 +38,7 @@ urlpatterns = [
     path('pro/', include('rehgien_pro.urls')),
     path('resources/', include('resource_center.urls')),
     path('apis/', include('listings.apis.urls')),
-    path('location-apis/', include('location.api.urls')),
+    path('apis/', include('location.api.urls')),
     path('apis/', include('profiles.apis.urls')),
     path('apis/', include('markets.apis.urls')),
     url(r'^accounts/', include('allauth.urls')),

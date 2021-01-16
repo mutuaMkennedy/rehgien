@@ -1,73 +1,53 @@
-from location.api.serializers import (
-            DistrictsSerializer,
-            DivisionsSerializer,
-            KNPolytechnicsSerializer,
-            KenyaPrimarySchoolsSerializer,
-            PrivateCollegesSerializer,
-            PrivateUniversitiesSerializer,
-            PublicCollegesSerializer,
-            UniversitiesCollegesSerializer,
-            SecondarySchoolsSerializer,
-            TTCollegesSerializer,
-            UniversitiesSerializer
-            )
-from location.models import (
-            Districts,
-            Divisions,
-            KenyaNationalPolytechnics,
-            KenyaPrimarySchools,
-            PrivateColleges,
-            PrivateUniversities,
-            PublicColleges,
-            UniversitiesColleges,
-            SecondarySchools,
-            TeachersTrainingColleges,
-            Universities
-            )
+from . import serializers
+from location import models
 from rest_framework.generics import ListAPIView
 
 
 
 class DistrictsListApi(ListAPIView):
-    queryset = Districts.objects.all()
-    serializer_class = DistrictsSerializer
+    queryset = models.Districts.objects.all()
+    serializer_class = serializers.DistrictsSerializer
 
 class DivisionsListApi(ListAPIView):
-    queryset = Divisions.objects.all()
-    serializer_class = DivisionsSerializer
+    queryset = models.Divisions.objects.all()
+    serializer_class = serializers.DivisionsSerializer
 
 class KNPolytechnicsListApi(ListAPIView):
-    queryset = KenyaNationalPolytechnics.objects.all()
-    serializer_class = KNPolytechnicsSerializer
+    queryset = models.KenyaNationalPolytechnics.objects.all()
+    serializer_class = serializers.KNPolytechnicsSerializer
 
 class KenyaPrimarySchoolsListApi(ListAPIView):
-    queryset = KenyaPrimarySchools.objects.all()
-    serializer_class = KenyaPrimarySchoolsSerializer
+    queryset = models.KenyaPrimarySchools.objects.all()
+    serializer_class = serializers.KenyaPrimarySchoolsSerializer
 
 class PrivateCollegesListApi(ListAPIView):
-    queryset = PrivateColleges.objects.all()
-    serializer_class = PrivateCollegesSerializer
+    queryset = models.PrivateColleges.objects.all()
+    serializer_class = serializers.PrivateCollegesSerializer
 
 class PrivateUniversitiesListApi(ListAPIView):
-    queryset = PrivateUniversities.objects.all()
-    serializer_class = PrivateUniversitiesSerializer
+    queryset = models.PrivateUniversities.objects.all()
+    serializer_class = serializers.PrivateUniversitiesSerializer
 
 class PublicCollegesListApi(ListAPIView):
-    queryset = PublicColleges.objects.all()
-    serializer_class = PublicCollegesSerializer
+    queryset = models.PublicColleges.objects.all()
+    serializer_class = serializers.PublicCollegesSerializer
 
 class UniversitiesCollegesListApi(ListAPIView):
-    queryset = UniversitiesColleges.objects.all()
-    serializer_class = UniversitiesCollegesSerializer
+    queryset = models.UniversitiesColleges.objects.all()
+    serializer_class = serializers.UniversitiesCollegesSerializer
 
 class SecondarySchoolsListApi(ListAPIView):
-    queryset = SecondarySchools.objects.all()
-    serializer_class = SecondarySchoolsSerializer
+    queryset = models.SecondarySchools.objects.all()
+    serializer_class = serializers.SecondarySchoolsSerializer
 
 class TeachersTrainingCollegesListApi(ListAPIView):
-    queryset = TeachersTrainingColleges.objects.all()
-    serializer_class = TTCollegesSerializer
+    queryset = models.TeachersTrainingColleges.objects.all()
+    serializer_class = serializers.TTCollegesSerializer
 
 class UniversitiesListApi(ListAPIView):
-    queryset = Universities.objects.all()
-    serializer_class = UniversitiesSerializer
+    queryset = models.Universities.objects.all()
+    serializer_class = serializers.UniversitiesSerializer
+
+class KenyaTownListApi(ListAPIView):
+    queryset = models.KenyaTown.objects.all()
+    serializer_class = serializers.KenyaTownSerializer

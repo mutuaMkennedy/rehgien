@@ -1,91 +1,62 @@
 from rest_framework import serializers
-from location.models import (
-        Districts,
-        Divisions,
-        KenyaNationalPolytechnics,
-        KenyaPrimarySchools,
-        PrivateColleges,
-        PrivateUniversities,
-        PublicColleges,
-        UniversitiesColleges,
-        SecondarySchools,
-        TeachersTrainingColleges,
-        Universities
-        )
+from location import models
 
 class DistrictsSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Districts
-        fields=[
-        'name_2', 'geom'
-        ]
+        model=models.Districts
+        fields= '__all__'
 
 class DivisionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Divisions
-        fields=[
-        'name_3', 'geom'
-        ]
+        model=models.Divisions
+        fields= '__all__'
 
 class KNPolytechnicsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = KenyaNationalPolytechnics
-        fields=[
-        'name','descriptio','geom'
-        ]
+        model = models.KenyaNationalPolytechnics
+        fields= '__all__'
 
 class KenyaPrimarySchoolsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = KenyaPrimarySchools
-        fields=[
-        'name_of_sc','geom'
-        ]
+        model = models.KenyaPrimarySchools
+        fields= '__all__'
 
 class PrivateCollegesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PrivateColleges
-        fields=[
-        'name','geom'
-        ]
+        model = models.PrivateColleges
+        fields= '__all__'
 
 class PrivateUniversitiesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PrivateUniversities
-        fields=[
-        'name','geom'
-        ]
+        model = models.PrivateUniversities
+        fields= '__all__'
 
 class PublicCollegesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PublicColleges
-        fields=[
-        'name','geom'
-        ]
+        model = models.PublicColleges
+        fields= '__all__'
 
 class UniversitiesCollegesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UniversitiesColleges
-        fields=[
-        'name','geom'
-        ]
+        model = models.UniversitiesColleges
+        fields= '__all__'
 
 class SecondarySchoolsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SecondarySchools
-        fields=[
-        'institute','geom'
-        ]
+        model = models.SecondarySchools
+        fields= '__all__'
 
 class TTCollegesSerializer(serializers.ModelSerializer):
     class Meta:
-        model =TeachersTrainingColleges
-        fields=[
-        'name','geom'
-        ]
+        model = models.TeachersTrainingColleges
+        fields= '__all__'
 
 class UniversitiesSerializer(serializers.ModelSerializer):
     class Meta:
-        model =Universities
-        fields=[
-        'name','geom'
-        ]
+        model = models.Universities
+        fields= '__all__'
+
+class KenyaTownSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.KenyaTown
+        fields= '__all__'
