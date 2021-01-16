@@ -48,7 +48,11 @@
   <div class="navbar-fixed">
     <nav class="teal" role="navigation">
     <div class="nav-wrapper">
-      <a id="logo-wrapper" href="{% url 'homepage'%}" class="brand-logo left" style="height:60px;"><img class="logo" src="{%static 'img/rehgien_logo_r.png'%}"></a>
+      <a id="logo-wrapper" href="{% url 'homepage'%}" class="brand-logo left" style="height:60px;">
+        <div class="base_lgo">
+          <img src="{% static 'img/RehgienLogoBlack.svg'%}" alt="rehgien logo">
+        </div>
+      </a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-base1"class="left hide-on-med-and-down">
         <li><a href="#" id='ag-trigger' class="dropdown-trigger" data-target='ag-dropdown'>Find professionals</a></li>
@@ -225,7 +229,11 @@
 
   <ul id="mobile-nav" class="sidenav">
     <ul class="Mnav-logoUl">
-      <li><a href="{% url 'listings:homepage'%}" class="brand-logo center Mnav-logoWrapper"><img class="logo" src="{%static 'img/rehgien_logo_r.png'%}"></a>
+      <li><a href="{% url 'listings:homepage'%}" class="brand-logo center Mnav-logoWrapper">
+        <div class="mnv_Lg">
+          <img src="{% static 'img/RehgienLogoBlack.svg'%}" alt="rehgien logo">
+        </div>
+      </a>
       </li>
     </ul>
     <ul class="Mnav-UlItems collapsible">

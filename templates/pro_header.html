@@ -4,7 +4,9 @@
     <nav role="navigation">
     <div class="nav-wrapper">
       <a id="logo-wrapper" href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo left" style="height:60px;">
-        <img class="logo" src="{%static 'img/rehgien_pro_white.png' %}">
+        <div class="base_lgo">
+          <img src="{% static 'img/RehgienProLogoW.svg'%}" alt="rehgien pro logo">
+        </div>
       </a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-base1"class="left hide-on-med-and-down">
@@ -88,7 +90,7 @@
           </div>
         </div>
       </div>
-      
+
       <div id="pro_resources" class="dropdown-content hide-on-med-and-down _RgnProNav_dwn">
         <div class="container">
           <div class="pro_nav_rbox">
@@ -170,7 +172,12 @@
 
     <ul id="mobile-nav" class="sidenav">
       <ul class="Mnav-logoUl">
-        <li><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo center Mnav-logoWrapper"><img class="logo" src="{%static 'img/rehgien_pro_regular.png'%}"></a>
+        <li>
+          <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo center Mnav-logoWrapper">
+            <div class="mnv_Lg">
+                <img src="{% static 'img/RehgienProLogo.svg'%}" alt="rehgien pro logo">
+            </div>
+          </a>
         </li>
       </ul>
       <ul class="Mnav-UlItems collapsible">
@@ -249,16 +256,17 @@ $(document).ready(function(){
         $('#ac-dropdown').css('display','none')
     });
 
-    const black_logo =   "{%static 'img/rehgien_pro_regular.png' %}";
-    const white_logo = "{%static 'img/rehgien_pro_white.png' %}";
+    const black_logo =  "{% static 'img/RehgienProLogo.svg'%}";
+
+    const white_logo = "{% static 'img/RehgienProLogoW.svg'%}";
 
     $(window).scroll(function() {
       if($(this).scrollTop() > 1) {
           $('header').removeAttr('id');
-          $('#logo-wrapper img').attr('src',black_logo)
+          $('.base_lgo img').attr('src', black_logo)
       } else {
           $('header').attr('id','main_hdr_hmpg_aiuu');
-          $('#logo-wrapper img').attr('src',white_logo)
+          $('.base_lgo img').attr('src', white_logo)
       }
     });
 

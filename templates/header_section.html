@@ -4,7 +4,9 @@
     <nav role="navigation">
     <div class="nav-wrapper">
       <a id="logo-wrapper" href="{% url 'homepage'%}" class="brand-logo left" style="height:60px;">
-        <img class="logo" src="{%static 'img/Rehgien Regular-w.png' %}">
+        <div class="base_lgo">
+          <img src="{% static 'img/RehgienLogoW.svg'%}" alt="rehgien logo">
+        </div>
       </a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-base1"class="left hide-on-med-and-down">
@@ -184,7 +186,11 @@
 
     <ul id="mobile-nav" class="sidenav">
       <ul class="Mnav-logoUl">
-        <li><a href="{% url 'listings:homepage'%}" class="brand-logo center Mnav-logoWrapper"><img class="logo" src="{%static 'img/rehgien_logo_r.png'%}"></a>
+        <li><a href="{% url 'listings:homepage'%}" class="brand-logo center Mnav-logoWrapper">
+          <div class="mnv_Lg">
+            <img src="{% static 'img/RehgienLogoBlack.svg'%}" alt="rehgien logo">
+          </div>
+        </a>
         </li>
       </ul>
       <ul class="Mnav-UlItems collapsible">
@@ -302,16 +308,17 @@ $(document).ready(function(){
         $('#ac-dropdown').css('display','none')
     });
 
-    const black_logo =   "{%static 'img/rehgien_logo_r.png' %}";
-    const white_logo = "{%static 'img/Rehgien Regular-w.png' %}";
+    const black_logo ="{% static 'img/RehgienLogoBlack.svg'%}";
+
+    const white_logo = "{% static 'img/RehgienLogoW.svg'%}";
 
     $(window).scroll(function() {
       if($(this).scrollTop() > 1) {
           $('header').removeAttr('id');
-          $('#logo-wrapper img').attr('src',black_logo)
+          $('.base_lgo img').attr('src', black_logo);
       } else {
           $('header').attr('id','main_hdr_hmpg_aiuu');
-          $('#logo-wrapper img').attr('src',white_logo)
+          $('.base_lgo img').attr('src', white_logo)
       }
     });
 

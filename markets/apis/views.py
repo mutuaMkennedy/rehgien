@@ -14,7 +14,7 @@ from rest_framework.permissions import  (
                     IsAdminUser,
                     IsAuthenticatedOrReadOnly
                     )
-from .permissions import IsOwnerOrReadOnly,IsPro
+from .permissions import IsOwnerOrReadOnly
 from django.contrib.auth import get_user_model
 
 # referencing the custom user model
@@ -48,6 +48,6 @@ class JobPostViewerUpdateApi(RetrieveUpdateAPIView):
 class JobPostProposalCreateApi(CreateAPIView):
     queryset = models.JobPostProposal.objects.all()
     serializer_class = serializers.JobPostProposalSerializer
-    permission_classes = IsPro
+    permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(proposal_sender=self.request.user)

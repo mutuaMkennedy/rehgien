@@ -321,9 +321,13 @@ main {
     box-shadow: 0 0px 5px 0px #eee;
 }
 
-#mobile-nav .Mnav-logoWrapper img {
-    width: 73px;
+#mobile-nav .Mnav-logoWrapper .mnv_Lg img {
+    width: 80px;
     height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
 }
 
 #mobile-nav .Mnav-UlItems li a {
@@ -631,8 +635,18 @@ main {
     }
 }
 
-.logo {
-    height: 35px;
+.base_lgo{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.base_lgo img {
+    width:80px;
+    height:auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto;
 }
 
 .videos {
