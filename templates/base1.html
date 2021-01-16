@@ -13,7 +13,7 @@
   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
   <link rel="shortcut icon" type="image/png" href="{%static 'img/logo-fav.png'%}">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <title>Rehgien|Find property experts & service providers</title>
+  {% block title %}{% endblock %}
 
   <!-- CSS  -->
   <link rel="stylesheet" type="text/css" href="{%static 'css/material-icons.css'%}">
@@ -179,7 +179,7 @@
                         </ul>
                         <span class="col s12" style='margin-top:25px;'>Are you a pro?</span>
                         <ul class="col s12 catRe_pros">
-                          <li><a href="#">Join as a pro</a></li>
+                          <li><a href="{% url 'profiles:change_to_pro' %}">Join as a pro</a></li>
                           <li><a href="#">Join insider programme</a></li>
                           <li><a href="#">Partner with us</a></li>
                         </ul>

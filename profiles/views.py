@@ -37,6 +37,9 @@ def check_value_valid(param):
 def check_service_valid(param):
 	return param <= 8 and param >= 1
 
+def change_user_type_to_pro(request):
+	return render(request,'profiles/change_to_pro_form.html',{})
+
 def account_page(request):
 	ImageTransformation = dict(
 	format = "jpeg",
@@ -560,7 +563,6 @@ def pro_follow(request):
 		if request.is_ajax():
 			html = render_to_string('profiles/pro-follow-section.html', context, request=request)
 			return JsonResponse({'form':html,'err_message':err_message})
-
 
 """
 function that adds a pro to another pro's team connection list.
