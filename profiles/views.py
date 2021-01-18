@@ -37,9 +37,6 @@ def check_value_valid(param):
 def check_service_valid(param):
 	return param <= 8 and param >= 1
 
-def change_user_type_to_pro(request):
-	return render(request,'profiles/change_to_pro_form.html',{})
-
 def account_page(request):
 	ImageTransformation = dict(
 	format = "jpeg",

@@ -1,3 +1,6 @@
+import os
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -13,6 +16,8 @@ try:
 	from django.utils import simplejson as simplejson
 except ImportError:
 	import json
+from profiles import pro_profile_setup_forms as pro_setup_forms
+from formtools.wizard.views import SessionWizardView
 
 User = get_user_model()
 
@@ -20,80 +25,108 @@ def check_q_valid(param):
 	return param !="" and param is not None
 
 def homepage(request):
-    return render(request,'rehgien_pro/rehgien_pro_homepage.html',{})
+	return render(request,'rehgien_pro/rehgien_pro_homepage.html',{})
+
+#pro onboarding wizard
+FORMS = [
+			("ProInfo", pro_setup_forms.ProInfo),
+			("ProServices", pro_setup_forms.ProServices),
+			("ProLocation", pro_setup_forms.ProLocation),
+			("ProBusinessProfileImage", pro_setup_forms.ProBusinessProfileImage),
+			("ProReviewers", pro_setup_forms.ProReviewers)
+		 ]
+
+TEMPLATES = {
+			"ProInfo": "rehgien_pro/pro_onboarding/pro_info.html",
+			"ProServices": "rehgien_pro/pro_onboarding/pro_services.html",
+			"ProLocation": "rehgien_pro/pro_onboarding/pro_location.html",
+			"ProBusinessProfileImage": "rehgien_pro/pro_onboarding/pro_business_profile_image.html",
+			"ProReviewers": "rehgien_pro/pro_onboarding/pro_services.html"
+			}
+
+# @login_required(login_url='account_login')
+class ProSetupWizardView(SessionWizardView):
+	def get_template_names(self):
+		print('next step ' + self.steps.current)
+		return [TEMPLATES[self.steps.current]]
+	file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_profile_photos'))
+	def done(self, form_list, **kwargs):
+		return render(self.request, 'done.html', {
+			'form_data': [form.cleaned_data for form in form_list],
+		})
 
 @login_required(login_url='account_login')
 def jobs_list(request):
-    if request.user.user_type == 'PRO':
-        location_target = str(request.GET.get("location_target",''))
-        project_size = str(request.GET.get("project_size",''))
-        project_duration = str(request.GET.get("project_duration",''))
-        expertise_areas = str(request.GET.get("skill_areas",''))
-        page = request.GET.get('page', '1')
-        jobs = market_models.JobPost.objects.filter(active=True).order_by('-job_update_date')
+	if request.user.user_type == 'PRO':
+		location_target = str(request.GET.get("location_target",''))
+		project_size = str(request.GET.get("project_size",''))
+		project_duration = str(request.GET.get("project_duration",''))
+		expertise_areas = str(request.GET.get("skill_areas",''))
+		page = request.GET.get('page', '1')
+		jobs = market_models.JobPost.objects.filter(active=True).order_by('-job_update_date')
 
-        skill_areas = []
-        for job in jobs:
-            for skill in job.skill_areas:
-                skill_areas.append(skill)
-        skill_areas = list(set(skill_areas))
+		skill_areas = []
+		for job in jobs:
+			for skill in job.skill_areas:
+				skill_areas.append(skill)
+		skill_areas = list(set(skill_areas))
 
-        town_names = []
-        for town in location_models.KenyaTown.objects.all():
-            town_names.append(town.town_name)
+		town_names = []
+		for town in location_models.KenyaTown.objects.all():
+			town_names.append(town.town_name)
 
-        if check_q_valid(location_target):
-            jobs = jobs.filter(location__icontains = location_target)
-        if check_q_valid(project_size):
-            jobs = jobs.filter(project_size = project_size.upper())
-        if check_q_valid(project_duration):
-            jobs = jobs.filter(project_duration = project_duration)
-        if check_q_valid(expertise_areas):
-            jobs = jobs.filter(skill_areas__icontains = expertise_areas)
+		if check_q_valid(location_target):
+			jobs = jobs.filter(location__icontains = location_target)
+		if check_q_valid(project_size):
+			jobs = jobs.filter(project_size = project_size.upper())
+		if check_q_valid(project_duration):
+			jobs = jobs.filter(project_duration = project_duration)
+		if check_q_valid(expertise_areas):
+			jobs = jobs.filter(skill_areas__icontains = expertise_areas)
 
-        paginator_jobs = Paginator(jobs, 20)
-        jobs_p = paginator_jobs.get_page(page)
+		paginator_jobs = Paginator(jobs, 20)
+		jobs_p = paginator_jobs.get_page(page)
 
-        search_params = {}
-        search_params['location_target'] = location_target
-        search_params['project_size'] = project_size
-        search_params['project_duration'] = project_duration
-        search_params['expertise_areas'] = expertise_areas
-        search_params['page'] = page
+		search_params = {}
+		search_params['location_target'] = location_target
+		search_params['project_size'] = project_size
+		search_params['project_duration'] = project_duration
+		search_params['expertise_areas'] = expertise_areas
+		search_params['page'] = page
 
-        query_string = urlencode(search_params)
+		query_string = urlencode(search_params)
 
-        context = {
-            "jobs":jobs,
-            "jobs_p":jobs_p,
-            "skill_areas":skill_areas,
-            "town_names":town_names,
-            "search_params":search_params,
-            "query_string":query_string
-        }
-        return render(request, 'rehgien_pro/job_list.html',context)
-    else:
-        messages.error(request,'Denied. This feature is availlable to pros only!')
-        return redirect('rehgien_pro:rehgien_pro_homepage')
+		context = {
+			"jobs":jobs,
+			"jobs_p":jobs_p,
+			"skill_areas":skill_areas,
+			"town_names":town_names,
+			"search_params":search_params,
+			"query_string":query_string
+		}
+		return render(request, 'rehgien_pro/job_list.html',context)
+	else:
+		messages.error(request,'Denied. This feature is availlable to pros only!')
+		return redirect('rehgien_pro:rehgien_pro_homepage')
 
 @login_required(login_url='account_login')
 def job_detail(request, pk):
-    if request.user.user_type == 'PRO':
-        job = get_object_or_404(market_models.JobPost, id=pk)
-        job_proposal = market_models.JobPostProposal.objects.filter(proposal_sender = request.user, job_post=job)
-        if job.job_viewers.filter(pk=request.user.id).exists():
-            pass
-        else:
-            job.job_viewers.add(request.user.id)
+	if request.user.user_type == 'PRO':
+		job = get_object_or_404(market_models.JobPost, id=pk)
+		job_proposal = market_models.JobPostProposal.objects.filter(proposal_sender = request.user, job_post=job)
+		if job.job_viewers.filter(pk=request.user.id).exists():
+			pass
+		else:
+			job.job_viewers.add(request.user.id)
 
-        context = {
-                "job":job,
-                "job_proposal":job_proposal
-            }
-        return render(request,  'rehgien_pro/job_post_detail.html', context)
-    else:
-        messages.error(request,'Denied. This feature is availlable to pros only!')
-        return redirect('rehgien_pro:rehgien_pro_homepage')
+		context = {
+				"job":job,
+				"job_proposal":job_proposal
+			}
+		return render(request,  'rehgien_pro/job_post_detail.html', context)
+	else:
+		messages.error(request,'Denied. This feature is availlable to pros only!')
+		return redirect('rehgien_pro:rehgien_pro_homepage')
 
 def blog_posts(request):
 	try:

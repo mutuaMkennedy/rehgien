@@ -3,7 +3,6 @@ from . import models
 from leaflet.forms.widgets import LeafletWidget
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
-
 class BusinessProfileImage(forms.ModelForm):
     business_profile_image = forms.ImageField(widget=forms.FileInput)
     class Meta:
@@ -41,7 +40,6 @@ class BusinessProfileServiceAreas(forms.ModelForm):
         fields = [
         'service_areas'
         ]
-
 
 class ClientForm(forms.ModelForm):
     client_logo = forms.ImageField(widget=forms.FileInput)

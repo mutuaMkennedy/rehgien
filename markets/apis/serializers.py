@@ -19,4 +19,4 @@ class JobPostSerializer(serializers.ModelSerializer):
 class JobPostViewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.JobPost
-        fields = 'job_viewers'
+        fields = ['job_viewers']

@@ -1,0 +1,92 @@
+{% extends 'pro_base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>Create pro business profile|Rehgien Pro</title>{% endblock %}
+{% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+{{ form.media.css }}
+{{ wizard.form.media }}
+<div class="ProOnboardingWizard">
+  <div class="pro_onboardingProgress" style="width:0"></div>
+  <div class="container">
+    <div class="row">
+        <form method="post col s12">
+            {% csrf_token %}
+            <div class="proOnbdFormElS col s12">
+                <div class="col s12 md8 l8 xl8 pr_ObdFormFields stepOne">
+                  <div class="formSct">
+                      {{form.errors}}
+                    <h2>
+                      Welcome to Rehgien Pro! <br>
+                      Lets get started by creating your business profile.
+                    </h2>
+                  </div>
+                    <div class="field">
+                        <p>Business name <span>*</span></p>
+                        {{form.business_name}}
+                    </div>
+                    <div class="field onboardingSelectProCatg">
+                      <p>Professional category <span>*</span></p>
+                      {{form.professional_category}}
+                    </div>
+                    <div class="field formPhoneNumberField">
+                      <p>Business phone number <span>*</span></p>
+                      {{form.phone}}
+                    </div>
+                    <div class="field">
+                      <p>Business email <span>*</span></p>
+                      {{form.business_email}}
+                    </div>
+                    <div class="disclaimer">
+                      <small>
+                        By continuing with this process you agree to receive text messages and emails about new leads,
+                        product news, and best practices at the number and email provided pursuant to <a href="#"> Rehgien Terms of Use.</a>
+                      </small>
+                    </div>
+                </div>
+                <div class="col s12 md4 l4 xl4 ">
+                  <div class="helper_card_msgTxtRg">
+                    <div class="card">
+                        <h3>Get a professional business profile.</h3>
+                        <div class="proObgHelpTips">
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">person_search</span>
+                            <p>Your business profile is how clients find you.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">work</span>
+                            <p>Ensure you correctly represent your business in order to reach more clients.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">engineering</span>
+                            <p>Select a professional Category that best fits your business.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">connect_without_contact</span>
+                            <p>Your business phone number and email is what clients contact you with.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">verified_user</span>
+                            <p>At Rehgien we always verify pros before they are listed.</p>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          <div class="OnbgSteps-footer col s12">
+            <div class="OnbgSteps-footerBtns">
+              {% if wizard.steps.prev %}
+              <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
+              {% endif %}
+              <button class="nextStepOnbd" name="wizard_goto_step" type="submit">{% trans "Next" %}</button>
+            </div>
+          </div>
+            {{ wizard.management_form }}
+        </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

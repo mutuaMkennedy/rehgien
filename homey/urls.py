@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^photologue/', include('photologue.urls', namespace='photologue')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    path("select2/", include("django_select2.urls")),
     url(r'^apis/rest-auth/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email')
     # path('msg/', TemplateView.as_view(template_name = 'index.html')),
     #url(r'^search/', include('haystack.urls')),

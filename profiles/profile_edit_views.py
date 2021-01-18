@@ -8,7 +8,6 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
 from django.db.models import Q
 from django.contrib.auth import get_user_model
-
 from . import models
 from . import profile_edit_forms as forms
 

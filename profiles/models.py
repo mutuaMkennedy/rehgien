@@ -32,7 +32,7 @@ import cloudinary
 from embed_video.fields import EmbedVideoField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
-
+from phonenumber_field.modelfields import PhoneNumberField
 
 # extending user model
 class User(AbstractUser):

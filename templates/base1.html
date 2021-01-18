@@ -28,6 +28,8 @@
   <link rel="stylesheet" href="{% static 'calendar/css/theme2.css'%}">
   <link rel="stylesheet" href="{% static 'dropzone/dropzone.min.css'%}">
   <link rel="stylesheet" href="{% static 'dropzone/dropzone.css'%}">
+  <link rel="stylesheet" href="{% static 'intl-tel-input-master/build/css/intlTelInput.css'%}">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> -->
   <script src="{%static 'js/js/all.min.js'%}"></script>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
@@ -179,7 +181,7 @@
                         </ul>
                         <span class="col s12" style='margin-top:25px;'>Are you a pro?</span>
                         <ul class="col s12 catRe_pros">
-                          <li><a href="{% url 'profiles:change_to_pro' %}">Join as a pro</a></li>
+                          <li><a href="{% url 'rehgien_pro:ProSetupWizardView' %}">Join as a pro</a></li>
                           <li><a href="#">Join insider programme</a></li>
                           <li><a href="#">Partner with us</a></li>
                         </ul>
@@ -416,6 +418,8 @@
   <script src="{% static 'js/gall.js' %}"></script>
   <script src="{% static 'js/mat.js' %}"></script>
   <script src="{% static 'js/bubbles.js' %}"></script>
+  <script src="{% static 'intl-tel-input-master/build/js/intlTelInput-jquery.min.js'%}"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> -->
   <!-- <script src="{% static 'js/jquery.autocomplete.js' %}"></script> -->
   <script src="{% static 'js/our_search_code.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/js/all.min.js' %}"></script>

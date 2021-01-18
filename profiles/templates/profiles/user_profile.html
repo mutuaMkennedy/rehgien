@@ -118,9 +118,11 @@
                                   <h6>Complete</h6>
                                 </div>
                               </div>
-                              <a href="{{user.pro_business_profile.get_absolute_url}}">
-                                <h5>Go to business page &nbsp<span class="material-icons">east</span></h5>
-                              </a>
+                              {% if user.pro_business_profile %}
+                                <a href="{{user.pro_business_profile.get_absolute_url}}">
+                                  <h5>Go to business page &nbsp<span class="material-icons">east</span></h5>
+                                </a>
+                              {% endif %}
                           </div>
                           <div class="_userProfileEnd">
                             <a
