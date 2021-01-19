@@ -9,5 +9,5 @@ class PartnerForm(forms.ModelForm):
             "email","company_name","company_website","phone_number"
         ]
         widget ={
-        "partner_program":forms.SelectMultiple(),
+        "partner_program":forms.RadioSelect(),
         }

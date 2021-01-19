@@ -11,7 +11,7 @@ class JobPostProposalSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class JobPostSerializer(serializers.ModelSerializer):
-    job_post_proposal = JobPostProposalSerializer(many=True)
+    job_post_proposal = JobPostProposalSerializer(many=True, required=False)
     class Meta:
         model = models.JobPost
         fields = '__all__'
