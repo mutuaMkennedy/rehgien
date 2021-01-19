@@ -37,6 +37,7 @@ urlpatterns = [
     path('markets/', include('markets.urls')),
     path('pro/', include('rehgien_pro.urls')),
     path('resources/', include('resource_center.urls')),
+    path('partnerships/', include('partnership.urls')),
     path('apis/', include('listings.apis.urls')),
     path('apis/', include('location.api.urls')),
     path('apis/', include('profiles.apis.urls')),

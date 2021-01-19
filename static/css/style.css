@@ -17361,3 +17361,277 @@ particle {
     color:#fff;
     background-color:#2cb2ea;
 }
+
+.partnershipBanner{
+    height: 100vh;
+    min-height: 600px;
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition: background-image 2s;
+    font-family: Ubuntu,Montserrat,Open Sans, Arial;
+}
+
+.partnershipBanner ._pshipROverlay{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(4 66 137 / 0.95);
+    display: flex;
+    align-items: center;
+}
+
+.partnershipBanner ._pshipROverlay .container{
+    width:90%;
+}
+
+._pshipROverlay .container ._ppshiHdTx h1{
+    font-size: 52px;
+    max-width: 650px;
+    font-family: Ubuntu,Montserrat,Open Sans, Arial;
+    color: #fff;
+    font-weight: 700;
+    line-height: 64px;
+}
+
+._pshipROverlay .container ._ppshiHdTx p{
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    font-family: Open Sans, Arial;
+    max-width: 650px;
+}
+
+.partnerProgramsSection .container{
+    width:90%;
+    font-family: Work Sans,Open Sans, Arial;
+}
+
+.partnerProgramsSection .prtnsCHead{
+    margin:100px 0;
+    max-width:750px;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+}
+
+.partnerProgramsSection h2{
+    font-size:35px;
+    font-weight:600;
+}
+
+.partnerProgramsSection .prtnsCHead p{
+    font-size: 15px;
+    line-height: 22px;
+}
+
+.partnerProgramsSection .prtnCardWrp .card{
+    width:100%;
+    height:500px;
+    margin:120px 0;
+    box-shadow:none;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.partnerProgramsSection .prtnCardWrp .card.coverRight{
+    flex-direction:row-reverse;
+}
+.partnerProgramsSection .prtnCardWrp .card .programCoverPhoto{
+    background-color:#000;
+    border-radius:5px;
+    height:500px;
+}
+.partnerProgramsSection .prtnCardWrp .card .programCoverPhoto img{
+    width:600px;
+    height:500px;
+    object-fit:cover;
+    border-radius:5px;
+    transform:rotatey(180deg);
+    opacity:0.9;
+}
+
+.prtnCardWrp .card .programBody{
+    width:500px;
+}
+
+.prtnCardWrp .card .programBody h5{
+    margin: 0;
+    font-size: 15px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #cc0000;
+    display: flex;
+    align-items: center;
+}
+
+.prtnCardWrp .card .programBody h2{
+     font-size: 35px;
+    margin: 5px 0;
+    font-weight: 600;
+}
+
+.prtnCardWrp .card .programBody p{
+    font-size: 15px;
+    line-height: 22px;
+    color: #000;
+}
+
+.prtnCardWrp .card .programBody button{
+    background-color:#cc0000;
+    border:none;
+    height:45px;
+    border-radius:3px;
+    color:#fff;
+    font-size:15px;
+    padding:0 10px;
+    font-weight:600;
+    margin:20px 0;
+    cursor:pointer;
+    text-transform:capitalize;
+}
+
+.prtnProgMsg .card{
+    width:100%;
+    box-shadow:0 0 20px 0 #eee;
+    display:flex;
+    align-items:center;
+    height:auto;
+    padding:50px;
+    border-radius:5px;
+}
+.prtnProgMsg .card img{
+    width:100px;
+    height:100px;
+    object-fit:cover;
+}
+
+.prtnProgMsg .card .pgramMsg{
+     padding:0 35px;
+}
+
+.prtnProgMsg .card .pgramMsg h6{
+    font-weight:600;
+    font-size:20px;
+}
+
+.prtnProgMsg .card .pgramMsg p{
+    font-size:13px;
+    font-weight:500;
+}
+
+.prtnProgMsg .card .pgramMsg button{
+    height:45px;
+    min-width:200px;
+    border:none;
+    background-color:#2cb2ea;
+    padding:0 10px;
+    color:#fff;
+    font-weight:600;
+    border-radius:5px;
+    margin:10px 0;
+}
+
+.partnerProgramsSection .prtnRFaQ{
+     display:flex;
+     flex-direction:column;
+     justify-content:center;
+     align-items:center;
+}
+
+.partnerProgramsSection .prtnRFaQ .collapsible{
+    min-width:750px;
+    box-shadow:none;
+    border:none;
+}
+
+.partnerProgramsSection .prtnRFaQ .collapsible .collapsible-header{
+    border:none;
+    font-weight:600;
+    display:flex;
+    justify-content:space-between;
+    font-size:15px;
+}
+
+.partnerProgramsSection .prtnRFaQ .collapsible li .collapsible-header span{
+    transform:rotate(0deg);
+    transition:transform 0.5s;
+}
+
+.partnerProgramsSection .prtnRFaQ .collapsible li.active .collapsible-header span{
+    transform:rotate(180deg)
+}
+
+.partnerProgramsSection .prtnRFaQ .collapsible li{
+    border-radius:5px;
+    border:1px solid #eee;
+    margin:5px 0;
+}
+
+.partnerProgramsSection .prtnRFaQ .collapsible .collapsible-body{
+    border:none;
+}
+
+.PartnerSection{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background-color:#044289;
+    padding:100px 0;
+}
+
+.PartnerSection h2{
+    color:#fff;
+}
+
+.PartnerSection p{
+    color:#d1d1d1;
+}
+
+.PartnerSection .partnerSignup{
+    background-color:#fff;
+    padding:50px 70px;
+    border-radius:10px;
+    min-width:600px;
+}
+
+.PartnerSection .partnerSignup .ptnrSignupFieldWrp{
+    margin:15px 0;
+}
+
+.PartnerSection .partnerSignup .ptnrSignupFieldWrp h6{
+   font-weight:500;
+   font-size:15px;
+   margin:10px 0;
+}
+
+.PartnerSection .partnerSignup .ptnrSignupFieldWrp input{
+    border:2px solid #eee;
+    border-radius:5px;
+    margin:0;
+    padding:0 10px;
+    box-sizing:border-box;
+    font-size:13px;
+}
+
+.PartnerSection .partnerSignup .ptnrSignupFieldWrp input:focus{
+    box-shadow: 0 0 1px 1px rgb(44 178 234 / 0.5);
+}
+
+.PartnerSection .partnerSignup .ptnrSignupSubmit{
+    padding:15px 0;
+}
+
+.PartnerSection .partnerSignup .ptnrSignupSubmit button{
+    width:250px;
+    height:50px;
+    background-color:#1100ff;
+    border:none;
+    color:#fff;
+    font-weight:500;
+    margin-left:50%;
+    transform:translateX(-50%);
+    border-radius:5px;
+
+}

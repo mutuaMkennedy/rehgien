@@ -47,7 +47,6 @@ TEMPLATES = {
 # @login_required(login_url='account_login')
 class ProSetupWizardView(SessionWizardView):
 	def get_template_names(self):
-		print('next step ' + self.steps.current)
 		return [TEMPLATES[self.steps.current]]
 	file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_profile_photos'))
 	def done(self, form_list, **kwargs):

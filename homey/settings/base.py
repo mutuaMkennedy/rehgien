@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'formtools',
     'phonenumber_field',
     "django_select2",
+    "partnership"
     #'haystack',
     # 'tastypie',
 ]

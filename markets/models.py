@@ -56,7 +56,7 @@ class JobPost(models.Model):
         return reverse( 'rehgien_pro:job_detail', kwargs={'pk':self.pk})
 
 class JobPostProposal(models.Model):
-    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='job_post_proposal')
+    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='job_post_proposal', null=True)
     message = models.TextField()
     proposal_sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='job_post_responder', on_delete=models.CASCADE, default=None, null=True)
     proposal_send_date = models.DateTimeField(auto_now=False, auto_now_add=True)

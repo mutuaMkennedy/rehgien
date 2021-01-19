@@ -9,13 +9,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from twilio.base.exceptions import TwilioRestException
 from .services.twilio_service import TwilioService
 from . import models
+from . import forms
 from listings import models as listings_models
 
 def about_us(request):
     pass
 
 # Listing message service
-
 def build_message( message,name, phone_number, from_email, current_listing_name, current_listing_location, current_listing_path ):
     template = """ A new lead has been captured for your listing.\n
      Message: {} \n
@@ -39,7 +39,6 @@ def build_pro_message(sender_message, sender_name, sender_phone_number, sender_e
      Email: {}."""
 
     return template.format(sender_message, sender_name, sender_phone_number, sender_email)
-
 
 def contact_listing_agent(request):
     propertyId = request.POST.get('currentListingLocation', '')

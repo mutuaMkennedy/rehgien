@@ -7,6 +7,7 @@
 <script src="{% static 'js/jquery.min.js' %}"></script>
 {{ form.media.css }}
 {{ wizard.form.media }}
+
 <div class="ProOnboardingWizard">
   <div class="pro_onboardingProgress" style="width:0"></div>
   <div class="container">
@@ -22,21 +23,27 @@
                       Lets get started by creating your business profile.
                     </h2>
                   </div>
+                  {{ wizard.management_form }}
+                {% if wizard.form.forms %}
+                    {{ wizard.form.management_form }}
+                    {% for form in wizard.form.forms %}
+                    {% endfor %}
+                {% else %}
                     <div class="field">
                         <p>Business name <span>*</span></p>
-                        {{form.business_name}}
+                        {{wizard.form.business_name}}
                     </div>
                     <div class="field onboardingSelectProCatg">
                       <p>Professional category <span>*</span></p>
-                      {{form.professional_category}}
+                      {{wizard.form.professional_category}}
                     </div>
                     <div class="field formPhoneNumberField">
                       <p>Business phone number <span>*</span></p>
-                      {{form.phone}}
+                      {{wizard.form.phone}}
                     </div>
                     <div class="field">
                       <p>Business email <span>*</span></p>
-                      {{form.business_email}}
+                      {{wizard.form.business_email}}
                     </div>
                     <div class="disclaimer">
                       <small>
@@ -44,6 +51,8 @@
                         product news, and best practices at the number and email provided pursuant to <a href="#"> Rehgien Terms of Use.</a>
                       </small>
                     </div>
+                {% endif %}
+
                 </div>
                 <div class="col s12 md4 l4 xl4 ">
                   <div class="helper_card_msgTxtRg">
@@ -80,10 +89,10 @@
               {% if wizard.steps.prev %}
               <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
               {% endif %}
-              <button class="nextStepOnbd" name="wizard_goto_step" type="submit">{% trans "Next" %}</button>
+              <button class="nextStepOnbd" type="submit">{% trans "Next" %}</button>
             </div>
           </div>
-            {{ wizard.management_form }}
+
         </form>
     </div>
   </div>

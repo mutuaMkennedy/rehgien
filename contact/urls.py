@@ -11,5 +11,5 @@ urlpatterns = [
     path('share_home/', views.share_listing, name='share_listing'),
     path('report/problem/pg', views.page_report, name = 'page_report'),
     path('report/problem/p_p', views.p_p_report, name = 'p_p_report'),
-    path('report/problem/rv', views.review_report, name = 'review_report')
+    path('report/problem/rv', views.review_report, name = 'review_report'),
 ]

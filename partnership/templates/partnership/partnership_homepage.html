@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head_title %}<title>Become a partner|Rehgien partners</title>{% endblock %}
+{% block header %}{% include 'header_section.html' %}{% endblock%}
+{% block content %}
+
+<div class="partnershipBanner" style="background-image:url({%static 'img/partnership.jpg' %})">
+   <div class="_pshipROverlay">
+      <div class="container">
+          <div class="row">
+              <div class="col s12 _ppshiHdTx">
+                  <h1>Lets build the future of property service access together.</h1>
+                  <p>
+                    At rehgien we believe in team work and collaboration - thats why we would love to partner with you. Join us and
+                    get exclusive offers and matches with serious clients.
+                  </p>
+              </div>
+           </div>
+       </div>
+    </div>
+</div>
+<div class="partnerProgramsSection">
+    <div class="container">
+        <div class="row">
+            <div class="prtnsCHead">
+                <h2>Partner Programs on Rehgien</h2>
+                <p>
+                  Whether you are an agent, a plumber or a manager rehgien is ready to work with you to grow your business.
+                </p>
+            </div>
+            <div class="prtnCardWrp">
+                {% for program in program %}
+                  <div class="card {% if forloop.counter|divisibleby:2 %} coverRight{% endif %}">
+                      <div class="programCoverPhoto">
+                        <img src="{% if program.cover_photo %}{{program.cover_photo.url}}{% endif %}" alt="{{program.title}}">
+                      </div>
+                      <div class="programBody">
+                        <h5>{{program.title}}</h5>
+                        <h2>{{program.short_descritpion}}</h2>
+                        <p>{{program.description}}</p>
+                        <a href="#">
+                            <button type="button" name="button"> Join our {{program.title}} </button>
+                        </a>
+                      </div>
+                  </div>
+                {% endfor %}
+            </div>
+            <div class="prtnProgMsg">
+                <div class="card">
+                  <img src="{%static 'img/diagram.svg'%}" alt="development">
+                  <div class="pgramMsg">
+                    <h6>Can't find a partnership program that suits you?</h6>
+                    <p>
+                      Don't worry we are always open to make new friends. Therefore, feel free to
+                      send us a message and tell us how we can partner.
+                    </p>
+                    <a href="#"><button type="button" name="button">Send us a message</button></a>
+                  </div>
+                </div>
+            </div>
+            <div class="prtnRFaQ">
+                  <h2>Frequently Asked Questions</h2>
+                  <ul class="collapsible">
+                    <li>
+                      <div class="collapsible-header">
+                        This is a question
+                        <span class="material-icons">keyboard_arrow_down</span>
+                      </div>
+                      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                    </li>
+                    <li>
+                      <div class="collapsible-header">
+                        This is another question
+                      <span class="material-icons">keyboard_arrow_down</span>
+                      </div>
+                      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                    </li>
+                    <li>
+                      <div class="collapsible-header">
+                        This is the last question
+                      <span class="material-icons">keyboard_arrow_down</span>
+                      </div>
+                      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                    </li>
+                  </ul>
+            </div>
+        </div>
+    </div>
+    <div class="PartnerSection">
+        <h2> Become a Rehgien Partner.</h2>
+        <p>Tell us about your business to apply</p>
+        <div class="partnerSignup">
+            <form action="{% url 'partnership:partnership_form'%}" method="post">
+              {% csrf_token %}
+              <div class="ptnrSignupFields">
+                  <div class="ptnrSignupFieldWrp">
+                    <h6>What type of business partnership are you interested in?</h6>
+                    {{partnership_form.partner_program}}
+                  </div>
+                  <div class="ptnrSignupFieldWrp">
+                    <h6>First name</h6>
+                    {{partnership_form.first_name}}
+                  </div>
+                  <div class="ptnrSignupFieldWrp">
+                    <h6>Last name</h6>
+                    {{partnership_form.last_name}}
+                  </div>
+                  <div class="ptnrSignupFieldWrp">
+                    <h6>Business name</h6>
+                    {{partnership_form.company_name}}
+                  </div>
+                  <div class="ptnrSignupFieldWrp">
+                    <h6>Business website</h6>
+                    {{partnership_form.company_website}}
+                  </div>
+                  <div class="ptnrSignupFieldWrp">
+                    <h6>Business email</h6>
+                    {{partnership_form.email}}
+                  </div>
+                  <div class="ptnrSignupFieldWrp">
+                    <h6>Phone number</h6>
+                    {{partnership_form.phone_number}}
+                  </div>
+                  <div class="ptnrSignupSubmit">
+                      <button type="submit" name="button">Apply</button>
+                  </div>
+              </div>
+            </form>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<section>
+  <div class="container">
+    <div class="getApp-card-row row">
+        <div class="getApp-card card col s12 md6 l6">
+            <div class="getappImgWrp">
+                <img src="{% static 'img/6532.png'%}" alt="phone">
+            </div>
+            <h1>Get more flexibility</h1>
+            <p>Do more on the go. Get our features customized for your phone.</p>
+            <div class="appStoreBadges">
+                <a href="#">
+                  <button type="button" name="button">
+                    <img src="{%static 'img/apple-store-badge.png'%}" alt="applestore">
+                  </button>
+                </a>
+                <a href="#">
+                  <button type="button" name="button">
+                    <img src="{%static 'img/google-play-badge.png'%}" alt="googleplay">
+                  </button>
+                </a>
+            </div>
+        </div>
+        <div class="getApp-card card col s12 md6 l6">
+            <div class="getappImgWrp">
+                <img src="{% static 'img/call-center.png'%}" alt="call-center">
+            </div>
+            <h1>Reach out to us</h1>
+            <p>We are always happy to hear from you.</p>
+            <div class="appStoreBadges">
+                <a href="#">
+                  <button type="button" name="button">
+                    +254 12 345 678
+                  </button>
+                </a>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block footer %}{% include 'footer_section.html' %}{% endblock %}
