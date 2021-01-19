@@ -137,7 +137,6 @@
                         <span class="col s12" style='margin-top:25px;'>Are you a pro?</span>
                         <ul class="col s12 catRe_pros">
                           <li><a href="{% url 'rehgien_pro:ProSetupWizardView' %}">Join as a pro</a></li>
-                          <li><a href="#">Join insider programme</a></li>
                           <li><a href="{% url 'partnership:partner_program_home' %}">Partner with us</a></li>
                         </ul>
                       </div>
@@ -237,9 +236,8 @@
                 <li><a href="{% url 'profiles:business_list'%}?p_cat=garbage-cleaners">garbage cleaners</a></li>
                 <li><a href="{% url 'profiles:business_list'%}?p_cat=pest-control">pest control</a></li>
                 <h6>Are you a pro?</h6>
-                <li><a href="#">Join as a pro</a></li>
-                <li><a href="#">Join insider programme</a></li>
-                <li><a href="#">Partner with us</a></li>
+                <li><a href="{% url 'rehgien_pro:ProSetupWizardView' %}">Join as a pro</a></li>
+                <li><a href="{% url 'partnership:partner_program_home' %}">Partner with us</a></li>
               </div>
             </ul>
           </div>

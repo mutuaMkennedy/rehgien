@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags%}
 {% block head_title %}<title>Become a partner|Rehgien partners</title>{% endblock %}
 {% block header %}{% include 'header_section.html' %}{% endblock%}
 {% block content %}
@@ -25,7 +26,7 @@
             <div class="prtnsCHead">
                 <h2>Partner Programs on Rehgien</h2>
                 <p>
-                  Whether you are an agent, a plumber or a manager rehgien is ready to work with you to grow your business.
+                  Whatever line of business you do Rehgien is ready to work with you.
                 </p>
             </div>
             <div class="prtnCardWrp">
@@ -38,7 +39,7 @@
                         <h5>{{program.title}}</h5>
                         <h2>{{program.short_descritpion}}</h2>
                         <p>{{program.description}}</p>
-                        <a href="#">
+                        <a href="#partnerForm">
                             <button type="button" name="button"> Join our {{program.title}} </button>
                         </a>
                       </div>
@@ -54,7 +55,7 @@
                       Don't worry we are always open to make new friends. Therefore, feel free to
                       send us a message and tell us how we can partner.
                     </p>
-                    <a href="#"><button type="button" name="button">Send us a message</button></a>
+                    <a href="#partnerForm"><button type="button" name="button">Join as Other Partner</button></a>
                   </div>
                 </div>
             </div>
@@ -87,39 +88,55 @@
         </div>
     </div>
     <div class="PartnerSection">
-        <h2> Become a Rehgien Partner.</h2>
+        <h2 id="partnerForm"> Become a Rehgien Partner.</h2>
         <p>Tell us about your business to apply</p>
         <div class="partnerSignup">
-            <form action="{% url 'partnership:partnership_form'%}" method="post">
+            <form action="{% url 'partnership:partner_program_home'%}" method="post">
               {% csrf_token %}
               <div class="ptnrSignupFields">
+                {{partnership_form.non_field_errors}}
                   <div class="ptnrSignupFieldWrp">
                     <h6>What type of business partnership are you interested in?</h6>
-                    {{partnership_form.partner_program}}
+                    <label> {{partnership_form.partner_program}} <span></span></label>
                   </div>
-                  <div class="ptnrSignupFieldWrp">
-                    <h6>First name</h6>
-                    {{partnership_form.first_name}}
-                  </div>
-                  <div class="ptnrSignupFieldWrp">
-                    <h6>Last name</h6>
-                    {{partnership_form.last_name}}
+                  <div class="flexNames">
+                    <div class="ptnrSignupFieldWrp">
+                      <h6>First name</h6>
+                      {{partnership_form.first_name}}
+                     {{ partnership_form.first_name.errors }}
+                    </div>
+                    <div class="ptnrSignupFieldWrp">
+                      <h6>Last name</h6>
+                      {{partnership_form.last_name}}
+                      {{ partnership_form.last_name.errors }}
+                    </div>
                   </div>
                   <div class="ptnrSignupFieldWrp">
                     <h6>Business name</h6>
                     {{partnership_form.company_name}}
+                    {{ partnership_form.company_name.errors }}
                   </div>
                   <div class="ptnrSignupFieldWrp">
                     <h6>Business website</h6>
                     {{partnership_form.company_website}}
+                    {{ partnership_form.company_website.errors }}
                   </div>
                   <div class="ptnrSignupFieldWrp">
                     <h6>Business email</h6>
                     {{partnership_form.email}}
+                    {{ partnership_form.email.errors }}
                   </div>
                   <div class="ptnrSignupFieldWrp">
                     <h6>Phone number</h6>
                     {{partnership_form.phone_number}}
+                    {{ partnership_form.phone_number.errors }}
+                  </div>
+                  <br>
+                  <br>
+                  <div class="ptnrSignupFieldWrp">
+                    <h6>Tell us more about why you want to partner with Rehgien?</h6>
+                    {{partnership_form.message}}
+                    {{ partnership_form.message.errors }}
                   </div>
                   <div class="ptnrSignupSubmit">
                       <button type="submit" name="button">Apply</button>

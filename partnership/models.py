@@ -22,9 +22,10 @@ class RehgienPartner(models.Model):
     first_name = models.CharField(max_length = 100, blank=False)
     last_name = models.CharField(max_length = 100, blank=False)
     email = models.EmailField(blank=False)
-    company_name = models.URLField(max_length=200, blank=True)
+    company_name = models.CharField(max_length=200, blank=True)
     company_website = models.URLField(max_length=200, blank=True)
     phone_number = models.CharField( max_length=13, blank=False)
+    message = models.TextField(null=True)
     approval_status = models.CharField(max_length=15, choices=APPROVAL_CHOICES, default='PENDING')
     request_date = models.DateTimeField(auto_now=False, auto_now_add=True)
 

@@ -17401,6 +17401,17 @@ particle {
     max-width: 650px;
 }
 
+@media all and (max-width:768px){
+    ._pshipROverlay .container ._ppshiHdTx h1{
+        font-size:40px;
+        line-height:40px;
+    }
+    ._pshipROverlay .container ._ppshiHdTx p{
+        font-size:15px;
+        line-height:20px;
+    }
+}
+
 .partnerProgramsSection .container{
     width:90%;
     font-family: Work Sans,Open Sans, Arial;
@@ -17424,12 +17435,19 @@ particle {
     line-height: 22px;
 }
 
+@media all and (max-width:768px){
+    .partnerProgramsSection h2{
+        font-size:30px;
+    }
+}
+
 .partnerProgramsSection .prtnCardWrp .card{
     width:100%;
-    height:500px;
+    height:auto;
     margin:120px 0;
     box-shadow:none;
     display:flex;
+    flex-wrap:wrap;
     justify-content:space-between;
     align-items:center;
 }
@@ -17443,7 +17461,8 @@ particle {
     height:500px;
 }
 .partnerProgramsSection .prtnCardWrp .card .programCoverPhoto img{
-    width:600px;
+    max-width:600px;
+    width:100%;
     height:500px;
     object-fit:cover;
     border-radius:5px;
@@ -17453,6 +17472,7 @@ particle {
 
 .prtnCardWrp .card .programBody{
     width:500px;
+    padding:20px 0;
 }
 
 .prtnCardWrp .card .programBody h5{
@@ -17463,12 +17483,24 @@ particle {
     color: #cc0000;
     display: flex;
     align-items: center;
+    width:100%;
 }
 
 .prtnCardWrp .card .programBody h2{
-     font-size: 35px;
+    font-size: 35px;
     margin: 5px 0;
     font-weight: 600;
+}
+
+@media all and (max-width:768px){
+    .prtnCardWrp .card .programBody{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+    }
+   .prtnCardWrp .card .programBody h2{
+       font-size:30px;
+   }
 }
 
 .prtnCardWrp .card .programBody p{
@@ -17495,11 +17527,14 @@ particle {
     width:100%;
     box-shadow:0 0 20px 0 #eee;
     display:flex;
+    flex-wrap:wrap;
     align-items:center;
+    justify-content:center;
     height:auto;
     padding:50px;
     border-radius:5px;
 }
+
 .prtnProgMsg .card img{
     width:100px;
     height:100px;
@@ -17520,6 +17555,19 @@ particle {
     font-weight:500;
 }
 
+@media all and (max-width:768px){
+    .prtnProgMsg .card .pgramMsg{
+        padding:0 ;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+
+    }
+    .prtnProgMsg .card .pgramMsg h6,.prtnProgMsg .card .pgramMsg p{
+        text-align:center;
+    }
+}
+
 .prtnProgMsg .card .pgramMsg button{
     height:45px;
     min-width:200px;
@@ -17538,11 +17586,19 @@ particle {
      justify-content:center;
      align-items:center;
 }
-
+.partnerProgramsSection .prtnRFaQ h2{
+    text-align:center;
+}
 .partnerProgramsSection .prtnRFaQ .collapsible{
-    min-width:750px;
+    width:750px;
     box-shadow:none;
     border:none;
+}
+
+@media all and (max-width:768px){
+ .partnerProgramsSection .prtnRFaQ .collapsible{
+     width:100%;
+ }
 }
 
 .partnerProgramsSection .prtnRFaQ .collapsible .collapsible-header{
@@ -17579,10 +17635,20 @@ particle {
     align-items:center;
     background-color:#044289;
     padding:100px 0;
+    font-family:Work Sans, Open Sans, Arial;
 }
 
 .PartnerSection h2{
     color:#fff;
+    font-size: 35px;
+    font-weight: 600;
+}
+
+@media all and (max-width:758px){
+  .PartnerSection h2{
+      font-size:30px;
+      text-align:center;
+  }
 }
 
 .PartnerSection p{
@@ -17593,11 +17659,32 @@ particle {
     background-color:#fff;
     padding:50px 70px;
     border-radius:10px;
-    min-width:600px;
+    max-width:600px;
+}
+
+@media all and (max-width:768px){
+    .PartnerSection .partnerSignup{
+        padding: 50px 20px;
+        margin:10px;
+    }
+}
+
+.PartnerSection .partnerSignup .flexNames{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
 }
 
 .PartnerSection .partnerSignup .ptnrSignupFieldWrp{
     margin:15px 0;
+}
+
+.PartnerSection .partnerSignup .ptnrSignupFieldWrp .errorlist{
+    margin:0;
+}
+
+.PartnerSection .partnerSignup .ptnrSignupFieldWrp .errorlist li{
+    font-size:11px;
 }
 
 .PartnerSection .partnerSignup .ptnrSignupFieldWrp h6{
@@ -17608,19 +17695,63 @@ particle {
 
 .PartnerSection .partnerSignup .ptnrSignupFieldWrp input{
     border:2px solid #eee;
+    height:50px;
     border-radius:5px;
     margin:0;
     padding:0 10px;
     box-sizing:border-box;
-    font-size:13px;
+    background-color:#f1f9f1;
+    font-weight:300;
 }
 
-.PartnerSection .partnerSignup .ptnrSignupFieldWrp input:focus{
+.PartnerSection .partnerSignup .ptnrSignupFieldWrp textarea{
+    border:2px solid #eee;
+    background-color:#f1f9f1;
+    height:150px;
+    padding:10px;
+    border-radius:5px;
+}
+.PartnerSection .partnerSignup .ptnrSignupFieldWrp input:focus,
+.PartnerSection .partnerSignup .ptnrSignupFieldWrp textarea:focus{
     box-shadow: 0 0 1px 1px rgb(44 178 234 / 0.5);
+    outline:none !important;
+}
+
+.PartnerSection .partnerSignup ul input[type="radio"]:not(:checked),
+.PartnerSection .partnerSignup ul input[type="radio"]:checked {
+    position: relative;
+    opacity: 1;
+    pointer-events: none;
+    margin-right: 10px;
+    outline:none !important;
+ }
+
+.PartnerSection .partnerSignup ul{
+     display:flex;
+     flex-wrap:wrap;
+     align-items:center;
+     padding-top:10px;
+     padding-bottom:25px;
+     border-bottom:1px solid #eee;
+     margin-bottom:25px;
+}
+
+.PartnerSection .partnerSignup ul li{
+    margin-right:10px;
+}
+
+.PartnerSection .partnerSignup ul li label{
+    display:flex;
+    align-items:center;
+    color:#000;
+    font-size:15px;
+    height:30px;
 }
 
 .PartnerSection .partnerSignup .ptnrSignupSubmit{
     padding:15px 0;
+    display:flex;
+    justify-content:center;
 }
 
 .PartnerSection .partnerSignup .ptnrSignupSubmit button{
@@ -17630,8 +17761,10 @@ particle {
     border:none;
     color:#fff;
     font-weight:500;
-    margin-left:50%;
-    transform:translateX(-50%);
     border-radius:5px;
+    cursor:pointer;
+}
 
+.PartnerSection .partnerSignup .ptnrSignupSubmit button:hover{
+    opacity:0.7;
 }
