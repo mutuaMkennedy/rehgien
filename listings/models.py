@@ -21,25 +21,21 @@ import cloudinary
 from .regression import trendline as trend
 
 
-class PropertyTypeImage(models.Model):
-	apartment = models.ImageField(upload_to='categoryImages/', null=True, blank=True)
-	bungalow = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
-	condominium = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
-	dormitory = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
-	duplex = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
-	mansion = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
-	single_family = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
-	terraced_house = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
-	townhouse = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
-	other = models.ImageField(upload_to='categoryImages/',null=True, blank=True)
-
-	def save(self,*args,**kwargs):
-		if not self.pk and PropertyTypeImage.objects.exists():
-			raise	ValidationError('There can be only one PropertyTypeImage instance')
-			return	super(PropertyTypeImage,	self).save(*args,	**kwargs)
+#This model will allow easy addition of other property type requiring this fields
+class PropertyType(models.Model):
+	name = models.CharField(max_length = 50, blank=True, null = True)
+	photo = models.ImageField(upload_to='propertyTypePhotos/', null=True, blank=True)
 
 	class Meta:
-		verbose_name_plural = 'PropertyTypeImages'
+		abstract = True
+
+	def __str__(self):
+		return self.name
+
+class HomeType(PropertyType):
+	# We will reserve this for any future modifications
+	class Meta:
+		verbose_name_plural = 'HomeTypes'
 
 class PropertyBase(models.Model):
 	property_name = models.CharField(max_length=20, default=None, db_index=True)
@@ -208,6 +204,8 @@ class Home(PropertyBase):
 	listing_type = models.CharField(max_length=20, choices = LISTING_TYPE_CHOICES, default='FOR_SALE')
 	property_category = models.CharField(max_length=20, choices = PROPERTY_CATEGORY_CHOICES, default='HOMES')
 	type = models.CharField(max_length=20, choices = HOUSE_TYPE_CHOICES, default='APARTMENT')
+	home_type = models.ForeignKey(HomeType, on_delete=models.SET_NULL,\
+	                                    default = None, related_name='home_type', null=True)
 	bathrooms = models.PositiveIntegerField(default=1, blank = True)
 	bedrooms = models.PositiveIntegerField(default=1)
 	total_rooms = models.PositiveIntegerField(default = 1, blank = False)

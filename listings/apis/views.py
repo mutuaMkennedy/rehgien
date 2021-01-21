@@ -37,9 +37,9 @@ class UserHomeListings(ListAPIView):
 
 
 #Home model api views
-class PropertyTypeImageList(ListAPIView):
-    serializer_class = serializers.PropertyTypeImageSerializer
-    queryset = models.PropertyTypeImage.objects.all()
+class HomeTypeApi(ListAPIView):
+    serializer_class = serializers.HomeTypeSerializer
+    queryset = models.HomeType.objects.all()
 
 class HomeListApi(ListAPIView):
     serializer_class = serializers.HomeSerializer

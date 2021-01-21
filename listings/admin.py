@@ -28,5 +28,5 @@ class HomeAdmin(LeafletGeoAdmin):
 
 
 admin.site.register(models.Home, HomeAdmin)
-admin.site.register(models.PropertyTypeImage)
+admin.site.register(models.HomeType)
 admin.site.register(models.SavedSearch)

@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 from listings.apis import views
 
 urlpatterns = [
-    path('listings/propertyTypeImages/', views.PropertyTypeImageList.as_view(), name='p_type_list_api'),
+    path('listings/property/home_type/list/', views.HomeTypeApi.as_view(), name='HomeTypeApi'),
     #Home endpoints
     path('listings/property/homes/', views.HomeListApi.as_view(), name='home_list_api'),
     path('listings/property/home/create/', views.HomeCreateApi.as_view(), name='home_create_api'),
