@@ -59,7 +59,12 @@ class BusinessProfileDetailApi(RetrieveAPIView):
 class BusinessProfileUpdateApi(RetrieveUpdateAPIView):
     queryset = models.BusinessProfile.objects.all()
     serializer_class = serializers.BusinessProfileSerializer
-    permission_classes = [IsUserOrReadOnly]
+    permission_classes = [IsProfileOwnerOrReadOnly]
+
+class SocialBusinessProfileUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.BusinessProfile.objects.all()
+    serializer_class = serializers.SocialBusinessProfileSerializer
+    permission_classes = [IsAuthenticated]
 
 class ReviewListApi(ListAPIView):
     queryset = models.Review.objects.all()
@@ -71,6 +76,16 @@ class ReviewCreateApi(CreateAPIView):
     permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(reviewer=self.request.user)
+
+class LikeReviewUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.Review.objects.all()
+    serializer_class = serializers.LikeReviewSerializer
+    permission_classes = [IsAuthenticated]
+
+class LikeReviewUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.Review.objects.all()
+    serializer_class = serializers.LikeReviewSerializer
+    permission_classes = [IsAuthenticated]
 
 # Portfolio crud
 class PortfolioItemCreateApi(CreateAPIView):

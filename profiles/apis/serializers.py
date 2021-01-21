@@ -44,6 +44,11 @@ class ReviewSerializer(serializers.ModelSerializer):
         "quality_of_service_rating","comment","likes","reviewer","review_date",
         ]
 
+class LikeReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = profiles_models.Review
+        fields = ["likes"]
+
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = profiles_models.Client
@@ -120,6 +125,10 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
             total += percent.get('about', 0)
         return "%s"%(total)
 
+class SocialBusinessProfileSerializer(WritableNestedModelSerializer):
+    class Meta:
+        model = profiles_models.BusinessProfile
+        fields = ["saves","followers"]
 
 class PortfolioItemPhotoSerializer(serializers.ModelSerializer):
     class Meta:

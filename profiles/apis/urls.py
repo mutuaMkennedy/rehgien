@@ -13,9 +13,11 @@ urlpatterns = [
     path('profiles/business_profile/list/', api_views.BusinessProfileListApi.as_view(), name='business_profile_list'),
     path('profiles/business_profile/<int:pk>/retrieve/', api_views.BusinessProfileDetailApi.as_view(), name='business_profile_retrieve'),
     path('profiles/business_profile/<int:pk>/edit/', api_views.BusinessProfileUpdateApi.as_view(), name='business_profile_update'),
+    path('profiles/business_profile/<int:pk>/social/', api_views.SocialBusinessProfileUpdateApi.as_view(), name='SocialBusinessProfileUpdateApi'),
 
     path('profiles/business_review/list/', api_views.ReviewListApi.as_view(), name='business_review_list'),
     path('profiles/business_review/create/', api_views.ReviewCreateApi.as_view(), name='business_review_create'),
+    path('profiles/business_review/<int:pk>/like/', api_views.LikeReviewUpdateApi.as_view(), name='LikeReviewUpdateApi'),
 
     path('profiles/portfolio_item/create/', api_views.PortfolioItemCreateApi.as_view(), name='portfolio_item_create'),
     path('profiles/portfolio_item/list/', api_views.PortfolioItemListApi.as_view(), name='portfolio_item_list'),
