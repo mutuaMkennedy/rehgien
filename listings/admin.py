@@ -24,7 +24,7 @@ class HomeAdmin(LeafletGeoAdmin):
 	PropertyPhotoInline,PropertyVideoInline, PropertyInteractionInline,
 	PropertyOpenHouseInline
 	]
-	list_display = ('property_name','type','owner')
+	list_display = ('property_name','home_type','owner')
 
 
 admin.site.register(models.Home, HomeAdmin)

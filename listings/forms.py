@@ -6,10 +6,10 @@ from cloudinary.forms import CloudinaryFileField
 #from haystack.forms import FacetedSearchForm
 
 class DateInput(forms.DateInput):
-    input_type = 'date'
+	input_type = 'date'
 
 class TimeInput(forms.TimeInput):
-    input_type = 'text'
+	input_type = 'text'
 
 class ListingForm(forms.ModelForm):
 	appliances = forms.MultipleChoiceField(required=False, choices = models.Home.APPLIANCES_CHOICES, widget = forms.SelectMultiple())
@@ -27,9 +27,10 @@ class ListingForm(forms.ModelForm):
 	view = forms.MultipleChoiceField(required=False, choices = models.Home.VIEW_CHOICES, widget = forms.SelectMultiple())
 	basement = forms.ChoiceField(required = False, choices =models.Home.BASEMENT_CHOICES, widget=forms.RadioSelect())
 	deal_closed = forms.ChoiceField(required = False, choices =models.Home.DEAL_CLOSED_CHOICES, widget=forms.RadioSelect())
+	home_type = forms.ModelChoiceField(queryset=models.HomeType.objects, empty_label=None)
 	class Meta:
 		model = models.Home
-		fields = [	'listing_type','property_name', 'price', 'type','virtual_tour_url','location_name', 'location', 'bathrooms', 'bedrooms', 'total_rooms',
+		fields = [	'listing_type','property_name', 'price', 'home_type','virtual_tour_url','location_name', 'location', 'bathrooms', 'bedrooms', 'total_rooms',
 					'floor_number','floor_area', 'number_of_units', 'number_of_stories',
 					'parking_spaces', 'year_built', 'remodel_year','garage_sqm', 'appliances', 'basement', 'floor_covering',
 					'rooms', 'indoor_features', 'cooling_type', 'heating_type', 'heating_fuel', 'building_amenities', 'exterior',

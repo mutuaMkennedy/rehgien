@@ -115,16 +115,9 @@
                       <div id="type-filter" class="input-field">
                          <select name="property_type">
                            <option value="All" selected>All Home Types</option>
-                           <option value="Apartment">Apartment</option>
-                           <option value="Bungalow">Bungalow</option>
-                           <option value="Singlefamily">Single family</option>
-                           <option value="Townhouse">Townhouse</option>
-                           <option value="Condominium">Condo</option>
-                           <option value="Duplex">Duplex</option>
-                           <option value="Dormitory">Dormitory</option>
-                           <option value="Terraced">Terraced</option>
-                           <option value="Mansion">Mansion</option>
-                           <option value="Other">Other</option>
+                           {% for home_type in home_types%}
+                           <option value="{{home_type.name}}">{{home_type.name}}</option>
+                           {% endfor %}
                          </select>
                        </div>
                     </div>

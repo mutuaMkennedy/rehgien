@@ -167,7 +167,7 @@ class HomeSerializer(WritableNestedModelSerializer):
         'OUTDOOR_AMENITIES_CHOICES','PARKING_CHOICES','ROOF_CHOICES','VIEW_CHOICES',
         'APPLIANCES_CHOICES','LISTING_TYPE_CHOICES','PROPERTY_CATEGORY_CHOICES',
 
-        'id','listing_type', 'property_category', 'property_name','price','type', 'home_type',
+        'id','listing_type', 'property_category', 'property_name','price', 'home_type',
         'virtual_tour_url', 'location_name', 'location', 'bathrooms',
         'bedrooms', 'total_rooms','floor_number', 'description', 'floor_area',
         'number_of_units', 'number_of_stories', 'home_photos','home_video','home_interactions',

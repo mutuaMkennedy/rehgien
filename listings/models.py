@@ -203,7 +203,6 @@ class Home(PropertyBase):
 	#Property Facts
 	listing_type = models.CharField(max_length=20, choices = LISTING_TYPE_CHOICES, default='FOR_SALE')
 	property_category = models.CharField(max_length=20, choices = PROPERTY_CATEGORY_CHOICES, default='HOMES')
-	type = models.CharField(max_length=20, choices = HOUSE_TYPE_CHOICES, default='APARTMENT')
 	home_type = models.ForeignKey(HomeType, on_delete=models.SET_NULL,\
 	                                    default = None, related_name='home_type', null=True)
 	bathrooms = models.PositiveIntegerField(default=1, blank = True)

@@ -80,6 +80,7 @@ def property_listings_results(request, property_category, property_listing_type)
 
 	listings = ''
 	model_object = ''
+	home_types = models.HomeType.objects.all()
 
 	if property_category == 'homes':
 		model_object = models.Home
@@ -176,7 +177,7 @@ def property_listings_results(request, property_category, property_listing_type)
 			listings = listings.filter(price__range = (min_price,max_price))
 	if check_q_valid(property_type):
 		if not checkAllValue(property_type):
-			listings = listings.filter(type__iexact=property_type)
+			listings = listings.filter(home_type__name__icontains=property_type)
 	if check_q_valid(bedrooms):
 		#filter with beds submitted by user
 		listings = listings.filter(bedrooms__gte=bedrooms)
@@ -252,7 +253,7 @@ def property_listings_results(request, property_category, property_listing_type)
 		'sort':sort
 	}
 
-	return render(request, 'listings/property-listing-page.html', {
+	return render(request, 'listings/property-listing-page.html', {"home_types":home_types,
 			"all_listings":all_listings,'listings':listings, 'listings_count':listings_count,
 			"ImageTransformation":ImageTransformation ,"location_address":location_address,
 			"insight_stats":insight_stats_context,"filter_fields":filter_fields_context, 'query_string':query_string,
