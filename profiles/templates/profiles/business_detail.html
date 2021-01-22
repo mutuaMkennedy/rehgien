@@ -1,6 +1,7 @@
 {% extends 'base1.html' %}
 {% load static %}
 {% load cloudinary %}
+{% load embed_video_tags %}
 {% block content %}
 {% load profiles_extra_tags %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
@@ -414,9 +415,16 @@
                     </div>
                     <div class="_ag-about-sc">
                         <h2><span class="material-icons">assignment</span> Overview</h2>
-                      {% if business.about %}
-                        <p id="_Pro_Intro_sc">{{business.about|safe}}</p>
-                      {% else %}
+                        {% if business.about_video%}
+                          <p>
+                            {% video business.about_video '100% x 350' %}
+                          </p>
+                        {% endif %}
+                        {% if business.about %}
+                          <p id="_Pro_Intro_sc">
+                              {{business.about|safe}}
+                          </p>
+                        {% else %}
                         <div class="pflpages-no-results">
                           <p>Nothing yet</p>
                         </div>

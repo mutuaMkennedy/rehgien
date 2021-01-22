@@ -42,6 +42,7 @@ urlpatterns = [
     path('apis/', include('location.api.urls')),
     path('apis/', include('profiles.apis.urls')),
     path('apis/', include('markets.apis.urls')),
+    path('apis/', include('contact.apis.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^photologue/', include('photologue.urls', namespace='photologue')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),

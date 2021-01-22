@@ -77,7 +77,7 @@ def contact_listing_agent(request):
 
             # After a successfull send update the property's leads field with the user
             home_object = get_object_or_404(listings_models.Home, pk=str(propertyId) )
-            # we don't need this check but we will have it as a precaution. Object should already exist b4 the user reaches this view
+            # we don't need this check but we will have it as a precaution. Object should already exist b4 the user reaches this part
             try:
                 interaction = get_object_or_404(listings_models.PropertyInteraction, user=request.user)
                 _views_count = interaction.views_count
