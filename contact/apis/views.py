@@ -190,17 +190,85 @@ def contact_pro(request):
 		}
 		return Response(context)
 
+@api_view(['POST'])
+def share_listing(request):
+	try:
+		property_id = request.data['property_id']
+		sender_email = request.data['sender_email']
+		recepient_email = request.data['recepient_email']
+		domain = 'http://' + Site.objects.get_current().domain
+		subject = sender_email + " wants you to see this home"
+		ImageTransformation = dict(
+			format = "jpg",
+			transformation = [
+				dict(height=333, width=500, crop="fill",quality="auto", gravity="center",
+				 format="auto", dpr="auto", fl="progressive"),
+					]
+				)
+		if check_valid(property_id) and check_valid(sender_email) and check_valid(recepient_email):
+			try:
+				home_object = get_object_or_404(listings_models.Home, pk=str(property_id) )
+				property_name = home_object.property_name
+				property_Location = home_object.location_name
+				property_price = home_object.price
+				property_bathrooms = home_object.bathrooms
+				property_bedrooms = home_object.bedrooms
+				property_size= home_object.floor_area
+				link_to_property =  domain + home_object.get_absolute_url()
+				property_image = home_object.home_photos.last()
+
+				try:
+					plainMessage =  sender_email  + ' wants you to see this home' + '\n url: ' + link_to_property + \
+									"From \n" + 'The Rehgien Team'
+					context = {
+							'propertyLocation': property_Location,
+							'propertyName':property_name,
+							'recepientEmail':recepient_email,
+							'senderEmail':sender_email,
+							'property_absoluteUrl':link_to_property,
+							"propertyImage":property_image,
+							"propertyPrice":property_price,
+							"propertyBathrooms":property_bathrooms,
+							"propertyBedrooms":property_bedrooms,
+							"propertySize":property_size,
+							"ImageTransformation":ImageTransformation
+							 }
+					htmlMessage = render_to_string('contact/share_home.html', context)
+
+					message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email])
+					message.attach_alternative(htmlMessage, "text/html")
+					message.send()
+
+					message = 'Share successfull. We have sent an email to ' + recepient_email
+					return Response(message)
+				except BadHeaderError:
+					message = 'Something went wrong! Could not complete request. Try again later'
+					return Response(message)
+			except:
+				message = 'We cannot find this property. Make sure it exists.'
+				return Response(message)
+		else:
+			message = 'Ooops! something went wrong. Make sure all fields are entered and valid.'
+			return Response(message)
+	except:
+		context = {
+		"property_id":['This field is required'],
+		"sender_email":['This field is required'],
+		"recepient_email":['This field is required']
+		}
+		return Response(context)
+
 class PageReportApi(CreateAPIView):
-    queryset = models.PageReport.objects.all()
-    serializer_class = serializers.PageReportSerializer
-    permission_classes = [permissions.IsAuthenticated]
+	queryset = models.PageReport.objects.all()
+	serializer_class = serializers.PageReportSerializer
+	permission_classes = [permissions.IsAuthenticated]
 
 class PortfolioReportApi(CreateAPIView):
-    queryset = models.ProjectsPortfolioReport.objects.all()
-    serializer_class = serializers.PortfolioReportSerializer
-    permission_classes = [permissions.IsAuthenticated]
+	queryset = models.ProjectsPortfolioReport.objects.all()
+	serializer_class = serializers.PortfolioReportSerializer
+	permission_classes = [permissions.IsAuthenticated]
 
 class ReviewReportApi(ListAPIView):
-    queryset = models.ReviewReport.objects.all()
-    serializer_class = serializers.ReviewReportSerializer
-    permission_classes = [permissions.IsAuthenticated]
+	queryset = models.ReviewReport.objects.all()
+	serializer_class = serializers.ReviewReportSerializer
+	permission_classes = [permissions.IsAuthenticated]
