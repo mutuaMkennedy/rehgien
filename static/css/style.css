@@ -12295,7 +12295,6 @@ particle {
 
 .PDM-imageSliderBox, .PDM-Islider .carousel-item img {
     object-fit: cover;
-    width:100%;
     height:100%;
     object-fit:cover;
 }
@@ -12312,7 +12311,7 @@ particle {
 }
 
 .PDM-DetailsBox {
-    width: calc(100% - 530px);
+    width: calc(100% - 570px);
     height: 100%;
     overflow-y: auto;
 }
