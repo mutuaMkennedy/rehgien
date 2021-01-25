@@ -1,7 +1,7 @@
 {% extends 'base1.html' %}
 {% load static %}
 {% load cloudinary %}
-
+{% block title %}<title>Real Estate for {% if listing.listing_type == 'for_sale' %} sale {% else %} rent {% endif %} in {{location_address}} | Rehgien</title>{% endblock %}
 {% block content%}
 
 <section id="_listingPageElements_">

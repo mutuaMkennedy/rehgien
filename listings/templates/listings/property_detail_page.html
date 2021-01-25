@@ -1,6 +1,7 @@
 {% extends 'base1.html' %}
 {% load social_share %}
 {% load static %}
+{% block title %}<title>{{listing.location_name}} - {{listing.home_type}} {{listing.bathrooms}} ba | {{listing.bedrooms}} bd | {{listing.floor_area}} Sqft {{listing.listing_type|lower}} | Rehgien</title>{% endblock %}
 {% block content %}
 {% load cloudinary %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
