@@ -270,7 +270,7 @@
                 <h6 class="black-text col s12">Or send a message to {% if listing.owner.first_name %} {{listing.owner.first_name}} {% else %}this agent{%endif%}</h6>
                 {% csrf_token %}
                 <div class="MsglistingDetails col s12">
-                  <input type="hidden" name="listingID" value="{{listing.PK}}">
+                  <input type="hidden" name="listingID" value="{{listing.pk}}">
                   <input id="recepient" type="hidden" name="recepient" value="{{listing.email}}" class="validate">
                   <input type="hidden" name="recepientPhoneNumber" value="{{listing.phone}}">
                   <input type="hidden" name="currentListingPath" value="{{ request.build_absolute_uri }}">
@@ -318,15 +318,8 @@
             <form class="email_socialShare" action="{% url 'contact:share_listing'%}" method="post">
                 {% csrf_token %}
               <div class="e_sS_hiddenDetails">
-                <input type="hidden" name="e_sS_propertyName" value="{{listing.property_name}}">
-                <input type="hidden" name="e_sS_PropertyLocation" value="{{listing.location_name}}">
-                <input type="hidden" name="e_sS_PropertyPrice" value="Ksh: {{listing.price}}">
-                <input type="hidden" name="e_sS_PropertyBathrooms" value="{{listing.bathrooms}}">
-                <input type="hidden" name="e_sS_PropertyBedrooms" value="{{listing.bedrooms}}">
-                <input type="hidden" name="e_sS_PropertySize" value="{{listing.floor_area}}{{listing.size_units}}">
-                <input type="hidden" name="e_sS_absoluteUrl" value="{{request.build_absolute_uri}}">
-                <input type="hidden" name="e_sS_propertyImage" value="{{listing.thumb.url}}">
-              </div>
+                <input type="hidden" name="e_sS_propertyID" value="{{listing.pk}}">
+                <input type="hidden" name="e_sS_requestPath" value="{{request.build_absolute_uri}}">
               <h6>From</h6>
               <div class="e_sS_senderEmail">
                   <input type="email" name="e_sS_senderEmail" placeholder="Your Email Address" validate>
