@@ -33,7 +33,7 @@ urlpatterns = [
     path('listings/', include('listings.urls')),
     path('mortgage/', include('mortgage.urls')),
     path('contact/', include('contact.urls')),
-    path('professionals/', include('profiles.urls')),
+    path('profile/', include('profiles.urls')),
     path('markets/', include('markets.urls')),
     path('pro/', include('rehgien_pro.urls')),
     path('resources/', include('resource_center.urls')),
