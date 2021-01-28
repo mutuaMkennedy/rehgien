@@ -11,6 +11,7 @@
 #Speciality field represents field of expertise for the pro
 
 from django.db import models
+from location import models as location_models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
@@ -116,25 +117,26 @@ class BusinessProfile(models.Model):
                             related_name='pro_business_services')
 
     # personal & contact information
-    business_profile_image = models.ImageField(upload_to = 'business_profile_images/', blank = True)
+    business_profile_image = models.ImageField(upload_to = 'business_profile_images/', blank = True, null=True)
     business_name = models.CharField(max_length = 25, default=None, blank=True, null=True)
-    phone = models.CharField(max_length=13, blank = True)
-    business_email = models.EmailField(blank=True)
-    address = models.CharField(max_length=250, blank=True)
-    location = models.PointField(srid=4326, null=True)
-    website_link = models.URLField(max_length=200, blank=True)
+    phone = models.CharField(max_length=13, blank = True, null=True)
+    business_email = models.EmailField(blank=True, null=True)
+    address = models.CharField(max_length=250, blank=True, null=True)
+    location = models.PointField(srid=4326, blank=True, null=True)
+    website_link = models.URLField(max_length=200, blank=True, null=True)
 
     # social media accounts
-    facebook_page_link = models.URLField(max_length=200, blank=True)
-    twitter_page_link = models.URLField(max_length=200, blank=True)
-    linkedin_page_link = models.URLField(max_length=200, blank=True)
-    instagram_page_link = models.URLField(max_length=200, blank=True)
+    facebook_page_link = models.URLField(max_length=200, blank=True, null=True)
+    twitter_page_link = models.URLField(max_length=200, blank=True, null=True)
+    linkedin_page_link = models.URLField(max_length=200, blank=True, null=True)
+    instagram_page_link = models.URLField(max_length=200, blank=True, null=True)
 
     # Professional information
     about_video = EmbedVideoField(blank = True, null = True)
     about = models.TextField(blank=True, null=True)
-    service_areas = ArrayField(models.CharField(max_length=100, blank=True),blank=True, null=True)
-
+    # Additional area/s where this pro offers their professional services or areas where they would also want to find work
+    service_areas = models.ManyToManyField(location_models.KenyaTown, blank = True, \
+                            related_name='pro_service_services')
     #network features
     saves = models.ManyToManyField(settings.AUTH_USER_MODEL, blank = True, \
             related_name='business_page_saves')
@@ -322,7 +324,7 @@ class PortfolioItemPhoto(models.Model):
         imageTemporary	=	Image.open(image)
         outputIoStream	=	BytesIO()
         imageTemporaryResized	=	imageTemporary.resize( (1020,573) ) # Resize can be set to various varibale values in settings.py
-        imageTemporary.save(outputIoStream , format='JPEG', quality=70) # change quality according to requirement.
+        imageTemporary.save(outputIoStream , format='JPEG', quality=85) # change quality according to requirement.
         outputIoStream.seek(0)
         uploadedImage	=	InMemoryUploadedFile(outputIoStream,'CloudinaryField', "%s.jpg" % image.name.split('.')[0], 'image/jpeg', sys.getsizeof(outputIoStream), None)
         return uploadedImage

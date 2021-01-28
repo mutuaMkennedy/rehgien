@@ -173,4 +173,4 @@ class KenyaTown(models.Model):
         verbose_name_plural = 'KenyaTowns'
 
     def __str__(self):
-        return self.town_name + '-' + self.town_type
+        return self.town_name 
