@@ -136,7 +136,7 @@ class BusinessProfile(models.Model):
     about = models.TextField(blank=True, null=True)
     # Additional area/s where this pro offers their professional services or areas where they would also want to find work
     service_areas = models.ManyToManyField(location_models.KenyaTown, blank = True, \
-                            related_name='pro_service_services')
+                            related_name='service_areas')
     #network features
     saves = models.ManyToManyField(settings.AUTH_USER_MODEL, blank = True, \
             related_name='business_page_saves')
