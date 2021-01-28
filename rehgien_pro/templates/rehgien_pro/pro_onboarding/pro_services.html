@@ -8,21 +8,22 @@
 {{ form.media.css }}
 {{ wizard.form.media }}
 <div class="ProOnboardingWizard">
-  <div class="pro_onboardingProgress" style="width:0"></div>
+  <div class="pro_onboardingProgress" style="width:25%"></div>
   <div class="container">
     <div class="row">
-        <form method="post col s12">
+        <form method="post" class="col s12">
             {% csrf_token %}
             <div class="proOnbdFormElS col s12">
-                <div class="col s12 md8 l8 xl8 pr_ObdFormFields stepOne">
+                <div class="col s12 md8 l8 xl8 pr_ObdFormFields stepTwo">
                   <div class="formSct">
+                      {{form.errors}}
                     <h2>
-                      Select the services services you do.
+                      Select any other services you do.
                     </h2>
                   </div>
-                    <div class="field">
-                        <p>You'll show up in search resuts and get all the leads for the services you create</p>
-                        {{form.professional_services}}
+                    <div class="field onboardingSelectProSvcs">
+                        <p>You'll show up in search resuts and get leads for all the services you select.</p>
+                        {{wizard.form.professional_services}}
                     </div>
                 </div>
                 <div class="col s12 md4 l4 xl4 ">
@@ -31,12 +32,20 @@
                         <h3>Services increase your visibility.</h3>
                         <div class="proObgHelpTips">
                           <div class="proObgHelpTipTx">
-                            <span class="material-icons">person_search</span>
-                            <p>Select services that correlty match what you offer.</p>
+                            <span class="material-icons">construction</span>
+                            <p>Select services that correctly match what you do.</p>
                           </div>
                           <div class="proObgHelpTipTx">
-                            <span class="material-icons">work</span>
-                            <p>Can't find a service then contact us and we will add it.</p>
+                            <span class="material-icons">add_task</span>
+                            <p>Don't worry if you forget something. You can always update this list later.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">notification_important</span>
+                            <p>Be honest. Giving false information will lead to poor job deliverly and a possible account termination.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">support_agent</span>
+                            <p>Can't find a service? Just contact us and we will add it.</p>
                           </div>
                         </div>
                     </div>
@@ -46,9 +55,9 @@
           <div class="OnbgSteps-footer col s12">
             <div class="OnbgSteps-footerBtns">
               {% if wizard.steps.prev %}
-              <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
+              <button class="prevStepOnbd" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
               {% endif %}
-              <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">{% trans "Next" %}</button>
+              <button class="nextStepOnbd" type="submit" ">{% trans "Next" %}</button>
             </div>
           </div>
             {{ wizard.management_form }}

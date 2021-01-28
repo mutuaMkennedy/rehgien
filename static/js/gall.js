@@ -35,6 +35,11 @@ $(document).ready(function(){
         // specify the path to the libphonenumber script to enable validation/formatting
         utilsScript: ""
   });
+  //updates review message preview in rehgien_pro/templates/pro_reviewers
+  $('.review_request_message').on('keyup', function() {
+      $('#rvw_Rq_msg').html($(this).val());
+  });
+
   _helperTextTrigger.addEventListener( 'click', function(){
      _helperTextTrigger.style.color='#1100ff';
      var helperText = document.getElementById('_helperText');

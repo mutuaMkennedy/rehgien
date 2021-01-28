@@ -1,0 +1,76 @@
+{% extends 'pro_base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>Create pro business profile|Rehgien Pro</title>{% endblock %}
+{% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+{{ form.media.css }}
+{{ wizard.form.media }}
+<div class="ProOnboardingWizard">
+  <div class="pro_onboardingProgress" style="width:50%"></div>
+  <div class="container">
+    <div class="row">
+        <form method="post" class="col s12">
+            {% csrf_token %}
+            <div class="proOnbdFormElS col s12">
+                <div class="col s12 md8 l8 xl8 pr_ObdFormFields stepTwo">
+                  <div class="formSct">
+                      {{form.errors}}
+                    <h2>
+                      Tell us where you want to work?
+                    </h2>
+                  </div>
+                    <div class="field">
+                        <p>What's your business address. e.g. region name,street name, city etc.</p>
+                        {{wizard.form.address}}
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <div class="field onboardingSelectProSvcAreas onboardingSelectProSvcs">
+                        <p>Now select other areas where you want to work so that we can match you with the right clients</p>
+                        {{wizard.form.service_areas}}
+                    </div>
+                </div>
+                <div class="col s12 md4 l4 xl4 ">
+                  <div class="helper_card_msgTxtRg">
+                    <div class="card">
+                        <h3>Get found by hiring homeowners near you.</h3>
+                        <div class="proObgHelpTips">
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_one</span>
+                            <p>We show your business address & the areas you work in on your profile</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_two</span>
+                            <p>We use your business address & work areas to show your profile in search results locally. </p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_3</span>
+                            <p>The work areas you provide will also influence what job posts you can respond to.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_4</span>
+                            <p>You can always update this details later if you miss something.</p>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          <div class="OnbgSteps-footer col s12">
+            <div class="OnbgSteps-footerBtns">
+              {% if wizard.steps.prev %}
+              <button class="prevStepOnbd" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
+              {% endif %}
+              <button class="nextStepOnbd" type="submit" ">{% trans "Next" %}</button>
+            </div>
+          </div>
+            {{ wizard.management_form }}
+        </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -153,27 +153,28 @@ def business_list(request):
 
 	q_pro_category = str( request.GET.get('p_cat', '') )
 	service = str( request.GET.get('q_service', '') )
-	location = str( request.GET.get('pro_location', 'Nairobi') )
+	location = str( request.GET.get('pro_location', 'Nairobi city') )
 	job_rating = int( request.GET.get('job_rating',0) )
 	sort = str( request.GET.get('sort','') )
 	bs_page = request.GET.get('page', '1')
 
 	if check_q_valid(q_pro_category):
-		business_list = business_list.filter(professional_category__category_name__icontains = q_pro_category)
-		featured_b_list = business_list.filter(professional_category__category_name__icontains = q_pro_category, featured=True)
+		business_list = business_list.filter(professional_category__slug = q_pro_category)
+		featured_b_list = business_list.filter(professional_category__slug = q_pro_category, featured=True)
 	if check_q_valid(location):
-		business_list = business_list.filter(service_areas__icontains = location)
-		featured_b_list = business_list.filter(service_areas__icontains = location)
+		business_list = business_list.filter(service_areas__town_name__icontains = location)
+		featured_b_list = business_list.filter(service_areas__town_name__icontains = location)
 		business_list_count = business_list.count()
+
 	if check_q_valid(service):
 		business_list = business_list.filter(professional_services__slug__icontains = service)
 		featured_b_list = business_list.filter(professional_services__slug__icontains = service)
 		business_list_count = business_list.count()
 	if check_q_valid(job_rating):
-		business_list = business_list.annotate(avg_rating=Avg('pro_business_review__recommendation_rating')).filter(avg_rating__gte=job_rating)
-		featured_b_list = business_list.annotate(avg_rating=Avg('pro_business_review__recommendation_rating')).filter(avg_rating__gte=job_rating)
-		business_list_count = business_list.count()
-
+		if job_rating != 0:
+			business_list = business_list.annotate(avg_rating=Avg('pro_business_review__recommendation_rating')).filter(avg_rating__gte=job_rating)
+			featured_b_list = business_list.annotate(avg_rating=Avg('pro_business_review__recommendation_rating')).filter(avg_rating__gte=job_rating)
+			business_list_count = business_list.count()
 	if sort == 'mostProjects':
 		business_list = business_list.annotate(num_projects=Count('user__profiles_portfolioitem_createdby',distinct=True)).order_by('-num_projects')
 	elif sort == 'mostFollowers':
@@ -260,12 +261,14 @@ def business_detail(request, pk):
 	three_star_ratings = pro_reviews.filter(recommendation_rating=3).count()
 	two_star_ratings = pro_reviews.filter(recommendation_rating=2).count()
 	one_star_ratings = pro_reviews.filter(recommendation_rating=1).count()
-
-	five_star_ratings_avg = five_star_ratings/ pro_reviews.count() * 100
-	four_star_ratings_avg = four_star_ratings / pro_reviews.count() * 100
-	three_star_ratings_avg = three_star_ratings / pro_reviews.count() * 100
-	two_star_ratings_avg = two_star_ratings / pro_reviews.count() * 100
-	one_star_ratings_avg = one_star_ratings / pro_reviews.count() * 100
+	rvw_count = pro_reviews.count()
+	if rvw_count == 0:
+		rvw_count = 1
+	five_star_ratings_avg = five_star_ratings/ rvw_count * 100
+	four_star_ratings_avg = four_star_ratings / rvw_count * 100
+	three_star_ratings_avg = three_star_ratings / rvw_count * 100
+	two_star_ratings_avg = two_star_ratings / rvw_count * 100
+	one_star_ratings_avg = one_star_ratings / rvw_count * 100
 
 	reviews_count = pro_reviews.count()
 

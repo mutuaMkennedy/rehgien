@@ -17193,6 +17193,16 @@ particle {
 .ProOnboardingWizard{
     padding:10px;
     font-family:Open Sans, Arial;
+    position:relative;
+}
+
+.ProOnboardingWizard .pro_onboardingProgress{
+  height:5px;
+  position:fixed;
+  left:0;
+  top:64px;
+  z-index:2;
+  background-color:#1100ff;
 }
 
 .ProOnboardingWizard .container{
@@ -17214,6 +17224,10 @@ particle {
     padding:0;
 }
 
+.ProOnboardingWizard .proOnbdFormElS .pr_ObdFormFields .field{
+    width:80%;
+}
+
 .pr_ObdFormFields.stepOne .field{
     width:380px !important;
 }
@@ -17227,6 +17241,12 @@ particle {
 .ProOnboardingWizard .pr_ObdFormFields .field p span{
     color:#ff0000;
     font-size:10px;
+}
+
+.ProOnboardingWizard .proOnbdFormElS .pr_ObdFormFields .field h5{
+    font-size:15px;
+    font-weight:600;
+    margin:10px 0;
 }
 
 .pr_ObdFormFields .iti{
@@ -17268,7 +17288,9 @@ particle {
 }
 
 .onboardingSelectProCatg input,
-.onboardingSelectProCatg input ~ svg{
+.onboardingSelectProCatg input ~ svg,
+.onboardingSelectProSvcs input[type=text],
+.onboardingSelectProSvcs input[type=text] ~ svg{
     display:none !important;
 }
 
@@ -17282,6 +17304,174 @@ particle {
     color:#747474;
     font-size:13px;
     padding:5px 0;
+}
+
+.pr_ObdFormFields .onboardingSelectProSvcs{
+    width:80%;
+}
+
+.pr_ObdFormFields .onboardingSelectProSvcs .select2-selection{
+    height:auto;
+    min-height:100px;
+    padding:10px;
+}
+
+.pr_ObdFormFields .onboardingSelectProSvcs .select2-selection ul.select2-selection__rendered{
+    height:100% !important;
+    align-items:center;
+}
+
+.pr_ObdFormFields .onboardingSelectProSvcs .select2-selection ul span{
+    margin:0;
+}
+
+.pr_ObdFormFields .onboardingSelectProSvcs .select2-selection ul li.select2-selection__choice{
+    margin:0;
+    height:30px;
+    background-color:#1100ff;
+    display:flex;
+    align-items:center;
+    color:#fff;
+    font-size:13px;
+    border-radius:25px;
+    padding:0 20px;
+    margin:2px 5px;
+    font-weight:600;
+    border:none;
+}
+
+.pr_ObdFormFields .onboardingSelectProSvcs .select2-selection ul li.select2-selection__choice span{
+    width:20px;
+    height:20px;
+    line-height:20px;
+    font-size:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    border:2px solid #fff;
+    border-radius:50%;
+    margin-right:5px;
+}
+
+.pr_ObdFormFields .onboardingSelectProSvcs .select2-selection ul li.select2-search{
+    height:30px;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:2px 5px;
+}
+
+.pr_ObdFormFields .onboardingSelectProSvcs .select2-selection ul li.select2-search input{
+    margin:0;
+    height:30px !important;
+    border:none !important;
+    padding:0 10px;
+    box-sizing:border-box !important;
+    font-size:13px;
+}
+
+.ProOnboardingWizard .wzphotoInputField input[type=file]{
+    padding: 0;
+    width: 210px;
+    height: 50px;
+    color: transparent;
+    border: none;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.ProOnboardingWizard .wzphotoInputField input[type=file]::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.ProOnboardingWizard .wzphotoInputField input[type=file]::before {
+    content: '+ Upload Photo';
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff !Important;
+    border: 1px solid #1100ff;
+    border-radius: 3px;
+    padding: 5px 20px;
+    width: 210px;
+    height: 50px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1100ff;
+}
+
+.ProOnboardingWizard .wzphotoInputField input[type=file]:hover::before {
+    background-color: #f1f9f1 !important;
+}
+
+.wzphotoInputField .ProfilePhotoPreview{
+    margin:10px 0;
+    border-radius:5px;
+    border:1px solid rgb(44 178 234 / 0.5);
+    border-style:dashed;
+    display:flex;
+    justify-content:center;
+}
+
+.wzphotoInputField .ProfilePhotoPreview canvas{
+    margin:20px;
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.wzphotoInputField .ProfilePhotoPreview canvas:hover{
+    cursor:pointer;
+    border-radius:0;
+    transform:rotate(-5deg);
+    transition:transform 0.2s;
+}
+
+.wzEmailsInputField input{
+    border:none !important;
+}
+
+.wzEmailsInputField textarea{
+  border:1px solid #ddd;
+  min-height:200px;
+  padding:10px;
+  border-radius:5px;
+}
+
+.wzEmailsInputField textarea:focus{
+    outline:none;
+    border:1px solid #d1d1d1;
+}
+
+.wzEmailsInputField .tag{
+    margin:2px 5px !important;
+    background-color:#1100ff !important;
+    display:flex !important;
+    flex-direction:row-reverse;
+    align-items:center;
+    border-radius:20px !important;
+    padding:0 20px !important;
+    height:35px;
+}
+
+.wzEmailsInputField .tag button.tag-remove{
+    position:relative !important;
+    width:20px;
+    border-radius:20px;
+}
+
+.wzEmailsInputField .tag button.tag-remove:before,
+.wzEmailsInputField .tag button.tag-remove:after{
+    left:unset !important;
+    right:unset !important;
+    background-color:#fff !important;
 }
 
 .proOnbdFormElS .helper_card_msgTxtRg{
@@ -17307,6 +17497,20 @@ particle {
     margin:0;
 }
 
+.proOnbdFormElS .helper_card_msgTxtRg .proObgHelpTipImg{
+    display:flex;
+    justify-content:center;
+    padding:5px;
+}
+.proOnbdFormElS .helper_card_msgTxtRg .proObgHelpTipImg img{
+    width:120px;
+    height:150px;
+    object-fit:cover;
+    object-position:100% 50%;
+    margin:3px;
+    border-radius:5px;
+}
+
 .proOnbdFormElS .helper_card_msgTxtRg .proObgHelpTips .proObgHelpTipTx{
     display:flex;
     align-items:center;
@@ -17322,6 +17526,148 @@ particle {
     font-size:11px;
     margin: 0;
     margin-left:10px;
+    color:#000;
+}
+
+.proOnbdFormElS .helper_card_msgTxtRg .proObgHelpTips .proObgHelpTipTx.email-preview p span{
+    font-size:11px;
+    color:#000;
+}
+.ProOnboardingWizard .ph-cropModal{
+    position:fixed;
+    background-color:rgb(0 0 0 / 0.7);
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:1000;
+    padding:100px;
+    overflow-y:auto;
+}
+
+.ProOnboardingWizard .ph-cropModal.closed{
+    display:none;
+}
+
+.ProOnboardingWizard .ph-cropModal .cropEditorModalContent{
+    width:700px;
+    background-color:transparent;
+    margin-left:auto;
+    margin-right:auto;
+    border-radius:5px;
+    padding:15px;
+}
+
+.ProOnboardingWizard .ph-cropModal .cropEditHead{
+    padding-bottom:10px;
+}
+
+.ProOnboardingWizard .ph-cropModal .cropEditHead h2{
+    margin:0;
+    font-size:20px;
+    font-weight:600;
+    text-align:center;
+    color:#fff
+}
+
+.ProOnboardingWizard .ph-cropModal .cropEditHead h2 span{
+    font-size:13px;
+}
+
+.ProOnboardingWizard .ph-cropModal .cropEditBody{
+    padding:20px;
+}
+
+.ProOnboardingWizard .ph-cropModal .cropEditBody .cropper-container{
+    width:100% !important;
+}
+
+.ProOnboardingWizard .ph-cropModal .cropEditFooter{
+    padding:10px;
+    display:flex;
+    justify-content:center;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:80%;
+    margin-left:50%;
+    transform:translateX(-50%)
+}
+
+.ProOnboardingWizard .ph-cropModal .cropEditFooter button{
+    width:200px;
+    height:45px;
+    border-radius:5px;
+    border:none;
+    background-color:#2cb2ea;
+    color:#fff;
+    font-weight:500;
+    cursor:pointer;
+}
+
+.ProOnboardingWizard .ph-cropModal .cropEditFooter button:hover{
+   opacity:0.7;
+   background-color:#1100ff;
+   color:#fff;
+}
+
+.ProOnboardingWizard .proBsf_setup_complete .card{
+    width:750px;
+    height:auto;
+    border-radius:5px;
+    box-shadow:0 0 20px 1px #eee;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.ProOnboardingWizard .proBsf_setup_complete .card h1{
+    font-size:20px;
+    font-weight:600;
+    color:#4caf50;
+    text-align:center;
+}
+
+.ProOnboardingWizard .proBsf_setup_complete .card span{
+    font-size:50px;
+    color:#4caf50;
+}
+
+.ProOnboardingWizard .proBsf_setup_complete .card .acctStp_lstMsg{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.ProOnboardingWizard .proBsf_setup_complete .card .acctStp_lstMsg h2{
+    font-size:17px;
+    font-weight:600;
+}
+
+.ProOnboardingWizard .proBsf_setup_complete .card .acctStp_lstMsg p{
+    font-size:13px;
+    max-width:500px;
+    line-height:20px;
+}
+
+.ProOnboardingWizard .proBsf_setup_complete .card .acctStp_lstMsg button{
+    margin:20px 0;
+    height:45px;
+    width:200px;
+    background-color:#cc0000;
+    border:none;
+    color:#fff;
+    border-radius:25px;
+    font-weight:600;
+}
+
+.ProOnboardingWizard .proBsf_setup_complete .card .acctStp_lstMsg button:hover{
+    opacity:0.7;
+    cursor:pointer;
+    border-radius:5px;
 }
 
 .OnbgSteps-footer{
@@ -17361,6 +17707,14 @@ particle {
     background-color:#2cb2ea;
 }
 
+.OnbgSteps-footer .OnbgSteps-footerBtns button.nextStepOnbd:hover{
+    background-color:#1100ff;
+}
+
+.OnbgSteps-footer .OnbgSteps-footerBtns button.prevStepOnbd:hover{
+    border:1px solid #757575;
+    background-color:#fff;
+}
 .partnershipBanner{
     height: 100vh;
     min-height: 600px;

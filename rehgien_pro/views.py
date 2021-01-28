@@ -1,9 +1,14 @@
 import os
+import io
+import sys
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.http import urlencode
@@ -12,12 +17,15 @@ from location import models as location_models
 from resource_center import models as resource_models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 try:
 	from django.utils import simplejson as simplejson
 except ImportError:
 	import json
 from profiles import pro_profile_setup_forms as pro_setup_forms
+from profiles import models as profiles_models
 from formtools.wizard.views import SessionWizardView
+from django.utils.functional import cached_property
 
 User = get_user_model()
 
@@ -41,18 +49,91 @@ TEMPLATES = {
 			"ProServices": "rehgien_pro/pro_onboarding/pro_services.html",
 			"ProLocation": "rehgien_pro/pro_onboarding/pro_location.html",
 			"ProBusinessProfileImage": "rehgien_pro/pro_onboarding/pro_business_profile_image.html",
-			"ProReviewers": "rehgien_pro/pro_onboarding/pro_services.html"
+			"ProReviewers": "rehgien_pro/pro_onboarding/pro_reviewers.html"
 			}
 
-# @login_required(login_url='account_login')
-class ProSetupWizardView(SessionWizardView):
+class ProSetupWizardView(LoginRequiredMixin, SessionWizardView):
+	login_url = '/accounts/login/'
+	redirect_field_name = 'next'
+
+
+	def get(self, request):
+		if profiles_models.BusinessProfile.objects.filter(user = request.user).exists():
+			profile_obj = profiles_models.BusinessProfile.objects.get(user = request.user)
+			messages.error(request,'You can only own one business profile. Perhaps you wanted to update your current profile.')
+			return redirect( 'profiles:pro_business_page_edit', pk = profile_obj.pk )
+
 	def get_template_names(self):
 		return [TEMPLATES[self.steps.current]]
+
 	file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_profile_photos'))
-	def done(self, form_list, **kwargs):
-		return render(self.request, 'done.html', {
-			'form_data': [form.cleaned_data for form in form_list],
-		})
+		# this runs for the step it's on as well as for the step before
+	def get_form_initial(self, step):
+		current_step = self.storage.current_step
+		# get the data for step 0 on step 4
+		if step == 'ProReviewers':
+			pro_info = self.storage.get_step_data('ProInfo')
+			ProServices = self.storage.get_step_data('ProServices')
+			ProLocation = self.storage.get_step_data('ProLocation')
+			ProBusinessProfileImage = self.storage.get_step_data('ProBusinessProfileImage')
+			pro_category_id = pro_info.get('ProInfo-professional_category','')
+			pro_category_name = self.get_category_name(pro_category_id)
+			business_name = pro_info.get('ProInfo-business_name','')
+			innitial = {
+			'business_name':business_name,
+			'message': "As a {proCat} professional my business heavily depends on recommendations ".format(proCat = pro_category_name) +
+						"from clients. Therefore, I would appreciate it if you would write a brief review of me on Rehgien.com," +
+						" an influential directory of property and home service professionals."
+			}
+			return self.initial_dict.get(step, innitial)
+
+		return self.initial_dict.get(step, {})
+
+	def get_category_name(self,pro_category_id):
+		try:
+			category = profiles_models.ProfessionalCategory.objects.get(pk=int(pro_category_id))
+			return category.professional_group.group_name
+		except:
+			return ''
+
+	def resizePhoto(self,photo,x,y,width,height):
+		image = Image.open(photo.file)
+		# The crop method from the Image module takes four coordinates as input.
+		# The right can also be represented as (left+width)
+		# and lower can be represented as (upper+height).
+		cropped_image = image.crop((x, y, width+x, height+y))
+		resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+		output = io.BytesIO()
+		resized_image.save(output, format='JPEG', quality=70)
+		output.seek(0)
+		return InMemoryUploadedFile(output, 'ImageField',
+									"%s.jpg" % photo.name.split('.')[0],
+									'image/jpeg',
+									sys.getsizeof(output), None)
+
+	def done(self, form_list, form_dict, **kwargs):
+		ProBusinessProfileImage = form_dict['ProBusinessProfileImage']
+		form_data = self.get_all_cleaned_data()
+		professional_services = form_data.pop('professional_services')
+		service_areas = form_data.pop('service_areas')
+		business_profile_image = form_data.pop('business_profile_image')
+		x = form_data.pop('x')
+		y = form_data.pop('y')
+		width = form_data.pop('width')
+		height = form_data.pop('height')
+		email = form_data.pop('email')
+		message = form_data.pop('message')
+
+		resized_image = self.resizePhoto(business_profile_image,x,y,width,height)
+
+		obj_instance = profiles_models.BusinessProfile.objects.create(
+						**form_data, business_profile_image = resized_image,
+						user=self.request.user,
+						)
+		obj_instance.professional_services.set(professional_services)
+		obj_instance.service_areas.set(service_areas)
+
+		return render(self.request, 'rehgien_pro/pro_onboarding/done.html',{'obj_instance':obj_instance})
 
 @login_required(login_url='account_login')
 def jobs_list(request):

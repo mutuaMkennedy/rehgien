@@ -1,13 +1,21 @@
 from django import forms
+from PIL import Image
 from django.contrib.postgres.forms import SimpleArrayField
 from phonenumber_field.formfields import PhoneNumberField
 from django_select2 import forms as s2forms
 from . import models
+from location import models as location_models
 
 class ProCategoryWidget(s2forms.ModelSelect2Widget):
-    search_fields = [
-        "category_name__icontains",
-    ]
+	search_fields = [
+		"category_name__icontains",
+	]
+
+class ServiceAreasWidget(s2forms.ModelSelect2MultipleWidget):
+	search_fields = [
+		"town_name__icontains",
+	]
+
 
 class TelInput(forms.TextInput):
 	input_type = 'tel'
@@ -34,6 +42,9 @@ class ProServices(forms.ModelForm):
 		fields = [
 		'professional_services'
 		]
+		widgets = {
+			'professional_services': s2forms.Select2MultipleWidget(attrs={'data-placeholder':'Search and select any services applicable to you.'}),
+		}
 
 class ProLocation(forms.ModelForm):
 	class Meta:
@@ -41,14 +52,36 @@ class ProLocation(forms.ModelForm):
 		fields = [
 		'address','service_areas'
 		]
+		widgets = {
+			'service_areas': ServiceAreasWidget(attrs={'data-placeholder': 'Search and select additional areas from the suggestions.'}),
+		}
 
 class ProBusinessProfileImage(forms.ModelForm):
-	business_profile_image = forms.ImageField(widget=forms.FileInput)
+	x = forms.FloatField(widget=forms.HiddenInput())
+	y = forms.FloatField(widget=forms.HiddenInput())
+	width = forms.FloatField(widget=forms.HiddenInput())
+	height = forms.FloatField(widget=forms.HiddenInput())
 	class Meta:
 		model = models.BusinessProfile
 		fields = [
-		'business_profile_image'
+		'business_profile_image','x','y','width','height',
 		]
 
-class ProReviewers(forms.ModelForm):
+	# def save(self):
+	# 		photo = super(ProBusinessProfileImage, self).save()
+	#
+	# 		x = self.cleaned_data.get('x')
+	# 		y = self.cleaned_data.get('y')
+	# 		w = self.cleaned_data.get('width')
+	# 		h = self.cleaned_data.get('height')
+	#
+	# 		image = Image.open(photo.file)
+	# 		cropped_image = image.crop((x, y, w+x, h+y))
+	# 		resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+	# 		resized_image.save(photo.file.path)
+	#
+	# 		return photo
+
+class ProReviewers(forms.Form):
 	email = SimpleArrayField(forms.EmailField( required = True))
+	message = forms.CharField(widget=forms.Textarea(attrs={'class':'review_request_message'}))

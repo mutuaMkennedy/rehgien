@@ -1,7 +1,7 @@
 {% extends 'pro_base.html' %}
 {% load static %}
 {% load i18n %}
-{% block title %}<title>Create pro business profile|Rehgien Pro</title>{% endblock %}
+{% block title %}<title>Create a pro business profile | Rehgien Pro</title>{% endblock %}
 {% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
 {% block content %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
@@ -9,10 +9,10 @@
 {{ wizard.form.media }}
 
 <div class="ProOnboardingWizard">
-  <div class="pro_onboardingProgress" style="width:0"></div>
+  <div class="pro_onboardingProgress" style="width:0%"></div>
   <div class="container">
     <div class="row">
-        <form method="post col s12">
+        <form method="post" class="col s12">
             {% csrf_token %}
             <div class="proOnbdFormElS col s12">
                 <div class="col s12 md8 l8 xl8 pr_ObdFormFields stepOne">
@@ -23,12 +23,6 @@
                       Lets get started by creating your business profile.
                     </h2>
                   </div>
-                  {{ wizard.management_form }}
-                {% if wizard.form.forms %}
-                    {{ wizard.form.management_form }}
-                    {% for form in wizard.form.forms %}
-                    {% endfor %}
-                {% else %}
                     <div class="field">
                         <p>Business name <span>*</span></p>
                         {{wizard.form.business_name}}
@@ -51,7 +45,6 @@
                         product news, and best practices at the number and email provided pursuant to <a href="#"> Rehgien Terms of Use.</a>
                       </small>
                     </div>
-                {% endif %}
 
                 </div>
                 <div class="col s12 md4 l4 xl4 ">
@@ -92,7 +85,7 @@
               <button class="nextStepOnbd" type="submit">{% trans "Next" %}</button>
             </div>
           </div>
-
+          {{ wizard.management_form }}
         </form>
     </div>
   </div>

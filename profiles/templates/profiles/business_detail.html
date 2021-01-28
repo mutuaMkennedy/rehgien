@@ -473,10 +473,10 @@
                     <div class="_ag-about-sc">
                       <h2><span class="material-icons">pin_drop</span> Service areas</h2>
                       <div class="_ag-serviceAreas">
-                          {% if business.service_areas %}
-                            {% for service_area in business.service_areas%}
+                          {% if business.service_areas.all %}
+                            {% for service_area in business.service_areas.all%}
                               <form class="_ag-svcAreafORM" action="{% url 'profiles:business_list'%}" method="get">
-                                  <button type="submit" name="pro_location" value="{{service_area}}">{{service_area}}</button>
+                                  <button type="submit" name="pro_location" value="{{service_area.town_name}}">{{service_area.town_name}}</button>
                               </form>
                             {% endfor %}
                           {% else %}

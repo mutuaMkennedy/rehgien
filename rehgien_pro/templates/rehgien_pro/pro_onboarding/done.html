@@ -1,0 +1,44 @@
+{% extends 'pro_base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>Create pro business profile|Rehgien Pro</title>{% endblock %}
+{% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<div class="ProOnboardingWizard">
+  <div class="pro_onboardingProgress" style="width:100%"></div>
+  <div class="container">
+    <div class="row">
+      <div class="proBsf_setup_complete">
+          <div class="card">
+              <h1>Congratulations! Your account has been upgraded Successfully</h1>
+              <span class="material-icons">check_circle_outline</span>
+              <div class="acctStp_lstMsg">
+                <h2>A message from the Rehgien team.</h2>
+                <p>
+                  Congratulations for reaching here, we are taking this special opportunity
+                  to welcome you to our dedicated community of professional service providers doing & building
+                  their businesses in a new different way while revolutionizing their experience and that of their clients.
+                  <br>
+                  <br>
+                  Before we leave you to enjoy the full suit of Rehgien features we would like to let you know that
+                  we take seriously the security of our users who trust us daily to connect them with legitimate professionals/businesses.
+                  Because of this we verify all professionals before they can start connecting with customers.
+                  This process typically takes less than 24 hours from the time you upgrade your account. During this period we might reach out to you
+                  if we have any questions.
+                  <br>
+                  <br>
+                  Again welcome home and let's build the future of property service access together!
+                  <br>
+                  <br>
+                  Rehgien Team
+                </p>
+                <a href="{% url 'profiles:pro_business_page_edit' pk=obj_instance.pk %}"><button type="button">Go to profile</button></a>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

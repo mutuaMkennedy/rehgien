@@ -1,0 +1,127 @@
+{% extends 'pro_base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>Create pro business profile|Rehgien Pro</title>{% endblock %}
+{% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.js'%}"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#wzClEmInputField input').tagsInput({
+        // min/max number of characters
+        minChars: 2,
+        maxChars:null,
+        // max number of tags
+        limit:null,
+        // RegExp
+        validationPattern:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        // duplicate validation
+        unique:true,
+        // // allows new tags
+        interactive: true,
+        // // custom placeholder
+        placeholder: 'Enter client email addresses separated by a comma',
+        // // width/height
+        width: 'auto',
+        height: 'auto',
+        // // hides the regular input field
+        hide: true,
+        // // custom delimiter
+        delimiter: ',',
+        // // removes tags with backspace
+        removeWithBackspace: true,
+        // // an array of whitelisted values
+        whitelist: null,
+        onAddTag: (inp, tg)=>{
+          let tags = $('#id_ProReviewers-email_tagsinput').find('.tag-text');
+          let tagsArray = [];
+          $.each(tags, function( index, tag ) {
+            tagsArray.push(tag.innerHTML);
+          });
+          $('#jb_location input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+        },
+        onRemoveTag: (inp, tg)=>{
+         let tags = $('#id_ProReviewers-email_tagsinput').find('.tag-text');
+         let tagsArray = [];
+         $.each(tags, function( index, tag ) {
+           tagsArray.push(tag.innerHTML);
+         });
+         $('#jb_location input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+       },
+        onChange: ()=>{
+           let tags = $('#id_ProReviewers-email_tagsinput').find('.tag-text');
+           let tagsArray = [];
+           $.each(tags, function( index, tag ) {
+             tagsArray.push(tag.innerHTML);
+           });
+           $('#jb_location input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+        }
+  });
+  })
+</script>
+{{ form.media.css }}
+{{ wizard.form.media }}
+<div class="ProOnboardingWizard">
+  <div class="pro_onboardingProgress" style="width:100%"></div>
+  <div class="container">
+    <div class="row">
+        <form method="post" class="col s12">
+            {% csrf_token %}
+            <div class="proOnbdFormElS col s12">
+                <div class="col s12 md8 l8 xl8 pr_ObdFormFields stepTwo">
+                  <div class="formSct">
+                      {{form.errors}}
+                    <h2>
+                     Get atleast one Review from past clients <br>and colleagues
+                    </h2>
+                  </div>
+                    <div id="wzClEmInputField" class="field wzEmailsInputField">
+                        <p>Reviews are very important. They show new customers your quality and raise your chances of getting hired.</p>
+                          <br>
+                          <br>
+                          <h5>Send past customers an email</h5>
+                          {{wizard.form.email}}
+                          <h5>Message</h5>
+                          {{wizard.form.message}}
+                    </div>
+                </div>
+                <div class="col s12 md4 l4 xl4 ">
+                  <div class="helper_card_msgTxtRg">
+                    <div class="card">
+                        <h3>Email preview.</h3>
+                        <div class="proObgHelpTips">
+                          <div class="proObgHelpTipTx email-preview">
+                            <p>
+                              <span id="rvw_Rq_msg">{{wizard.form.initial.message}}</span>
+                              <br>
+                              <br>
+                              Click this link to write a review.
+                              <br>
+                              <br>
+                              Thanks in advance and let me know if your have any questions.
+                              <br>
+                              <br>
+                              {{wizard.form.initial.business_name}}
+                            </p>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          <div class="OnbgSteps-footer col s12">
+            <div class="OnbgSteps-footerBtns">
+              {% if wizard.steps.prev %}
+              <button class="prevStepOnbd" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
+              {% endif %}
+              <button class="nextStepOnbd" type="submit" ">{% trans "Next" %}</button>
+            </div>
+          </div>
+            {{ wizard.management_form }}
+        </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

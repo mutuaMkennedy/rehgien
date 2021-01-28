@@ -1,0 +1,152 @@
+{% extends 'pro_base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>Create pro business profile|Rehgien Pro</title>{% endblock %}
+{% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".wzphotoInputField input").change(function () {
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $("#crop-tg-image").attr("src", e.target.result);
+          $("#cropEditorModal").removeClass("closed").trigger('modalOpen');
+        }
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+
+    $('#photoEditDone').on('click', function(e){
+      e.preventDefault()
+      $('#cropEditorModal').addClass("closed").trigger('modalClosed');
+    })
+
+    var cropBoxData ;
+    var canvasData ;
+    let crpImg = $('#crop-tg-image');
+    $('#cropEditorModal').on('modalOpen', function(){
+      $('#crop-tg-image').cropper({
+          viewMode: 1,
+          dragMode:'move',
+          aspectRatio: 1/1,
+          cropBoxResizable:false,
+          cropBoxMovable: true,
+          toggleDragModeOnDblclick:false,
+          minCropBoxWidth: 200,
+          minCropBoxHeight: 200,
+          data:{
+            width: 200,
+            height: 200,
+          },
+          ready: function () {
+            crpImg.cropper("setCanvasData", canvasData);
+            crpImg.cropper("setCropBoxData", cropBoxData);
+          },
+        });
+
+    }).on("modalClosed", function () {
+        cropBoxData = crpImg.cropper("getCropBoxData");
+        canvasData = crpImg.cropper("getCanvasData");
+        canvas = crpImg.cropper("getCroppedCanvas", {
+                            width: 200,
+                            height: 200,
+                            imageSmoothingEnabled:true,
+                            });
+        var cropData = crpImg.cropper("getData");
+        crpImg.cropper("destroy");
+        $(".ProfilePhotoPreview").html(canvas);
+      
+        $("#id_ProBusinessProfileImage-x").val(cropData["x"]);
+        $("#id_ProBusinessProfileImage-y").val(cropData["y"]);
+        $("#id_ProBusinessProfileImage-height").val(cropData["height"]);
+        $("#id_ProBusinessProfileImage-width").val(cropData["width"]);
+      });
+
+})
+</script>
+{{ form.media.css }}
+{{ wizard.form.media }}
+<div class="ProOnboardingWizard">
+  <div class="pro_onboardingProgress" style="width:75%"></div>
+  <div class="container">
+    <div class="row">
+        <form method="post" class="col s12" enctype="multipart/form-data" >
+            {% csrf_token %}
+            <div class="proOnbdFormElS col s12">
+                <div class="col s12 md8 l8 xl8 pr_ObdFormFields stepTwo">
+                  <div class="formSct">
+                      {{form.errors}}
+                    <h2>
+                      Add your profile photo
+                    </h2>
+                  </div>
+                    <div class="field wzphotoInputField">
+                        <p>Your business profile photo is what clients see on your profile page and on pro listing directories.</p>
+                          <br>
+                          <br>
+                          <div class="ProfilePhotoPreview">
+                          </div>
+                          {{wizard.form.x}}
+                          {{wizard.form.y}}
+                          {{wizard.form.width}}
+                          {{wizard.form.height}}
+                          {{wizard.form.business_profile_image}}
+
+                    </div>
+                </div>
+                <div class="col s12 md4 l4 xl4 ">
+                  <div class="helper_card_msgTxtRg">
+                    <div class="card">
+                        <h3>A great photo can make all the difference.</h3>
+                        <div class="proObgHelpTips">
+                          <div class="proObgHelpTipImg">
+                              <img src="{% static 'img/smiling_person.jpg'%}" alt="smiling person">
+                              <img src="{% static 'img/smiling_person2.jpg'%}" alt="smiling person">
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">check</span>
+                            <p>Use a clear photo of you or your team - clients like seeing who they are hiring.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">check</span>
+                            <p>But incase you don't have a photo you can always use your logo.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">check</span>
+                            <p>Finally don't forget to put a smile!</p>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          <div class="OnbgSteps-footer col s12">
+            <div class="OnbgSteps-footerBtns">
+              {% if wizard.steps.prev %}
+              <button class="prevStepOnbd" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
+              {% endif %}
+              <button class="nextStepOnbd" type="submit" ">{% trans "Next" %}</button>
+            </div>
+          </div>
+            {{ wizard.management_form }}
+        </form>
+    </div>
+  </div>
+  <div id="cropEditorModal" class="ph-cropModal closed">
+    <div class="cropEditorModalContent">
+        <div class="cropEditHead">
+            <h2>Crop to fit your picture <br><span>( Scroll to zoom )</span></h2>
+        </div>
+        <div class="cropEditBody">
+              <img id="crop-tg-image" src="" style="max-width: 100%;">
+        </div>
+        <div class="cropEditFooter">
+          <button id="photoEditDone" type="button" name="button">Done</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
