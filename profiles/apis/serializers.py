@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from profiles import models as profiles_models
 from listings import models as listings_models
 from listings.apis import serializers as listings_serializers
-from location.apis import serializers as location_serializers
+from location.api import serializers as location_serializers
 from django.db.models import Avg
 
 # referencing the custom user model
