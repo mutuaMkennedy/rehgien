@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from profiles import models as profiles_models
 from listings import models as listings_models
 from listings.apis import serializers as listings_serializers
+from location.apis import serializers as location_serializers
 from django.db.models import Avg
 
 # referencing the custom user model
@@ -70,6 +71,7 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
     pro_business_client = ClientSerializer(many=True)
     pro_business_hours = BusinessHoursSerializer(many=True)
     pro_business_review = ReviewSerializer(many=True)
+    service_areas = location_serializers.KenyaTownSerializer(many=True)
     _pro_average_rating_ = serializers.SerializerMethodField()
     _business_profile_percentage_complete_ = serializers.SerializerMethodField()
     class Meta:
