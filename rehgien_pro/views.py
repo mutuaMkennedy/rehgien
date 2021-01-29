@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -55,19 +56,21 @@ TEMPLATES = {
 class ProSetupWizardView(LoginRequiredMixin, SessionWizardView):
 	login_url = '/accounts/login/'
 	redirect_field_name = 'next'
+	file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_profile_photos'))
 
-
-	def get(self, request):
+	def dispatch(self, request, *args, **kwargs):
+		# check if there is some video onsite
 		if profiles_models.BusinessProfile.objects.filter(user = request.user).exists():
 			profile_obj = profiles_models.BusinessProfile.objects.get(user = request.user)
 			messages.error(request,'You can only own one business profile. Perhaps you wanted to update your current profile.')
-			return redirect( 'profiles:pro_business_page_edit', pk = profile_obj.pk )
+			return HttpResponseRedirect(reverse('profiles:pro_business_page_edit', kwargs={'pk':profile_obj.pk}))
+		else:
+			return super(ProSetupWizardView, self).dispatch(request, *args, **kwargs)
 
 	def get_template_names(self):
 		return [TEMPLATES[self.steps.current]]
 
-	file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_profile_photos'))
-		# this runs for the step it's on as well as for the step before
+	# this runs for the step it's on as well as for the step before
 	def get_form_initial(self, step):
 		current_step = self.storage.current_step
 		# get the data for step 0 on step 4
@@ -132,6 +135,8 @@ class ProSetupWizardView(LoginRequiredMixin, SessionWizardView):
 						)
 		obj_instance.professional_services.set(professional_services)
 		obj_instance.service_areas.set(service_areas)
+		# if everything is setup correctly then update the user type field to pro
+		User.objects.filter(pk= self.request.user.pk).update(user_type = 'PRO')
 
 		return render(self.request, 'rehgien_pro/pro_onboarding/done.html',{'obj_instance':obj_instance})
 
