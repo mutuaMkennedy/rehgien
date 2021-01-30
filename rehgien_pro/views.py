@@ -10,6 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonRespons
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.http import urlencode
@@ -53,9 +54,8 @@ TEMPLATES = {
 			"ProReviewers": "rehgien_pro/pro_onboarding/pro_reviewers.html"
 			}
 
-class ProSetupWizardView(LoginRequiredMixin, SessionWizardView):
-	login_url = '/accounts/login/'
-	redirect_field_name = 'next'
+@method_decorator(login_required(login_url='account_login'), name='dispatch')
+class ProSetupWizardView(SessionWizardView):
 	file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_profile_photos'))
 
 	def dispatch(self, request, *args, **kwargs):
@@ -100,7 +100,7 @@ class ProSetupWizardView(LoginRequiredMixin, SessionWizardView):
 			return ''
 
 	def resizePhoto(self,photo,x,y,width,height):
-		image = Image.open(photo.file)
+		image = Image.open(photo.file).convert('RGB')
 		# The crop method from the Image module takes four coordinates as input.
 		# The right can also be represented as (left+width)
 		# and lower can be represented as (upper+height).
