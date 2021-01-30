@@ -17209,6 +17209,12 @@ particle {
     width:80%;
 }
 
+@media all and (max-width:768px){
+    .ProOnboardingWizard .container{
+        width:100%;
+    }
+}
+
 .ProOnboardingWizard .proOnbdFormElS{
     margin-bottom:65px;
     position:relative;
@@ -17230,6 +17236,13 @@ particle {
 
 .pr_ObdFormFields.stepOne .field{
     width:380px !important;
+}
+
+@media all and (max-width:768px){
+    .pr_ObdFormFields.stepOne .field,
+    .ProOnboardingWizard .proOnbdFormElS .pr_ObdFormFields .field{
+        width:100% !important;
+    }
 }
 
 .ProOnboardingWizard .proOnbdFormElS .pr_ObdFormFields .field p{
@@ -17304,6 +17317,12 @@ particle {
     color:#747474;
     font-size:13px;
     padding:5px 0;
+}
+
+@media all and (max-width:768px){
+    .pr_ObdFormFields .disclaimer{
+        width:100% !important;
+    }
 }
 
 .pr_ObdFormFields .onboardingSelectProSvcs{
@@ -17545,6 +17564,12 @@ particle {
     overflow-y:auto;
 }
 
+@media all and (max-width:768px){
+    .ProOnboardingWizard .ph-cropModal{
+        padding:10px;
+    }
+}
+
 .ProOnboardingWizard .ph-cropModal.closed{
     display:none;
 }
@@ -17556,6 +17581,13 @@ particle {
     margin-right:auto;
     border-radius:5px;
     padding:15px;
+}
+
+@media all and (max-width:768px){
+    .ProOnboardingWizard .ph-cropModal .cropEditorModalContent{
+        width:100%;
+        padding:0;
+    }
 }
 
 .ProOnboardingWizard .ph-cropModal .cropEditHead{
@@ -17576,6 +17608,13 @@ particle {
 
 .ProOnboardingWizard .ph-cropModal .cropEditBody{
     padding:20px;
+}
+
+@media all and (max-width:768px){
+    .ProOnboardingWizard .ph-cropModal .cropEditBody{
+        width:100%;
+        padding:0;
+    }
 }
 
 .ProOnboardingWizard .ph-cropModal .cropEditBody .cropper-container{
@@ -17622,6 +17661,12 @@ particle {
     align-items:center;
     margin-left:auto;
     margin-right:auto;
+}
+
+@media all and (max-width:768px){
+    .ProOnboardingWizard .proBsf_setup_complete .card{
+        width:100%;
+    }
 }
 
 .ProOnboardingWizard .proBsf_setup_complete .card h1{
@@ -17693,6 +17738,16 @@ particle {
     align-items:center;
 }
 
+
+@media all and (max-width:768px){
+    .OnbgSteps-footer{
+        position:static;
+    }
+    .OnbgSteps-footerBtns{
+        width:90%;
+    }
+}
+
 .OnbgSteps-footer .OnbgSteps-footerBtns button{
     border:none;
     height:45px;
@@ -17700,6 +17755,12 @@ particle {
     border-radius:3px;
     font-weight:600;
     cursor:pointer;
+}
+
+@media all and (max-width:768px){
+    .OnbgSteps-footer .OnbgSteps-footerBtns button{
+        width:120px;
+    }
 }
 
 .OnbgSteps-footer .OnbgSteps-footerBtns button.nextStepOnbd{
