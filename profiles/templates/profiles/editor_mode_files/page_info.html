@@ -4,7 +4,7 @@
 <li><span class="material-icons">public</span><a href="#" target='_blank'>{{bs_profile.website_link|truncatechars:30}}</a></li>
 {% endif %}
 <ul>
-  <li><b>License No:</b><br> <a href="#">See all</a></li>
+{% comment "Section excluded untill it's fully supported"%}<li><b>License No:</b><br> <a href="#">See all</a></li>{% endcomment %}
   <li><b>Rehgien Member since:</b><br>{{bs_profile.member_since.date}}</li>
   <li class="social-btns"><b>Follow Us:</b><br>
     {% if bs_profile.linkedin_page_link%}
