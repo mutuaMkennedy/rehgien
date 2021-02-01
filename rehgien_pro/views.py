@@ -5,6 +5,7 @@ from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.core.mail import send_mail, send_mass_mail, BadHeaderError
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse
@@ -28,6 +29,8 @@ from profiles import pro_profile_setup_forms as pro_setup_forms
 from profiles import models as profiles_models
 from formtools.wizard.views import SessionWizardView
 from django.utils.functional import cached_property
+from django.contrib.sites.models import Site
+
 
 User = get_user_model()
 
@@ -36,6 +39,24 @@ def check_q_valid(param):
 
 def homepage(request):
 	return render(request,'rehgien_pro/rehgien_pro_homepage.html',{})
+
+def send_review_request_email(email_dict, message, pk, business_name):
+	domain = 'https://' + Site.objects.get_current().domain
+	review_page_url = reverse( 'profiles:business_review')
+	subject = 'Can you please review me?'
+	datalist = []
+	extended_message = message + '\n\n' + 'Click this link: ' + domain + review_page_url + '?bsr=' + str(pk) + ' to write your review.' + \
+						'\n\n\n' + \
+						'Thanks in advance and let me know if you have any questions.' + \
+						'\n\n' + \
+						'{b_name}'.format(b_name=business_name)
+	for email in email_dict:
+		datalist.append( (subject, extended_message, '{name} <mutuakennedy81@gmail.com>'.format(name=business_name), [email]) )
+	try:
+		send_mass_mail(tuple(datalist))
+	except BadHeaderError:
+		return 'Error'
+	return 'succcess'
 
 #pro onboarding wizard
 FORMS = [
@@ -137,6 +158,9 @@ class ProSetupWizardView(SessionWizardView):
 		obj_instance.service_areas.set(service_areas)
 		# if everything is setup correctly then update the user type field to pro
 		User.objects.filter(pk= self.request.user.pk).update(user_type = 'PRO')
+
+		# then send the review invite emails
+		send_review_request_email(email,message, obj_instance.pk, obj_instance.business_name)
 
 		return render(self.request, 'rehgien_pro/pro_onboarding/done.html',{'obj_instance':obj_instance})
 
