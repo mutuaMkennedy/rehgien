@@ -2,6 +2,7 @@
 {% load static %}
 {% load cloudinary %}
 {% load embed_video_tags %}
+{% block title %} <title>{{business.business_name}} | Rehgien</title>{% endblock %}
 {% block content %}
 {% load profiles_extra_tags %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
@@ -243,7 +244,11 @@
       <li class="col s3"><a href="#co-about-vw">Posts</a></li>
       <li class="col s3"><a href="#co-Portfolio-vw">Portfolio</a></li>
       <li class="col s3"><a href="#pro_reviews_vw">Reviews</a></li>
-      <li class="col s3"><a href="#co-sr-lsts-vw">Listings</a></li>
+      {% if business.professional_category.professional_group.slug == 'real-estate-services'%}
+        {% if all_listings %}
+          <li class="col s3"><a href="#co-sr-lsts-vw">Listings</a></li>
+        {% endif %}
+      {% endif %}
   </ul>
   {% if business.user == request.user %} <button type="button" name="button">This is your business page</button>{%endif %}
 </div>
@@ -354,7 +359,7 @@
               <li><span class="material-icons">public</span><a href="{{business.website_link}}" target='_blank'>{{business.website_link|truncatechars:30}}</a></li>
               {% endif %}
               <ul>
-                <li><b>Licenses & Certifications:</b><br><a href="#">See all</a></li>
+                {% comment 'excluded untill this feature is fuly supported '%}<li><b>Licenses & Certifications:</b><br><a href="#">See all</a></li>{% endcomment %}
                 <li><b>Rehgien Member since:</b><br>{{business.member_since.date}}</li>
                 <li class="social-btns"><b>Follow Us:</b><br>
                   {% if business.linkedin_page_link%}
@@ -919,6 +924,7 @@
                   </div>
                 </div>
             </div>
+            {% if all_listings %}
             <div class="Pr-sr-lsts-vw" id="co-sr-lsts-vw">
                 <div class="ag-sr-m-sc">
                     <div class="_pf_sectionHeader">
@@ -938,7 +944,7 @@
                           <th>Beds</th>
                           <th>Price</th>
                         </tr>
-                        {% for listings in sale_listings_p %}
+                        {% for listings in property_listings_p %}
                         <tr>
                           <td>
                             <a href="{{listings.get_absolute_url}}">
@@ -959,10 +965,11 @@
                       </table>
                     </div>
                     <div class="s_l_pgnt">
-                      {% include 'profiles/pagination.html' with listings=sale_listings_p %}
+                      {% include 'profiles/pagination.html' with listings=property_listings_p %}
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
         <div class="ag-d-right-content">
           <div class="_ag-connections card">
@@ -1270,6 +1277,7 @@
 
 
 </div>
+{% if all_listings %}
   <script type="text/javascript">
     mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
     if (!mapboxgl.supported()) {
@@ -1473,6 +1481,7 @@
   })
 
   </script>
+{% endif %}
 <script type="text/javascript">
   function scrollTo(to, duration) {
     if (document.body.scrollTop == to) return;
