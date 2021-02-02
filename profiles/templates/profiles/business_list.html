@@ -1,5 +1,6 @@
 {% extends 'base1.html' %}
 {% load static %}
+{% block title %} <title>Pros in {{search_params.pro_location}} {% if q_pro_category %} - {{q_pro_category|capfirst}}{% endif %} | Rehgien</title>{% endblock %}
 {% block content %}
 {% load profiles_extra_tags %}
 <script src="{% static 'js/jquery.min.js' %}"></script>

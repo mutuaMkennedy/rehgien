@@ -1,5 +1,6 @@
 {% extends 'base1.html'%}
 {% load static %}
+{% block title %} <title>My connections @{{request.user.username}} | Rehgien</title>{% endblock %}
 {% block content %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript">

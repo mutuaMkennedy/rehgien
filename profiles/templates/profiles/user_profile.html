@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 {%load cloudinary %}
+{% block head_title %} <title>My account | Rehgien</title>{% endblock %}
 {% block content %}
 {% load leaflet_tags %}
 {% leaflet_js plugins="forms" %}
 {% leaflet_css plugins="forms" %}
 {% load crispy_forms_tags%}
-{% block head_title %} <title>Rehgien|My account</title>{% endblock %}
+
 
 <section>
   <div id="pfl-pg-cont" class="container">
