@@ -236,14 +236,11 @@ def business_detail(request, pk):
 	rental_listings = all_listings.filter(owner=business.user,listing_type__icontains='FOR_RENT')
 	s_count = sale_listings.count()
 	r_count = rental_listings.count()
-	s_r_total = int(s_count) + int(r_count)
+	s_r_total = int(all_listings.count())
 
-	s_paginator = Paginator(sale_listings, 3)
-	sales_page = request.GET.get('page')
-	sale_listings_p = s_paginator.get_page(sales_page)
-	r_paginator = Paginator(rental_listings, 3)
-	rentals_page = request.GET.get('page')
-	rental_listings_p = r_paginator.get_page(rentals_page)
+	p_listings_paginator = Paginator(all_listings, 3)
+	property_page = request.GET.get('page')
+	property_listings_p = p_listings_paginator.get_page(property_page)
 
 	projects = models.PortfolioItem.objects.filter(created_by = business.user).order_by('-created_at')
 
@@ -299,8 +296,8 @@ def business_detail(request, pk):
 		'review_sort':review_sort,
 	}
 
-	context ={'business':business, "all_listings":all_listings,'sale_listings': sale_listings,
-			'rental_listings':rental_listings, 'sale_listings_p':sale_listings_p, 'rental_listings_p':rental_listings_p,
+	context ={'business':business, "all_listings":all_listings,'property_listings_p':property_listings_p, 'sale_listings': sale_listings,
+			'rental_listings':rental_listings,
 			's_r_total':s_r_total, 's_count':s_count,'r_count':r_count, 'pro_reviews':pro_reviews,
 			'reviews_count':reviews_count, 'recommendation_rating_avg':recommendation_rating_avg, 'responsive_rating_avg':responsive_rating_avg,
 			'knowledge_rating_avg':knowledge_rating_avg,'professionalism_rating_avg':professionalism_rating_avg,
