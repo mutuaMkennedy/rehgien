@@ -40,17 +40,15 @@ $(document).ready(function(){
       $('#rvw_Rq_msg').html($(this).val());
   });
 
-  _helperTextTrigger.addEventListener( 'click', function(){
-     _helperTextTrigger.style.color='#1100ff';
-     var helperText = document.getElementById('_helperText');
-      helperText.style.display= 'flex';
-      helperText.style.transform= 'translateY(5px)';
-   });
-   _helperTextHide.addEventListener( 'click', function(){
-     _helperTextTrigger.style.color='#000';
-      var helperText = document.getElementById('_helperText');
-      helperText.style.display= "none";
-      helperText.style.transform= 'translateY(0px)';
-    });
+  // show/hide helper text in business profile detail page connection list
+  $('#_helperTextTrigger').on('click', function(){
+    $(this).css('color','#1100ff')
+    $('#_helperText').css({'display':'flex', 'transform':'translateY(5px)'});
+  });
+
+  $('#_helperTextHide').on('click', function(){
+    $('#_helperTextTrigger').css('color','#000');
+    $('#_helperText').css({'display':'none', 'transform':'translateY(0px)'});
+  });
 
 });
