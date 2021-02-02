@@ -984,15 +984,15 @@
                     <div class="_ag-cns-user">
                       <div class="_ag-cns-imgWrp">
                           <img src="
-                          {% if connection.receiver.profile_image %}
-                            {{connection.receiver.profile_image.url}}
+                          {% if connection.receiver.pro_business_profile.business_profile_image %}
+                            {{connection.receiver.pro_business_profile.business_profile_image.url}}
                           {% else %}
                             {%static 'img/avatar.png'%}
                           {% endif %}
-                          " alt="{{business.business_name}}">
+                          " alt="{{ connection.receiver.pro_business_profile.business_name}}">
                       </div>
                       <div class="_ag-cns-Dtls">
-                          <h5>{% if connection.receiver.get_full_name %}{{connection.receiver.get_full_name}} {% else %} {{connection.receiver.username}}{% endif %}</h5>
+                          <h5>{% if connection.receiver.pro_business_profile.business_name %}{{connection.receiver.pro_business_profile.business_name}} {% else %} {{connection.receiver.username}}{% endif %}</h5>
                           <h6>{{connection.receiver.user_type}}</h6>
                       </div>
                       <div class="_ag-cns-Cta">
@@ -1005,16 +1005,16 @@
                     <div class="_ag-cns-user">
                       <div class="_ag-cns-imgWrp">
                           <img src="
-                          {% if connection.requestor.profile_image %}
-                            {{connection.requestor.profile_image.url}}
+                          {% if connection.requestor.pro_business_profile.business_profile_image %}
+                            {{connection.requestor.pro_business_profile.business_profile_image.url}}
                           {% else %}
                             {%static 'img/avatar.png'%}
                           {% endif %}
                           " alt="{{business.business_name}}">
                       </div>
                       <div class="_ag-cns-Dtls">
-                          <h5>{% if connection.requestor.get_full_name %}{{connection.requestor.get_full_name}} {% else %} {{connection.requestor.username}}{% endif %}</h5>
-                          <h6>{% if connection.requestor.user_type == 'CLIENT' %}Rehgien User {%else%}Rehgien Pro{%endif%}</h6>
+                          <h5>{% if connection.requestor.pro_business_profile.business_name %}{{connection.requestor.pro_business_profile.business_name}} {% else %} {{connection.requestor.username}}{% endif %}</h5>
+                            <h6>{{connection.requestor.user_type}}</h6>
                       </div>
                       <div class="_ag-cns-Cta">
                         <a href="{{connection.requestor.pro_business_profile.get_absolute_url}}">
@@ -1128,53 +1128,82 @@
              {% for teammate in pro_teammates%}
               {% if business.user == teammate.requestor %}
                 <div class="bsTMembersWrp">
-                   <a href="{{connection.requestor.get_absolute_url}">
+                   <a href="{{teammate.receiver.pro_business_profile.get_absolute_url}}">
                       <div class="bsTMbImg-wrp">
-                        <a href="{{connection.receiver.get_absolute_url}}">
                           <img src="
-                          {% if teammate.receiver.profile_image %}
-                          {{teammate.receiver.profile_image.url}}
+                          {% if teammate.receiver.pro_business_profile.business_profile_image %}
+                          {{teammate.receiver.pro_business_profile.business_profile_image.url}}
                           {% else %}
                             {% static 'img/avatar.png'%}
                           {% endif %}
                           ">
-                        </a>
-                      </div>
-                      <div class="bsTMbI-wrp">
-                        <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i>
-                              {% if teammate.receiver.pro_business_profile.average_rating > 0 %}
-                                {{teammate.receiver.pro_business_profile.average_rating}}/5 ({{teammate.receiver.pro_business_profile.pro_business_review.all.count}} Reviews)
-                              {% else %}
-                                0 Reviews
-                              {% endif %}
-                         </li>
-                        {% if teammate.requestor.get_full_name %} {{teammate.requestor.get_full_name}} {% else %} {{teammate.requestor.username}} {%endif%}
                       </div>
                     </a>
+                    <div class="bsTMbI-wrp">
+                      <h4>{% if teammate.receiver.pro_business_profile.business_name %} {{teammate.receiver.pro_business_profile.business_name}} {% else %} {{teammate.receiver.username}} {%endif%}</h4>
+                      <h5>
+                        <i class="fas fa-star fa-2x" style='color:#1BFF00'></i>
+                          {% if teammate.receiver.pro_business_profile.average_rating > 0 %}
+                            {{teammate.receiver.pro_business_profile.average_rating}}/5 ({{teammate.receiver.pro_business_profile.pro_business_review.all.count}} Review{{teammate.receiver.pro_business_profile.pro_business_review.all.count|pluralize}})
+                          {% else %}
+                            0 Reviews
+                          {% endif %}
+                       </h5>
+                       <h6>{{teammate.receiver.user_type|upper}}</h6>
+                    </div>
+                    <div class="_tmMt_goToPage">
+                      <a href="{{teammate.receiver.pro_business_profile.get_absolute_url}}"> Business page <span class='material-icons'>expand_more</span></a>
+                    </div>
+                    <div class="_tmMt_goToPageFollowers">
+                        <img src="
+                        {% if teammate.receiver.pro_business_profile.business_profile_image %}
+                          {{teammate.receiver.pro_business_profile.business_profile_image.url}}
+                        {% else %}
+                          {% static 'img/avatar.png'%}
+                        {% endif %}
+                        " alt="avatar">
+                        {{teammate.receiver.pro_business_profile.followers.all.count}} follower{{teammate.receiver.pro_business_profile.followers.all.count|pluralize}}
+                    </div>
                 </div>
               {% elif  business.user == teammate.receiver%}
                 <div class="bsTMembersWrp">
-                  <a href="{{connection.requestor.get_absolute_url}">
+                  <a href="{{teammate.requestor.pro_business_profile.get_absolute_url}}">
                     <div class="bsTMbImg-wrp">
                         <img src="
-                        {% if teammate.requestor.profile_image %}
-                        {{teammate.requestor.profile_image.url}}
+                        {% if teammate.requestor.pro_business_profile.business_profile_image %}
+                        {{teammate.requestor.pro_business_profile.business_profile_image.url}}
                         {% else %}
                           {% static 'img/avatar.png'%}
                         {% endif %}
                         ">
                     </div>
+                    </a>
                     <div class="bsTMbI-wrp">
-                      <li><i class="fas fa-star fa-2x" style='color:#1BFF00'></i>
+                      <h4>{% if teammate.requestor.pro_business_profile.business_name %} {{teammate.requestor.pro_business_profile.business_name}} {% else %} {{teammate.requestor.username}} {%endif%}</h4>
+                      <h5>
+                        <i class="fas fa-star fa-2x" style='color:#1BFF00'></i>
                           {% if teammate.requestor.pro_business_profile.average_rating > 0 %}
-                            {{teammate.requestor.pro_business_profile.average_rating}}/5 ({{teammate.requestor.pro_business_profile.pro_business_review.all.count}} Reviews)
+                            {{teammate.requestor.pro_business_profile.average_rating}}/5 ({{teammate.requestor.pro_business_profile.pro_business_review.all.count}} Review{{teammate.requestor.pro_business_profile.pro_business_review.all.count|pluralize}})
                           {% else %}
                             0 Reviews
                           {% endif %}
-                       </li>
-                      {% if teammate.requestor.get_full_name %} {{teammate.requestor.get_full_name}} {% else %} {{teammate.requestor.username}} {%endif%}
+                       </h5>
+                       <h6>{{teammate.requestor.user_type|upper}}</h6>
                     </div>
-                    </a>
+                    <div class="_tmMt_goToPage">
+                      <a href="{{teammate.requestor.pro_business_profile.get_absolute_url}}"> Business page <span class='material-icons'>expand_more</span></a>
+                    </div>
+                    <div class="_tmMt_goToPageFollowers">
+                        <img src="
+                        {% if teammate.requestor.pro_business_profile.business_profile_image %}
+                          {{teammate.requestor.pro_business_profile.business_profile_image.url}}
+                        {% else %}
+                          {% static 'img/avatar.png'%}
+                        {% endif %}
+                        " alt="avatar">
+                        {{teammate.requestor.pro_business_profile.followers.all.count}} follower{{teammate.requestor.pro_business_profile.followers.all.count|pluralize}}
+                    </div>
+
                 </div>
               {%endif%}
             {% endfor %}
