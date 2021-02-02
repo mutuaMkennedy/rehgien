@@ -11363,7 +11363,7 @@ particle {
     width: 800px;
     height: 80%;
     outline: none;
-    border-radius: 15px;
+    border-radius: 5px;
     background-color: #fff;
 }
 
@@ -11724,7 +11724,7 @@ particle {
     font-family: inherit;
     font-size: 13px;
     font-weight: 500;
-    background-color: #141414;
+    background-color: #000;
     color: #fff;
     padding: 10px;
     display: none;
@@ -11738,17 +11738,31 @@ particle {
 
 .Pr-Members-vw #_helperText button {
     padding: 0;
-    background-color: transparent;
+    background-color: #000;
     border: 0;
     color: #d1d1d1;
     margin-left: auto;
+    position:absolute;
+    top:-10px;
+    right:-10px;
+    width:25px;
+    height:25px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .Pr-Members-vw #_helperText button span {
-    width: 30px;
-    height: 25px;
-    font-size: 27px;
+    width: 20px;
+    height: 20px;
+    line-height:25px;
+    font-size: 20px;
     cursor: pointer;
+    color:#ffffff;
+}
+
+.Pr-Members-vw #_helperText button span:hover{
+    color:#1100ff;
 }
 
 .proffesional-dtls {
@@ -11835,13 +11849,60 @@ particle {
     font-weight: bold;
 }
 
+.bsTeamMembers ._tmMt_goToPage{
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.bsTeamMembers ._tmMt_goToPage a{
+    display:flex;
+    font-size:12px;
+    flex-direction: column;
+    align-items: center;
+    color: #2cb2ea;
+    text-transform: capitalize;
+}
+
+.bsTeamMembers ._tmMt_goToPage a span{
+    font-size:12px;
+    text-align: center;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(-90deg);
+}
+
+.bsTeamMembers ._tmMt_goToPageFollowers{
+    padding-top: 10px;
+    font-size: 11px;
+    font-weight: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bsTeamMembers ._tmMt_goToPageFollowers img{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-bottom:5px;
+}
+
 .bsTMembersCards {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-around;
     align-items: flex-start;
     margin-top: 25px;
     overflow-y: auto;
+    padding:10px;
 }
 
 .bsTMembersWrp {
@@ -11851,11 +11912,16 @@ particle {
     justify-content: center;
     align-items: center;
     margin-bottom: 25px;
+    margin-right:5px;
+    border:1px solid #d1d1d1;
+    padding:10px;
+    border-radius:5px;
+    box-shadow:0 0 10px 0 #eee;
 }
 
 .bsTMbImg-wrp img {
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -11867,15 +11933,35 @@ particle {
     justify-content: center;
     align-items: center;
     font-size: 14px;
-    font-family: Open Sans, Arial;
+    padding-bottom:10px;
 }
 
-.bsTMbI-wrp li {
-    color: blue;
+.bsTMbI-wrp h4{
+    font-size: 13px;
+    line-height: 15px;
+    margin: 0;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items:center;
 }
 
-.bsTMbI-wrp svg {
-    font-size: 16px;
+.bsTMbI-wrp h5{
+    font-size:11px;
+    line-height:15px;
+    margin:5px 0;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+}
+
+.bsTMbI-wrp  h5 svg {
+    font-size: 15px;
+}
+
+.bsTMbI-wrp h6{
+    margin:0;
+    font-size:11px;
 }
 
 .pflpages-no-results {
