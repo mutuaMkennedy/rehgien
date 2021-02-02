@@ -10,7 +10,11 @@ from rest_framework.generics import (
                                     DestroyAPIView
                                     )
 from rest_framework.views import APIView
-from .permissions import IsUserOrReadOnly,IsOwnerOrReadOnly,AccountOwnerOrReadOnly,IsAPro,IsRequestorOrReceiver,IsProfileOwnerOrReadOnly
+from .permissions import (
+                        IsUserOrReadOnly,IsOwnerOrReadOnly,AccountOwnerOrReadOnly,
+                        IsAPro,IsRequestorOrReceiver,IsProfileOwnerOrReadOnly,
+                        IsBusinessProfileOwnerOrReadOnly
+                        )
 from rest_framework.permissions import (
                                     AllowAny,
                                     IsAuthenticated,
@@ -156,12 +160,12 @@ class BusinessHoursDetailApi(RetrieveAPIView):
 class BusinessHoursUpdateApi(RetrieveUpdateAPIView):
     queryset = models.BusinessHours.objects.all()
     serializer_class = serializers.BusinessHoursSerializer
-    permission_classes = [IsProfileOwnerOrReadOnly]
+    permission_classes = [IsBusinessProfileOwnerOrReadOnly]
 
 class BusinessHoursDeleteApi(DestroyAPIView):
     queryset = models.BusinessHours.objects.all()
     serializer_class = serializers.BusinessHoursSerializer
-    permission_classes = [IsProfileOwnerOrReadOnly]
+    permission_classes = [IsBusinessProfileOwnerOrReadOnly]
 
 # Client
 class ClientCreate(CreateAPIView):
@@ -180,9 +184,9 @@ class ClientDetailApi(RetrieveAPIView):
 class ClientUpdateApi(RetrieveUpdateAPIView):
     queryset = models.Client.objects.all()
     serializer_class = serializers.ClientSerializer
-    permission_classes = [IsProfileOwnerOrReadOnly]
+    permission_classes = [IsBusinessProfileOwnerOrReadOnly]
 
 class ClientDeleteApi(DestroyAPIView):
     queryset = models.Client.objects.all()
     serializer_class = serializers.ClientSerializer
-    permission_classes = [IsProfileOwnerOrReadOnly]
+    permission_classes = [IsBusinessProfileOwnerOrReadOnly]
