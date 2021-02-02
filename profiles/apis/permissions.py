@@ -30,3 +30,8 @@ class IsProfileOwnerOrReadOnly(BasePermission):
     message = 'PermissionDenied.'
     def has_object_permission(self,request,view,obj):
         return obj.user == request.user
+
+class IsBusinessProfileOwnerOrReadOnly(BasePermission):
+    message = 'PermissionDenied.'
+    def has_object_permission(self,request,view,obj):
+        return obj.business_profile.user == request.user
