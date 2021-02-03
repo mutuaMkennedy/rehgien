@@ -10361,6 +10361,7 @@ particle {
     position: relative;
     padding: 0 !important;
     top: 0 !important;
+    outline:none !important;
 }
 
 #aglst_geocoder ul li {
@@ -10414,7 +10415,10 @@ particle {
 .ag-filter-collapsible-body ._popularLcs .pp_inS_rdbt span::after, #aglst_geocoder ul li label span::after {
     background-color: #2cb2ea;
     border: 1px solid #fff;
-    box-shadow: 0 0 0 1px #2cb2ea;
+/*     box-shadow: 0 0 0 1px #2cb2ea; */
+    width:14px;
+    height:14px;
+
 }
 
 .ag-filter-collapsible-body ._popularLcs .pp_inS_rdbt input:checked + span::before, #aglst_geocoder ul li label input:checked + span::before {
