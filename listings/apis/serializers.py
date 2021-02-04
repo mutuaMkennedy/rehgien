@@ -125,12 +125,12 @@ class PropertyVideoSerializer(serializers.ModelSerializer):
 class PropertyOpenHouseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PropertyOpenHouse
-        fields = ["home","date","start_time","end_time","reminder_list",]
+        fields = ["pk","home","date","start_time","end_time","reminder_list",]
 
 class PropertyInteractionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PropertyInteraction
-        fields = ["home", "user", "is_lead", "has_viewed", "views_count",
+        fields = ["pk","home", "user", "is_lead", "has_viewed", "views_count",
         "created_at"
         ]
 
