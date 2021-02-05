@@ -114,8 +114,6 @@ class PropertyOpenHouseCreateApi(CreateAPIView):
     queryset = models.PropertyOpenHouse.objects.all()
     serializer_class = serializers.PropertyOpenHouseSerializer
     permission_classes = [IsAuthenticated]
-    def perform_create(self,serializer):
-        serializer.save(user=self.request.user)
 
 class PropertyOpenHouseDetailApi(RetrieveAPIView):
     queryset =  models.PropertyOpenHouse.objects.all()
@@ -124,7 +122,7 @@ class PropertyOpenHouseDetailApi(RetrieveAPIView):
 class PropertyOpenHouseUpdateApi(RetrieveUpdateAPIView):
     queryset = models.PropertyOpenHouse.objects.all()
     serializer_class = serializers.PropertyOpenHouseSerializer
-    permission_classes = [IsUserOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
 class PropertyOpenHouseDeleteApi(DestroyAPIView):
     queryset = models.PropertyOpenHouse.objects.all()
