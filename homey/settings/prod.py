@@ -6,8 +6,8 @@ DEBUG = False
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'homeydb',
-        'USER': 'admin',
+        'NAME': 'rehgienc_homeydb',
+        'USER': 'rehgienc_admin',
         'PASSWORD': 'dbadmin20$$',
         'HOST': 'localhost',
         'PORT': '',
