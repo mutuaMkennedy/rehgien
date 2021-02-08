@@ -15,10 +15,3 @@ DATABASES = {
 }
 
 STATICFILES_STORAGE = 'homey.storage.ForgivingManifestStaticFilesStorage'
-
-# Smuggler settings mmore info https://github.com/semente/django-smuggler
-
-# SMUGGLER_EXCLUDE_LIST=
-# SMUGGLER_FIXTURE_DIR= 'home/mutua/rehgienProject/dbBackups/'
-# SMUGGLER_FORMAT=
-# SMUGGLER_INDENT=

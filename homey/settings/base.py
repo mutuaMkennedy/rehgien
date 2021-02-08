@@ -337,10 +337,3 @@ TWILIO_AUTH_TOKEN = '7f70419841a1632045d657089acd65c1'
 
 STREAM_API_KEY = 'krfpqyntmyk8'
 STREAM_API_SECRET = 'ynfguub9ds3qufavnzkdnvetrzrftqvs9punjq6zu7jwavcncshceyc8byp93kyq'
-
-# Smuggler settings mmore info https://github.com/semente/django-smuggler
-
-# SMUGGLER_EXCLUDE_LIST=
-# SMUGGLER_FIXTURE_DIR= r'C:\Users\REY\Desktop\pycharm\homey\dev\homey\dbBackups'
-# SMUGGLER_FORMAT=
-# SMUGGLER_INDENT=
