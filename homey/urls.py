@@ -27,7 +27,6 @@ from allauth.account.views import confirm_email
 #from haystack.views import FacetedSearchView
 
 urlpatterns = [
-    # path('admin/', include('smuggler.urls')),  # should be before admin url patterns!
     path('admin/', admin.site.urls),
     url(r'^$', views.homepage, name='homepage'),
     path('location/', include('location.urls')),
