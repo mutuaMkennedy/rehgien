@@ -198,7 +198,7 @@ STATICFILES_DIRS = (
     # os.path.join(BASE_DIR, 'chat-frontend/build/static'),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'assets_new')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
