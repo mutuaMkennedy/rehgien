@@ -21,7 +21,6 @@ django-photologue==3.8.1
 django-redis==4.12.1
 django-rest-auth==0.9.5
 django-select2==7.6.1
-django-smuggler==1.0.2
 django-social-share==2.0.0
 django-sortedm2m==1.5.0
 django-tastypie==0.14.3
