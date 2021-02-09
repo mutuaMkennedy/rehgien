@@ -48,7 +48,29 @@
   </head>
   <body>
     {% block header %}{% endblock%}
-
+    <script type="text/javascript">
+      window.onload = function() {
+        document.querySelector(".preloader").style.display = "none";
+      };
+    </script>
+    <div class="preloader valign-wrapper">
+      <div class="preloader-content">
+        <div class="preloader-img">
+        </div>
+        <div id="preloader-c" class="preloader-wrapper small active">
+         <div class="spinner-layer spinner-red-only">
+           <div class="circle-clipper left">
+             <div class="circle"></div>
+           </div><div class="gap-patch">
+             <div class="circle"></div>
+           </div><div class="circle-clipper right">
+             <div class="circle"></div>
+           </div>
+         </div>
+       </div>
+      </div>
+    </div>
+    
     {% block body %}
 
     {% if messages%}
