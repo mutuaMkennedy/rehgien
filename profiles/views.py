@@ -36,7 +36,8 @@ def check_value_valid(param):
 
 def check_service_valid(param):
 	return param <= 8 and param >= 1
-
+	
+@login_required(login_url='account_login')
 def account_page(request):
 	ImageTransformation = dict(
 	format = "jpeg",
