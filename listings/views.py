@@ -32,6 +32,7 @@ from django.core.signals import request_finished
 import datetime
 from django.utils import timezone
 from django.utils.http import urlencode
+from django.db.models import Exists, OuterRef
 #from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 #from haystack.query import SearchQuerySet
 # referencing the custom user model
@@ -192,7 +193,8 @@ def property_listings_results(request, property_category, property_listing_type)
 	if check_q_valid(properties_array):
 		listings = listings.filter(id__in = properties_array)
 	if check_q_valid(openhouse):
-		listings = listings.filter(virtual_tour_url !='')
+		if  openhouse == 'yes':
+			listings = listings.filter(home_openhouse__isnull=False).distinct()
 	# if check_q_valid(vr):
 	# 	listings = listings.filter(home_openhouse__virtual_tour_url !='')
 	# Sorting the results
