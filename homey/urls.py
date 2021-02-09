@@ -23,8 +23,22 @@ from photologue.sitemaps import GallerySitemap, PhotoSitemap
 from listings import views
 from django.views.generic import TemplateView
 from allauth.account.views import confirm_email
+from django.contrib.sitemaps.views import sitemap
+from listings.sitemap import PropertyListingsSitemap
+from listings.sitemap import StaticViewSitemap
+from markets.sitemap import JobPostSitemap
+from profiles.sitemap import BusinessProfileSitemap
+from resource_center.sitemap import BlogPostSitemap
 #from haystack.forms import FacetedSearchForm
 #from haystack.views import FacetedSearchView
+
+sitemaps = {
+    'property_listings':PropertyListingsSitemap,
+    'job_posts':JobPostSitemap,
+    'business_profiles':BusinessProfileSitemap,
+    'blog_post':BlogPostSitemap,
+    'static_content':StaticViewSitemap
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,7 +61,10 @@ urlpatterns = [
     url(r'^photologue/', include('photologue.urls', namespace='photologue')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path("select2/", include("django_select2.urls")),
-    url(r'^apis/rest-auth/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email')
+    url(r'^apis/rest-auth/registration/account-confirm-email/(?P<key>.+)/$',
+        confirm_email, name='account_confirm_email'),
+    path('r/site/indexing/sitemap.xml', sitemap, {'sitemaps': sitemaps},
+        name='django.contrib.sitemaps.views.sitemap'),
     # path('msg/', TemplateView.as_view(template_name = 'index.html')),
     #url(r'^search/', include('haystack.urls')),
 ]
