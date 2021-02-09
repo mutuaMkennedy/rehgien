@@ -142,7 +142,7 @@ class PortfolioItemSerializer(WritableNestedModelSerializer):
     class Meta:
         model = profiles_models.PortfolioItem
         fields = [
-        "name","description","video","portfolio_item_photo","created_at","created_by",
+        "pk","name","description","video","portfolio_item_photo","created_at","created_by",
         ]
 
 class TeammateConnectionSerializer(serializers.ModelSerializer):
