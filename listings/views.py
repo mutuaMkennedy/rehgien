@@ -195,8 +195,9 @@ def property_listings_results(request, property_category, property_listing_type)
 	if check_q_valid(openhouse):
 		if  openhouse == 'yes':
 			listings = listings.filter(home_openhouse__isnull=False).distinct()
-	# if check_q_valid(vr):
-	# 	listings = listings.filter(home_openhouse__virtual_tour_url !='')
+	if check_q_valid(vr):
+		if vr == 'yes':
+			listings = listings.exclude(virtual_tour_url__isnull = True).exclude(virtual_tour_url__exact = '')
 	# Sorting the results
 	if sort == 'jfy':
 		listings = listings.order_by('-publishdate', 'price') # default sort with our chosen params
