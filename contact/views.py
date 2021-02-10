@@ -15,7 +15,8 @@ from django.contrib.sites.models import Site
 
 
 def about_us(request):
-	pass
+	context = {}
+	return render(request,'contact/about_us.html', context)
 
 # Listing message service
 def build_message( message,name, phone_number, from_email, current_listing_name, current_listing_location, current_listing_path ):
