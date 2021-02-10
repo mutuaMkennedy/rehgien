@@ -268,7 +268,7 @@ class PortfolioReportApi(CreateAPIView):
 	serializer_class = serializers.PortfolioReportSerializer
 	permission_classes = [permissions.IsAuthenticated]
 
-class ReviewReportApi(ListAPIView):
+class ReviewReportApi(CreateAPIView):
 	queryset = models.ReviewReport.objects.all()
 	serializer_class = serializers.ReviewReportSerializer
 	permission_classes = [permissions.IsAuthenticated]
