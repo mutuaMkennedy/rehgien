@@ -18366,3 +18366,53 @@ particle {
     margin-left:auto;
     margin-right:auto;
 }
+
+.errorPage{
+    background-color:#f1f9f1;
+    width:100%;
+    padding:10px;
+    height:100vh;
+}
+
+.errorPage .row{
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.errorPage .errorMessageBox{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    font-family:Open Sans, Arial;
+}
+
+.errorPage .errorMessageBox img{
+    width:350px;
+}
+
+.errorPage .errorMessageBox h2{
+    margin:10px 0;
+    font-weight:600;
+    font-size:25px;
+    text-align:center;
+}
+
+.errorPage .errorMessageBox h3{
+    margin:10px 0;
+    font-size:15px;
+    text-align:center;
+}
+
+.errorPage .errorMessageBox button{
+    height:35px;
+    background-color:#cc0000;
+    border:none;
+    border-radius:20px;
+    padding:0 25px;
+    color:#ffffff;
+    font-weight:500;
+    margin:20px 0;
+    cursor:pointer;
+}
