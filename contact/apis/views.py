@@ -147,6 +147,7 @@ def contact_pro(request):
 		if check_valid(client_name) and check_valid(client_phone_number) \
 			and check_valid(client_message) and check_valid(client_email) and \
 			check_valid(recepient_email) and check_valid(recepient_phone_number):
+
 			try:
 				plainMessage =  client_message  + '\nSubmited user data' + '\n Name: ' + client_name + \
 								'\n Phone number: ' + client_phone_number  + '\n Email: ' + client_email
@@ -162,6 +163,7 @@ def contact_pro(request):
 				message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email])
 				message.attach_alternative(htmlMessage, "text/html")
 				message.send()
+				
 			except BadHeaderError:
 				message = 'Something went wrong! Could not complete request. Try again later'
 				return Response(message)
@@ -174,7 +176,7 @@ def contact_pro(request):
 				twilio_service.send_message(formatted_message, e_recepient_phone_number)
 			except TwilioRestException as e:
 				message = 'SMS not sent. Make sure the phone number supplied is correct!'
-			message = 'Message sent sucessfully. This agent will contact you soon.'
+			message = 'Message sent sucessfully. This pro will contact you soon.'
 			return Response(message)
 		else:
 			message = 'Empty fields are not allowed.'
