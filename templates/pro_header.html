@@ -5,7 +5,7 @@
     <div class="nav-wrapper">
       <a id="logo-wrapper" href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo left" style="height:60px;">
         <div class="base_lgo">
-          <img src="{% static 'img/RehgienProLogoW.svg'%}" alt="rehgien pro logo">
+          <img src="{% static 'img/RehgienProLogoW.png'%}" alt="rehgien pro logo">
         </div>
       </a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
@@ -175,7 +175,7 @@
         <li>
           <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo center Mnav-logoWrapper">
             <div class="mnv_Lg">
-                <img src="{% static 'img/RehgienProLogo.svg'%}" alt="rehgien pro logo">
+                <img src="{% static 'img/RehgienProLogo.png'%}" alt="rehgien pro logo">
             </div>
           </a>
         </li>
@@ -256,9 +256,9 @@ $(document).ready(function(){
         $('#ac-dropdown').css('display','none')
     });
 
-    const black_logo =  "{% static 'img/RehgienProLogo.svg'%}";
+    const black_logo =  "{% static 'img/RehgienProLogo.png'%}";
 
-    const white_logo = "{% static 'img/RehgienProLogoW.svg'%}";
+    const white_logo = "{% static 'img/RehgienProLogoW.png'%}";
 
     $(window).scroll(function() {
       if($(this).scrollTop() > 1) {
