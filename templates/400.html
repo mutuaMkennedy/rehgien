@@ -1,0 +1,17 @@
+{% extends 'base1.html'%}
+{% load static %}
+{% block title %}<title>Error 400 Bad request | Rehgien</title>{% endblock %}
+{% block content %}
+  <div class="container errorPage">
+      <div class="row">
+          <div class="errorMessageBox">
+              <img src="{% static 'img/400 Error.svg' %}" alt="page not found">
+              <h2>Error 400! Bad request.</h2>
+              <h3>Don't worry we are looking into this problem.</h3>
+              <a href="{% url 'homepage' %}"><button type="button" name="button">Return to Rehgien</button></a>
+          </div>
+      </div>
+  </div>
+{% endblock %}
+
+{% block footer%}{% include 'footer_section.html'%}{% endblock %}
