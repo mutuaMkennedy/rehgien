@@ -33,3 +33,11 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+
+#claudinary settings
+cloudinary.config(
+  cloud_name = "rehgien",
+  api_key = "113141524396467",
+  api_secret = "BAsPMg7zobSDbjzPs0yrwnCf-S0"
+)
