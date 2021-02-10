@@ -14538,6 +14538,15 @@ particle {
     font-family: Open Sans, Arial;
 }
 
+@media all and (max-width:768px){
+    ._mainHome_Bn_xcrs{
+        background-position:right;
+    }
+    ._mainHome_Bn_xcrs ._mH_Bn_xcrsoverlay{
+        background-color: rgb(0 0 0 / 0.4);
+    }
+}
+
 ._mainHome_Bn_xcrs ._mH_Bn_xcrsoverlay .container {
     width: 90%;
 }
