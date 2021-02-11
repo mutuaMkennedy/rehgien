@@ -72,8 +72,7 @@ class User(AbstractUser):
 #Professional model tables from here
 class ProfessionalGroup(models.Model):
 	group_name = models.CharField(max_length=100, blank=False)
-	group_image =  models.ImageField(upload_to='proGroupImages/',blank=False)
-	group_image_new = CloudinaryField('image', blank=True, null=True, overwrite=True, resource_type='image',
+	group_image = CloudinaryField('image', blank=True, null=True, overwrite=True, resource_type='image',
 							folder='professional_group_cover_photos')
 	slug = models.SlugField(max_length=250, blank=True)
 
