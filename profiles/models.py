@@ -86,7 +86,8 @@ class ProfessionalCategory(models.Model):
 	professional_group = models.ForeignKey(ProfessionalGroup, on_delete=models.PROTECT,\
 									default = None, related_name='pro_category_group')
 	category_name = models.CharField(max_length=100, blank=False)
-	category_image =  models.ImageField(upload_to='proCategoryImages/', blank=False)
+	category_image =  CloudinaryField('image', blank=True, null=True, overwrite=True, resource_type='image',
+							folder='professional_group_cover_photos')
 	slug = models.SlugField(max_length=250, blank=True)
 
 	class Meta:
@@ -97,7 +98,8 @@ class ProfessionalCategory(models.Model):
 
 class ProfessionalService(models.Model):
 	service_name = models.CharField(max_length=100, blank=False)
-	service_image =  models.ImageField(upload_to='proServiceImages/',blank=False)
+	service_image =  CloudinaryField('image', blank=True, null=True, overwrite=True, resource_type='image',
+							folder='professional_group_cover_photos')
 	slug = models.SlugField(max_length=250, blank=True)
 
 	class Meta:
