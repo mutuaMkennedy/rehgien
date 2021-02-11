@@ -29,10 +29,10 @@
                                   <span class="material-icons">home</span>&nbsp &nbsp
                                   <p>Home</p>
                                 </a>
-                                <a href="#" class="dashboardTabLink">
+                                <!-- <a href="#" class="dashboardTabLink">
                                   <span class="material-icons">dashboard</span>&nbsp &nbsp
                                   <p>Dashboard</p>
-                                </a>
+                                </a> -->
                                 <a href="#" class="dashboardTabLink" onclick="openPage(event, '_dashbordListings')">
                                   <span class="material-icons">list_alt</span>&nbsp &nbsp
                                   <p>Listings</p>
@@ -93,6 +93,7 @@
                               </div>
                         </div>
                     </div>
+                    {% if request.user.user_type == 'PRO'%}
                       <div class="card _accCard">
                         {% if user.user_type != 'PRO' %}
                         <div class="disabledCardOverlay">
@@ -136,9 +137,11 @@
                           </a>
                           </div>
                       </div>
+                    {% endif %}
                   </div>
                   <div class="_accCardsWrapperR">
                     <div class="_accCardsWrapScal">
+                      {% if request.user.user_type == 'PRO'%}
                       <div class="card _accCard">
                         {% if request.user.user_type != 'PRO' %}
                         <div class="disabledCardOverlay">
@@ -197,6 +200,7 @@
                             <a {% if request.user.user_type == 'PRO' %} href="{% url 'profiles:user_connections'%}" {% endif %}><button type="button" name="button">Manage Connections</button></a>
                           </div>
                       </div>
+                      {% endif %}
                       <div class="card _accCard">
                           <h3><span class="material-icons">how_to_reg</span>
                             {% if user.user_type == 'CLIENT' %}<!-- Use following instead of followers -->
@@ -272,6 +276,7 @@
                           </div>
                       </div>
                     </div>
+                    {% comment 'Not fully supported yet '%}
                     <div id="_activityAccCard" class="card _accCard">
                         <h3><span class="material-icons">timeline</span>Activity Log</h3>
 
@@ -338,27 +343,30 @@
                               </div>
                         </div>
                     </div>
+                    {% endcomment %}
                   </div>
-                  <div class="_accSgCardsWrapper">
-                    <div class="card _accSgCard">
-                        <h3><span class="material-icons">admin_panel_settings</span>Sign in & Security</h3>
-                        <div class="_accSgCardMiddle">
-                          <p>Manage your sign in options, security options and passwords.</p>
+                    {% comment 'Not fully supported yet '%}
+                      <div class="_accSgCardsWrapper">
+                        <div class="card _accSgCard">
+                            <h3><span class="material-icons">admin_panel_settings</span>Sign in & Security</h3>
+                            <div class="_accSgCardMiddle">
+                              <p>Manage your sign in options, security options and passwords.</p>
+                            </div>
+                            <div class="_accSgCardEnd">
+                              <a href="#" class="modal-trigger"><button type="button" name="button">Manage Options</button></a>
+                            </div>
                         </div>
-                        <div class="_accSgCardEnd">
-                          <a href="#" class="modal-trigger"><button type="button" name="button">Manage Options</button></a>
+                        <div class="card _accSgCard">
+                            <h3><span class="material-icons">settings</span>Privacy & Account settings</h3>
+                            <div class="_accSgCardMiddle">
+                                <p>Deactivate your account or manage your privacy settings. </p>
+                            </div>
+                            <div class="_accSgCardEnd">
+                              <a href="#" class="modal-trigger"><button type="button" name="button">Manage Settings</button></a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card _accSgCard">
-                        <h3><span class="material-icons">settings</span>Privacy & Account settings</h3>
-                        <div class="_accSgCardMiddle">
-                            <p>Deactivate your account or manage your privacy settings. </p>
-                        </div>
-                        <div class="_accSgCardEnd">
-                          <a href="#" class="modal-trigger"><button type="button" name="button">Manage Settings</button></a>
-                        </div>
-                    </div>
-                  </div>
+                      </div>
+                    {% endcomment %}
               </div>
             </div>
           </div>
@@ -1192,6 +1200,7 @@ document.getElementById("defaultOpen").click();
 
 var bsProfilePercentComplete = {% if user.user_type == 'PRO'%}{{user.pro_business_profile.percentage_complete}}{% else %}0{% endif %};
 
+{% if user.user_type == 'PRO'%}
 function showBsProfileProgress(){
   var bar = new ProgressBar.Circle(_bspProgress, {
     strokeWidth: 7,
@@ -1208,6 +1217,7 @@ function showBsProfileProgress(){
   }); // Number from 0.0 to 1.0
 };
 showBsProfileProgress();
+{% endif %}
 
 $(document).ready(function(){
 
