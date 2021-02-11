@@ -118,7 +118,8 @@ class BusinessProfile(models.Model):
                             related_name='pro_business_services')
 
     # personal & contact information
-    business_profile_image = models.ImageField(upload_to = 'business_profile_images/', blank = True, null=True)
+    business_profile_image = CloudinaryField('image', blank=True, null=True, overwrite=True, resource_type='image',
+    	 						folder='business_page_profile_photos')
     business_name = models.CharField(max_length = 25, default=None, blank=True, null=True)
     phone = models.CharField(max_length=13, blank = True, null=True)
     business_email = models.EmailField(blank=True, null=True)
