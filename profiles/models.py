@@ -48,7 +48,7 @@ class User(AbstractUser):
         )
 
     user_type = models.CharField(max_length=20,choices=user_type_choices, default='CLIENT')
-    profile_image = CloudinaryField('image', blank=False, overwrite=True, resource_type='image',
+    profile_image = CloudinaryField('image', blank=True, null=True, overwrite=True, resource_type='image',
 	 						folder='user_profile_photos')
     account_type = models.CharField(max_length=10, choices=account_type_choices, default='BASIC')
 
