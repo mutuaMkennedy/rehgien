@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'profiles',
     'search',
     'chat',
+    "partnership",
     # other applications
     'photologue',
     'sortedm2m',
@@ -71,7 +72,7 @@ INSTALLED_APPS = [
     'formtools',
     'phonenumber_field',
     "django_select2",
-    "partnership"
+    "compressor",
     #'haystack',
     # 'tastypie',
 ]
@@ -202,6 +203,15 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets_new')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+COMPRESS_ENABLED = True
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
