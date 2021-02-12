@@ -51,7 +51,7 @@ def homepage(request):
 	ImageTransformation = dict(
 	format = "jpg",
 	transformation = [
-		dict(crop="fill",quality="auto", gravity="center",
+		dict(crop="fill",height = 408, width = 250,quality="auto", gravity="center", loading="lazy",
 		 format="auto", dpr="auto", fl="progressive:steep"),
 			]
 		)
