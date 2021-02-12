@@ -127,14 +127,17 @@
                               {% endif %}
                           </div>
                           <div class="_userProfileEnd">
-                            <a
                             {% if user.user_type == 'PRO' %}
-                               href="{% url 'profiles:pro_business_page_edit' user.pro_business_profile.pk %}"
-                              class="modal-trigger"
+                                {% if user.pro_business_profile %}
+                                <a href="{% url 'profiles:pro_business_page_edit' user.pro_business_profile.pk %}" class="modal-trigger">
+                                  <button type="button" name="button">Update Business Profile</button>
+                                </a>
+                                {% else %}
+                                <a href="#"><button type="button" name="button">No Business Profile</button></a>
+                                {% endif %}
                             {% endif %}
-                            >
-                            <button type="button" name="button">Update Business Profile</button>
-                          </a>
+
+
                           </div>
                       </div>
                     {% endif %}
