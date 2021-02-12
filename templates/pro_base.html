@@ -1,4 +1,5 @@
 {%load static%}
+{% load compress %}
 {% load cloudinary %}
 {% load i18n %}
 <!DOCTYPE html>
@@ -13,7 +14,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   {% block title %}{% endblock %}
-
+  {% compress css %}
   <link rel="stylesheet" type="text/css" href="{%static 'css/material-icons.css'%}">
   <link href="{%static 'css/materialize.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="{%static 'css/css/all.min.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -27,8 +28,8 @@
   <link rel="stylesheet" href="{% static 'JqueryUI/jquery-ui.min.css'%}">
   <link rel="stylesheet" href="{% static 'intl-tel-input-master/build/css/intlTelInput.css'%}">
   <link rel="stylesheet" href="{% static 'PhotoCropper/cropper.min.css'%}">
+  {% endcompress %}
   <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> -->
-  <script src="{%static 'js/js/all.min.js'%}"></script>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
@@ -93,6 +94,7 @@
 
 {% endblock footer%}
 
+{% compress js %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript">
   $(document).ready(function(){
@@ -105,6 +107,7 @@
   });
 </script>
 <script src="{% static 'JqueryUI/jquery-ui.min.js'%}"></script>
+  <script src="{%static 'js/js/all.min.js'%}"></script>
   <script src="{% static 'OwlCarousel/owl.carousel.min.js'%}"></script>
   <script src="{% static 'JqueryTimepicker/js/jquery.timepicker.js'%}"></script>
   <script src="{% static 'JqueryDateTimepicker/jquery.datetimepicker.full.js'%}"></script>
@@ -126,6 +129,7 @@
   <script src="{% static 'progressBar/progressbar.min.js'%}"></script>
   <script src="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.js'%}"></script>
   <script src="{% static 'dynamic_formsets_src/jquery.formset.js'%}"></script>
+  {% endcompress %}
   <script src="https://media.twiliocdn.com/sdk/js/chat/v3.3/twilio-chat.min.js"></script>
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <!-- <script type="text/javascript">

@@ -1,4 +1,5 @@
 {%load static%}
+{% load compress %}
 {% load cloudinary %}
 {% load i18n %}
 
@@ -14,7 +15,7 @@
   <link rel="shortcut icon" type="image/png" href="{%static 'img/logo-fav.png'%}">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   {% block title %}{% endblock %}
-
+  {% compress css %}
   <!-- CSS  -->
   <link rel="stylesheet" type="text/css" href="{%static 'css/material-icons.css'%}">
   <link href="{%static 'css/materialize.css'%}" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -30,8 +31,8 @@
   <link rel="stylesheet" href="{% static 'dropzone/dropzone.css'%}">
   <link rel="stylesheet" href="{% static 'intl-tel-input-master/build/css/intlTelInput.css'%}">
   <link rel="stylesheet" href="{% static 'PhotoCropper/cropper.min.css'%}">
+  {% endcompress %}
     <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> -->
-  <script src="{%static 'js/js/all.min.js'%}"></script>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
@@ -387,47 +388,50 @@
 
 {% endblock footer%}
 
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script type="text/javascript">
-  $(document).ready(function(){
-      var message_ele = document.getElementById("message_box");
-      if (message_ele != null) {
-        setTimeout(function(){
-           message_ele.style.display = "none";
-        }, 6000);
-      }
+{% compress js %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+          var message_ele = document.getElementById("message_box");
+          if (message_ele != null) {
+            setTimeout(function(){
+               message_ele.style.display = "none";
+            }, 6000);
+          }
 
-      $(document).on( 'click', '#ac-trigger', function() {
-          $('#ac-dropdown').css('display','block');
+          $(document).on( 'click', '#ac-trigger', function() {
+              $('#ac-dropdown').css('display','block');
+          });
+          $(document).on('click', '#acDropdownClose', function() {
+              $('#ac-dropdown').css('display','none')
+          });
       });
-      $(document).on('click', '#acDropdownClose', function() {
-          $('#ac-dropdown').css('display','none')
-      });
-  });
-</script>
-<script src="{% static 'JqueryUI/jquery-ui.min.js'%}"></script>
-  <script src="{% static 'OwlCarousel/owl.carousel.min.js'%}"></script>
-  <script src="{% static 'JqueryTimepicker/js/jquery.timepicker.js'%}"></script>
-  <script src="{% static 'JqueryDateTimepicker/jquery.datetimepicker.full.js'%}"></script>
-  <script src="{% static 'dropzone/dropzone.min.js' %}"></script>
-  <script src="{% static 'PhotoCropper/cropper.min.js'%}"></script>
-  <script src="{% static 'PhotoCropper/jquery-cropper.min.js'%}"></script>
-  <!-- <script src="{% static 'starlight/starlight.js'%}"></script> -->
-  <script src="{% static 'calendar/js/caleandar.js' %}"></script>
-  <script src="{% static 'js/materialize.js' %}"></script>
-  <script src="{% static 'js/init.js' %}"></script>
-  <script src="{% static 'js/gall.js' %}"></script>
-  <script src="{% static 'js/mat.js' %}"></script>
-  <script src="{% static 'js/bubbles.js' %}"></script>
-  <script src="{% static 'intl-tel-input-master/build/js/intlTelInput-jquery.min.js'%}"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> -->
-  <!-- <script src="{% static 'js/jquery.autocomplete.js' %}"></script> -->
-  <script src="{% static 'js/our_search_code.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/js/all.min.js' %}"></script>
-  <script src="{% static 'progressBar/progressbar.js'%}"></script>
-  <script src="{% static 'progressBar/progressbar.min.js'%}"></script>
-  <script src="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.js'%}"></script>
-  <script src="{% static 'dynamic_formsets_src/jquery.formset.js'%}"></script>
+    </script>
+    <script src="{% static 'JqueryUI/jquery-ui.min.js'%}"></script>
+      <script src="{%static 'js/js/all.min.js'%}"></script>
+      <script src="{% static 'OwlCarousel/owl.carousel.min.js'%}"></script>
+      <script src="{% static 'JqueryTimepicker/js/jquery.timepicker.js'%}"></script>
+      <script src="{% static 'JqueryDateTimepicker/jquery.datetimepicker.full.js'%}"></script>
+      <script src="{% static 'dropzone/dropzone.min.js' %}"></script>
+      <script src="{% static 'PhotoCropper/cropper.min.js'%}"></script>
+      <script src="{% static 'PhotoCropper/jquery-cropper.min.js'%}"></script>
+      <!-- <script src="{% static 'starlight/starlight.js'%}"></script> -->
+      <script src="{% static 'calendar/js/caleandar.js' %}"></script>
+      <script src="{% static 'js/materialize.js' %}"></script>
+      <script src="{% static 'js/init.js' %}"></script>
+      <script src="{% static 'js/gall.js' %}"></script>
+      <script src="{% static 'js/mat.js' %}"></script>
+      <script src="{% static 'js/bubbles.js' %}"></script>
+      <script src="{% static 'intl-tel-input-master/build/js/intlTelInput-jquery.min.js'%}"></script>
+      <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> -->
+      <!-- <script src="{% static 'js/jquery.autocomplete.js' %}"></script> -->
+      <script src="{% static 'js/our_search_code.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/js/all.min.js' %}"></script>
+      <script src="{% static 'progressBar/progressbar.js'%}"></script>
+      <script src="{% static 'progressBar/progressbar.min.js'%}"></script>
+      <script src="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.js'%}"></script>
+      <script src="{% static 'dynamic_formsets_src/jquery.formset.js'%}"></script>
+{% endcompress %}
   <script src="https://media.twiliocdn.com/sdk/js/chat/v3.3/twilio-chat.min.js"></script>
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script type="text/javascript">
