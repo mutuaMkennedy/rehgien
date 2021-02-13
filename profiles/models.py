@@ -336,7 +336,7 @@ class PortfolioItemPhoto(models.Model):
 
 @receiver(pre_delete, sender=PortfolioItemPhoto)
 def porfolio_item_photo_delete(sender, instance, **kwargs):
-	cloudinary.uploader.destroy(instance.project_photo.public_id)
+	cloudinary.uploader.destroy(instance.photo.public_id)
 
 #professional teammates
 class TeammateConnection(models.Model):
