@@ -393,7 +393,13 @@ def property_listing_form(request):
 					instance.owner = request.user
 					# finally save to db
 					instance.save()
-					open_house_formset.save()
+
+					open_house_formset.save(commit = False )
+					for openhouse in open_house_formset:
+						if openhouse.is_valid():
+							oph = openhouse.save(commit=False)
+							oph.home = models.Home.objects.get(id=instance.id)
+							oph.save()
 
 					for img in images:
 						file_instance = models.PropertyPhoto(photo = img, home = models.Home.objects.get(id=instance.id))
