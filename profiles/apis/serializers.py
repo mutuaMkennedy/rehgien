@@ -88,9 +88,9 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
     def get__pro_average_rating_(self,obj):
         rating = obj.pro_business_review.all().aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
         if rating:
-            return 0
-        else:
             return rating
+        else:
+            return 0
 
 
     def get__business_profile_percentage_complete_(self,obj):
