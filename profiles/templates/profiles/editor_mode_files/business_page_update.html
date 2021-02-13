@@ -743,9 +743,6 @@
 
               $('#about_us_form').on('submit', function(event){
                    event.preventDefault();
-                   for ( instance in CKEDITOR.instances ) {
-                         CKEDITOR.instances.id_about.updateElement();
-                     };
                    var serializedData = $(this).serialize();
 
                    loaderImg.show();
