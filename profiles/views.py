@@ -36,7 +36,7 @@ def check_value_valid(param):
 
 def check_service_valid(param):
 	return param <= 8 and param >= 1
-	
+
 @login_required(login_url='account_login')
 def account_page(request):
 	ImageTransformation = dict(
@@ -414,7 +414,6 @@ def portfolio_item_create(request):
 			PortfolioForm = forms.PortfolioItemForm(request.POST, request.FILES)
 			ImageForm = forms.PortfolioItemPhotoForm(request.POST, request.FILES)
 			images = [request.FILES.get('photo[%d]' % i) for i in range(0, len(request.FILES))]
-			print( request.FILES)
 			# Authenticate form
 			if PortfolioForm.is_valid() and ImageForm.is_valid():
 				instance = PortfolioForm.save(commit=False)
