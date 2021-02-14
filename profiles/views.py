@@ -23,6 +23,7 @@ except ImportError:
 	import json
 from django.utils.http import urlencode
 from django.core.exceptions import ObjectDoesNotExist
+from .profile_edit_views import resizePhoto
 
 # referencing the custom user model
 User = get_user_model()
@@ -83,7 +84,19 @@ def edit_basic_profile(request):
 		if request.method == 'POST':
 				basic_form = forms.UserEditForm(request.POST, request.FILES, instance=request.user)
 				if basic_form.is_valid():
-					basic_form.save()
+					instance = basic_form.save(commit=False)
+
+					temp_photo = basic_form.cleaned_data['profile_image']
+					x = basic_form.cleaned_data.get('x')
+					y = basic_form.cleaned_data.get('y')
+					w = basic_form.cleaned_data.get('width')
+					h = basic_form.cleaned_data.get('height')
+
+					cropped_photo = resizePhoto(temp_photo,x,y,w,h)
+
+					instance.profile_image = cropped_photo
+					instance.save()
+
 					context = {
 					'user':request.user,
 					'basic_form':basic_form
