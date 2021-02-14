@@ -12005,12 +12005,13 @@ particle {
     margin: 10px;
 }
 
-.social-btns svg {
+.social-btns i{
     border: 1px solid;
     border-radius: 100%;
     padding: 5px;
     width: 30px !important;
     height: 30px;
+    font-size:20px;
 }
 
 .social-btns svg:hover {
