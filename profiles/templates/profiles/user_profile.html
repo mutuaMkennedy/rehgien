@@ -493,11 +493,15 @@
                                               </td>
                                               <td>
                                                 <div class="card-links">
+                                                    <a href="{% url 'listings:property_update' property_category=onsale_listings.property_category|lower pk=onsale_listings.pk%}"><button id="link-edit" type="button" name="button">
+                                                      <span class="material-icons" style="color:#1100ff">mode_edit</span>
+                                                    </button></a>
                                                     <form action="{% url 'listings:property_delete' property_category=onsale_listings.property_category|lower pk=onsale_listings.pk%}" method="post">
                                                       {% csrf_token %}
-                                                      <button id="link-del" type="submit" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button>
+                                                      <button id="link-del" type="submit" name="button">
+                                                        <span class="material-icons" style="color:#ff0000">delete_forever</span>
+                                                      </button>
                                                     </form>
-                                                    <a href="{% url 'listings:property_update' property_category=onsale_listings.property_category|lower pk=onsale_listings.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
                                                 </div>
                                               </td>
                                           </tr>
@@ -608,11 +612,13 @@
                                         </td>
                                         <td>
                                           <div class="card-links">
+                                            <a href="{% url 'listings:property_update' property_category=rentals.property_category|lower pk=rentals.pk%}"><button id="link-edit" type="button" name="button">
+                                            <span class="material-icons" style="color:#1100ff">mode_edit</span>
+                                            </button></a>
                                             <form action="{% url 'listings:property_delete' property_category=rentals.property_category|lower pk=rentals.pk%}" method="post">
                                               {% csrf_token %}
-                                              <button id="link-del" type="submit" name="button"><i class="far fa-trash-alt fa-lg" style="color:red"></i></button>
+                                              <button id="link-del" type="submit" name="button"><span class="material-icons" style="color:#ff0000">delete_forever</span></button>
                                             </form>
-                                            <a href="{% url 'listings:property_update' property_category=rentals.property_category|lower pk=rentals.pk%}"><button id="link-edit" type="button" name="button"><i class="far fa-edit fa-lg" style="color:blue"></i></button></a>
                                             </div>
                                         </td>
                                     </tr>
