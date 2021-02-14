@@ -1128,12 +1128,16 @@
                           {% else %}
                             <img id="__currentPImg" class="__currentPImg" src="{%static 'img/avatar.png'%}" alt="{{user.username}}" style="width:150px;height:150px;object-fit:cover;">
                           {% endif %}
-                          <div class="upf-profile_imageSlt">
+                          <div id="upfPhotoInputSelector" class="upf-profile_imageSlt">
                             {{basic_form.profile_image}}
                           </div>
                           <div id="__selectedImageWrp">
                             <img id="__selectedImage" src="" alt="New Image">
                           </div>
+                          {{basic_form.x}}
+                          {{basic_form.y}}
+                          {{basic_form.width}}
+                          {{basic_form.height}}
                         </div>
                         <div class="upf-username">
                           <p>Your username</p>
@@ -1190,6 +1194,20 @@
     </div>
   </div>
 </section>
+
+<div id="cropEditorModal" class="prfEditMode-cropModal closed">
+  <div class="prfEMod-cropEditorModalContent">
+      <div class="prfEMod-cropEditHead">
+          <h2>Crop to fit your picture <br><span>( Scroll to zoom )</span></h2>
+      </div>
+      <div class="prfEMod-cropEditBody">
+            <img id="prfEMod-crop-tg-image" src="" style="max-width: 100%;">
+      </div>
+      <div class="prfEMod-cropEditFooter">
+        <button id="prfEMod-photoEditDone" type="button" name="button">Done</button>
+      </div>
+  </div>
+</div>
 
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
@@ -1261,7 +1279,7 @@ $(document).ready(function(){
             .css('display','none');
 
           $('#__currentPImg')
-            .attr('src', $("#__selectedImage").attr('src'))
+            .attr('src', $("#upfSelectedPhoto-udf").attr('src'))
 
             let msgBody;
             if (response['success'] != undefined ) {
@@ -1299,23 +1317,87 @@ $(document).ready(function(){
      });
   });
 
-  $('#id_profile_image').change(function () {
-  if ($(this)[0].files && $(this)[0].files[0]) {
-    var reader = new FileReader();
-    reader.onload = function (e) {
-      $('#__selectedImage')
-        .attr('src', e.target.result)
-        .width(70)
-        .height(70)
-        .css('object-fit','cover');
+//   $('#id_profile_image').change(function () {
+//   if ($(this)[0].files && $(this)[0].files[0]) {
+//     var reader = new FileReader();
+//     reader.onload = function (e) {
+//       $('#__selectedImage')
+//         .attr('src', e.target.result)
+//         .width(70)
+//         .height(70)
+//         .css('object-fit','cover');
+//
+//       $('#__selectedImageWrp')
+//       .css('display','flex');
+//     };
+//     reader.readAsDataURL($(this)[0].files[0]);
+//   };
+//
+// });
 
-      $('#__selectedImageWrp')
-      .css('display','flex');
-    };
-    reader.readAsDataURL($(this)[0].files[0]);
-  };
+$("#upfPhotoInputSelector input").change(function () {
+    if (this.files && this.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        $('#__selectedImage')
+          .attr('src', e.target.result)
+          .width(70)
+          .height(70);
+        $('#__selectedImageWrp')
+        .css('display','flex');
 
-});
+        $("#prfEMod-crop-tg-image").attr("src", e.target.result);
+        $("#cropEditorModal").removeClass("closed").trigger('modalOpen');
+      }
+      reader.readAsDataURL(this.files[0]);
+    }
+  });
+
+  $('#prfEMod-photoEditDone').on('click', function(e){
+    e.preventDefault()
+    $('#cropEditorModal').addClass("closed").trigger('modalClosed');
+  })
+
+  var cropBoxData ;
+  var canvasData ;
+  let crpImg = $('#prfEMod-crop-tg-image');
+  $('#cropEditorModal').on('modalOpen', function(){
+    $('#prfEMod-crop-tg-image').cropper({
+        viewMode: 1,
+        dragMode:'move',
+        aspectRatio: 1/1,
+        cropBoxResizable:false,
+        cropBoxMovable: true,
+        toggleDragModeOnDblclick:false,
+        minCropBoxWidth: 200,
+        minCropBoxHeight: 200,
+        data:{
+          width: 200,
+          height: 200,
+        },
+        ready: function () {
+          crpImg.cropper("setCanvasData", canvasData);
+          crpImg.cropper("setCropBoxData", cropBoxData);
+        },
+      });
+
+  }).on("modalClosed", function () {
+      cropBoxData = crpImg.cropper("getCropBoxData");
+      canvasData = crpImg.cropper("getCanvasData");
+      canvas = crpImg.cropper("getCroppedCanvas", {
+                          width: 200,
+                          height: 200,
+                          imageSmoothingEnabled:true,
+                          });
+      var cropData = crpImg.cropper("getData");
+      crpImg.cropper("destroy");
+      $("#__selectedImageWrp").html(canvas);
+
+      $("#id_x").val(cropData["x"]);
+      $("#id_y").val(cropData["y"]);
+      $("#id_height").val(cropData["height"]);
+      $("#id_width").val(cropData["width"]);
+    });
 
   $(document).on('click', '._removeSavedlsUpf', function(){
         var savedProperty = $(this);
