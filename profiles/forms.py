@@ -10,26 +10,30 @@ from django.forms import ClearableFileInput
 User = get_user_model()
 
 class FileInput(forms.FileInput):
-    input_type = 'image'
+	input_type = 'image'
 
 class profile_form(forms.ModelForm):
-    class Meta:
-        model = models.User
-        fields = ['first_name', 'last_name', 'email']
+	class Meta:
+		model = models.User
+		fields = ['first_name', 'last_name', 'email']
 
 
-    def signup(self,request, user):
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.email = self.cleaned_data['email']
-        user.save()
+	def signup(self,request, user):
+		user.first_name = self.cleaned_data['first_name']
+		user.last_name = self.cleaned_data['last_name']
+		user.email = self.cleaned_data['email']
+		user.save()
 
 
 class UserEditForm(forms.ModelForm):
-    profile_image = forms.ImageField(widget=forms.FileInput,required=False)
-    class Meta:
-        model = models.User
-        fields = ['username','first_name', 'last_name','email','profile_image']
+	x = forms.FloatField(widget=forms.HiddenInput())
+	y = forms.FloatField(widget=forms.HiddenInput())
+	width = forms.FloatField(widget=forms.HiddenInput())
+	height = forms.FloatField(widget=forms.HiddenInput())
+	profile_image = forms.ImageField(widget=forms.FileInput,required=False)
+	class Meta:
+		model = models.User
+		fields = ['username','first_name', 'last_name','email','profile_image']
 
 # class BusinessPageEditForm(forms.ModelForm):
 #     about = forms.CharField(widget=CKEditorUploadingWidget(config_name='agent_profile'))
@@ -42,10 +46,10 @@ class UserEditForm(forms.ModelForm):
 #         widgets = {'location':LeafletWidget()}
 
 class PortfolioItemForm(forms.ModelForm):
-    class Meta:
-        model = models.PortfolioItem
-        exclude =  ['created_at', 'created_by']
-        fields = '__all__'
+	class Meta:
+		model = models.PortfolioItem
+		exclude =  ['created_at', 'created_by']
+		fields = '__all__'
 
 class PortfolioItemPhotoForm(forms.ModelForm):
 	class Meta:
