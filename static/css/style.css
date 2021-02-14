@@ -14542,6 +14542,10 @@ particle {
     font-family: Open Sans, Arial;
 }
 
+._mainHome_Bn_xcrs ._mH_Bn_xcrsoverlay .container {
+    width: 90%;
+}
+
 @media all and (max-width:768px){
     ._mainHome_Bn_xcrs{
         background-position:right;
@@ -14549,10 +14553,9 @@ particle {
     ._mainHome_Bn_xcrs ._mH_Bn_xcrsoverlay{
         background-color: rgb(0 0 0 / 0.4);
     }
-}
-
-._mainHome_Bn_xcrs ._mH_Bn_xcrsoverlay .container {
-    width: 90%;
+    ._mainHome_Bn_xcrs ._mH_Bn_xcrsoverlay .container{
+        width:95%;
+    }
 }
 
 ._mainHome_Bn_xcrs h1 {
@@ -14667,6 +14670,9 @@ particle {
 }
 
 @media all and (max-width:768px){
+    .main_home_cCotainer{
+        width:100%;
+    }
     .main_home_cCotainer h2{
         font-size:28px;
     }
@@ -14700,6 +14706,12 @@ particle {
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
+}
+
+@media all and (max-width:768px){
+    .main_home_cCotainer .owl-nav{
+        display:none;
+    }
 }
 
 .main_home_cCotainer .owl-nav button {
