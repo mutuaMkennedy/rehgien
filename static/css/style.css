@@ -14574,21 +14574,23 @@ particle {
 
 @media all and (max-width: 768px) {
     ._mainHome_Bn_xcrs h1 {
-        font-size:35px;
+        font-size:40px;
         line-height: 40px;
     }
 
     ._mainHome_Bn_xcrs p {
-        font-size: 13px;
+        font-size: 15px;
     }
 }
 
 ._home_Bnr_catBtns {
     display: flex;
+    padding:10px 0;
 }
 
 ._home_Bnr_catwRP {
     display: flex;
+    flex-wrap:wrap;
     align-items: center;
     padding: 20px 0;
     width: 100%;
@@ -14597,11 +14599,11 @@ particle {
 ._home_Bnr_catwRP span {
     font-size: 15px;
     color: #fff;
+    padding-right:10px;
 }
 
 ._home_Bnr_catwRP ._home_Bnr_catBtns button {
     min-width: 150px;
-    margin: 0 5px;
     padding: 0 10px;
     height: 35px;
     background-color: transparent;
@@ -14610,17 +14612,7 @@ particle {
     border-radius: 5px;
     border: 1px solid #fff;
     font-weight: 500;
-}
-
-@media all and (max-width: 768px) {
-    ._home_Bnr_catwRP span {
-        font-size:11px;
-    }
-
-    ._home_Bnr_catwRP ._home_Bnr_catBtns button {
-        font-size: 11px;
-        min-width: 100px;
-    }
+    margin-right:10px;
 }
 
 ._home_Bnr_catwRP ._home_Bnr_catBtns button:hover {
@@ -14676,7 +14668,7 @@ particle {
 
 @media all and (max-width:768px){
     .main_home_cCotainer h2{
-        font-size:25px;
+        font-size:28px;
     }
 }
 
@@ -14786,12 +14778,6 @@ particle {
     top: 2px;
     left: 0;
     margin: 25px 15px;
-}
-
-@media all and (max-width:768px){
-    .main_home_cCotainer .card h6{
-        font-size:20px;
-    }
 }
 
 .main_home_cCotainer .card button {
