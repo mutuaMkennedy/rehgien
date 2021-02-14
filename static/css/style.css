@@ -14691,7 +14691,9 @@ particle {
 }
 
 .main_home_cCotainer .owl-item {
-    width: 250px !important;
+    width: 265px !important;
+    padding:0 10px;
+    margin-right:0 !important;
 }
 
 .main_home_cCotainer .owl-stage {
