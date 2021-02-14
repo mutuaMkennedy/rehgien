@@ -3684,6 +3684,9 @@ _dashbordAccount {
     border-radius: 5px;
     height: 40px;
     width: 40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .card-links button:hover {
