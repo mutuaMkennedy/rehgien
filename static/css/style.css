@@ -354,8 +354,9 @@ main {
     color: #757575;
     font-weight: 600;
     text-transform:uppercase;
-    font-size:12px;
+    font-size:14px;
     height:40px;
+    line-height:40px;
 }
 
 #mobile-nav .Mnav-UlItems li a.link_disabled{
@@ -400,7 +401,7 @@ main {
 
 .Mnav-collapsible-header h6{
     text-transform:uppercase;
-    font-size:12px;
+    font-size:14px;
     display:flex;
     flex-direction:column;
     font-weight:600;
@@ -438,13 +439,14 @@ main {
 }
 
 .Mnav-collapsible-body h6 {
-    font-size: 12px;
+    font-size: 14px;
     color: #000;
     line-height: 25px;
     display:flex;
     align-items:center;
     margin: 0px;
     font-weight: 600;
+    line-height:35px;
 }
 
 .Mnav-collapsible-body ul{
@@ -457,15 +459,17 @@ main {
 }
 
 .Mnav-collapsible-body ul > span{
-    height:15px;
-    line-height:15px;
+    height:35px;
+    line-height:35px;
     width:100%;
+    text-align:end;
 }
 
 .Mnav-collapsible-body ul span a{
-    font-size:9px !important;
+    font-size:11px !important;
     text-transform:capitalize !important;
     color:#1100ff !important;
+    line-height:unset !important;
 }
 
 .Mnav-collapsible-body ul li{
@@ -505,7 +509,9 @@ main {
 
 .Mnav-collapsible-body ul li .sub_collapsBody .Mnav-re_pros a{
     padding-left:0 !important;
-    font-family:Open Sans;
+    font-family:Open Sans,Arial;
+    line-height:35px !important;
+    height:35px !important;
 }
 
 .Mnav-collapsible-body li  a{
