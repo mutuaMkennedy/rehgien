@@ -309,6 +309,26 @@ main {
     width: 100%;
 }
 
+#mobile-nav .Mnav-logoUl .sidenavBtnClose{
+    position:absolute;
+    left:32px;
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:start;
+}
+
+#mobile-nav .Mnav-logoUl .sidenavBtnClose button{
+    height:100%;
+    border:none;
+    background-color:#fff;
+    padding:0;
+}
+
+#mobile-nav .Mnav-logoUl .sidenavBtnClose button span{
+    color:#cc0000;
+}
+
 #mobile-nav .Mnav-UlItems {
     margin-top: 60px;
 }
@@ -321,7 +341,7 @@ main {
     box-shadow: 0 0px 5px 0px #eee;
 }
 
-#mobile-nav .Mnav-logoWrapper .mnv_Lg img {
+#mobile-nav .Mnav-logoWrapper a img {
     width: 80px;
     height: auto;
     display: flex;
@@ -374,6 +394,10 @@ main {
     color: #9e9e9e;
 }
 
+#mobile-nav li.active .Mnav-collapsible-header a span{
+    transform:none !important;
+}
+
 .Mnav-collapsible-header h6{
     text-transform:uppercase;
     font-size:12px;
@@ -383,16 +407,20 @@ main {
     color:#757575;
 }
 
-#mobile-nav li.active a > svg {
+#mobile-nav li.active a > span {
     transform: none;
 }
 
-#mobile-nav li.active svg {
-    transform: rotate(90deg);
-    color: #2cb2ea;
+#mobile-nav li .collapsible-header span {
+    color:#747474;
 }
 
-#mobile-nav li.active .collapsible-header h6{
+#mobile-nav li.active .collapsible-header.Mnav-collapsible-header  span {
+    transform: rotate(180deg);
+    color: #2cb2ea !important;
+}
+
+#mobile-nav li.active .collapsible-header.Mnav-collapsible-header h6{
     color:#2cb2ea !important;
 }
 
@@ -410,7 +438,7 @@ main {
 }
 
 .Mnav-collapsible-body h6 {
-    font-size: 11px;
+    font-size: 12px;
     color: #000;
     line-height: 25px;
     display:flex;
@@ -420,19 +448,18 @@ main {
 }
 
 .Mnav-collapsible-body ul{
-    padding:0 32px;
+    padding-left:50px;
+    padding-right:32px;
     display:flex;
     flex-direction:column;
     justify-content:start;
     align-items:start;
-    background-color:#f1f9f1;
 }
 
-.Mnav-collapsible-body ul span{
+.Mnav-collapsible-body ul > span{
     height:15px;
     line-height:15px;
     width:100%;
-    text-align:end;
 }
 
 .Mnav-collapsible-body ul span a{
@@ -441,8 +468,47 @@ main {
     color:#1100ff !important;
 }
 
+.Mnav-collapsible-body ul li{
+    width:100%;
+}
+
+.Mnav-collapsible-body ul li .sub_collapsHeader{
+    padding:0;
+    display:flex;
+    justify-content:space-between;
+    background-color:#fff !important;
+}
+
+.Mnav-collapsible-body ul li.active .sub_collapsHeader{
+    background-color:#fff;
+}
+
+.Mnav-collapsible-body ul li.active .sub_collapsHeader span{
+    transform: rotate(180deg);
+    color: #2cb2ea !important;
+}
+
+.Mnav-collapsible-body ul li .sub_collapsHeader h6{
+    color:#757575;
+    font-weight:500;
+}
+
+.Mnav-collapsible-body ul li .sub_collapsHeader span{
+    text-align:center;
+}
+
+.Mnav-collapsible-body ul li .sub_collapsBody .Mnav-re_pros{
+    display:flex;
+    flex-direction:column;
+    padding-left:10px;
+}
+
+.Mnav-collapsible-body ul li .sub_collapsBody .Mnav-re_pros a{
+    padding-left:0 !important;
+    font-family:Open Sans;
+}
+
 .Mnav-collapsible-body li  a{
-    font-size:10px !important ;
     height:20px !important;
     line-height: 20px !important;
     color:#747474 !important;
