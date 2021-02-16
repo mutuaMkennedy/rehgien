@@ -173,17 +173,22 @@
     <ul id="mobile-nav" class="sidenav">
       <ul class="Mnav-logoUl">
         <li>
-          <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo center Mnav-logoWrapper">
-            <div class="mnv_Lg">
-                <img src="{% static 'img/RehgienProLogo.png'%}" alt="rehgien pro logo">
-            </div>
-          </a>
+              <div class="sidenavBtnClose">
+                  <button type="button" name="button" class="sidenav-close">
+                    <span class="material-icons">clear</span>
+                  </button>
+              </div>
+              <div class="brand-logo center Mnav-logoWrapper">
+                <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">
+                  <img src="{% static 'img/RehgienProLogo.png'%}" alt="rehgien pro logo">
+                </a>
+              </div>
         </li>
       </ul>
       <ul class="Mnav-UlItems collapsible">
         <li><a href="{%url 'rehgien_pro:rehgien_pro_homepage'%}">Home</a></li>
         <li>
-          <div class="collapsible-header Mnav-collapsible-header"><h6>Solutions</h6><i class="fas fa-chevron-right"></i></div>
+          <div class="collapsible-header Mnav-collapsible-header"><h6>Solutions</h6><span class="material-icons">expand_more</span></div>
           <div class="collapsible-body Mnav-collapsible-body">
             <ul>
               <div class="Mnav-re_pros pro_links">
@@ -212,7 +217,7 @@
             </ul>
           </div>
         </li>
-        <li><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">Rehgien Home</a></li>
+        <li><a href="{% url 'homepage'%}">Rehgien Home</a></li>
         {% if not request.user.is_authenticated %}
         <ul>
           <div class="Mnav-authWrapper">
@@ -227,9 +232,9 @@
         {% else %}
 
         <li>
-          <div class="collapsible-header Mnav-collapsible-header">
+          <div class="collapsible-header Mnav-collapsible-header acctNAVd">
               <a style="color:#000;"><span class="material-icons">account_circle</span></a>
-              <i class="fas fa-chevron-right"></i>
+              <span class="material-icons">expand_more</span>
           </div>
           <div class="collapsible-body Mnav-collapsible-body">
             <ul>
