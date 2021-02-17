@@ -525,6 +525,8 @@ main {
 
 .Mnav-collapsible-body .pro_links li  a{
     height:auto !important;
+    font-size:12px !important;
+    padding-left:30px !important;
 }
 
 .Mnav-collapsible-body .pro_links h6 span{
