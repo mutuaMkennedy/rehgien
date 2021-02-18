@@ -97,9 +97,6 @@ class PortfolioItemCreateApi(CreateAPIView):
     serializer_class = serializers.PortfolioItemSerializer
     permission_classes = [IsAPro]
     def perform_create(self,serializer):
-        print('here')
-        print(self)
-        print(serializer)
         serializer.save(created_by=self.request.user)
 
 class PortfolioItemListApi(ListAPIView):
