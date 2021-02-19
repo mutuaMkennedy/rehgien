@@ -75,9 +75,9 @@ $(document).ready(function(){
     <div class="col s12">
       <h2>Shop by category <a href="{% url 'listings:shop_category'%}"><span>View all</span></a></h2>
       <div class="owl-carousel">
-        <a href="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/home_fwwsxs.jpg">
+        <a href="{% url 'listings:property_homepage'%}">
             <div class="card">
-              <img src="{%static 'img/thumbnails/home.jpg' %}">
+              <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/home_fwwsxs.jpg">
               <div class="DtsWrapper_">
                 <h6>Sale & rental Homes</h6>
               </div>
