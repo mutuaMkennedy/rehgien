@@ -327,12 +327,12 @@ ACCOUNT_AUTHENTICATION_METHOD = "username"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_SIGNUP_FORM_CLASS = 'profiles.forms.profile_form'
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "mutuakennedy81@gmail.com"
-EMAIL_HOST_PASSWORD = 'ierhjgdkfdmrghml'
-EMAIL_PORT = 587
-EMAIL_USE_SSL = False
+EMAIL_USE_TLS = False
+EMAIL_HOST = "rs2.noc254.com"
+EMAIL_HOST_USER = "do-not-reply@rehgien.com"
+EMAIL_HOST_PASSWORD = 'donotreply20$$Rehgien'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
 
 TWILIO_ACCOUNT_SID = 'AC1db0e8cfbae1e3b9b5834772c0ef8d6c'
 TWILIO_API_KEY = 'SK5c969e58ab96a19249489add62911305'
