@@ -14901,6 +14901,12 @@ particle {
     font-family: Ubuntu,Montserrat,Open Sans, Arial;
 }
 
+@media all and (max-width:768px){
+    ._cdleHBn_Sxxcrs{
+        background-position:right;
+    }
+}
+
 ._cdleHBn_Sxxcrs ._cdleHBROverlay {
     width: 100%;
     height: 100%;
