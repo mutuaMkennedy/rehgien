@@ -1071,9 +1071,10 @@
 
                         var heartIcon = document.createElement('button')
                             heartIcon.setAttribute("data-propertypk", prop.pk);
-                            heartIcon.innerHTML = "<i class='fas fa-heart'></i>"
+                            heartIcon.innerHTML = "<span class='material-icons'>favorite_border</span>";
                             if (prop.is_saved ==='True') {
                               heartIcon.className = '_lssaveProperty _lsIs_saved';
+
                             }else {
                               heartIcon.className = '_lssaveProperty';
                             };

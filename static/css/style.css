@@ -5139,20 +5139,20 @@ particle {
     opacity: 0;
 }
 
-#all-card2 ._lssaveProperty svg {
+#all-card2 ._lssaveProperty span {
     line-height: 35px;
     font-size: 30px;
-    color: rgb(0 0 0 / 0.5);
+    color: rgb(255 255 255 / 1);
     stroke: #fff;
     stroke-width: 35 !important;
     cursor: pointer;
 }
 
-#all-card2 ._lssaveProperty svg:hover {
-    stroke: rgb(255 255 255 / 0.8);
+#all-card2 ._lssaveProperty span:hover {
+    color: rgb(255 255 255 / 0.5);
 }
 
-#all-card2 ._lsIs_saved svg {
+#all-card2 ._lsIs_saved span {
     color: #cc0000;
 }
 
