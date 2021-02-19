@@ -76,7 +76,7 @@ def contact_listing_agent(request):
 					 }
 			htmlMessage = render_to_string('contact/ListingLeadMessage.html', context)
 
-			message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email])
+			message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <do-not-reply@rehgien.com>', [recepient_email])
 			message.attach_alternative(htmlMessage, "text/html")
 			message.send()
 
@@ -146,7 +146,7 @@ def contact_pro(request):
 			htmlMessage = render_to_string('contact/ProServicesLeadMessage.html', context)
 
 			# send_mail(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email], fail_silently=False)
-			message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email])
+			message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <do-not-reply@rehgien.com>', [recepient_email])
 			message.attach_alternative(htmlMessage, "text/html")
 			message.send()
 		except BadHeaderError:
@@ -214,7 +214,7 @@ def share_listing(request):
 						 }
 				htmlMessage = render_to_string('contact/share_home.html', context)
 
-				message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepientEmail])
+				message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <do-not-reply@rehgien.com>', [recepientEmail])
 				message.attach_alternative(htmlMessage, "text/html")
 				message.send()
 				messages.success(request, 'Share successfull. We have sent an email to ' + recepientEmail)

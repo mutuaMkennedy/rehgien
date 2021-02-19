@@ -76,7 +76,7 @@ def contact_listing_agent(request):
 
 					htmlMessage = render_to_string('contact/ListingLeadMessage.html', context)
 
-					message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email])
+					message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <do-not-reply@rehgien.com>', [recepient_email])
 					message.attach_alternative(htmlMessage, "text/html")
 					message.send()
 
@@ -160,10 +160,10 @@ def contact_pro(request):
 						 }
 				htmlMessage = render_to_string('contact/ProServicesLeadMessage.html', context)
 
-				message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email])
+				message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <do-not-reply@rehgien.com>', [recepient_email])
 				message.attach_alternative(htmlMessage, "text/html")
 				message.send()
-				
+
 			except BadHeaderError:
 				message = 'Something went wrong! Could not complete request. Try again later'
 				return Response(message)
@@ -237,7 +237,7 @@ def share_listing(request):
 							 }
 					htmlMessage = render_to_string('contact/share_home.html', context)
 
-					message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email])
+					message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <do-not-reply@rehgien.com>', [recepient_email])
 					message.attach_alternative(htmlMessage, "text/html")
 					message.send()
 
