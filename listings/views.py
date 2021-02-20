@@ -101,7 +101,7 @@ def property_listings_results(request, property_category, property_listing_type)
 		listings = model_object.objects.filter(listing_type__iexact = property_listing_type).order_by('-publishdate', 'price')
 		listing_type = 'for_sale'
 	elif property_listing_type ==  'for_rent':
-		listings = model_object.objects.filter(listing_type = property_listing_type).order_by('-publishdate', 'price')
+		listings = model_object.objects.filter(listing_type__iexact = property_listing_type).order_by('-publishdate', 'price')
 	else:
 		messages.error(request, 'The path you requested is invalid!')
 		return redirect('listings:homepage')
