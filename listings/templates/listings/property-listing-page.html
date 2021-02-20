@@ -1,7 +1,7 @@
 {% extends 'base1.html' %}
 {% load static %}
 {% load cloudinary %}
-{% block title %}<title>Real Estate for {% if listing.listing_type == 'for_sale' %} sale {% else %} rent {% endif %} in {{location_address}} | Rehgien</title>{% endblock %}
+{% block title %}<title>Real Estate for {% if property_listing_type == 'for_sale' %} sale {% else %} rent {% endif %} in {{location_address}} | Rehgien</title>{% endblock %}
 {% block content%}
 
 <section id="_listingPageElements_">
@@ -172,7 +172,7 @@
               </div>
                 <div id="all-row2">
                     <div id="page-head" class="page-head">
-                      <h2>Real Estate for {% if listing.listing_type == 'for_sale' %} sale {% else %} rent {% endif %} in {{location_address}}.</h2>
+                      <h2>Real Estate for {% if property_listing_type == 'for_sale' %} sale {% else %} rent {% endif %} in {{location_address}}.</h2>
                         <h3>{{listings_count}} results.</h3>
                     </div>
                     <div class="_listingsVwSummary">
@@ -331,7 +331,7 @@
                 <span class="material-icons">list</span> List
               </button>
               <!-- Dropdown Trigger -->
-              <a id='map-btn' class='dropdown-trigger btn-small blue' href='#' data-target='map-dropdown'><i class="small material-icons">school</i></a>
+              <a id='map-btn' class='dropdown-trigger btn-small blue' href='#' data-target='map-dropdown'><span class="material-icons">school</span></a>
 
               <ul id='map-dropdown' class='dropdown-content'>
                 <li id="menu-items"></li>
@@ -379,9 +379,9 @@
               //geocoder
               var geocoder = new MapboxGeocoder({
               accessToken: mapboxgl.accessToken,
-              types: 'country,region,place,postcode,locality,neighborhood',
+              types: 'place,locality',
               countries:'KE',
-              placeholder:'Enter an address, city, neighborhood or postcode.'
+              placeholder:'Enter a locality, place name or city.'
               });
               geocoder.addTo('#geocoder');
               // disable map rotation using right click + drag
@@ -1156,16 +1156,17 @@
                   var insightText = document.getElementById('_listingsVS_ctTxt');
                       if ('{{filter_fields.property_type}}' != '') {
                           insightText.textContent =
-                              "The median " + {% if listing.listing_type == 'for-sale' %}"price"{%else%} "rent"{% endif %} +
-                              " for a {{filter_fields.bedrooms}} bedroom {{filter_fields.property_type}} " +
+                              "The median " + {% if property_listing_type == 'for_sale' %}"price"{%else%} "rent"{% endif %} +
+                              " for a " + {% if filter_fields.bedrooms%}"{{filter_fields.bedrooms}}"{%else%}"1"{% endif %} +
+                              "bedroom " + {% if filter_fields.property_type != 'All' %}"{{filter_fields.property_type}}"{%else%}"house "{% endif %} +
                               "in this area is " + mFormatter(parseInt({{insight_stats.n_bds_median_price}})) + " while the median " +
-                              {% if listing.listing_type == 'for-sale' %}"price"{%else%}"rent"{% endif %} +
+                              {% if property_listing_type == 'for_sale'  %}"price"{%else%}"rent"{% endif %} +
                               " for a 3 bedroom plus house is " + mFormatter(parseInt({{insight_stats.threebd_plus_price_trend}})) +".";
                         }else {
                           insightText.textContent =
-                              "The median " + {% if listing.listing_type == 'for-sale' %}"price"{%else%}"rent"{% endif %} +
+                              "The median " + {% if property_listing_type == 'for_sale' %}"price"{%else%}"rent"{% endif %} +
                               " for a 1 bedroom house in this area is " + mFormatter(parseInt({{insight_stats.Onebd_median_price}})) +
-                              " while the median " + {% if listing.listing_type == 'for-sale' %}"price"{%else%} "rent"{% endif %} +
+                              " while the median " + {% if property_listing_type == 'for_sale' %}"price"{%else%} "rent"{% endif %} +
                               " for a 3 bedroom plus house is " + mFormatter(parseInt({{insight_stats.Threebd_plus_median_price}})) +".";
                         };
 
