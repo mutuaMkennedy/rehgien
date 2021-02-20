@@ -238,9 +238,9 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
 var geocoder = new MapboxGeocoder({
 accessToken: mapboxgl.accessToken,
-types: 'country,region,place,postcode,locality,neighborhood',
+types: 'place,locality',
 countries:'KE',
-placeholder:'Enter an address, city, neighborhood or postcode.'
+placeholder:'Enter a locality, place name or city.'
 });
 
 geocoder.addTo('#s_geocoder');
