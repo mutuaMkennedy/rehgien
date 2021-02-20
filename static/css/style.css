@@ -5333,8 +5333,13 @@ particle {
     }
 }
 
+#geocoder .suggestions-wrapper{
+    z-index:100000 !important;
+}
+
 #geocoder .suggestions {
-    border-radius: 15px;
+    border-radius: 5px;
+    z-index:10000000 !important;
 }
 
 .ResultsFilterBar {
@@ -5527,6 +5532,7 @@ particle {
 @media all and (max-width:768px) {
     #type-filter {
         height:25px;
+        z-index:0;
     }
 
     #type-filter input{
@@ -6388,7 +6394,7 @@ particle {
     position: relative;
     width: 95%;
     height: 95% !important;
-    z-index: 2;
+/*     z-index: 2; */
     border-radius: 10px;
 }
 
@@ -6477,7 +6483,7 @@ particle {
     }
 }
 
-#menu-items {position: absolute;right: 0px;top: 0px;background-color: #fff;border-radius: 10px;width: 160px;margin: 10px;margin-right: 0px !important;align-content: start;padding-left: 10px;border: 2px solid #;box-shadow: 0 0px 10px 2px #eee;}
+#menu-items {position: relative;background-color: #fff;border-radius: 10px;margin-right: 0px !important;padding:10px;align-content: start;box-shadow: 0 0px 10px 2px #eee;}
 
 #menu-items a {
     display: block;
@@ -6628,18 +6634,23 @@ particle {
     }
 }
 
-#map-btn i {
+#map-btn span {
     color: #000;
     font-size: 17px;
 }
 
+#map-btn.active span{
+    color:#1100ff;
+}
+
 #map-dropdown {
     min-width: 200px;
-    /* overflow-y: unset; */
+    overflow-y:unset;
     position:absolute !important;
-    border:1px solid;
+    background-color:transparent;
+    box-shadow:none;
     height:200px !important;
-    right:0px !important;
+    right:0 !important;
 }
 
 #map .mapboxgl-ctrl-top-right {
@@ -6703,7 +6714,7 @@ particle {
     min-width: 250px;
     top: 0px;
     left: 0px;
-    z-index: 2;
+/*     z-index: 2; */
     margin: 20px;
     display: inline-flex;
     align-items: center;
@@ -6715,7 +6726,7 @@ particle {
     padding: 2px 10px;
     border-radius: 5px;
     margin-left: 50%;
-    transform: translateX(-50%)
+    transform: translateX(-50%);
 }
 
 .help-text1 p {
