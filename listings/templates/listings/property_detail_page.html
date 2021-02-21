@@ -770,39 +770,5 @@
 </section>
 {% endblock %}
 {% block footer %}
-<footer >
-<section id="footer" class="section section-follow black-text">
-  <div class="container">
-    <div class="row">
-      <div class="f-details center">
-        <a href="#"> Privacy Policy</a>
-        <a href="#"> Terms & Conditions</a>
-        <a href="#"> Advertise</a>
-        <a href="#"> Contact Us</a>
-        <a href="{% url 'contact:about_us'%}"> About Us</a>
-      </div>
-      <div id="footer-details" class="col s12 center">
-        <a href="#" class="black-text">
-          <i class="fab fa-facebook fa-2x"></i>
-        </a>
-        <a href="#" class="black-text">
-          <i class="fab fa-twitter fa-2x"></i>
-        </a>
-        <a href="#" class="black-text">
-          <i class="fab fa-linkedin fa-2x"></i>
-        </a>
-        <a href="#" class="black-text">
-          <i class="fab fa-instagram fa-2x"></i>
-        </a>
-      </div>
-      <p class="flow-text black-text center" id="c-year"></p>
-      <script type="text/javascript">
-        var d = new Date();
-        document.getElementById("c-year").innerHTML= 'While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright '+ d.getFullYear();
-      </script>
-    </div>
-  </div>
-</section>
-
-</footer>
+{% include 'footer_section.html'%}
 {% endblock%}
