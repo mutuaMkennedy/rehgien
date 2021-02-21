@@ -2,7 +2,7 @@ from django.contrib.sitemaps import Sitemap
 from . import models
 
 class BlogPostSitemap(Sitemap):
-    changefreq = "never"
+    changefreq = "daily"
     priority = 0.5
 
     def items(self):

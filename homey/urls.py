@@ -24,20 +24,23 @@ from listings import views
 from django.views.generic import TemplateView
 from allauth.account.views import confirm_email
 from django.contrib.sitemaps.views import sitemap
-from listings.sitemap import PropertyListingsSitemap
-from listings.sitemap import StaticViewSitemap
+from listings.sitemap import  StaticViewSitemap
 from markets.sitemap import JobPostSitemap
 from profiles.sitemap import BusinessProfileSitemap
 from resource_center.sitemap import BlogPostSitemap
+from rehgien_pro.sitemap import RehgienProStaticViewSitemap
+from contact.sitemap import ContactStaticViewSitemap
 #from haystack.forms import FacetedSearchForm
 #from haystack.views import FacetedSearchView
 
 sitemaps = {
-    'property_listings':PropertyListingsSitemap,
+    # 'property_listings':PropertyListingsSitemap,
     'job_posts':JobPostSitemap,
     'business_profiles':BusinessProfileSitemap,
     'blog_post':BlogPostSitemap,
-    'static_content':StaticViewSitemap
+    'static_content':StaticViewSitemap,
+    "RehgienProStaticViewSitemap":RehgienProStaticViewSitemap,
+    "ContactStaticViewSitemap":ContactStaticViewSitemap
 }
 
 urlpatterns = [

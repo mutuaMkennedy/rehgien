@@ -2,12 +2,13 @@ from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 from . import models
 
-class JobPostSitemap(Sitemap):
+
+class RehgienProStaticViewSitemap(Sitemap):
     priority = 0.5
     changefreq = 'daily'
 
     def items(self):
-        return ['markets:job_post_home']
+        return ['rehgien_pro:rehgien_pro_homepage']
 
     def location(self, item):
         return reverse(item)
