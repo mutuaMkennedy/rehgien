@@ -6,7 +6,7 @@ app_name = 'profiles'
 
 urlpatterns = [
 		path('account/', views.account_page, name='account'),
-		path('home/', views.business_homepage, name='business_homepage'),
+		path('categories/pros/home/', views.business_homepage, name='business_homepage'),
 		path('accounts/nu_profile/edit', views.edit_basic_profile, name='edit_basic_profile'),
 		path('search/service', views.ajax_autocomplete, name='pro_service_ajx_search'),
 		path('categories/', views.business_list, name = 'business_list'),
