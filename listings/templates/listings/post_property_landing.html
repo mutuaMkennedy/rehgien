@@ -16,7 +16,7 @@
           Get clients faster on rehgien by listing with an agent. Agents get you more value
           from your property.
         </p>
-        <button type="button" name="button">Find an agent now</button>
+        <a href="{% url 'profiles:business_list'%}?p_cat=real-estate-agents"><button type="button" name="button">Find an agent now</button></a>
       </div>
     </div>
     <div class="col s12 md6 l6 xl6">
@@ -35,4 +35,7 @@
   </div>
 </div>
 
+{% endblock %}
+{% block footer %}
+{% include 'footer_section.html'%}
 {% endblock %}
