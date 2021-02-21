@@ -18511,3 +18511,36 @@ particle {
     margin:20px 0;
     cursor:pointer;
 }
+
+.company_terms_box{
+    background-color:#f1f9f1;
+    padding:10px;
+    font-family:Work Sans, Open Sans, Arial;
+}
+
+.company_terms_box .company_terms_wrapper{
+    background-color:#fff;
+    border-radius:5px;
+    padding:15px 35px;
+}
+
+@media all and (max-width:768px){
+    .company_terms_box .container{
+        width:100%;
+    }
+}
+
+.company_terms_box .company_terms_wrapper h2{
+    font-size:30px;
+    font-weight:600;
+}
+
+.company_terms_box .company_terms_wrapper h2 b{
+    font-weight:600;
+}
+
+.company_terms_box .company_terms_wrapper p{
+    font-weight:500;
+    font-size:13px;
+    line-height:16px;
+}
