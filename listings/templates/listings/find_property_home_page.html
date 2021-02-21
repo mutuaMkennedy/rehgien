@@ -251,44 +251,5 @@ geocoder.addTo('#s_geocoder');
 {%endblock%}
 
 {% block footer %}
-<footer id="hpf">
- <section id="footer" class="section section-follow black-text">
-   <div class="container" style="width:100%;">
-     <div class="row">
-       <div class="f-details center">
-         <a href="#"> Privacy Policy</a>
-         <a href="#"> Terms & Conditions</a>
-         <a href="#"> Advertise</a>
-         <a href="#"> Mobile App</a>
-         <a href="#"> FAQ'S</a>
-         <a href="#"> Contact Us</a>
-         <a href="{% url 'contact:about_us'%}"> About Us</a>
-       </div>
-       <div id="footer-details" class="col s12 center">
-         <a href="#" class="black-text">
-           <i class="fab fa-facebook fa-2x"></i>
-         </a>
-         <a href="#" class="black-text">
-           <i class="fab fa-twitter fa-2x"></i>
-         </a>
-         <a href="#" class="black-text">
-           <i class="fab fa-linkedin fa-2x"></i>
-         </a>
-         <a href="#" class="black-text">
-           <i class="fab fa-instagram fa-2x"></i>
-         </a>
-         <p>While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy.</p>
-       </div>
-       <p class="flow-text black-text center" id="c-year"></p>
-       <script type="text/javascript">
-         var d = new Date();
-         document.getElementById("c-year").innerHTML= 'Copyright '+ d.getFullYear();
-       </script>
-     </div>
-   </div>
- </section>
- <div class="ft-bk-sl">
-   <img src="{% static 'img/nairobi-skyline.png'%}">
- </div>
-</footer>
+{% include 'footer_section.html'%}
 {% endblock %}
