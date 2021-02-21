@@ -68,6 +68,8 @@ urlpatterns = [
         confirm_email, name='account_confirm_email'),
     path('r/site/indexing/sitemap.xml', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
+    path('terms_of_service/', TemplateView.as_view(template_name = 'terms_of_service.html'), name='terms_of_use'),
+    path('privacy_policy/', TemplateView.as_view(template_name = 'privacy_policy.html'), name='privacy_policy'),
     # path('msg/', TemplateView.as_view(template_name = 'index.html')),
     #url(r'^search/', include('haystack.urls')),
 ]
