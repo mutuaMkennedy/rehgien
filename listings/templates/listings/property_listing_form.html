@@ -5,9 +5,10 @@
 {% block content %}
 {% load crispy_forms_tags%}
 {% load leaflet_tags %}
-{% leaflet_js plugins="forms" %}
-{% leaflet_css plugins="forms" %}
+{% leaflet_js plugins="ALL" %}
+{% leaflet_css plugins="ALL" %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
+
 <section class='ListingFormSection'>
 <div class="container ListingFormContainer">
   <div class="LstFmSecLgoWrpx">
@@ -62,13 +63,13 @@
         </div>
 
         <div class="_lstfVideoFieldghk">
-          <p>Have a video walkthrough? Upload it here.<span>*</span></p>
+          <p>Have a video walkthrough? Upload it here.</p>
           <div class="_LstfVdSelected-box"></div>
           {{VideoForm}}
         </div>
 
         <div class="virtual-tour sjfr8vrtour">
-            <p>Add a virtual tour URL. Don't have a virtual tour talk to us and get one? <a href="#">Contact US!</a><span>*</span></p>
+            <p>Add a virtual tour URL. Don't have a virtual tour talk to us and get one? <a href="#">Contact US!</a></p>
             <div class="__virtualTourPrvBox">
                 <iframe  class='pstfoRmVrbOXSA' src="" frameborder="0" allowfullscreen allowvr>
                 </iframe>
@@ -154,56 +155,56 @@
 
           <div class="form-row1">
             <div class="bathrooms">
-              <p>Bathrooms.<span>*</span></p>
+              <p>Bathrooms.</p>
                 {{PropertyForm.bathrooms|as_crispy_field}}
             </div>
             <div class="bedrooms">
-              <p>Bedrooms.<span>*</span></p>
+              <p>Bedrooms.</p>
                 {{PropertyForm.bedrooms|as_crispy_field}}
             </div>
             <div class="total-rooms">
-              <p>Total rooms.<span>*</span></p>
+              <p>Total rooms.</p>
                 {{PropertyForm.total_rooms|as_crispy_field}}
             </div>
             <div class="floor-number">
-              <p>Floor number.<span>*</span></p>
+              <p>Floor number.</p>
                 {{PropertyForm.floor_number|as_crispy_field}}
             </div>
           </div>
 
           <div class="form-row2">
             <div class="lot-size">
-              <p>Floor area in sqft.<span>*</span></p>
+              <p>Floor area in sqft.</p>
               {{PropertyForm.floor_area|as_crispy_field}}
             </div>
             <div class="garage-size">
-              <p>Garage size in sqft.<span>*</span></p>
+              <p>Garage size in sqft.</p>
               {{PropertyForm.garage_sqm|as_crispy_field}}
             </div>
           </div>
 
           <div class="form-row3">
             <div class="units">
-              <p>Number of units availlable.<span>*</span></p>
+              <p>Number of units availlable.</p>
               {{PropertyForm.number_of_units|as_crispy_field}}
             </div>
             <div class="stories">
-              <p>Number of stories.<span>*</span></p>
+              <p>Number of stories.</p>
               {{PropertyForm.number_of_stories|as_crispy_field}}
             </div>
             <div class="parking-spaces">
-              <p>Number of parking spaces.<span>*</span></p>
+              <p>Number of parking spaces.</p>
                 {{PropertyForm.parking_spaces|as_crispy_field}}
             </div>
           </div>
 
           <div class="form-row4">
               <div class="year-bullt">
-                <p>Year built.<span>*</span></p>
+                <p>Year built.</p>
                 {{PropertyForm.year_built|as_crispy_field}}
               </div>
               <div class="remodel-year">
-                <p>Remodel year.<span>*</span></p>
+                <p>Remodel year.</p>
                 {{PropertyForm.remodel_year|as_crispy_field}}
               </div>
           </div>
@@ -274,65 +275,65 @@
         <div class="_ScFsform-row-choices">
         <h5>#Room Details</h5>
           <div class="appliances">
-            <p>Appliances.<span>*</span></p>
+            <p>Appliances.</p>
             {{PropertyForm.appliances|as_crispy_field}}
           </div>
           <div class="basement">
-            <p>Basement.<span>*</span></p>
+            <p>Basement.</p>
             {{PropertyForm.basement|as_crispy_field}}
           </div>
           <div class="floor-covering">
-            <p>Floor covering.<span>*</span></p>
+            <p>Floor covering.</p>
             {{PropertyForm.floor_covering|as_crispy_field}}
           </div>
           <div class="rooms">
-            <p>Rooms.<span>*</span></p>
+            <p>Rooms.</p>
             {{PropertyForm.rooms|as_crispy_field}}
           </div>
           <div class="indoor-features">
-            <p>Indoor features.<span>*</span></p>
+            <p>Indoor features.</p>
             {{PropertyForm.indoor_features|as_crispy_field}}
           </div>
         </div>
         <div class="_ScFsform-row-choices">
           <h5>#Utility Details</h5>
           <div class="cooling-type">
-            <p>Cooling type.<span>*</span></p>
+            <p>Cooling type.</p>
             {{PropertyForm.cooling_type|as_crispy_field}}
           </div>
           <div class="heating-type">
-            <p>Heating type.<span>*</span></p>
+            <p>Heating type.</p>
             {{PropertyForm.heating_type|as_crispy_field}}
           </div>
           <div class="heating-fuel">
-            <p>Heating fuel.<span>*</span></p>
+            <p>Heating fuel.</p>
             {{PropertyForm.heating_fuel|as_crispy_field}}
           </div>
         </div>
         <div class="_ScFsform-row-choices">
           <h5>#Building Details</h5>
             <div class="building-amenities">
-              <p>Built amenities.<span>*</span></p>
+              <p>Built amenities.</p>
               {{PropertyForm.building_amenities|as_crispy_field}}
             </div>
             <div class="exterior">
-              <p>Exterior features.<span>*</span></p>
+              <p>Exterior features.</p>
               {{PropertyForm.exterior|as_crispy_field}}
             </div>
             <div class="outdoor-amenities">
-              <p>Outdoor amenities.<span>*</span></p>
+              <p>Outdoor amenities.</p>
               {{PropertyForm.outdoor_amenities|as_crispy_field}}
             </div>
             <div class="parking">
-              <p>Parking.<span>*</span></p>
+              <p>Parking.</p>
               {{PropertyForm.parking|as_crispy_field}}
             </div>
             <div class="roof">
-              <p>Roof.<span>*</span></p>
+              <p>Roof.</p>
               {{PropertyForm.roof|as_crispy_field}}
             </div>
             <div class="view">
-              <p>View.<span>*</span></p>
+              <p>View.</p>
               {{PropertyForm.view|as_crispy_field}}
             </div>
         </div>
@@ -341,7 +342,7 @@
       <div class="ListingFormStep">
         <h5>Contact information</h5>
         <div class="form-row-info">
-          <p>Provide a link to a website associated with this home where people can find more information. Can be a personal or company website.<span>*</span></p>
+          <p>Provide a link to a website associated with this home where people can find more information. Can be a personal or company website.</p>
           <div class="related_website">
             {{PropertyForm.related_website|as_crispy_field}}
           </div>
@@ -356,7 +357,7 @@
             {{PropertyForm.email|as_crispy_field}}
           </div>
         </div>
-        <p><b>By clicking create you agree that you own this property or are acting on behalf of the owner of this property as an Agent. Also you consent to our <a href="#">terms of service</a></b></p>
+        <p><b>By clicking create you agree that you own this property or are acting on behalf of the owner of this property as an Agent. Also you consent to our <a href="{% url 'terms_of_use'%}">terms of service</a></b></p>
       </div>
 
       <div class="_cskjListingStepPagBtsn" style="overflow:auto;">
@@ -514,6 +515,14 @@ function fixStepIndicator(n) {
   //... and adds the "active" class on the current step:
   x[n].className += " active";
 }
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+      setTimeout(() => {
+        // djoptions.map.invalidateSize();
+      }, 1000);
+
+  });
 </script>
 
 {% endblock %}
