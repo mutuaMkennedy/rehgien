@@ -1845,7 +1845,7 @@ main {
 }
 
 .ListingFormSection .container{
-  width:100%;
+/*   width:100%; */
 }
 
 .ListingFormRow {
@@ -2084,9 +2084,9 @@ main {
 }
 
 ._plS_form_steps-xsjk {
-    min-width: 600px;
-/*     margin-left: auto; */
-/*     margin-right: auto; */
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media only screen and (max-width: 768px) {
