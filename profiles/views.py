@@ -167,7 +167,7 @@ def business_list(request):
 
 	q_pro_category = str( request.GET.get('p_cat', '') )
 	service = str( request.GET.get('q_service', '') )
-	location = str( request.GET.get('pro_location', 'Nairobi city') )
+	location = str( request.GET.get('pro_location', 'Nairobi') )
 	job_rating = int( request.GET.get('job_rating',0) )
 	sort = str( request.GET.get('sort','') )
 	bs_page = request.GET.get('page', '1')
