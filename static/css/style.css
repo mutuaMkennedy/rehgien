@@ -209,6 +209,9 @@ main {
     background-color: transparent;
 }
 
+#nav-base2 li{
+    font-size:14px;
+}
 #ac-trigger {
     position: static;
     font-size: inherit;
@@ -563,15 +566,15 @@ main {
 
 .Mnav-authLinks li {
     background-color: #fff;
-    line-height: 45px;
+    line-height: 40px !important;
     font-weight: lighter;
+    text-transform:uppercase;
 }
 
 .Mnav-authLinks a {
     color: blue !important;
     font-weight: lighter !important;
-    font-family: Arial;
-    font-size: 13px !important;
+    font-size: 14px !important;
 }
 
 .listings-dropdown {
@@ -1841,6 +1844,10 @@ main {
     overflow-y: scroll;
 }
 
+.ListingFormSection .container{
+  width:100%;
+}
+
 .ListingFormRow {
     background-color: #fff;
     border-radius: 10px;
@@ -2077,9 +2084,9 @@ main {
 }
 
 ._plS_form_steps-xsjk {
-    width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    min-width: 600px;
+/*     margin-left: auto; */
+/*     margin-right: auto; */
 }
 
 @media only screen and (max-width: 768px) {
@@ -2554,6 +2561,11 @@ main {
 .location {
     border-radius: 10px;
     margin-bottom: 20px;
+}
+
+.location #id_location-map{
+    width:100% !important;
+    height:400px;
 }
 
 .ListingFormStep .form-row1, .ListingFormStep .form-row2, .ListingFormStep .form-row3, .ListingFormStep .form-row4 {
@@ -14721,6 +14733,18 @@ particle {
 
 #main_hdr_hmpg_aiuu .nav-wrapper #nav-base1 > li a, #main_hdr_hmpg_aiuu .nav-wrapper #nav-base2 > li, #main_hdr_hmpg_aiuu .nav-wrapper #nav-base2 > li a {
     color: #fff;
+}
+
+#nav-base2 li a .join_as_pro{
+    height:30px;
+    background-color:#cc0000;
+    border:none;
+    color:#ffff;
+    border-radius:2px;
+    padding:0 10px;
+    text-transform:uppercase;
+    font-weight:600;
+    font-size:14px;
 }
 
 #main_hdr_hmpg_aiuu .nav-wrapper #nav-base1 .link_disabled {
