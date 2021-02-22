@@ -295,7 +295,15 @@ LEAFLET_CONFIG = {
     'MIN_ZOOM':3,
     'SCALE': 'both',
     'ATTRIBUTION_PREFIX': 'Rehgien',
-
+    'RESET_VIEW': False,
+    'FORCE_IMAGE_PATH': True,
+    'PLUGINS': {
+        'forms1': {
+                'js': 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js',
+                'css': 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css',
+                'auto-include': True
+        },
+    }
 
 }
 
