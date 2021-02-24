@@ -379,6 +379,8 @@ def save_property(request):
 		messages.error(request, 'Invalid Request!')
 		return redirect('listings:homepage')
 
+# This view has been discarded in favor of the ListPropertyWizardView below and
+# will be removed together with its corresponding template in future commits
 @login_required(login_url='account_login')
 def property_listing_form(request):
 	if request.user.pro_business_profile.professional_category.professional_group.slug =='real-estate-services' :
