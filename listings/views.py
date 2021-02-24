@@ -1,3 +1,5 @@
+import os
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
 from django.forms import inlineformset_factory
@@ -33,6 +35,9 @@ import datetime
 from django.utils import timezone
 from django.utils.http import urlencode
 from django.db.models import Exists, OuterRef
+from formtools.wizard.views import SessionWizardView
+from django.core.files.storage import FileSystemStorage
+from .wizard_storage import MultiFileSessionStorage
 #from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 #from haystack.query import SearchQuerySet
 # referencing the custom user model
@@ -422,6 +427,94 @@ def property_listing_form(request):
 		return redirect('profiles:account')
 	return render(request, 'listings/property_listing_form.html', {'PropertyForm': PropertyForm, 'ImageForm': PhotoForm,
 	 		'VideoForm':VideoForm,'open_house_formset':open_house_formset})
+
+#property create wizard
+oph_formset = inlineformset_factory( models.Home , models.PropertyOpenHouse, forms.OpenHouseForm,
+ 					max_num=10, min_num=1, extra=0, can_order = True,can_delete=True, exclude=('home',))
+photos_formset = inlineformset_factory( models.Home , models.PropertyPhoto, forms.PhotoForm,
+				max_num=10, min_num=1, extra=0, can_order = True,can_delete=True, exclude=('home',))
+videos_formset = inlineformset_factory(models.Home, models.PropertyVideo, forms.VideoForm,
+					max_num=1, min_num=1,extra=0,can_order = True,exclude=('home',)
+					)
+FORMS = [
+			("AddressInfo", forms.AddressInfo),
+			("MapPoint", forms.MapPoint),
+			("PhotoForm", photos_formset),
+			("VideoForm", videos_formset),
+			("OpenHouseForm", oph_formset),
+			("PropetyFacts", forms.PropetyFacts),
+		 ]
+
+TEMPLATES = {
+			"AddressInfo": "listings/search_property/location_address_form.html",
+			"MapPoint": "listings/search_property/map_point_form.html",
+			"PhotoForm": "listings/search_property/photo_form.html",
+			"VideoForm": "listings/search_property/video_form.html",
+			"OpenHouseForm": "listings/search_property/openhouse_form.html",
+			"PropetyFacts": "listings/search_property/property_facts_form.html",
+			}
+
+@method_decorator(login_required(login_url='account_login'), name='dispatch')
+class ListPropertyWizardView(SessionWizardView):
+	file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_property_media'))
+
+	def dispatch(self, request, *args, **kwargs):
+		return super(ListPropertyWizardView, self).dispatch(request, *args, **kwargs)
+
+	def get_template_names(self):
+		return [TEMPLATES[self.steps.current]]
+
+	# this runs for the step it's on as well as for the step before
+	def get_form_initial(self, step):
+		current_step = self.storage.current_step
+		# get the data for step 0 on step 4
+		if step == 'MapPoint':
+			address_info = self.storage.get_step_data('AddressInfo')
+			innitial = {
+			'location_name':address_info.get('AddressInfo-location_name',''),
+			'lat':address_info.get('AddressInfo-lat',''),
+			'long':address_info.get('AddressInfo-long',''),
+			}
+			return self.initial_dict.get(step, innitial)
+
+		return self.initial_dict.get(step, {})
+
+	def done(self, form_list, form_dict, **kwargs):
+		form_data = self.get_all_cleaned_data()
+		lat = form_data.pop('lat')
+		long = form_data.pop('long')
+		photoFormset = form_data.pop('formset-PhotoForm')
+		videoFormset = form_data.pop('formset-VideoForm')
+		openhouseFormset = form_data.pop('formset-OpenHouseForm')
+		obj_instance = models.Home.objects.create(
+						**form_data,
+						owner=self.request.user,
+						)
+		home_object = models.Home.objects.get(id=obj_instance.id)
+
+		openhouseForm = form_dict['OpenHouseForm']
+		for openhouse in openhouseForm:
+			if openhouse:
+				oph = openhouse.save(commit=False)
+				oph.home = home_object
+				oph.save()
+
+		photoForm = form_dict['PhotoForm']
+		for photo in photoForm:
+			if photo:
+				photo_instance = photo.save(commit=False)
+				photo_instance.home = home_object
+				photo_instance.save()
+
+		videoForm = form_dict['VideoForm']
+		for video in videoForm:
+			if video:
+				vid_instance = video.save(commit=False)
+				vid_instance.home = home_object
+				vid_instance.save()
+
+		messages.success(self.request,'Your Listing has been posted Successfully!')
+		return redirect('profiles:account')
 
 @login_required(login_url='account_login')
 def property_update(request, property_category, pk):
