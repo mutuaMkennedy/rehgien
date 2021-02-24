@@ -16,7 +16,8 @@ urlpatterns = [
 	re_path(r'^property/(?P<property_category>\w+)/(?P<pk>[0-9]+)/edit/', views.property_update, name='property_update'),
 	re_path(r'^property/(?P<property_category>\w+)/(?P<property_listing_type>\w+)/results/$', views.property_listings_results, name='property-listings'),
 	path('property/save_search/', views.save_search, name='save_search'),
-	path('property/post/', views.post_property, name='post_property')
+	path('property/post/', views.post_property, name='post_property'),
+	path('property/add/wizard/', views.ListPropertyWizardView.as_view(views.FORMS), name='ListPropertyWizardView'),
 	# url(r'^directions/$', views.directions, name = 'directions'),
 	#url(r'^search/autocomplete/$', views.autocomplete),
 	#url(r'^find/', views.FacetedSearchView.as_view(), name='haystack_search'),
