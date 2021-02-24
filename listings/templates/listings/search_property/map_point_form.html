@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block head_title %}<title>Address information | Rehgien</title>{% endblock %}
+{% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+{% load leaflet_tags %}
+{% load crispy_forms_tags%}
+
+{% leaflet_css plugins="ALL" %}
+{{ form.media.css }}
+{% leaflet_js plugins="ALL" %}
+{{ form.media.js }}
+
+{{ wizard.form.media }}
+
+<div class="listPropertyWizard">
+  <div class="listPropertyWizardProgress" style="width:20%"></div>
+  <div class="container">
+    <div class="wiz_exit">
+      <a href="{% url 'profiles:account'%}"><button type="button" name="button"><span class="material-icons">keyboard_backspace</span>Exit to account</button></a>
+    </div>
+    <div class="row">
+        <form method="post" class="col s12">
+            {% csrf_token %}
+            <div class="listPropertyFormElS col s12">
+                <div class="col s12 pr_ObdFormFields stepTwo">
+                  <div class="listPropertyHdWzd">
+                    <h2>
+                      Set a point on the map!<br>
+                      <span>{{wizard.form.initial.location_name}}</span>
+                    </h2>
+                  </div>
+                    <div class="field">
+                        <p>Place marker in the correct position using the map controls.<span>*</span></p>
+                          {{wizard.form.location.errors}}
+                        {{wizard.form.location}}
+                    </div>
+
+                </div>
+            </div>
+          <div class="lsPropSteps-footer col s12">
+            <div class="lsPropSteps-footerBtns">
+              {% if wizard.steps.prev %}
+              <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
+              {% endif %}
+              <button class="nextStepLsprop" type="submit">{% trans "Ok, it's done" %}</button>
+            </div>
+          </div>
+          {{ wizard.management_form }}
+        </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    window.addEventListener("map:init", function (e) {
+      var detail = e.detail;
+      // L.marker([{{wizard.form.initial.lat}}, {{wizard.form.initial.long}}], {'draggable':true,'autoPan':true}).addTo(detail.map);
+      detail.map.setView([{{wizard.form.initial.lat}}, {{wizard.form.initial.long}}],15);
+      detail.map.removeControl('drawControl')
+
+  }, false)
+  });
+</script>
+
+{% endblock %}

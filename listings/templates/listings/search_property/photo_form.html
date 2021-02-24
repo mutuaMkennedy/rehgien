@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block head_title %}<title>Address information | Rehgien</title>{% endblock %}
+{% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'dynamic_formsets_src/jquery.formset.js'%}"></script>
+{{ form.media.css }}
+{{ wizard.form.media }}
+
+<div class="listPropertyWizard">
+  <div class="listPropertyWizardProgress" style="width:40%"></div>
+  <div class="container">
+    <div class="wiz_exit">
+      <a href="{% url 'profiles:account'%}"><button type="button" name="button"><span class="material-icons">keyboard_backspace</span>Exit to account</button></a>
+    </div>
+    <div class="row">
+        <form method="post" class="col s12" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="listPropertyFormElS col s12">
+                <div class="col s12 md8 l8 xl8 pr_ObdFormFields stepOne">
+                  <div class="listPropertyHdWzd">
+                    <h2>
+                      Add quality Photos for your property.
+                    </h2>
+                  </div>
+                  <br>
+                    <div class="field propertyPhotos">
+                        <p>Choose some nice pictures of this property.<span>*</span></p>
+                        <div class="_LstfPhSelectedWiz-box"></div>
+                        <table class="_media-update-formXtable">
+                          <thead>
+                            <th ></th>
+                            <th ></th>
+                            <th hidden ></th>
+                            <th></th>
+                          </thead>
+                          <tbody>
+                              {% for form in wizard.form %}
+                              {{form.photo.errors}}
+                              <tr class="_HomePhotoTrWiz">
+                                <td>
+                                  <div class="_FmsetLstfPhSelected-boxWiz">
+                                    {% if form.instance.photo%}
+                                    <img src="{{form.instance.photo.url}}" alt="photo">
+                                    {% endif %}
+                                  </div>
+                                </td>
+                                <td class="_img_formset_photo_inputukhkWiz">
+                                  {{form.photo}}
+                                </td>
+                                <td hidden>
+                                  {{form.id}}
+                                  {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                                </td>
+                                <td></td>
+                              </tr>
+                              {%endfor%}
+                          </tbody>
+                        </table>
+                      {{wizard.form.management_form}}
+                    </div>
+                    <script type="text/javascript">
+                      $('._HomePhotoTrWiz').formset({
+                        prefix: '{{ wizard.form.prefix }}'
+                      });
+
+                      $(document).on('change', '._img_formset_photo_inputukhkWiz input', function () {
+                          var inputField = $(this);
+                      if (inputField[0].files && inputField[0].files[0]) {
+                          var reader = new FileReader()
+                          reader.onload = function (e) {
+                            inputField.parent().prev('td').find('._FmsetLstfPhSelected-boxWiz')
+                              .html("<img src=' " + e.target.result + " '>")
+                              .css('display','flex');
+                          };
+                          reader.readAsDataURL(inputField[0].files[0]);
+                      }
+                    });
+
+                    //   $('.propertyPhotos input').change(function () {
+                    //   if ($(this)[0].files && $(this)[0].files[0]) {
+                    //     for (var i = 0; i < $(this)[0].files.length; i++) {
+                    //         var reader = new FileReader();
+                    //         reader.onload = function (e) {
+                    //           $('._LstfPhSelectedWiz-box')
+                    //             .append("<img class='_LstfPhSelectedWiz-Imgx' src=' " + e.target.result + " ' width=70 height=70>")
+                    //             .css('display','flex');
+                    //         };
+                    //         reader.readAsDataURL($(this)[0].files[i]);
+                    //     }
+                    //   }
+                    // });
+                    </script>
+                </div>
+                <div class="col s12 md4 l4 xl4 ">
+                  <div class="helper_card_msgTxtRg col s12">
+                    <div class="card col s12">
+                        <h3>Photos speak more than words!</h3>
+                        <div class="proObgHelpTips">
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_one</span>
+                            <p>Ensure photos are clear, well lit and not blurry.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_two</span>
+                            <p>Take photos from different angles to capture as much detail as possible.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_3</span>
+                            <p>Consider working with professional photographers when taking photos for your property.</p>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          <div class="lsPropSteps-footer col s12">
+            <div class="lsPropSteps-footerBtns">
+              {% if wizard.steps.prev %}
+              <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
+              {% endif %}
+              <button class="nextStepLsprop" type="submit">{% trans "Next" %}</button>
+            </div>
+          </div>
+          {{ wizard.management_form }}
+        </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

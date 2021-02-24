@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block head_title %}<title>Address information | Rehgien</title>{% endblock %}
+{% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+{{ form.media.css }}
+{{ wizard.form.media }}
+
+<div class="listPropertyWizard">
+  <div class="listPropertyWizardProgress" style="width:100%"></div>
+  <div class="submittingFormWrapper">
+      <div class="submittingInfo">
+          <img src="{% static 'img/ajax-loader.gif'%}" alt="uploading..">
+          <p>Uploading please wait!</p>
+      </div>
+  </div>
+  <div class="container">
+    <div class="wiz_exit">
+      <a href="{% url 'profiles:account'%}"><button type="button" name="button"><span class="material-icons">keyboard_backspace</span>Exit to account</button></a>
+    </div>
+    <div class="row">
+        <form class="finalWizForm" method="post" class="col s12">
+            {% csrf_token %}
+            <div class="listPropertyFormElS col s12">
+                <div class="col s12 pr_ObdFormFields stepOne">
+                  <div class="listPropertyHdWzd">
+                      {{form.errors}}
+                    <h2>
+                      Great! this is the last step.<br>
+                    </h2>
+                  </div>
+                  <br>
+                  <div class="wizFieldGroup1">
+                    <div class="field">
+                        <p>Select the listing type. <span>*</span></p>
+                        {{wizard.form.listing_type}}
+                    </div>
+                    <div class="field">
+                        <p>Give this listing a name. Eg. High leaf estate. <span>*</span></p>
+                        {{wizard.form.property_name}}
+                    </div>
+                    <div class="field">
+                        <p>Asking price in KSH. If it's a rental set the monthly rent.  <span>*</span></p>
+                        {{wizard.form.price}}
+                    </div>
+                    <div class="field">
+                        <p>Home type. <span>*</span></p>
+                        {{wizard.form.home_type}}
+                    </div>
+                    <div class="field virtualTourBoxWiz">
+                        <p>Have a Virtual Tour?. Paste the link here. </p>
+                        <div class="__virtualTourPrvBoxWiz">
+                            <iframe  class='pstfoRmVrbOXSAWiz' src="" frameborder="0" allowfullscreen allowvr>
+                            </iframe>
+                            <div class="__vr-tour-loader-msgWiz">
+                              <div class="__lldMsggWiz">
+                                <img src="{% static 'img/ajax-loader.gif'%}" alt="">
+                                Loading...<br>
+                                If this is taking too long make sure your url below is
+                                correct or check your connection status.
+                              </div>
+                              <br><br>
+                              <span>Don't submit a virtual tour url that is not displaying here correctly! <br> We continually review and remove invalid tours.</span>
+                            </div>
+                        </div>
+                        {{wizard.form.virtual_tour_url}}
+                    </div>
+
+                      <script type="text/javascript">
+                        $('.__virtualTourPrvBoxWiz').css('display', 'none');
+                        $(document).on('change', '.virtualTourBoxWiz input', function () {
+                            $('.__virtualTourPrvBoxWiz').css('display', 'flex');
+                            var inputField = $(this);
+                            var inputVal=''
+                            if (inputField.val() !=''){
+                              inputVal = inputField.val()
+                            }
+                            inputField.parentsUntil('div.__virtualTourPrvBoxWiz').find('.pstfoRmVrbOXSAWiz')
+                              .attr("src", inputVal)
+                              .css('display','flex');
+
+                            $('.pstfoRmVrbOXSAWiz').load(function () {
+                              $('.__lldMsggWiz').css('display', 'none');
+                            });
+                        });
+                      </script>
+                  </div>
+
+                    <div class="wizFieldGroup2">
+                      <h3>More Home facts</h3>
+                      <div class="fieldsWrp">
+                        <div class="field">
+                            <p>Bathrooms</p>
+                            {{wizard.form.bathrooms}}
+                        </div>
+                        <div class="field">
+                            <p>Bedrooms</p>
+                            {{wizard.form.bedrooms}}
+                        </div>
+                        <div class="field">
+                            <p>Total rooms</p>
+                            {{wizard.form.total_rooms}}
+                        </div>
+                        <div class="field">
+                            <p>Floor number</p>
+                            {{wizard.form.floor_number}}
+                        </div>
+                        <div class="field">
+                            <p>Floor area in SQFT</p>
+                            {{wizard.form.floor_area}}
+                        </div>
+                        <div class="field">
+                            <p>Garage size in SQFT</p>
+                            {{wizard.form.garage_sqm}}
+                        </div>
+                        <div class="field">
+                            <p>Number units are availlable.</p>
+                            {{wizard.form.number_of_units}}
+                        </div>
+                        <div class="field">
+                            <p>Number of stories.</p>
+                            {{wizard.form.number_of_stories}}
+                        </div>
+                        <div class="field">
+                            <p>Number of parking spaces.</p>
+                            {{wizard.form.parking_spaces}}
+                        </div>
+                        <div class="field">
+                            <p>Year built.</p>
+                            {{wizard.form.year_built}}
+                        </div>
+                        <div class="field">
+                            <p>Remodel year.</p>
+                            {{wizard.form.remodel_year}}
+                        </div>
+                      </div>
+                      <div class="field">
+                          <p>What i love about this home.<span>*</span></p>
+                          {{wizard.form.description}}
+                      </div>
+                    </div>
+
+                    <div class="wizFieldGroup3">
+                        <h3>Room details</h3>
+                        <div class="fieldsWrp">
+                          <div class="field">
+                              <p>Appliances</p>
+                              {{wizard.form.appliances}}
+                          </div>
+                          <div class="field">
+                              <p>Basement</p>
+                              {{wizard.form.basement}}
+                          </div>
+                          <div class="field">
+                              <p>Floor covering</p>
+                              {{wizard.form.floor_covering}}
+                          </div>
+                          <div class="field">
+                              <p>Rooms</p>
+                              {{wizard.form.rooms}}
+                          </div>
+                          <div class="field">
+                              <p>Indoor features</p>
+                              {{wizard.form.indoor_features}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="wizFieldGroup4">
+                          <h3>Utility Details</h3>
+                          <div class="fieldsWrp">
+                            <div class="field">
+                                <p>Cooling type</p>
+                                {{wizard.form.cooling_type}}
+                            </div>
+                            <div class="field">
+                                <p>Heating type.</p>
+                                {{wizard.form.heating_type}}
+                            </div>
+                            <div class="field">
+                                <p>Heating fuel.</p>
+                                {{wizard.form.heating_fuel}}
+                            </div>
+                          </div>
+                      </div>
+
+                      <div class="wizFieldGroup4">
+                          <h3>Building Details</h3>
+                          <div class="fieldsWrp">
+                            <div class="field">
+                                <p>Building amenities.</p>
+                                {{wizard.form.building_amenities}}
+                            </div>
+                            <div class="field">
+                                <p>Exterior features.</p>
+                                {{wizard.form.exterior}}
+                            </div>
+                            <div class="field">
+                                <p>Outdoor amenities.</p>
+                                {{wizard.form.outdoor_amenities}}
+                            </div>
+                            <div class="field">
+                                <p>Parking.</p>
+                                {{wizard.form.parking}}
+                            </div>
+                            <div class="field">
+                                <p>Roof.</p>
+                                {{wizard.form.roof}}
+                            </div>
+                            <div class="field">
+                                <p>View.</p>
+                                {{wizard.form.view}}
+                            </div>
+                          </div>
+                     </div>
+
+                    <div class="wizFieldGroup4">
+                      <h3>Contact Information</h3>
+                      <div class="field">
+                          <p>Related website.<span>*</span></p>
+                          {{wizard.form.related_website}}
+                      </div>
+                      <div class="field">
+                          <p>Phone number. <span>*</span></p>
+                          {{wizard.form.phone}}
+                      </div>
+                      <div class="field">
+                          <p>Email. <span>*</span></p>
+                          {{wizard.form.email}}
+                      </div>
+                    </div>
+
+                    <div class="disclaimer">
+                      <small>
+                        By clicking post listing you agree that you own this property or are acting on behalf of the owner of this property as an Agent.
+                        Also you agree to our <a href="{% url 'terms_of_use'%}">terms of service</a>
+                      </small>
+                    </div>
+
+                </div>
+            </div>
+          <div class="lsPropSteps-footer col s12">
+            <div class="lsPropSteps-footerBtns">
+              {% if wizard.steps.prev %}
+              <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
+              {% endif %}
+              <button id="submitFormWiz" class="nextStepLsprop" type="submit">{% trans "Post listing" %}</button>
+            </div>
+          </div>
+          {{ wizard.management_form }}
+        </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('.finalWizForm').on('submit', function(){
+    $('.submittingFormWrapper').css('display','flex');
+  });
+</script>
+{% endblock %}

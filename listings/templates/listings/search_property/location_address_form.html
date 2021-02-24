@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block head_title %}<title>Address information | Rehgien</title>{% endblock %}
+{% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css' type='text/css' />
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+{{ form.media.css }}
+{{ wizard.form.media }}
+
+<div class="listPropertyWizard">
+  <div class="listPropertyWizardProgress" style="width:0%"></div>
+  <div class="container">
+    <div class="wiz_exit">
+      <a href="{% url 'profiles:account'%}"><button type="button" name="button"><span class="material-icons">keyboard_backspace</span>Exit to account</button></a>
+    </div>
+    <div class="row">
+        <form method="post" class="col s12">
+            {% csrf_token %}
+            <div class="listPropertyFormElS col s12">
+                <div class="col s12 md8 l8 xl8 pr_ObdFormFields stepOne">
+                  <div class="listPropertyHdWzd">
+                    <h2>
+                      Let's list your property!<br>
+                      To start off, specify an appropriate location <br>for your property.
+                    </h2>
+                  </div>
+                  <br>
+                    <div class="field">
+                        <p>Tell us where this property is located <span>*</span></p>
+                        {{wizard.form.location_name.errors}}
+                        <div class="wizaddressFIeld">
+                            {{wizard.form.location_name.as_hidden }}
+                        </div>
+                        {{wizard.form.lat }}
+                        {{wizard.form.long }}
+                        <div id="wizGeocoder">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col s12 md4 l4 xl4 ">
+                  <div class="helper_card_msgTxtRg col s12">
+                    <div class="card col s12">
+                        <h3>Tips on choosing a location.</h3>
+                        <div class="proObgHelpTips">
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_one</span>
+                            <p>Search and select a location from the list of suggestions.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_two</span>
+                            <p>Suggested locations make it easy for your listing to appear in property results.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_3</span>
+                            <p>Can't find a location? Try other well known locations nearby.</p>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          <div class="lsPropSteps-footer col s12">
+            <div class="lsPropSteps-footerBtns">
+              {% if wizard.steps.prev %}
+              <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
+              {% endif %}
+              <button class="nextStepLsprop" type="submit">{% trans "Next" %}</button>
+            </div>
+          </div>
+          {{ wizard.management_form }}
+        </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
+    var geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    types: 'place,locality',
+    countries:'KE',
+    placeholder:'Try a location.'
+    });
+
+    geocoder.addTo('#wizGeocoder');
+    geocoder.on('result', function(e) {
+      $('.wizaddressFIeld input').val(e.result.place_name);
+      $('#id_AddressInfo-lat').val(e.result.geometry.coordinates[1]);
+      $('#id_AddressInfo-long').val(e.result.geometry.coordinates[0]);
+    });
+      $("#wizGeocoder input").val($('.wizaddressFIeld input').val())
+  })
+</script>
+{% endblock %}

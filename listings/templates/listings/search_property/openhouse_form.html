@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block head_title %}<title>Address information | Rehgien</title>{% endblock %}
+{% block header %}{% include 'rehgien_pro/pro_onboarding/header_section.html'%}{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+{{ form.media.css }}
+{{ wizard.form.media }}
+
+<div class="listPropertyWizard">
+  <div class="listPropertyWizardProgress" style="width:80%"></div>
+  <div class="container">
+    <div class="wiz_exit">
+      <a href="{% url 'profiles:account'%}"><button type="button" name="button"><span class="material-icons">keyboard_backspace</span>Exit to account</button></a>
+    </div>
+    <div class="row">
+        <form method="post" class="col s12">
+            {% csrf_token %}
+            <div class="listPropertyFormElS col s12">
+                <div class="col s12 md8 l8 xl8 pr_ObdFormFields stepOne">
+                  <div class="listPropertyHdWzd">
+                    <h2>
+                      Add an openhouse event.
+                    </h2>
+                  </div>
+                  <br>
+                    <div class="field openHouseWiz">
+                        <p>Having an open house soon? Tell us the date and time.</p>
+                        <table>
+                          <thead>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th hidden></th>
+                            <th></th>
+                          </thead>
+                          <tbody>
+                            {% for form in wizard.form %}
+                              {{form.date.errors}}
+                              {{form.start_time.errors}}
+                              {{form.end_time.errors}}
+                              <tr class="wiz_formset-rw">
+                                <td>Date {{form.date}}</td>
+                                <td>Start time {{form.start_time}}</td>
+                                <td>End time {{form.end_time}}</td>
+                                <td hidden>
+                                  {{form.id}}
+                                  {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                                </td>
+                                <td></td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                    </div>
+                      {{wizard.form.management_form}}
+                      <script>
+                        $(document).ready(function(){
+                            $('.wiz_formset-rw').formset({
+                              prefix: '{{ wizard.form.prefix }}'
+                            });
+                            $('.wiz_formset-rw input[type=text]').timepicker({
+                              timeFormat: 'HH:mm',
+                              interval: 60,
+                              minTime: '12:00am',
+                              maxTime: '23:00pm',
+                              dynamic: true,
+                              dropdown: true,
+                              scrollbar: true
+                            }); //disabled materialize timepicker which was overriding this plugin
+                            $(document).on('focus', '.add-row', function(){
+                              setTimeout(function(){
+                                $('.wiz_formset-rw input[type=text]').timepicker({
+                                timeFormat: 'HH:mm',
+                                interval: 60,
+                                minTime: '12:00am',
+                                maxTime: '23:00pm',
+                                dynamic: true,
+                                dropdown: true,
+                                scrollbar: true
+                              });
+                              }, 100);
+                            });
+                          })
+                      </script>
+                </div>
+                <div class="col s12 md4 l4 xl4 ">
+                  <div class="helper_card_msgTxtRg col s12">
+                    <div class="card col s12">
+                        <h3>How we use openhouse events.</h3>
+                        <div class="proObgHelpTips">
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_one</span>
+                            <p>We attach a calendar with all your upcoming openhouse events along with this property.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_two</span>
+                            <p>Clients can set reminders from this calendar.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_3</span>
+                            <p>We show you contact information of the clients in the reminder list so that you can follow up.</p>
+                          </div>
+                          <div class="proObgHelpTipTx">
+                            <span class="material-icons">looks_4</span>
+                            <p>We additionally notify the clients of the event when it nears on your behalf.</p>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          <div class="lsPropSteps-footer col s12">
+            <div class="lsPropSteps-footerBtns">
+              {% if wizard.steps.prev %}
+              <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
+              {% endif %}
+              <button class="nextStepLsprop" type="submit">{% trans "Next" %}</button>
+            </div>
+          </div>
+          {{ wizard.management_form }}
+        </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
