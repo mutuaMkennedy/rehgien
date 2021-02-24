@@ -2674,6 +2674,495 @@ main {
     display: none;
 }
 
+.listPropertyWizard{
+    padding:10px;
+    height:calc(100vh - 64px);
+    overflow-y:auto;
+    font-family:Work Sans, Open Sans, Arial;
+    position:relative;
+}
+
+.listPropertyWizard .listPropertyWizardProgress{
+    height:5px;
+    background-color:#1100ff;
+    position:fixed;
+    top:64px;
+    left:0;
+    z-index:10000;
+}
+
+@media all and (max-width:768px){
+    .listPropertyWizard .listPropertyWizardProgress{
+        top:56px;
+    }
+}
+
+.listPropertyWizard .submittingFormWrapper{
+    position:fixed;
+    height:100vh;
+    background-color:rgba(0, 0, 0, 0.5);
+    z-index:10001;
+    left:0;
+    width:100%;
+    top:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+}
+
+.listPropertyWizard .submittingFormWrapper .submittingInfo{
+   display:flex;
+   flex-direction:column;
+   align-items:center;
+   justify-content:center;
+   height:150px;
+   padding:15px 20px;
+   border:none;
+   background-color:#fff;
+   border-radius:5px;
+   font-size:14px;
+}
+
+.listPropertyWizard .submittingFormWrapper .submittingInfo img{
+    width:20px;
+    height:20px;
+}
+
+.listPropertyWizard .container{
+    background-color:#fff;
+    border-radius:10px;
+    height:100%;
+}
+
+@media all and (max-width:768px){
+    .listPropertyWizard .container{
+        width:100%;
+    }
+}
+
+.listPropertyWizard .container .wiz_exit {
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+}
+
+.listPropertyWizard .container .wiz_exit button{
+    background-color:#fff;
+    color:#747474;
+    border:none;
+    height:30px;
+    display:flex;
+    align-items:center;
+}
+
+.listPropertyWizard .container .wiz_exit button:hover{
+    cursor:pointer;
+    color:#1100ff;
+    border-radius:5px;
+}
+
+.listPropertyWizard .container .wiz_exit button span{
+    margin-right:5px;
+    display:flex;
+    height:30px;
+    line-height:30px;
+}
+
+.listPropertyWizard .row{
+    height:100%;
+}
+
+.listPropertyWizard .row form{
+    height:100%;
+}
+
+.listPropertyWizard .row form .listPropertyFormElS {
+/*     height:100%; */
+    padding-bottom:100px !important;
+}
+
+@media all and (max-width:768px){
+    .listPropertyWizard .row form .listPropertyFormElS{
+        padding-left:0 !important;
+        padding-right:0 !important;
+    }
+}
+
+.listPropertyWizard .container .listPropertyFormElS .listPropertyHdWzd h2{
+    font-size:25px;
+    font-weight:600;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .listPropertyHdWzd h2 span{
+    font-size:18px;
+    font-weight:500;
+    text-transform:capitalize;
+    display:flex;
+    margin:5px 0;
+}
+
+.listPropertyWizard .container .listPropertyFormElS h3{
+    font-size:20px;
+    font-weight:600;
+    text-transform:capitalize;
+    display:flex;
+    margin:20px 0;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field{
+    width:450px !important;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field.openHouseWiz tbody tr{
+    display:flex;
+    flex-wrap:wrap;
+/*     flex-direction:column; */
+}
+
+@media all and (max-width:768px){
+    .listPropertyWizard .container .listPropertyFormElS .field{
+        width:100% !important;
+    }
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field .errorlist{
+    margin:0;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field .errorlist li{
+    display:flex;
+    font-size:13px;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .stepTwo .field{
+    width:100% !important;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field p{
+    font-size:14px;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field p span{
+    color:#ff0000;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .openHouseWiz table td{
+    font-size:14px;
+    width:100%;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field input{
+    border: none;
+    background-color: #eee;
+    padding: 0 10px;
+    height: 45px;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    margin:0;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field input:focus {
+    box-shadow: 0 0 1px 1px #2cb2ea;
+    background-color: #fff !important;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field #wizGeocoder .mapboxgl-ctrl-geocoder {
+    width:100%;
+    margin:0 !important;
+    box-shadow:none;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field #wizGeocoder .mapboxgl-ctrl-geocoder input{
+    padding-left:35px;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field #wizGeocoder .mapboxgl-ctrl-geocoder svg{
+    height:30px;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .propertyPhotos input[type=file],
+.listPropertyWizard .container .listPropertyFormElS .propertyVideo input[type=file]{
+    background-color: #fff !important;
+    padding: 0 !important;
+    width: 100px!important;
+    height: 30px !important;
+    color: transparent;
+    border: none !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center!important;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .propertyPhotos ._LstfPhSelectedWiz-box,
+.listPropertyWizard .container .listPropertyFormElS .propertyVideo ._LstfVdSelectedWiz-box{
+    justify-content: left;
+    flex-wrap: wrap;
+    margin: 10px 0;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .propertyVideo video{
+    margin: 5px 0;
+    border-radius: 5px;
+    width:350px;
+    object-fit: cover;
+}
+
+@media all and (max-width:768px){
+    .listPropertyWizard .container .listPropertyFormElS .propertyVideo video{
+        width:100%;
+    }
+}
+
+.listPropertyWizard .container .listPropertyFormElS .propertyVideo ._media-update-formXtable tbody,
+.listPropertyWizard .container .listPropertyFormElS .propertyPhotos ._media-update-formXtable tbody{
+    justify-content:start;
+    margin:10px 0;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .propertyPhotos ._LstfPhSelectedWiz-box img{
+     margin: 5px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .propertyPhotos input[type=file]::-webkit-file-upload-button,
+.listPropertyWizard .container .listPropertyFormElS .propertyVideo input[type=file]::-webkit-file-upload-button{
+    visibility: hidden;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .propertyPhotos input[type=file]::before,
+.listPropertyWizard .container .listPropertyFormElS .propertyVideo input[type=file]::before {
+    display: inline-flex !important;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff !Important;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 20px;
+    width: 100px;
+    height: 30px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1100ff;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .propertyPhotos input::before {
+    content: 'Upload';
+}
+
+.listPropertyWizard .container .listPropertyFormElS .propertyVideo input[type=file]::before{
+    content: 'Upload';
+}
+
+.listPropertyWizard .container .listPropertyFormElS .propertyPhotos img{
+    width: 150px;
+    height: 100px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    object-fit: cover;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .__virtualTourPrvBoxWiz{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .__virtualTourPrvBoxWiz iframe{
+    width: 100% !important;
+    height: 300px !important;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .__virtualTourPrvBoxWiz .__vr-tour-loader-msgWiz{
+    font-size: 11px;
+    color: #747474;
+    text-align: center;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .__virtualTourPrvBoxWiz .__vr-tour-loader-msgWiz .__lldMsggWiz{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .__virtualTourPrvBoxWiz .__vr-tour-loader-msgWiz span{
+     color: red;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .field #id_mappoint-location-map{
+    height:350px;
+}
+.listPropertyWizard .container .listPropertyFormElS .wizFieldGroup2 .fieldsWrp .field{
+    width:200px !important;
+    margin-right:15px;
+    margin-bottom:15px;
+}
+
+@media all and (max-width:768px){
+    .listPropertyWizard .container .listPropertyFormElS .wizFieldGroup2 .fieldsWrp .field{
+        width:100% !important;
+        padding-right:15px;
+    }
+}
+
+.listPropertyWizard .container .listPropertyFormElS .wizFieldGroup2 .fieldsWrp{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    justify-content:start;
+    flex-wrap:wrap;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .wizFieldGroup2 .field textarea{
+    width:100%;
+    height:100px;
+    padding:10px;
+    font-size:14px;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .fieldsWrp .select-wrapper input{
+    display:none !important;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .fieldsWrp ul{
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    position: relative;
+    opacity: 1;
+    box-shadow: none;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .fieldsWrp ul li{
+    width:50%;
+    min-height:30px;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .fieldsWrp ul li > span{
+    padding:0 10px;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .fieldsWrp ul li span{
+    font-size:14px;
+    color:#747474;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .fieldsWrp ul li.selected span::before{
+     border-right-color: #2cb2ea;
+    border-bottom-color: red;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .fieldsWrp ul#id_PropetyFacts-basement{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .fieldsWrp ul#id_PropetyFacts-basement label{
+    display: flex;
+    align-items: center;
+    color: #747474;
+    font-size: 14px;
+    cursor:pointer;
+}
+
+.listPropertyWizard .container .listPropertyFormElS .fieldsWrp #id_PropetyFacts-basement input[type="radio"]:not(:checked),
+.listPropertyWizard .container .listPropertyFormElS .fieldsWrp #id_PropetyFacts-basement input[type="radio"]:checked{
+    position: relative;
+    opacity: 1;
+    pointer-events: none;
+    margin-right: 10px;
+    width:15px !important;
+}
+
+.listPropertyWizard .helper_card_msgTxtRg{
+    height:100%;
+}
+
+.listPropertyWizard .helper_card_msgTxtRg .card{
+    margin:0;
+    width:100%;
+    height:auto;
+    padding:15px;
+    margin-top:50%;
+    border-left:2px solid #1100ff;
+}
+
+.listPropertyWizard .helper_card_msgTxtRg .card h3{
+    font-size:14px;
+    font-weight:500;
+    margin:0;
+}
+
+.listPropertyWizard .card .proObgHelpTips .proObgHelpTipTx{
+    display:flex;
+    margin:15px 0;
+}
+
+.listPropertyWizard .card .proObgHelpTips .proObgHelpTipTx span{
+    color:#1100ff;
+}
+
+.listPropertyWizard .card .proObgHelpTips .proObgHelpTipTx p{
+    font-size:12px;
+    margin:0 10px;
+    line-height:16px;
+}
+
+.listPropertyWizard .lsPropSteps-footer{
+    position:fixed;
+    bottom:0;
+    left:0 !important;
+    height:65px;
+    box-shadow: 0 0px 5px 0px #eee;
+    display:flex;
+    align-items:center;
+    z-index:10000;
+    background-color:#ffff;
+}
+
+.listPropertyWizard .lsPropSteps-footer .lsPropSteps-footerBtns{
+    width:70%;
+    margin-left:auto;
+    margin-right:auto;
+    display:flex;
+    justify-content:space-between;
+}
+
+@media all and (max-width:768px){
+    .listPropertyWizard .lsPropSteps-footer .lsPropSteps-footerBtns{
+        width:100%;
+    }
+}
+
+.listPropertyWizard .lsPropSteps-footer .lsPropSteps-footerBtns button{
+    height:45px;
+    min-width:150px;
+    padding:0 10px;
+    border:none;
+    border-radius:5px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.listPropertyWizard .lsPropSteps-footer .lsPropSteps-footerBtns button.nextStepLsprop{
+     background-color:#1100ff;
+     color:#fff;
+}
+
 .dab-links-wrapper {
     font-size: 13px;
     color: #747474;
