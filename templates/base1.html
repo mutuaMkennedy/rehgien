@@ -453,20 +453,20 @@
 </div>
 
 <main>
-{% if messages%}
-    <ul class="messages" id="message_box">
-        {% for message in messages%}
-         <li {% if message.tag %} class="{{ message.tags }}" {% endif %}>
-           {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-           <i class="far fa-check-circle" style="color:#0aef13;"></i>
-           {% else %}
-           <i class="fas fa-times" style='color:red'></i>
-           {% endif %}
-           {{ message }}
-         </li>
-        {% endfor %}
-    </ul>
-{%endif%}
+  {% if messages%}
+      <ul class="messages" id="message_box">
+          {% for message in messages%}
+           <li {% if message.tag %} class="{{ message.tags }}" {% endif %}>
+             {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+               <span class="material-icons" style="color:#0aef13;">check_circle_outline</span>
+             {% else %}
+               <span class="material-icons" style="color:red;">highlight_off</span>
+             {% endif %}
+             {{ message }}
+           </li>
+          {% endfor %}
+      </ul>
+  {%endif%}
   {%block content%}
   {%endblock%}
 </main>
