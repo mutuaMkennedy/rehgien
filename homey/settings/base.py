@@ -296,11 +296,13 @@ LEAFLET_CONFIG = {
     'SCALE': 'both',
     'ATTRIBUTION_PREFIX': 'Rehgien',
     'RESET_VIEW': False,
+    'DRAW':False,
     'FORCE_IMAGE_PATH': True,
+    'NO_GLOBALS':False,
     'PLUGINS': {
-        'forms1': {
-                'js': 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js',
-                'css': 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css',
+        'forms': {
+                # 'js': 'https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.umd.js',
+                # 'css': 'https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.css',
                 'auto-include': True
         },
     }
