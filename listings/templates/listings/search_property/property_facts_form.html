@@ -256,8 +256,23 @@
 </div>
 
 <script type="text/javascript">
-  $('.finalWizForm').on('submit', function(){
-    $('.submittingFormWrapper').css('display','flex');
+  var submited = false;
+  var clickedPostListing = false;
+
+  function showUploadStatus(){
+      if (submited && clickedPostListing ) {
+            $('.submittingFormWrapper').css('display','flex');
+      };
+  };
+
+  $('#submitFormWiz').on('click', function(){
+    clickedPostListing = true;
+    $('.finalWizForm').on('submit', function(){
+      submited = true;
+      showUploadStatus()
+      });
+
   });
+
 </script>
 {% endblock %}
