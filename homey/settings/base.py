@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     "django_select2",
     "compressor",
+    "django_filters",
     #'haystack',
     # 'tastypie',
 ]
