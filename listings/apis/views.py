@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from listings import models
 from listings.apis import serializers
-from rest_framework import generics
-from rest_framework.filters import SearchFilter
+from rest_framework import generics, filters
 from django.db.models import Q
 from rest_framework.generics import (
                     ListAPIView,
@@ -20,7 +19,7 @@ from rest_framework.permissions import  (
 from .permissions import IsOwnerOrReadOnly,IsUserOrReadOnly
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-
+import django_filters
 # referencing the custom user model
 User = get_user_model()
 
@@ -41,19 +40,30 @@ class HomeTypeApi(ListAPIView):
     serializer_class = serializers.HomeTypeSerializer
     queryset = models.HomeType.objects.all()
 
-class HomeListApi(ListAPIView):
-    serializer_class = serializers.HomeSerializer
-    filter_backends = [SearchFilter]
-    search_fields = [ 'listing_type','type']
+class HomeFilter(django_filters.FilterSet):
+    min_price = django_filters.rest_framework.NumberFilter(field_name="price", lookup_expr='gte')
+    max_price = django_filters.rest_framework.NumberFilter(field_name="price", lookup_expr='lte')
+    min_bathrooms = django_filters.rest_framework.NumberFilter(field_name="bathrooms", lookup_expr='gte')
+    max_bathrooms = django_filters.rest_framework.NumberFilter(field_name="bathrooms", lookup_expr='lte')
+    min_bedrooms = django_filters.rest_framework.NumberFilter(field_name="bedrooms", lookup_expr='gte')
+    max_bedrooms = django_filters.rest_framework.NumberFilter(field_name="bedrooms", lookup_expr='lte')
+    min_floor_area = django_filters.rest_framework.NumberFilter(field_name="floor_area", lookup_expr='gte')
+    max_floor_area = django_filters.rest_framework.NumberFilter(field_name="floor_area", lookup_expr='lte')
+    location_name = django_filters.rest_framework.CharFilter(field_name="location_name", lookup_expr='icontains')
+    home_type = django_filters.rest_framework.CharFilter(field_name="home_type__name", lookup_expr='icontains')
+    class Meta:
+        model = models.Home
+        fields = {
+            'listing_type', 'price', 'property_category',
+            'home_type','bathrooms','bedrooms','location_name','floor_area',
+        }
 
-    def get_queryset(self,*args,**kwargs):
-        queryset_list = models.Home.objects.all()
-        query = self.request.GET.get('q')
-        if query:
-            queryset_list=queryset_list.filter(
-            Q(type__icontains=query)
-            ).distinct()
-        return queryset_list
+class HomeListApi(ListAPIView):
+    queryset = models.Home.objects.all()
+    serializer_class = serializers.HomeSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend,filters.OrderingFilter]
+    filterset_class = HomeFilter
+    ordering_fields  = ['publishdate','floor_area','bathrooms','bedrooms','price']
 
 class HomeCreateApi(CreateAPIView):
     queryset = models.Home.objects.all()
