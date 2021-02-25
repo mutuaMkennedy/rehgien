@@ -2,6 +2,7 @@ from . import serializers
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from profiles import models
+from rest_framework import filters
 from rest_framework.generics import (
                                     CreateAPIView,
                                     ListAPIView,
@@ -22,6 +23,7 @@ from rest_framework.permissions import (
                                     IsAuthenticatedOrReadOnly
                                         )
 from rest_framework.response import Response
+import django_filters
 
 # referencing the custom user model
 User = get_user_model()
@@ -52,9 +54,23 @@ class ProfessionalServiceListApi(ListAPIView):
     serializer_class = serializers.ProfessionalServiceSerializer
 
 #Busines profile
+class BusinessProfileFilter(django_filters.FilterSet):
+    address = django_filters.rest_framework.CharFilter(field_name="address", lookup_expr='icontains')
+    professional_category = django_filters.rest_framework.CharFilter(field_name="professional_category__category_name", lookup_expr='icontains')
+    professional_services = django_filters.rest_framework.CharFilter(field_name="professional_services__service_name", lookup_expr='icontains')
+    service_areas = django_filters.rest_framework.CharFilter(field_name="service_areas__town_name", lookup_expr='icontains')
+    class Meta:
+        model = models.BusinessProfile
+        fields = {
+            'address','service_areas', 'professional_category', 'professional_services',
+        }
+
 class BusinessProfileListApi(ListAPIView):
     queryset = models.BusinessProfile.objects.all()
     serializer_class = serializers.BusinessProfileSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend,filters.OrderingFilter]
+    filterset_class = BusinessProfileFilter
+    ordering_fields  = ['saves','followers']
 
 class BusinessProfileDetailApi(RetrieveAPIView):
     queryset = models.BusinessProfile.objects.all()
