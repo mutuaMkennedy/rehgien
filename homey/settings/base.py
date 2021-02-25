@@ -343,6 +343,7 @@ EMAIL_HOST_USER = "do-not-reply@rehgien.com"
 EMAIL_HOST_PASSWORD = 'donotreply20$$Rehgien'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'Rehgien <do-not-reply@rehgien.com>'
 
 TWILIO_ACCOUNT_SID = 'AC1db0e8cfbae1e3b9b5834772c0ef8d6c'
 TWILIO_API_KEY = 'SK5c969e58ab96a19249489add62911305'
