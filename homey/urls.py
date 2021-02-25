@@ -23,6 +23,7 @@ from photologue.sitemaps import GallerySitemap, PhotoSitemap
 from listings import views
 from django.views.generic import TemplateView
 from allauth.account.views import confirm_email
+from rest_auth.views import PasswordResetConfirmView
 from django.contrib.sitemaps.views import sitemap
 from listings.sitemap import  StaticViewSitemap
 from markets.sitemap import JobPostSitemap
@@ -83,6 +84,8 @@ urlpatterns += [
     url(r'^apis/rest-auth/', include('rest_auth.urls')),
     url(r'^apis/rest-auth/', include('rest_auth.urls')),
     url(r'^apis/rest-auth/registration/', include('rest_auth.registration.urls')),
+    re_path(r'^rest-auth/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', PasswordResetConfirmView.as_view(),
+            name='password_reset_confirm'),
     # re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name = 'index.html')),
 ]
 
