@@ -2,9 +2,11 @@
 {% load compress %}
 {% load cloudinary %}
 {% load i18n %}
+{% load analytical %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  {% analytical_head_top %}
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
   <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
@@ -46,8 +48,10 @@
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
   {% block head_title %}{% endblock %}
+{% analytical_head_bottom %}
 </head>
 <body>
+{% analytical_body_top %}
 <script type="text/javascript">
   window.onload = function() {
     document.querySelector(".preloader").style.display = "none";
@@ -135,5 +139,6 @@
   <!-- <script type="text/javascript">
           AOS.init()
   </script> -->
+  {% analytical_body_bottom %}
   </body>
 </html>
