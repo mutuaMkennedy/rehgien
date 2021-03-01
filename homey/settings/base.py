@@ -358,3 +358,4 @@ STREAM_API_SECRET = 'ynfguub9ds3qufavnzkdnvetrzrftqvs9punjq6zu7jwavcncshceyc8byp
 
 # Analytic services
 CLICKY_SITE_ID = '101303494'
+GOOGLE_ANALYTICS_GTAG_PROPERTY_ID = 'G-65Q435FWHZ'
