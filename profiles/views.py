@@ -179,10 +179,9 @@ def business_list(request):
 		business_list = business_list.filter(service_areas__town_name__icontains = location)
 		featured_b_list = business_list.filter(service_areas__town_name__icontains = location)
 		business_list_count = business_list.count()
-
 	if check_q_valid(service):
-		business_list = business_list.filter(professional_services__slug__icontains = service)
-		featured_b_list = business_list.filter(professional_services__slug__icontains = service)
+		business_list = business_list.filter(professional_services__service_name__icontains = service)
+		featured_b_list = business_list.filter(professional_services__service_name__icontains = service)
 		business_list_count = business_list.count()
 	if check_q_valid(job_rating):
 		if job_rating != 0:
