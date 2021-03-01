@@ -2,10 +2,11 @@
 {% load compress %}
 {% load cloudinary %}
 {% load i18n %}
-
+{% load analytical %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  {% analytical_head_top %}
   <!-- <meta name="viewport" content="width=1024"/> -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
@@ -42,14 +43,16 @@
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Libre+Baskerville&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=MuseoModerno&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
+  <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
+  {% analytical_head_bottom %}
 </head>
 <body>
+{% analytical_body_top %}
 <header>
   <div class="navbar-fixed">
     <nav class="teal" role="navigation">
@@ -516,11 +519,12 @@
       <script src="{% static 'progressBar/progressbar.min.js'%}"></script>
       <script src="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.js'%}"></script>
       <script src="{% static 'dynamic_formsets_src/jquery.formset.js'%}"></script>
-{% endcompress %}
-  <script src="https://media.twiliocdn.com/sdk/js/chat/v3.3/twilio-chat.min.js"></script>
-  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-  <script type="text/javascript">
-          AOS.init()
-  </script>
+  {% endcompress %}
+      <script src="https://media.twiliocdn.com/sdk/js/chat/v3.3/twilio-chat.min.js"></script>
+      <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+      <script type="text/javascript">
+              AOS.init()
+      </script>
+  {% analytical_body_bottom %}
   </body>
 </html>
