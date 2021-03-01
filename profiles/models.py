@@ -195,7 +195,7 @@ class BusinessProfile(models.Model):
 		verbose_name_plural = 'BusinessProfile'
 
 	def __str__(self):
-		return self.user.username
+		return self.business_name
 
 	@property
 	def longitude(self):
