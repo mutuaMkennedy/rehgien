@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     "django_select2",
     "compressor",
     "django_filters",
+    "analytical",
     #'haystack',
     # 'tastypie',
 ]
@@ -354,3 +355,6 @@ TWILIO_AUTH_TOKEN = '7f70419841a1632045d657089acd65c1'
 
 STREAM_API_KEY = 'krfpqyntmyk8'
 STREAM_API_SECRET = 'ynfguub9ds3qufavnzkdnvetrzrftqvs9punjq6zu7jwavcncshceyc8byp93kyq'
+
+# Analytic services
+CLICKY_SITE_ID = '101303494'
