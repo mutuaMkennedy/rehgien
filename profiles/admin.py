@@ -57,6 +57,7 @@ class ReviewInline(admin.StackedInline):
 
 class BusinessProfileAdmin(LeafletGeoAdmin):
     form = BusinessProfileAdminForm
+    list_display = ("business_name","user",)
     inlines = [
     ClientInline, BusinessHoursInline,ReviewInline
     ]
