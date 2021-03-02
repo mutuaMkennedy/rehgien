@@ -25,6 +25,12 @@ urlpatterns = [
     path('profiles/portfolio_item/<int:pk>/update/', api_views.PortfolioItemUpdateApi.as_view(), name='portfolio_item_update'),
     path('profiles/portfolio_item/<int:pk>/delete/', api_views.PortfolioItemDeleteApi.as_view(), name='portfolio_item_delete'),
 
+    path('profiles/portfolio_item/photo/create/', api_views.PortfolioItemPhotoCreateApi.as_view(), name='PortfolioItemPhotoCreateApi'),
+    path('profiles/portfolio_item/photo/list/', api_views.PortfolioItemPhotoListApi.as_view(), name='PortfolioItemPhotoListApi'),
+    path('profiles/portfolio_item/photo/<int:pk>/retrieve/', api_views.PortfolioItemPhotoDetailApi.as_view(), name='PortfolioItemPhotoDetailApi'),
+    path('profiles/portfolio_item/photo/<int:pk>/update/', api_views.PortfolioItemPhotoUpdateApi.as_view(), name='PortfolioItemPhotoUpdateApi'),
+    path('profiles/portfolio_item/photo/<int:pk>/delete/', api_views.PortfolioItemPhotoDeleteApi.as_view(), name='PortfolioItemPhotoDeleteApi'),
+
     path('profiles/team_connection/create/', api_views.TeammateConnectionCreate.as_view(), name='team_connection_create'),
     path('profiles/team_connection/list/', api_views.TeammateConnectionListApi.as_view(), name='team_connection_list'),
     path('profiles/team_connection/<int:pk>/retrieve/', api_views.TeammateConnectionDetailApi.as_view(), name='team_connection_retrieve'),
