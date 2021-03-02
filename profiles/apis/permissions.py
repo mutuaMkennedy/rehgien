@@ -11,6 +11,11 @@ class IsOwnerOrReadOnly(BasePermission):
     def has_object_permission(self,request,view,obj):
         return obj.created_by == request.user
 
+class IsPtfOwnerOrReadOnly(BasePermission):
+    message = 'PermissionDenied.'
+    def has_object_permission(self,request,view,obj):
+        return obj.portfolio_item.created_by == request.user
+
 class AccountOwnerOrReadOnly(BasePermission):
     message = 'PermissionDenied.'
     def has_object_permission(self,request,view,obj):
