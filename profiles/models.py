@@ -34,6 +34,7 @@ from embed_video.fields import EmbedVideoField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+from contact import views as contact_views
 
 # extending user model
 class User(AbstractUser):
@@ -352,3 +353,15 @@ class TeammateConnection(models.Model):
 
 	def __str__(self):
 		return str(self.requestor) + " - " + str(self.receiver) + " - " + self.receiver_accepted
+
+@receiver(post_save, sender=TeammateConnection)
+def send_email_to_receiver(sender, instance, **kwargs):
+	requestor_business_profile_pk = instance.requestor.pro_business_profile.pk
+	receiver_business_profile_pk =  instance.receiver.pro_business_profile.pk
+	# if the instance is that of accepting the connection request then send a
+	# request accpted email message to the requestor
+	if instance.receiver_accepted == 'Yes':
+		pass
+	# ele this is a new connection request so send a request to connect email message
+	else:
+		contact_views.request_team_connection(requestor_business_profile_pk, receiver_business_profile_pk)
