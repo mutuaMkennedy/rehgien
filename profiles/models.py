@@ -210,6 +210,10 @@ class BusinessProfile(models.Model):
 	def average_rating(self):
 		return self.pro_business_review.all().aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
 
+@receiver(pre_delete, sender=BusinessProfile)
+def set_user_to_client(sender, instance, **kwargs):
+	User.objects.filter(pk=instance.user.pk).update( user_type =  'CLIENT' )
+
 class Client(models.Model):
 	business_profile = models.ForeignKey(BusinessProfile, related_name = 'pro_business_client', on_delete = models.CASCADE)
 	client_logo = CloudinaryField('image', blank=False, overwrite=True, resource_type='image',
