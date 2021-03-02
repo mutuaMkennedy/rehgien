@@ -11,6 +11,7 @@ from .services.twilio_service import TwilioService
 from . import models
 from . import forms
 from listings import models as listings_models
+from profiles import models as profiles_models
 from django.contrib.sites.models import Site
 
 
@@ -84,7 +85,7 @@ def contact_listing_agent(request):
 			home_object = get_object_or_404(listings_models.Home, pk=str(propertyId) )
 			# we don't need this check but we will have it as a precaution. Object should already exist b4 the user reaches this part
 			try:
-				interaction = get_object_or_404(listings_models.PropertyInteraction, user=request.user)
+				interaction = get_object_or_404(listings_models.PropertyInteraction,home=home_object, user=request.user)
 				_views_count = interaction.views_count
 				listings_models.PropertyInteraction.objects.filter(home=home_object, user=request.user)\
 							.update( is_lead =  True )
@@ -230,6 +231,46 @@ def share_listing(request):
 	else:
 		messages.error(request,"Ooops! something went wrong. Make sure all fields are entered and valid.")
 		return redirect(request_path)
+
+def request_team_connection(requestor_business_profile_pk, receiver_business_profile_pk):
+	domain = 'http://' + Site.objects.get_current().domain
+	if requestor_business_profile_pk and receiver_business_profile_pk:
+		try:
+			requestor_obj = get_object_or_404(profiles_models.BusinessProfile, pk=int(requestor_business_profile_pk))
+			receiver_obj = get_object_or_404(profiles_models.BusinessProfile, pk=int(receiver_business_profile_pk))
+			subject = "{rc_name}, please add me to your team".format(rc_name = receiver_obj.business_name)
+			ImageTransformation = dict(
+				format = "jpg",
+				transformation = [
+					dict(height=333, width=500, crop="fill",quality="auto", gravity="center",
+					 format="auto", dpr="auto", fl="progressive"),
+						]
+					)
+			try:
+				sender_message = "Hi {rc_name}, I'd like to join your team on Rehgien.".format(rc_name = receiver_obj.business_name)
+				plainMessage = sender_message
+				context = {
+						'message': sender_message,
+						'requestorProfileImage':requestor_obj.business_profile_image,
+						'requestorName':requestor_obj.user.get_full_name() if requestor_obj.user.get_full_name() else requestor_obj.user.username,
+						'requestorBusinessName':requestor_obj.business_name,
+						'requestorBusinessPageLink':domain + requestor_obj.get_absolute_url(),
+						'domain':domain,
+						"ImageTransformation":ImageTransformation
+						 }
+				htmlMessage = render_to_string('contact/join_team_request.html', context)
+
+				# send_mail(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email], fail_silently=False)
+				message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <do-not-reply@rehgien.com>', [receiver_obj.user.email])
+				message.attach_alternative(htmlMessage, "text/html")
+				message.send()
+			except BadHeaderError:
+				message = 'Something went wrong! Could not complete request. Try again later'
+		except:
+			raise
+			# message = "Something went wrong could not find user!"
+	else:
+		message = 'Something went wrong! Could not complete request.'
 
 #Problem Reports
 
