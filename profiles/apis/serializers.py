@@ -135,14 +135,14 @@ class SocialBusinessProfileSerializer(WritableNestedModelSerializer):
 class PortfolioItemPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = profiles_models.PortfolioItemPhoto
-        fields = ['photo']
+        fields = ['pk','portfolio_item','photo']
 
 class PortfolioItemSerializer(WritableNestedModelSerializer):
-    portfolio_item_photo= PortfolioItemPhotoSerializer(many=True)
+    # portfolio_item_photo= PortfolioItemPhotoSerializer(many=True)
     class Meta:
         model = profiles_models.PortfolioItem
         fields = [
-        "pk","name","description","video","portfolio_item_photo","created_at","created_by",
+        "pk","name","description","video","created_at","created_by",
         ]
 
 class TeammateConnectionSerializer(serializers.ModelSerializer):
