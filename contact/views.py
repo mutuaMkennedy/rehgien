@@ -272,6 +272,46 @@ def request_team_connection(requestor_business_profile_pk, receiver_business_pro
 	else:
 		message = 'Something went wrong! Could not complete request.'
 
+def team_connection_request_acccepted(requestor_business_profile_pk, receiver_business_profile_pk):
+	domain = 'http://' + Site.objects.get_current().domain
+	if requestor_business_profile_pk and receiver_business_profile_pk:
+		try:
+			requestor_obj = get_object_or_404(profiles_models.BusinessProfile, pk=int(requestor_business_profile_pk))
+			receiver_obj = get_object_or_404(profiles_models.BusinessProfile, pk=int(receiver_business_profile_pk))
+			subject = "{rq_name}, accepted your connection request".format(rq_name = requestor_obj.business_name)
+			ImageTransformation = dict(
+				format = "jpg",
+				transformation = [
+					dict(height=333, width=500, crop="fill",quality="auto", gravity="center",
+					 format="auto", dpr="auto", fl="progressive"),
+						]
+					)
+			try:
+				sender_message = "{rq_name} has accepted your connection request. Your profiles are now visible on both of your business pages.".format(rq_name = requestor_obj.business_name)
+				plainMessage = sender_message
+				context = {
+						'message': sender_message,
+						'receiverProfileImage':receiver_obj.business_profile_image,
+						'receiverName':receiver_obj.user.get_full_name() if receiver_obj.user.get_full_name() else receiver_obj.user.username,
+						'receiverBusinessName':receiver_obj.business_name,
+						'domain':domain,
+						"ImageTransformation":ImageTransformation,
+						"receiverBusinessPageLink":domain + receiver_obj.get_absolute_url()
+						 }
+				htmlMessage = render_to_string('contact/join_team_request_accepted.html', context)
+
+				# send_mail(subject,plainMessage,'Rehgien <mutuakennedy81@gmail.com>', [recepient_email], fail_silently=False)
+				message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <do-not-reply@rehgien.com>', [requestor_obj.user.email])
+				message.attach_alternative(htmlMessage, "text/html")
+				message.send()
+			except BadHeaderError:
+				message = 'Something went wrong! Could not complete request. Try again later'
+		except:
+			raise
+			# message = "Something went wrong could not find user!"
+	else:
+		message = 'Something went wrong! Could not complete request.'
+
 #Problem Reports
 
 def check_valid(item):
