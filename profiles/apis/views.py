@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from .permissions import (
                         IsUserOrReadOnly,IsOwnerOrReadOnly,AccountOwnerOrReadOnly,
                         IsAPro,IsRequestorOrReceiver,IsProfileOwnerOrReadOnly,
-                        IsBusinessProfileOwnerOrReadOnly
+                        IsBusinessProfileOwnerOrReadOnly, IsPtfOwnerOrReadOnly
                         )
 from rest_framework.permissions import (
                                     AllowAny,
@@ -132,6 +132,31 @@ class PortfolioItemDeleteApi(DestroyAPIView):
     queryset = models.PortfolioItem.objects.all()
     serializer_class = serializers.PortfolioItemSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
+class PortfolioItemPhotoCreateApi(CreateAPIView):
+    queryset = models.PortfolioItemPhoto.objects.all()
+    serializer_class = serializers.PortfolioItemPhotoSerializer
+    permission_classes = [IsAPro]
+    # def perform_create(self,serializer):
+    #     serializer.save(portfolio_item.created_by=self.request.user)
+
+class PortfolioItemPhotoListApi(ListAPIView):
+    queryset = models.PortfolioItemPhoto.objects.all()
+    serializer_class = serializers.PortfolioItemPhotoSerializer
+
+class PortfolioItemPhotoDetailApi(RetrieveAPIView):
+    queryset = models.PortfolioItemPhoto.objects.all()
+    serializer_class = serializers.PortfolioItemPhotoSerializer
+
+class PortfolioItemPhotoUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.PortfolioItemPhoto.objects.all()
+    serializer_class = serializers.PortfolioItemPhotoSerializer
+    permission_classes = [IsPtfOwnerOrReadOnly]
+
+class PortfolioItemPhotoDeleteApi(DestroyAPIView):
+    queryset = models.PortfolioItemPhoto.objects.all()
+    serializer_class = serializers.PortfolioItemPhotoSerializer
+    permission_classes = [IsPtfOwnerOrReadOnly]
 
 # team connection crud
 class TeammateConnectionCreate(CreateAPIView):
