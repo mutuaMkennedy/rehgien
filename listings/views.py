@@ -324,7 +324,7 @@ def property_detail(request, property_category, pk):
 
 	# Check whether user has an interation object on the listing then create or update it
 	try:
-		interaction = get_object_or_404(models.PropertyInteraction, user=request.user)
+		interaction = get_object_or_404(models.PropertyInteraction, home=listing, user=request.user)
 		_views_count = interaction.views_count
 		models.PropertyInteraction.objects.filter(home=listing, user=request.user)\
 					.update(views_count = _views_count + 1)
