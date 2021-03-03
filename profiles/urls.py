@@ -24,7 +24,8 @@ urlpatterns = [
 		path('pro/follow/', views.pro_follow, name='follow_pro'),
 		# add to team
 		path('pro/connect/request/', views.request_connection, name='request_connection'),
-		path('pro/connetion/remove/', views.remove_connection, name='remove_connection'),
+		path('pro/connection/remove/', views.remove_connection, name='remove_connection'),
+		path('pro/connection/request/action/', views.connection_request_action, name='connection_request_action'),
 		path('my_network/connections/', views.user_connections, name='user_connections'),
 		path('pro/following/', views.user_followers, name='user_followers'),
 		path('notifications/', views.notifications, name='notifications'),
