@@ -2,26 +2,78 @@
 {% block title %} <title>Notifications | Rehgien</title>{% endblock %}
 {% load static %}
 {% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(document).on('click', '._conAcBtnsWr button', function(e){
+          e.preventDefault()
+          var button = $(this);
+          var rqAction = $(this).attr('value');
+          var rqId = $(this).attr('data-objId');
+          var successmsgBody = $('#upfPageAcScs');
+          var errmsgBody = $('#upfPageAcScs');
+          var rqCard = $('#rqCard' + rqId);
+          var ntfCount = parseInt($('#crqNtfCount').html());
+          rqCard.find($('.rqProcessing')).css('display','block');
+          $.ajax({
+              type: "POST",
+              url: "{% url 'profiles:connection_request_action'%}",
+              data: {
+                  'rq_id': rqId,
+                  'rq_action':rqAction,
+                  'csrfmiddlewaretoken':'{{ csrf_token }}'
+              },
+             dataType: 'json',
+              success: function (response) {
+                rqCard.find($('.rqProcessing')).css('display','none');
+                $(rqCard).css('display','none');
+                $('#crqNtfCount').html(ntfCount - 1);
+                successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                successmsgBody.css({'display': 'flex','bottom':'10px'})
+                setTimeout(function(){
+                   successmsgBody.css('bottom', '-100px');
+                }, 6000);
+              },
+              error: function(response,e){
+                rqCard.find($('.rqProcessing')).css('display','none');
+                errmsgBody.html("<span class='material-icons'>error_outline</span>" + response['err_message'])
+                errmsgBody.css({'display': 'flex','bottom':'10px'})
+                setTimeout(function(){
+                   errmsgBody.css('bottom', '-100px');
+                }, 6000);
+              },
+        });
+    });
+  })
+</script>
 <div class="notifIC">
+  <div id="upfPageAcScs" class="_upfPageAcScs">
+  </div>
+  <div id="upfPageAcErr" class="_upfPageAcErr">
+  </div>
   <div class="_HsbAlertsBx">
     <div class="container">
       <div class="row">
-        <h1>Notifications &nbsp <span>{{notifications_count}}</span></h1>
+        <h1>Notifications &nbsp <span id="crqNtfCount">{{notifications_count}}</span></h1>
         <div class="_notifyCards">
           {% if pending_connections %}
               {% for request in pending_connections %}
-                <div class="card">
+                <div id="rqCard{{request.pk}}" class="card">
+                  <div class="rqProcessing">
+
+                  </div>
                     <div class="prCo_img_wrp">
                       <img src="
-                          {% if request.requestor.profile_image %}
-                            {{request.requestor.profile_image.url}}
+                          {% if request.requestor.pro_business_profile.business_profile_image %}
+                            {{request.requestor.pro_business_profile.business_profile_image.url}}
                           {% else %}
                             {% static 'img/avatar.png'%}
                           {% endif %}
                           " alt="{{request.requestor.username}}">
                     </div>
                     <div class="_conBody">
-                      <p><span>{{request.requestor.username}}</span> sent you a connection request.</p>
+                      <p><span>{% if request.requestor.get_full_name %}{{request.requestor.get_full_name}}{% else %}{{request.requestor.username}}{% endif %}</span>
+                        owner of <a href="{{request.requestor.pro_business_profile.get_absolute_url}}"><b>{{request.requestor.pro_business_profile.business_name}} business page</b></a> sent you a connection request.</p>
                       <div class="_conAcBtnsWr">
                         <button id="_acceptC" type="button" name="rq_id" data-objId='{{request.pk}}' value='accept'>Accept</button>
                         <button id="_ignoreC" type="button" name="rq_id" data-objId='{{request.pk}}' value='ignore'>Ignore</button>
