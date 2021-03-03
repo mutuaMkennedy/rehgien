@@ -15811,6 +15811,18 @@ particle {
     align-items: center;
     border-radius: 5px;
     margin: 5px 0;
+    position:relative;
+}
+
+._HsbAlertsBx ._notifyCards .card .rqProcessing{
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:5px;
+    top:0;
+    left:0;
+    background-color:rgb(255 255 255 / 0.5);
+    display:none;
 }
 
 ._HsbAlertsBx ._notifyCards .card ._conBody {
