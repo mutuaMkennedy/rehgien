@@ -673,31 +673,57 @@ def remove_connection(request):
 
 def connection_request_action(request):
 	if request.method == 'POST':
-		if request.user.user_type != 'NormalUser':
-			#users usernames for creating the model instance
-			removed = False
-			object_id = int(request.POST.get('rq_id'))
+		if request.user.user_type != 'CLIENT':
+			rq_id = int(request.POST.get('rq_id',''))
+			rq_action = str(request.POST.get('rq_action',''))
 
 			try:
-				connection_object = get_object_or_404(models.TeammateConnection, pk='object_id')
+				connection_object = get_object_or_404(models.TeammateConnection, pk=rq_id)
 				if connection_object.receiver == request.user:
-					connection_object.delete()
-					removed = True
-					message = 'Success'
-					if request.is_ajax():
-						return JsonResponse({'error':message, 'removed':removed})
+					if rq_action == 'accept':
+						connection_object.receiver_accepted = 'Yes'
+						connection_object.save()
+						message = 'Success. {requestor} has been added to your connections list.'.format(requestor = connection_object.requestor)
+						if request.is_ajax():
+							return JsonResponse({'message':message})
+						else:
+							messages.success(request, message)
+							return redirect('profiles:notifications')
+					elif rq_action == 'ignore':
+						connection_object.delete()
+						message = 'Request ignored.'
+						if request.is_ajax():
+							return JsonResponse({'message':message})
+						else:
+							messages.success(request, message)
+							return redirect('profiles:notifications')
+					else:
+						message = 'Invalid request. Try again later'
+						if request.is_ajax():
+							return JsonResponse({'message':message})
+						else:
+							messages.success(request, message)
+							return redirect('profiles:notifications')
+
 				else:
 					if request.is_ajax():
 						message ='Permission Denied!'
-						return JsonResponse({'error':message,'removed':removed})
+						return JsonResponse({'err_message':message})
+					else:
+						messages.error(request, message)
+						return redirect('profiles:notifications')
 			except:
-				message ='Failed. Try again later'
+				message ='Something went wrong. Try again later'
 				if request.is_ajax():
-					html = render_to_string('profiles/remove_connection.html', context, request=request)
-					return JsonResponse({'form':html, 'error':message})
+					return JsonResponse({'err_message':message})
+				else:
+					messages.error(request, message)
+					return redirect('profiles:notifications')
+		else:
+			messages.error(request, 'You are not authorized for this action!')
+			return redirect('profiles:account')
 	else:
-		messages.error(request, 'You are not authorized for this action!')
-		return redirect('profiles:account')
+		return redirect('profiles:notifications')
 
 @login_required(login_url = 'account_login')
 def user_connections(request):
