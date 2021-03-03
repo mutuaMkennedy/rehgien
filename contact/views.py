@@ -13,6 +13,7 @@ from . import forms
 from listings import models as listings_models
 from profiles import models as profiles_models
 from django.contrib.sites.models import Site
+from django.urls import reverse
 
 
 def about_us(request):
@@ -255,6 +256,7 @@ def request_team_connection(requestor_business_profile_pk, receiver_business_pro
 						'requestorName':requestor_obj.user.get_full_name() if requestor_obj.user.get_full_name() else requestor_obj.user.username,
 						'requestorBusinessName':requestor_obj.business_name,
 						'requestorBusinessPageLink':domain + requestor_obj.get_absolute_url(),
+						'notificationsLink':domain + reverse('profiles:connection_request_action'),
 						'domain':domain,
 						"ImageTransformation":ImageTransformation
 						 }
@@ -278,7 +280,7 @@ def team_connection_request_acccepted(requestor_business_profile_pk, receiver_bu
 		try:
 			requestor_obj = get_object_or_404(profiles_models.BusinessProfile, pk=int(requestor_business_profile_pk))
 			receiver_obj = get_object_or_404(profiles_models.BusinessProfile, pk=int(receiver_business_profile_pk))
-			subject = "{rq_name}, accepted your connection request".format(rq_name = requestor_obj.business_name)
+			subject = "{rc_name}, accepted your connection request".format(rc_name = receiver_obj.business_name)
 			ImageTransformation = dict(
 				format = "jpg",
 				transformation = [
@@ -287,7 +289,7 @@ def team_connection_request_acccepted(requestor_business_profile_pk, receiver_bu
 						]
 					)
 			try:
-				sender_message = "{rq_name} has accepted your connection request. Your profiles are now visible on both of your business pages.".format(rq_name = requestor_obj.business_name)
+				sender_message = "{rc_name} has accepted your connection request. Your profiles are now visible on both of your business pages.".format(rc_name = receiver_obj.business_name)
 				plainMessage = sender_message
 				context = {
 						'message': sender_message,
