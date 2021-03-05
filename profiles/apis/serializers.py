@@ -138,7 +138,14 @@ class PortfolioItemPhotoSerializer(serializers.ModelSerializer):
         fields = ['pk','portfolio_item','photo']
 
 class PortfolioItemSerializer(WritableNestedModelSerializer):
-    # portfolio_item_photo= PortfolioItemPhotoSerializer(many=True)
+    portfolio_item_photo= PortfolioItemPhotoSerializer(many=True)
+    class Meta:
+        model = profiles_models.PortfolioItem
+        fields = [
+        "pk","name","description","video","portfolio_item_photo","created_at","created_by",
+        ]
+
+class PortfolioItemSerializer2(WritableNestedModelSerializer):
     class Meta:
         model = profiles_models.PortfolioItem
         fields = [
