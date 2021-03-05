@@ -16,7 +16,7 @@ from rest_framework.permissions import  (
                     IsAdminUser,
                     IsAuthenticatedOrReadOnly
                     )
-from .permissions import IsOwnerOrReadOnly,IsUserOrReadOnly
+from .permissions import IsOwnerOrReadOnly,IsUserOrReadOnly,IsHomeOwnerOrReadOnly
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 import django_filters
@@ -65,9 +65,12 @@ class HomeListApi(ListAPIView):
     filterset_class = HomeFilter
     ordering_fields  = ['publishdate','floor_area','bathrooms','bedrooms','price']
 
+# Uses a different serializer which does not nest property photo and video table in the response
+# which were raising issues in multi file uploads. Media files are uploaded
+# with a separate api
 class HomeCreateApi(CreateAPIView):
     queryset = models.Home.objects.all()
-    serializer_class = serializers.HomeSerializer
+    serializer_class = serializers.HomeSerializer2
     permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(owner=self.request.user)
@@ -76,9 +79,12 @@ class HomeDetailApi(RetrieveAPIView):
     queryset =  models.Home.objects.all()
     serializer_class = serializers.HomeSerializer
 
+# Uses a different serializer which does not nest property photo and video table in the response
+# which were raising issues in multi file uploads. Media files are uploaded
+# with a separate api
 class HomeUpdateApi(RetrieveUpdateAPIView):
     queryset = models.Home.objects.all()
-    serializer_class = serializers.HomeSerializer
+    serializer_class = serializers.HomeSerializer2
     permission_classes = [IsOwnerOrReadOnly]
 
 class HomeSavesSerializer(RetrieveUpdateAPIView):
@@ -91,6 +97,55 @@ class HomeDeleteApi(DestroyAPIView):
     serializer_class = serializers.HomeSerializer
     permission_classes = [IsAuthenticated]
 
+#Home photo api views
+class PropertyPhotoListApi(ListAPIView):
+    queryset = models.PropertyPhoto.objects.all()
+    serializer_class = serializers.PropertyPhotoSerializer
+
+class PropertyPhotoCreateApi(CreateAPIView):
+    queryset = models.PropertyPhoto.objects.all()
+    serializer_class = serializers.PropertyPhotoSerializer
+    permission_classes = [IsAuthenticated]
+
+class PropertyPhotoDetailApi(RetrieveAPIView):
+    queryset =  models.PropertyPhoto.objects.all()
+    serializer_class = serializers.PropertyPhotoSerializer
+
+class PropertyPhotoUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.PropertyPhoto.objects.all()
+    serializer_class = serializers.PropertyPhotoSerializer
+    permission_classes = [IsHomeOwnerOrReadOnly]
+
+class PropertyPhotoDeleteApi(DestroyAPIView):
+    queryset = models.PropertyPhoto.objects.all()
+    serializer_class = serializers.PropertyPhotoSerializer
+    permission_classes = [IsHomeOwnerOrReadOnly]
+
+#Home video api views
+class PropertyVideoListApi(ListAPIView):
+    queryset = models.PropertyVideo.objects.all()
+    serializer_class = serializers.PropertyVideoSerializer
+
+class PropertyVideoCreateApi(CreateAPIView):
+    queryset = models.PropertyVideo.objects.all()
+    serializer_class = serializers.PropertyVideoSerializer
+    permission_classes = [IsAuthenticated]
+
+class PropertyVideoDetailApi(RetrieveAPIView):
+    queryset =  models.PropertyVideo.objects.all()
+    serializer_class = serializers.PropertyVideoSerializer
+
+class PropertyVideoUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.PropertyVideo.objects.all()
+    serializer_class = serializers.PropertyVideoSerializer
+    permission_classes = [IsHomeOwnerOrReadOnly]
+
+class PropertyVideoDeleteApi(DestroyAPIView):
+    queryset = models.PropertyVideo.objects.all()
+    serializer_class = serializers.PropertyVideoSerializer
+    permission_classes = [IsHomeOwnerOrReadOnly]
+
+# Property interactions api views
 class PropertyInteractionListApi(ListAPIView):
     queryset = models.PropertyInteraction.objects.all()
     serializer_class = serializers.PropertyInteractionSerializer
