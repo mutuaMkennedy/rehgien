@@ -108,9 +108,12 @@ class LikeReviewUpdateApi(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
 # Portfolio crud
+# Uses a different serializer which does not nest portfolio photo table in the response
+# which were raising issues in multi file uploads. Media files are uploaded
+# with a separate api
 class PortfolioItemCreateApi(CreateAPIView):
     queryset = models.PortfolioItem.objects.all()
-    serializer_class = serializers.PortfolioItemSerializer
+    serializer_class = serializers.PortfolioItemSerializer2
     permission_classes = [IsAPro]
     def perform_create(self,serializer):
         serializer.save(created_by=self.request.user)
@@ -123,9 +126,12 @@ class PortfolioItemDetailApi(RetrieveAPIView):
     queryset = models.PortfolioItem.objects.all()
     serializer_class = serializers.PortfolioItemSerializer
 
+# Uses a different serializer which does not nest portfolio photo table in the response
+# which were raising issues in multi file uploads. Media files are uploaded
+# with a separate api
 class PortfolioItemUpdateApi(RetrieveUpdateAPIView):
     queryset = models.PortfolioItem.objects.all()
-    serializer_class = serializers.PortfolioItemSerializer
+    serializer_class = serializers.PortfolioItemSerializer2
     permission_classes = [IsOwnerOrReadOnly]
 
 class PortfolioItemDeleteApi(DestroyAPIView):
@@ -133,6 +139,9 @@ class PortfolioItemDeleteApi(DestroyAPIView):
     serializer_class = serializers.PortfolioItemSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
+# Uses a different serializer which does not nest portfolio photo table in the response
+# which were raising issues in multi file uploads. Media files are uploaded
+# with a separate api
 class PortfolioItemPhotoCreateApi(CreateAPIView):
     queryset = models.PortfolioItemPhoto.objects.all()
     serializer_class = serializers.PortfolioItemPhotoSerializer
