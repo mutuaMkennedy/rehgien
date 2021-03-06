@@ -8,7 +8,6 @@
 {% leaflet_css plugins="forms" %}
 {% load crispy_forms_tags%}
 
-
 <section>
   <div id="pfl-pg-cont" class="container">
     <div id="upfPageAcScs" class="_upfPageAcScs">
@@ -24,8 +23,8 @@
                   </div>
                   <div class="pfl-acct-BtnsWrps">
                       <div class="pfl-acct-actionBtnsWrp">
-                          <div id="AcsNavLinks" class="pfl-acct-actionBtns">
-                                <a href="{% url 'homepage'%}">
+                          <div id="AcsNavLinks" class="pfl-acct-actionBtns tourStep1">
+                                <a href="{% url 'homepage'%}" class="tourStep2">
                                   <span class="material-icons">home</span>&nbsp &nbsp
                                   <p>Home</p>
                                 </a>
@@ -33,15 +32,15 @@
                                   <span class="material-icons">dashboard</span>&nbsp &nbsp
                                   <p>Dashboard</p>
                                 </a> -->
-                                <a href="#" class="dashboardTabLink" onclick="openPage(event, '_dashbordListings')">
-                                  <span class="material-icons">list_alt</span>&nbsp &nbsp
-                                  <p>Listings</p>
-                                </a>
-                                <a href="#"  id="defaultOpen" class="dashboardTabLink" onclick="openPage(event, '_dashbordAccount')">
+                                <a href="#"  id="defaultOpen" data-sc='Account' class="dashboardTabLink tourStep3" onclick="openPage(event, '_dashbordAccount')">
                                   <span class="material-icons">account_circle</span>&nbsp &nbsp
                                   <p>Account</p>
                                 </a>
-                                <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="dashboardTabLink">
+                                <a id="lstSct" href="#" data-sc='Listings' class="dashboardTabLink tourStep4" onclick="openPage(event, '_dashbordListings')">
+                                  <span class="material-icons">list_alt</span>&nbsp &nbsp
+                                  <p>Listings</p>
+                                </a>
+                                <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="dashboardTabLink tourStep5">
                                   <span class="material-icons">business_center</span>&nbsp &nbsp
                                   <p>Rehgien Pro</p>
                                 </a>
@@ -64,7 +63,7 @@
                     </div>
                   </div>
                   <div class="pflDashHdRight">
-                      <div class="notificationsTab">
+                      <div id="ntfSction" data-sc='Accounts' class="notificationsTab tourStep6">
                         <a href="{% url 'profiles:notifications'%}"><span class="material-icons">group</span></a>
                         <a href="{% url 'profiles:notifications'%}"><span class="material-icons">notifications</span></a>
                       </div>
@@ -79,7 +78,7 @@
             <div class="_AccountovDbox">
               <div class="_accCardsWrapper">
                   <div class="_accCardsWrapperL">
-                    <div class="card _accCard">
+                    <div id="psnalActSction" data-sc='Accounts' class="card _accCard tourStep7">
                         <h3><span class="material-icons">person</span>Profile</h3>
 
                         <div class="_userProfileMiddle">
@@ -94,7 +93,7 @@
                         </div>
                     </div>
                     {% if request.user.user_type == 'PRO'%}
-                      <div class="card _accCard">
+                      <div id="bsNActSction" data-sc='Accounts' class="card _accCard tourStep8">
                         {% if user.user_type != 'PRO' %}
                         <div class="disabledCardOverlay">
                           <div class="_diabledHelperTxt">
@@ -145,7 +144,7 @@
                   <div class="_accCardsWrapperR">
                     <div class="_accCardsWrapScal">
                       {% if request.user.user_type == 'PRO'%}
-                      <div class="card _accCard">
+                      <div id="ConSSction" data-sc='Accounts' class="card _accCard tourStep9">
                         {% if request.user.user_type != 'PRO' %}
                         <div class="disabledCardOverlay">
                           <div class="_diabledHelperTxt">
@@ -204,7 +203,7 @@
                           </div>
                       </div>
                       {% endif %}
-                      <div class="card _accCard">
+                      <div id="ConSSction" data-sc='Accounts' class="card _accCard tourStep10">
                           <h3><span class="material-icons">how_to_reg</span>
                             {% if user.user_type == 'CLIENT' %}<!-- Use following instead of followers -->
                               Following
@@ -375,16 +374,19 @@
           </div>
           <div id="_dashbordListings" class="_dashboardTabContent">
               <div  id="pfl-d-sw">
-                <ul id="pfl-pg-switch" class="tabs">
-                    <li class="tab col s3"><a href="#_dashMyListings">Property</a></li>
-                    <li class="tab col s3"><a href="#_dashRequests">Job Posts</a></li>
-                    <li class="tab col s3"><a href="#_dashMyFavs">Saved Property</a></li>
+                <ul id="pfl-pg-switch" data-sc='Listings'class="tabs tourStep11">
+                    {% if user.pro_business_profile.professional_category.professional_group.slug == 'real-estate-services'%}
+                    <li id="propLink_ls" data-sc='Listings' class="tab col s3 tourStep12"><a href="#_dashMyListings">Property</a></li>
+                    {% endif %}
+                      <li id="propSvLink_ls" data-sc='Listings' class="tab col s3 tourStep13"><a href="#_dashMyFavs">Saved Property</a></li>
+                    <li id="propJbpLink_ls" data-sc='Listings' class="tab col s3 tourStep14"><a href="#_dashRequests">Job Posts</a></li>
                     {% if user.user_type == 'PRO'%}
-                      <li class="tab col s3"><a href="#_dashMyPortfolio">Portfolio</a></li>
+                      <li id="propPtfLink_ls" data-sc='Listings' class="tab col s3 tourStep15"><a href="#_dashMyPortfolio">Portfolio</a></li>
                     {% endif %}
                 </ul>
               </div>
               <div class="pfl-dtl">
+                {% if user.pro_business_profile.professional_category.professional_group.slug == 'real-estate-services'%}
                 <div id="_dashMyListings" class="pfl-listings pfl_itemsSection_post">
                     {% if user.pro_business_profile.professional_category.professional_group.slug == 'real-estate-services'%}
                       <div  id="MyListingsSwWr">
@@ -641,6 +643,7 @@
                       </div>
                     {% endif %}
                 </div>
+                {% endif %}
                 <div id="_dashMyFavs" class="favourites-sc pfl_itemsSection_post">
                   <div class="pfl-listings">
                       <div  id="MyListingsSwWr">
@@ -1103,8 +1106,70 @@
               </div>
           </div>
         </div>
-
     </div>
+  </div>
+
+<div class="fixedGuidedTour tourStep18">
+  <button id="showMapTour" class="btn-large cyan {% if user.date_joined|date:'j F Y' == now|date:'j F Y' %}pulse {%endif%}">
+    <i class="large material-icons">help_center</i>
+  </button>
+  <ul id="introStepMap" class="collapsible">
+    <div class="helpCenterHeader">
+      <span class="material-icons">help_outline</span>
+      <h4>This is your help center for this page. <br> Start or jump to a tutorial on any section if you ever feel lost.</h4>
+    </div>
+    <li class="active">
+      <div class="collapsible-header">
+          <div class="guidedScHeader">
+            <i class="material-icons">tour</i>Tour this page
+          </div>
+          <span class="material-icons">expand_more</span>
+      </div>
+      <div class="collapsible-body">
+        <a href="#" data-introStep="1">Start the page tour.</a>
+      </div>
+    </li>
+    <li>
+      <div class="collapsible-header">
+        <div class="guidedScHeader">
+          <i class="material-icons">notifications_active</i>Notifications
+        </div>
+        <span class="material-icons">expand_more</span>
+      </div>
+      <div class="collapsible-body"><a href="#" data-introStep="6">Managing notifications</a></div>
+    </li>
+    <li>
+      <div class="collapsible-header">
+        <div class="guidedScHeader">
+          <i class="material-icons">person</i>Account section
+        </div>
+        <span class="material-icons">expand_more</span>
+      </div>
+      <div class="collapsible-body">
+        <a href="#" data-introStep="7">What is a Personal profile?</a>
+        <a href="#" data-introStep="8">What is a Business profile?</a>
+        <a href="#" data-introStep="9">What are connections?</a>
+        <a href="#" data-introStep="10">How does the follow/ing section work?</a>
+      </div>
+    </li>
+    <li>
+      <div class="collapsible-header">
+          <div class="guidedScHeader">
+            <i class="material-icons">list_alt</i>Listings section
+          </div>
+          <span class="material-icons">expand_more</span>
+      </div>
+      <div class="collapsible-body">
+          <a href="#" data-introStep="11">What are listings?</a>
+          <a href="#" data-introStep="13">How do i add property listings?</a>
+          <a href="#" data-introStep="14">Where are my saved properties?</a>
+          <a href="#" data-introStep="15">What are Job posts?</a>
+          <a href="#" data-introStep="16">What's a portfolio?</a>
+      </div>
+    </li>
+  </ul>
+
+</div>
 </section>
 
 <section class="_userPfPageModals">
@@ -1208,9 +1273,149 @@
       </div>
   </div>
 </div>
-
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
+
+$(document).ready(function(){
+  //page guide
+    var intro = introJs().setOptions({
+    tooltipClass: 'customTooltip',
+    disableInteraction: true,
+    steps: [
+      {
+        title: 'Welcome!',
+        intro: "<img src='"+ "{% static 'img/guideData.svg'%}" + "' alt='welcome'> <br> Lets take you on a quick tour of this page."
+      },
+      {
+        title: 'A quick note!',
+        intro: "If you meet a feature on this tutorial that you can't see on your page, it means your account type is not allowed to access it. <br><br>However since this is a feature know how tutorial all features are mentioned. "
+      },
+      {
+        element: document.querySelector('.tourStep1'),
+        title: 'Page Navigation',
+        intro: "<img src='" + "{% static 'img/guideWindows.svg'%}" +"' alt='Navbar'> <br> This section allows you to switch sections on this page or to go to other pages."
+      },
+      {
+        element: document.querySelector('.tourStep2'),
+        title: 'Main homepage',
+        intro: 'Exit to rehgien.com'
+      },
+      {
+        element: document.querySelector('.tourStep3'),
+        title: 'Account section',
+        intro: 'Manage all your account information in the account section. This is the default open tab.'
+      },
+
+      {
+        element: document.querySelector('.tourStep6'),
+        title: 'Notifications',
+        intro: 'Any activity based and in-app notifications you have are shown and can be managed from here.',
+        position: 'left'
+      },
+      {
+        element: document.querySelector('.tourStep7'),
+        title: 'Personal profile.',
+        intro: "Your personal profile holds your identity on rehgien. <br>Update it anytime by clicking update account."
+      },
+      {
+        element: document.querySelector('.tourStep8'),
+        title: 'Business profile - <span>PRO feature</span>',
+        intro: "As a PRO your business page and the information you give is critical to helping us connect you with new clients. <br> Therefore, make sure the information you provide is correct, complete and up to date!<br><br> If you are a pro please: <br> <a href='"+ "{% url 'rehgien_pro:ProSetupWizardView' %}" +"' target='_blank'>upgrade.</a>"
+      },
+      {
+        element: document.querySelector('.tourStep9'),
+        title: 'Connections - <span>PRO feature</span>',
+        intro:"View and manage your connections on rehgien. Connecting with other pros on Rehgien increases your business page visibility and credibility. <br> <b>Only connect " +
+        "with brands or pros you trust.</b> <br><br> If you are a pro please: <br> <a href='"+ "{% url 'rehgien_pro:ProSetupWizardView' %}" +"' target='_blank'>upgrade.</a>"
+      },
+      {
+        element: document.querySelector('.tourStep10'),
+        title: 'Account:Followers/ing.',
+        intro: "If you are a pro you can manage the people you follow and people who follow you. If you are a CLIENT you can only follow pros but cannot have followers."
+      },
+      {
+        element: document.querySelector('.tourStep4'),
+        title: 'Listings section',
+        intro: "<img src='" + "{% static 'img/guideSpreadsheet.svg'%}" +"' alt='Listings'> <br> Listings comprise of items you can post and interact with on rehgien."
+      },
+
+      {
+        element: document.querySelector('.tourStep11'),
+        title: 'Listings tabs',
+        intro: "Quickly switch between open and closed tabs by clicking on this links.",
+        position: 'left'
+      },
+      {
+        element: document.querySelector('.tourStep12'),
+        title: 'Property posts - <span>PRO feature</span>',
+        intro: "<img src='" + "{% static 'img/guideHouseSelect.svg'%}" +"' alt='Listings'> <br> Post for free your properties and start getting clients. We give you dynamic statistical reports on the perfomance of each of your properties on rehgien . Feature only availlable to Real estate pros. <br><br> If you are a pro please: <br> <a href='"+ "{% url 'rehgien_pro:ProSetupWizardView' %}" +"' target='_blank'>upgrade.</a>"
+      },
+      {
+        element: document.querySelector('.tourStep13'),
+        title: 'Saved property',
+        intro: "Quickly access and manage properties you have liked.",
+        position: 'left'
+      },
+      {
+        element: document.querySelector('.tourStep14'),
+        title: 'Post a job',
+        intro: "<img src='" + "{% static 'img/guidePeopleSearch.svg'%}" +"' alt='Listings'> <br> Jobs are an alternative and quick way to finding pros for a service you need, <a href='"+ "{% url 'markets:job_post_home' %}" +"' target='_blank'>learn more here.</a> <br><br>If you are a pro please: <br> <a href='"+ "{% url 'rehgien_pro:ProSetupWizardView' %}" +"' target='_blank'>upgrade</a> <br>in order to reply to jobs.",
+        position: 'left'
+      },
+      {
+        element: document.querySelector('.tourStep15'),
+        title: 'Portfolio - <span>PRO feature</span> ',
+        intro: "<img src='" + "{% static 'img/guidePortfolio.svg'%}" +"' alt='Listings'> <br> Showcase your work by posting any ongoing projects.<br> Projects form your portfolio and are shown on your business page. <br><br> If you are a pro please: <br> <a href='"+ "{% url 'rehgien_pro:ProSetupWizardView' %}" +"' target='_blank'>upgrade.</a>",
+        position: 'left'
+      },
+      {
+        element: document.querySelector('.tourStep5'),
+        title: 'Pro homepage',
+        intro: 'Explore a collection of tools meant to help your business grow'
+        },
+      {
+          element: document.querySelector('.tourStep18'),
+          title: 'Done!',
+          intro: "Great you're good to go. We are always here if you need any help."
+        },
+    ]
+    });
+    introJs().refresh();
+
+    var firstGuideOpen = true;
+    $('#introStepMap a').on('click', function(){
+          var num = $(this).attr('data-introStep');
+          $('#introStepMap').css('right','-1000px');
+          if (firstGuideOpen) {
+            intro.goToStepNumber(parseInt(num)).start();
+            firstGuideOpen = false;
+          }else{
+            intro.goToStepNumber(parseInt(num)-1).start();
+          }
+
+    })
+
+    intro.onchange(function(targetElement) {
+      var elData = $('#'+targetElement.id).attr('data-sc')
+      if (elData === 'Listings'){
+        document.getElementById("lstSct").click();
+      }else if (elData === 'Accounts'){
+        document.getElementById("defaultOpen").click();
+      }
+    });
+
+
+    $('#showMapTour').on('click', function(){
+      var tourWrapper= $('#introStepMap');
+      if (tourWrapper.css('right') != '0px') {
+        tourWrapper.css('right','0px');
+      }else{
+        tourWrapper.css('right','-1000px');
+      }
+    })
+
+});
+
 function openPage(event,pageName) {
   var i, dashboardTabContent, dashboardTabLinks;
   dashboardTabContent = document.getElementsByClassName("_dashboardTabContent");
@@ -1457,6 +1662,7 @@ $("#upfPhotoInputSelector input").change(function () {
      lNav.attr('data-isOpen','True');
    }
 });
+
 })
 </script>
 
