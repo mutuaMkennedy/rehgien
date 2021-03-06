@@ -9506,7 +9506,7 @@ particle {
     background-color: transparent;
     outline: none;
     box-shadow: none;
-    pointer-events: none;
+/*     pointer-events: none; */
 }
 
 ._userPfPageModals .modal-overlay {
