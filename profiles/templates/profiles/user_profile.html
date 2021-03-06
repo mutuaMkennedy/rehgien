@@ -1110,14 +1110,18 @@
   </div>
 
 <div class="fixedGuidedTour tourStep18">
-  <button id="showMapTour" class="btn-large cyan {% if user.date_joined|date:'j F Y' == now|date:'j F Y' %}pulse {%endif%}">
+  {% now "j F Y" as todays_date %}
+  {% with date_joined=user.date_joined|date:"j F Y"%}
+  <button id="showMapTour" class="btn-large cyan {% if date_joined == todays_date %}pulse {%endif%}">
     <i class="large material-icons">help_center</i>
   </button>
+
   <ul id="introStepMap" class="collapsible">
     <div class="helpCenterHeader">
       <span class="material-icons">help_outline</span>
       <h4>This is your help center for this page. <br> Start or jump to a tutorial on any section if you ever feel lost.</h4>
     </div>
+    {% endwith %}
     <li class="active">
       <div class="collapsible-header">
           <div class="guidedScHeader">
