@@ -26,10 +26,10 @@ class profile_form(forms.ModelForm):
 
 
 class UserEditForm(forms.ModelForm):
-	x = forms.FloatField(widget=forms.HiddenInput())
-	y = forms.FloatField(widget=forms.HiddenInput())
-	width = forms.FloatField(widget=forms.HiddenInput())
-	height = forms.FloatField(widget=forms.HiddenInput())
+	x = forms.FloatField(widget=forms.HiddenInput(),required=False)
+	y = forms.FloatField(widget=forms.HiddenInput(),required=False)
+	width = forms.FloatField(widget=forms.HiddenInput(),required=False)
+	height = forms.FloatField(widget=forms.HiddenInput(),required=False)
 	profile_image = forms.ImageField(widget=forms.FileInput,required=False)
 	class Meta:
 		model = models.User
