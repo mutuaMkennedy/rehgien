@@ -92,10 +92,15 @@ def edit_basic_profile(request):
 					w = basic_form.cleaned_data.get('width')
 					h = basic_form.cleaned_data.get('height')
 
-					cropped_photo = resizePhoto(temp_photo,x,y,w,h)
-
-					instance.profile_image = cropped_photo
-					instance.save()
+					#check if the request has a file attachment
+					try:
+						cropped_photo = resizePhoto(temp_photo,x,y,w,h)
+						instance.profile_image = cropped_photo
+						instance.save()
+					except AttributeError as e:
+						# if file does not exist then it means the user did not submit any profile picture
+						# hence just save the form without trying any photo  manipulation.
+						instance.save()
 
 					context = {
 					'user':request.user,
@@ -115,6 +120,7 @@ def edit_basic_profile(request):
 					'user':request.user,
 					'basic_form':basic_form
 					}
+					print(basic_form.errors.as_data())
 					message = 'Invalid submission. Could not update!'
 					if request.is_ajax():
 						ac_details = render_to_string('profiles/account_details_section.html', context, request=request)
