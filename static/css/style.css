@@ -3823,6 +3823,7 @@ _dashbordAccount {
     margin: 5px 0;
     display: flex;
     align-items: center;
+    justify-content:center;
 }
 
 ._userProfileImgNw h5 span {
@@ -19066,4 +19067,164 @@ particle {
     font-weight:500;
     font-size:13px;
     line-height:16px;
+}
+
+.fixedGuidedTour{
+    position:fixed;
+    bottom:0 !important;
+    top:unset !important;
+    right:0 !important;
+    margin:15px;
+}
+
+.fixedGuidedTour button{
+    width:54px;
+    height:54px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:50%;
+    box-shadow:0 0 0 5px rgb(44 178 234 / 0.15);
+}
+
+.fixedGuidedTour .collapsible{
+    position:absolute;
+    min-width:300px;
+    right:-1000px;
+    bottom:54px;
+    background-color:#ffff;
+    border-radius:5px;
+    transition:right 0.2s ease;
+}
+
+.fixedGuidedTour .collapsible .helpCenterHeader{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:25px 5px;
+    border-bottom:2px solid #f1f9f1;
+    background-color:#1100ff;
+    border-top-right-radius:5px;
+    border-top-left-radius:5px;
+}
+
+.fixedGuidedTour .collapsible .helpCenterHeader span{
+    font-size:40px;
+    color:#ffffff;
+}
+
+.fixedGuidedTour .collapsible .helpCenterHeader h4{
+    margin:10px 0;
+    font-size:15px;
+    text-align:center;
+    font-size:12px;
+    color:#fff;
+}
+
+.fixedGuidedTour .collapsible li{
+    margin:0;
+    font-family:Open Sans, Arial;
+    padding:5px;
+}
+
+.fixedGuidedTour .collapsible .collapsible-header{
+    padding:10px 0;
+    border:none;
+    display:flex;
+    justify-content:space-between;
+    font-weight:500;
+    color:#1100ff;
+    background-color:#ffffff;
+    font-size:14px;
+}
+.fixedGuidedTour .collapsible .collapsible-header i{
+    font-size:20px;
+}
+
+.fixedGuidedTour .collapsible li.active .collapsible-header span{
+    transform:rotate(180deg)
+}
+
+.fixedGuidedTour .collapsible .collapsible-header .guidedScHeader{
+    display:flex;
+    align-items:center;
+}
+
+.fixedGuidedTour .collapsible .collapsible-body{
+    padding:5px;
+    padding-left:40px;
+    align-items:start;
+}
+
+.fixedGuidedTour .collapsible .collapsible-body a{
+    display:flex;
+    flex-direction:column;
+    align-items:start;
+    color:#747474;
+    text-align:start;
+    font-size:13px;
+    margin:5px;
+}
+
+.customTooltip * {
+  color: #4a4a4a !important;
+  font-size: 15px !important;
+}
+
+.customTooltip{
+  min-width:320px !important;
+  max-width:320px !important;
+}
+
+.customTooltip .introjs-tooltip-title {
+  font-family: Open Sans,Arial !important;
+  /* text-align:center; */
+  width:100% !important;
+}
+
+.customTooltip .introjs-tooltip-title span{
+  color:#cc0000 !important;
+}
+
+.customTooltip .introjs-tooltip-header a{
+  position: absolute;
+  top: 0px;
+  right: 0;
+  font-size:20px !important;
+}
+
+.customTooltip .introjs-tooltiptext{
+    font-family: Open Sans,Arial !important;
+    font-size:13px !important;
+}
+
+.customTooltip .introjs-tooltiptext a{
+  font-weight:500 !important;
+  color:#1100ff !important;
+}
+
+.customTooltip .introjs-tooltiptext img{
+    width:100% !important;
+    height:150px !important;
+    object-fit:cover !important;
+}
+.customTooltip .introjs-tooltipbuttons{
+  background:#1100ff !important;
+}
+
+.customTooltip .introjs-tooltipbuttons a{
+  border:none !important;
+}
+
+.customTooltip .introjs-prevbutton {
+  text-shadow: none !important;
+  background: #1100ff !important;
+  color: #ffffff !important;
+}
+
+.customTooltip .introjs-nextbutton {
+  text-shadow: none !important;
+  background: #ffffff !important;
+  color: #000 !important;
+  padding:0.5rem 2rem !important;
 }
