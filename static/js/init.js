@@ -45,4 +45,11 @@ $(document).ready(function(){
     //tooltip initialization
     $('.tooltipped').tooltip();
       $('.tabs').tabs();
+      //Feature Discovery
+    $(document).ready(function(){
+    $('.tap-target').tapTarget();
+    });
+    $('.fixed-action-btn').floatingActionButton({
+      hoverEnabled:false,
+    });
   });
