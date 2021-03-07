@@ -722,6 +722,15 @@
                    },
                  });
               });
+
+              window.addEventListener("map:init", function (e) {
+                var detail = e.detail;
+                setInterval(function () {
+                  detail.map.invalidateSize();
+                }, 100);
+
+            }, false)
+
         });
       </script>
     </div>
