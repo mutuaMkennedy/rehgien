@@ -386,35 +386,35 @@
         </div>
         <div class="ag-d-second-content">
             <div class="Pr-about-vw" id='co-about-vw'>
-                <div class="ag_featuredListings">
-                  <div class="_pf_sectionHeader">
-                    <h1>Recent Projects</h1>
-                  </div>
-                  {% if projects%}
-                  <div class="owl-carousel ag_featuredCarousel">
-                        {% for project in projects|slice:':5'%}
-                        <div class="_pf_FeaturedItem card">
+                {% if projects%}
+                  <div class="ag_featuredListings">
+                    <div class="_pf_sectionHeader">
+                      <h1>Recent Projects</h1>
+                    </div>
+                    <div class="owl-carousel ag_featuredCarousel">
+                          {% for project in projects|slice:':5'%}
+                          <div class="_pf_FeaturedItem card">
 
-                            <div class="_pf_FeaturedItemImg">
-                              {% for photo_object in project.portfolio_item_photo.all %}
-                                {% if forloop.last %}
-                                {% cloudinary photo_object.photo ImageTransformation %}
-                                {% endif %}
-                              {% endfor %}
-                            </div>
-                            <div class="_pf_FeaturedCtOvy">
-                              <div class="_pf_FeaturedItemDt">
-                                <h5>{{project.name}}</h5>
-                                <a href="#portf-detail-modal{{forloop.counter}}" class=" modal-trigger">
-                                  View more
-                                </a>
+                              <div class="_pf_FeaturedItemImg">
+                                {% for photo_object in project.portfolio_item_photo.all %}
+                                  {% if forloop.last %}
+                                  {% cloudinary photo_object.photo ImageTransformation %}
+                                  {% endif %}
+                                {% endfor %}
                               </div>
+                              <div class="_pf_FeaturedCtOvy">
+                                <div class="_pf_FeaturedItemDt">
+                                  <h5>{{project.name}}</h5>
+                                  <a href="#portf-detail-modal{{forloop.counter}}" class=" modal-trigger">
+                                    View more
+                                  </a>
+                                </div>
+                            </div>
                           </div>
-                        </div>
-                        {% endfor %}
+                          {% endfor %}
+                    </div>
                   </div>
-                  {%endif%}
-                </div>
+                {%endif%}
                 <div class="ag-about">
                     <div class="_pf_sectionHeader">
                       <h1>Who we are</h1>
