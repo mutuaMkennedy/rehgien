@@ -48,7 +48,7 @@
                     <div class="card-header">
                       <div class="bsPCoverOverlay">
                           <div class="img-rv-wrapper">
-                            <div id="__ag-Pf-img" class="ag-d-img">
+                            <div id="__ag-Pf-img" class="ag-d-img bsProfEdSTEP1">
                                   {%include 'profiles/editor_mode_files/page_profile_image.html'%}
                             </div>
                             <div class="ag-d-details">
@@ -84,12 +84,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="proffesional-dtls card">
+                <div class="proffesional-dtls card bsProfEdSTEP2">
                   <div id="ag-o-d">
                     {%include 'profiles/editor_mode_files/page_info.html'%}
                   </div>
                   <div class="_edit_page_info">
-                      <a href="#e_profilePgInfo-Modal" class="modal-trigger"><span class="material-icons">create</span>Edit page info</a>
+                      <a href="#e_profilePgInfo-Modal" class="modal-trigger"><span class="material-icons pulse">create</span>Edit page info</a>
                   </div>
                 </div>
               </div>
@@ -99,26 +99,26 @@
                       <div class="_pf_sectionHeader">
                         <h1>Who we are</h1>
                       </div>
-                      <div class="_ag-about-sc">
-                        <h2><div><span class="material-icons">assignment</span> Overview</div><a href="#e_profileOverview-Modal" id="_trigOVW" class="modal-trigger"><span class="material-icons">create</span></a></h2>
+                      <div class="_ag-about-sc bsProfEdSTEP3">
+                        <h2 class=""><div><span class="material-icons">assignment</span> Overview</div><a href="#e_profileOverview-Modal" id="_trigOVW" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
                         <div id="_editor_mode_about">
                           {%include 'profiles/editor_mode_files/about.html'%}
                         </div>
                       </div>
-                      <div class="_ag-about-sc">
-                        <h2><div><span class="material-icons">verified</span> Services</div><a href="#e_profileServices-Modal" class="modal-trigger"><span class="material-icons">create</span></a></h2>
+                      <div class="_ag-about-sc bsProfEdSTEP4">
+                        <h2 class=""><div><span class="material-icons">verified</span> Services</div><a href="#e_profileServices-Modal" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
                         <div id="_editor_mode_services" class="_ag-skillBtns">
                           {%include 'profiles/editor_mode_files/services.html'%}
                         </div>
                       </div>
-                      <div class="_ag-about-sc">
-                        <h2><div><span class="material-icons">group</span> Our top clients</div><a href="#e_topClients-Modal" class="modal-trigger"><span class="material-icons">create</span></a></h2>
+                      <div class="_ag-about-sc bsProfEdSTEP5">
+                        <h2 class=""><div><span class="material-icons">group</span> Our top clients</div><a href="#e_topClients-Modal" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
                         <div id="_editor_mode_clients">
                           {%include 'profiles/editor_mode_files/top_clients.html'%}
                         </div>
                       </div>
-                      <div class="_ag-about-sc">
-                        <h2><div><span class="material-icons">pin_drop</span> Service areas</div><a href="#e_profileServiceAreas-Modal" class="modal-trigger"><span class="material-icons">create</span></a></h2>
+                      <div class="_ag-about-sc bsProfEdSTEP6">
+                        <h2 class=""><div><span class="material-icons">pin_drop</span> Service areas</div><a href="#e_profileServiceAreas-Modal" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
                         <div id="_editor_mode_service_areas" class="_ag-serviceAreas">
                           {%include 'profiles/editor_mode_files/service_areas.html'%}
                         </div>
@@ -250,6 +250,48 @@
               </div>
           </div>
         </div>
+      </div>
+      <div class="fixedGuidedTour bsProfEdSTEP7">
+        {% now "j F Y" as todays_date %}
+        {% with date_joined=user.date_joined|date:"j F Y"%}
+        <button id="showMapTour" class="btn-large cyan {% if date_joined == todays_date %}pulse {%endif%}">
+          <i class="large material-icons">help_center</i>
+        </button>
+
+        <ul id="introStepMap" class="collapsible">
+          <div class="helpCenterHeader">
+            <span class="material-icons">help_outline</span>
+            <h4>This is your help center for this page. <br> Start or jump to a tutorial on any section if you ever feel lost.</h4>
+          </div>
+          {% endwith %}
+          <li class="active">
+            <div class="collapsible-header">
+                <div class="guidedScHeader">
+                  <i class="material-icons">tour</i>Tour this page
+                </div>
+                <span class="material-icons">expand_more</span>
+            </div>
+            <div class="collapsible-body">
+              <a href="#" data-introStep="1">Start the page tour.</a>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header">
+              <div class="guidedScHeader">
+                <i class="material-icons">segment</i>Page sections
+              </div>
+              <span class="material-icons">expand_more</span>
+            </div>
+            <div class="collapsible-body">
+              <a href="#" data-introStep="2">Adding/updating your business profile picture.</a>
+              <a href="#" data-introStep="3">Adding/updating your business contact information?</a>
+              <a href="#" data-introStep="4">Adding/updating your business description.</a>
+              <a href="#" data-introStep="5">Adding/updating services your business offers.</a>
+              <a href="#" data-introStep="6">Who are top clients?</a>
+              <a href="#" data-introStep="7">Adding/updating your business service areas.</a>
+            </div>
+          </li>
+        </ul>
 
       </div>
     </section>
@@ -1231,12 +1273,100 @@
 
 </div>
 
+
 <script type="text/javascript">
   //removes conflict causing tabindex in OVERVIEW Modal
   $('#_trigOVW').on('click', function(){
       $('#e_profileOverview-Modal').attr('tabindex', '');
   });
 
+  $(document).ready(function(){
+    //page guide
+      var intro = introJs().setOptions({
+      tooltipClass: 'customTooltip',
+      disableInteraction: true,
+      steps: [
+        {
+          title: 'Welcome!',
+          intro: "Get started with a quick guide on how to get the most out of your business page."
+        },
+        {
+          element: document.querySelector('.bsProfEdSTEP1'),
+          title: 'Profile picture',
+          intro: "<img src='" + "{% static 'img/guideAvatar.svg'%}" +"' alt='Navbar'> <br> A business profile photo is the face of your business/brand and sells a sense of trust to clients raising the chnace of them contacting you. <br><br>Use the blinking camera icon to upload your photo of choice."
+        },
+        {
+          element: document.querySelector('.bsProfEdSTEP2'),
+          title: 'Page info',
+          intro: "<img src='" + "{% static 'img/guideContactUs.svg'%}" +"' alt='Navbar'> <br>The page info section holds information on how clients can reach your business. Add/update your contact details, location details, social media links, website links and business hours from here. <br><br> Use the blinking pen icon to update your details."
+        },
+        {
+          element: document.querySelector('.bsProfEdSTEP3'),
+          title: 'Overview',
+          intro: "<img src='" + "{% static 'img/guideAboutUs.svg'%}" +"' alt='Navbar'> <br> The overview section is where you can tell clients more about your business and what you offer. You can add/update your business description and also upload a youtube profile video url and we will show the video here. <br><br> Use the blinking pen icon to update your details.",
+          position:'left',
+        },
+
+        {
+          element: document.querySelector('.bsProfEdSTEP4'),
+          title: 'Services',
+          intro: "<img src='" + "{% static 'img/guideServices.svg'%}" +"' alt='Navbar'> Services/areas of expertise are the list of services your business offers to clients. This is the information we use to connect you to the right clients easily. <br><br> To update your services use the blinking pen icon.",
+          position: 'left'
+        },
+        {
+          element: document.querySelector('.bsProfEdSTEP5'),
+          title: 'Top clients',
+          intro: "Have you offered your services to business clients before? If yes, you can add them here and increase your chances of getting more business type clients.<br><br> Click the blinking pen icon to add/update your top clients list.",
+          position: 'left'
+        },
+        {
+          element: document.querySelector('.bsProfEdSTEP6'),
+          title: 'Service areas',
+          intro: "<img src='" + "{% static 'img/guideLocation.svg'%}" +"' alt='Navbar'> Service areas are the regions or cities where your business offers it services. Add areas applicable to you and have clients in those areas find you on Rehgien. <br><br> Use the blinking pen icon to add/update your service areas.",
+          position: 'left'
+        },
+        {
+            // element: document.querySelector('.bsProfEdSTEP7'),
+            title: 'Done!',
+            intro: "Great you're good to go. Click the help icon on the bottom right if you ever need some help.",
+            position: 'left'
+          },
+      ]
+      });
+
+      var firstGuideOpen = true;
+      $('#introStepMap a').on('click', function(){
+            var num = $(this).attr('data-introStep');
+            $('#introStepMap').css('right','-1000px');
+            if (firstGuideOpen) {
+              intro.goToStepNumber(parseInt(num)).start();
+              firstGuideOpen = false;
+            }else{
+              intro.goToStepNumber(parseInt(num)-1).start();
+            }
+
+      })
+
+      intro.onchange(function(targetElement) {
+        var elData = $('#'+targetElement.id).attr('data-sc')
+        if (elData === 'Listings'){
+          document.getElementById("lstSct").click();
+        }else if (elData === 'Accounts'){
+          document.getElementById("defaultOpen").click();
+        }
+      });
+
+
+      $('#showMapTour').on('click', function(){
+        var tourWrapper= $('#introStepMap');
+        if (tourWrapper.css('right') != '0px') {
+          tourWrapper.css('right','0px');
+        }else{
+          tourWrapper.css('right','-1000px');
+        }
+      })
+
+  })
 </script>
 {% endblock %}
 {% block footer %}
