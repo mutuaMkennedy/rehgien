@@ -242,7 +242,9 @@
 <div class="bs-pfl-swc-wrp">
   <ul id="bs-pfl-switch" class="">
       <li class="col s3"><a href="#co-about-vw">Posts</a></li>
+      {% if projects%}
       <li class="col s3"><a href="#co-Portfolio-vw">Portfolio</a></li>
+      {% endif %}
       <li class="col s3"><a href="#pro_reviews_vw">Reviews</a></li>
       {% if business.professional_category.professional_group.slug == 'real-estate-services'%}
         {% if all_listings %}
@@ -361,7 +363,9 @@
               <ul>
                 {% comment 'excluded untill this feature is fuly supported '%}<li><b>Licenses & Certifications:</b><br><a href="#">See all</a></li>{% endcomment %}
                 <li><b>Rehgien Member since:</b><br>{{business.member_since.date}}</li>
-                <li class="social-btns"><b>Follow Us:</b><br>
+                {% if not business.linkedin_page_link and not business.facebook_page_link and not business.twitter_page_link and not business.instagram_page_link %}
+                {% else %}
+                <li class="social-btns"><b>Follow our socials:</b><br>
                   {% if business.linkedin_page_link%}
                   <a href="{{business.linkedin_page_link}}" target='_blank'><i class="fab fa-linkedin-in fa-2x"></i></a>
                   {% endif %}
@@ -375,6 +379,7 @@
                   <a href="{{business.instagram_page_link}}" target='_blank'><i class="fab fa-instagram fa-2x"></i></a>
                   {% endif%}
                 </li>
+                {% endif %}
               </ul>
             </div>
           </div>
@@ -408,10 +413,6 @@
                         </div>
                         {% endfor %}
                   </div>
-                  {%else%}
-                      <div class="pflpages-no-results">
-                        <p>Nothing yet. <br> Featured projects will appear here</p>
-                      </div>
                   {%endif%}
                 </div>
                 <div class="ag-about">
@@ -847,6 +848,7 @@
                   </div>
                 </div>
             </div>
+            {% if projects %}
             <div class="Pr-Portfolio-vw" id="co-Portfolio-vw">
                 <div class="pro-portfolio">
                   <div class="_pf_sectionHeader">
@@ -915,15 +917,11 @@
                         </div>
                       </div>
                       {% endfor %}
-                    {% else %}
-                    <div class="pflpages-no-results">
-                      <img src="{%static 'img/note.svg'%}" alt="empty">
-                      <p>No results found</p>
-                    </div>
                     {% endif %}
                   </div>
                 </div>
             </div>
+            {% endif %}
             {% if all_listings %}
             <div class="Pr-sr-lsts-vw" id="co-sr-lsts-vw">
                 <div class="ag-sr-m-sc">
