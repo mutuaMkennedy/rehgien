@@ -441,7 +441,7 @@
                         {% if business.professional_services %}
                           {% for service in business.professional_services.all %}
                           <form action="{% url 'profiles:business_list'%}" method="get">
-                              <button type="submit" name="q_service" value='{{service.slug}}'>{{service|capfirst}}</button>
+                              <button type="submit" name="q_service" value='{{service.service_name|lower}}'>{{service|capfirst}}</button>
                           </form>
                           {%endfor%}
                         {% else %}

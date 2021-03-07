@@ -255,39 +255,27 @@
                                                 Popular Services
                                                 <div class="pp_inS_rdbt">
                                                     <label>
-                                                      <input class="with-gap" type="radio" name="q_service" value="PCAT1">
-                                                      <span>Realestate services</span>
+                                                      <input class="with-gap" type="radio" name="q_service" value="real estate valuation">
+                                                      <span>Realestate valuation</span>
                                                     </label>
                                                     <label>
-                                                      <input class="with-gap" type="radio" name="q_service" value="PCAT2">
-                                                      <span>Surveying and construction</span>
+                                                      <input class="with-gap" type="radio" name="q_service" value="buying and selling property">
+                                                      <span>Buying and selling property</span>
                                                     </label>
                                                     <label>
-                                                      <input class="with-gap" type="radio" name="q_service" value="PCAT3">
-                                                      <span>Architecture and building design</span>
+                                                      <input class="with-gap" type="radio" name="q_service" value="House cleaning">
+                                                      <span>House cleaning</span>
                                                     </label>
                                                     <label>
-                                                      <input class="with-gap" type="radio" name="q_service" value="PCAT4">
-                                                      <span>General services</span>
-                                                    </label>
-                                                    <label>
-                                                      <input class="with-gap" type="radio" name="q_service" value="PCAT5">
-                                                      <span>Renovation and remodeling</span>
-                                                    </label>
-                                                    <label>
-                                                      <input class="with-gap" type="radio" name="q_service" value="PCAT6">
-                                                      <span>Appliances and systems</span>
-                                                    </label>
-                                                    <label>
-                                                      <input class="with-gap" type="radio" name="q_service" value="PCAT7">
-                                                      <span>Cleaning services</span>
+                                                      <input class="with-gap" type="radio" name="q_service" value="moving">
+                                                      <span>Moving</span>
                                                     </label>
                                                 </div>
                                                 Other services
                                                 <div class="pp_inS_rdbt">
                                                   {% for svc in all_services%}
                                                     <label>
-                                                      <input class="with-gap" type="radio" name="q_service" value="{{svc.slug}}" {%if svc.slug == search_params.q_service|lower|slugify %}checked{% endif %}>
+                                                      <input class="with-gap" type="radio" name="q_service" value="{{svc.service_name|lower}}" {%if svc.service_name|lower == search_params.q_service|lower %}checked{% endif %}>
                                                       <span>{{svc.service_name|capfirst}}</span>
                                                     </label>
                                                   {% endfor %}
