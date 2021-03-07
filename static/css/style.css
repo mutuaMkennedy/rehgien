@@ -11071,11 +11071,11 @@ particle {
 }
 
 .ag-d-left-content {
-    height: calc(100vh - 138px);
-    overflow-y: auto;
+/*     height: calc(100vh - 138px);
+    overflow-y: auto; */
     overflow-x: hidden;
-    position: sticky;
-    top: 120px;
+/*     position: sticky;
+    top: 0px; */
     background-color: #fff;
     border-radius: 5px;
     width: 20%;
@@ -11099,7 +11099,7 @@ particle {
 
 .ag-d-left-content::-webkit-scrollbar {
     width: 6px;
-    display: none;
+/*     display: none; */
 }
 
 .ag-d-left-content:hover::-webkit-scrollbar {
@@ -11193,17 +11193,18 @@ particle {
 
 #_proile_editor_view .ag-d-img span {
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
     font-size: 20px;
     text-align: center;
-    background-color: #eee;
-    color: #CC0000;
+    background-color: #cc0000;
+    color: #ffffff;
     position: absolute;
     bottom: 0;
     right: 0;
     cursor: pointer;
+    z-index:1;
 }
 
 .ag-d-details {
@@ -12031,14 +12032,15 @@ particle {
 }
 
 #_proile_editor_view ._ag-about-sc h2 div + a span {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     font-size: 20px;
-    line-height: 30px;
+    line-height: 35px;
     text-align: center;
     border-radius: 50%;
-    background-color: #eee;
-    color: #CC0000;
+    background-color: #cc0000;
+    color: #ffffff;
+    z-index:1;
 }
 
 ._ag-about-sc span {
@@ -12411,15 +12413,16 @@ particle {
 }
 
 #_proile_editor_view ._edit_page_info a span {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     font-size: 20px;
-    line-height: 30px;
+    line-height: 35px;
     text-align: center;
     border-radius: 50%;
-    background-color: #eee;
-    color: #CC0000;
+    background-color: #cc0000;
+    color: #ffffff;
     margin-right: 5px;
+    z-index:1;
 }
 
 #ag-o-d span {
@@ -19076,6 +19079,7 @@ particle {
     top:unset !important;
     right:0 !important;
     margin:15px;
+    z-index:1000!important;
 }
 
 .fixedGuidedTour button{
@@ -19092,10 +19096,12 @@ particle {
     position:absolute;
     min-width:300px;
     right:-1000px;
+    max-height:calc(100vh - 90px);
     bottom:54px;
     background-color:#ffff;
     border-radius:5px;
     transition:right 0.2s ease;
+    overflow-y:auto;
 }
 
 .fixedGuidedTour .collapsible .helpCenterHeader{
@@ -19205,9 +19211,11 @@ particle {
 }
 
 .customTooltip .introjs-tooltiptext img{
-    width:100% !important;
+/*     width:100% !important; */
     height:150px !important;
     object-fit:cover !important;
+    margin-left:50%;
+    transform:translateX(-50%);
 }
 .customTooltip .introjs-tooltipbuttons{
   background:#1100ff !important;
