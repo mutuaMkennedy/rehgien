@@ -218,8 +218,7 @@ class HomeSerializer(WritableNestedModelSerializer):
         return trend_line
 
 class HomeSerializer2(WritableNestedModelSerializer):
-    home_interactions = PropertyInteractionSerializer(many=True)
-    home_openhouse = PropertyOpenHouseSerializer(many=True)
+    home_openhouse = PropertyOpenHouseSerializer(many=True, required=False)
     cooling_type = serializers.MultipleChoiceField(choices=COOLING_TYPE_CHOICES, required=False)
     appliances = serializers.MultipleChoiceField(choices=APPLIANCES_CHOICES, required=False)
     floor_covering = serializers.MultipleChoiceField(choices=FLOOR_COVERING_CHOICES, required=False)
@@ -251,7 +250,7 @@ class HomeSerializer2(WritableNestedModelSerializer):
         'id','listing_type', 'property_category', 'property_name','price', 'home_type',
         'virtual_tour_url', 'location_name', 'location', 'bathrooms',
         'bedrooms', 'total_rooms','floor_number', 'description', 'floor_area',
-        'number_of_units', 'number_of_stories', 'home_photos','home_video','home_interactions',
+        'number_of_units', 'number_of_stories',
         'home_openhouse','saves', 'parking_spaces','year_built', 'remodel_year', 'garage_sqm','is_active',
         'deal_closed', 'final_closing_offer',
 
