@@ -502,6 +502,8 @@ def pro_save(request):
 		is_saved = False
 		pk = int(request.POST.get('pk'))
 		pro = get_object_or_404(models.BusinessProfile, pk=pk)
+		# source allows us to send custom data to source template
+		source = request.POST.get('source','')
 		business_name = 'pro'
 		if pro.business_name:
 			business_name = pro.business_name
@@ -511,14 +513,19 @@ def pro_save(request):
 			pro.saves.remove(user)
 			is_saved = False
 			message = "Successfully removed " + business_name +" from saves!"
+			if source == 'detail':
+				innerText = 'Save'
 		else:
 			pro.saves.add(user)
 			is_saved = True
 			message = "Successfully added " + business_name +" to saves!"
+			if source == 'detail':
+				innerText = 'Unsave'
 		context = {
 		'is_saved':is_saved,
 		'pro':pro,
-		'message':message
+		'message':message,
+		'innerText':innerText
 		}
 		if request.is_ajax():
 			html = render_to_string('profiles/pro-save-section.html', context, request=request)
