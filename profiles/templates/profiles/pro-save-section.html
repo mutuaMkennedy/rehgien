@@ -3,11 +3,11 @@
   {% csrf_token %}
   {% if request.user in pro.saves.all %}
      <button class="_add-pro-to-saved" type="submit" value="{{pro.pk}}">
-       <i class="fas fa-heart" style="color:#cc0000;"></i>
+       <i class="fas fa-heart" style="color:#cc0000;"></i> {% if saved %}{{saved}}{%else%}{{innerText}}{%endif%}
      </button>
   {% else %}
     <button class="_add-pro-to-saved"  type="submit" value="{{pro.pk}}">
-      <i class="fas fa-heart" style="color:#d1d1d1;"></i>
+      <i class="fas fa-heart" style="color:#d1d1d1;"></i> {% if save %}{{save}}{%else%}{{innerText}}{%endif%}
     </button>
   {% endif%}
 </form>
