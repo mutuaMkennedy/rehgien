@@ -10547,7 +10547,7 @@ particle {
     cursor: pointer;
 }
 
-._pfl_bs_card_footer button svg {
+._pfl_bs_card_footer button i {
     font-size: 20px;
 }
 
@@ -11285,40 +11285,93 @@ particle {
 
 .ag-SvFo {
     display: flex;
-    flex-direction: column;
+    flex-direction:column;
     justify-content: center;
     align-items: center;
-    margin-top: 25px;
 }
 
 .ag-SvFo button {
-    margin-bottom: 5px;
-    height: 30px;
-    min-width: 120px;
-    background-color: #2cb2ea;
+    height: 35px;
+    width: 100%;
     border: none;
-    color: #fff !important;
-    border-radius: 25px;
+    color: #000 !important;
+    border-radius: 5px;
     font-family: inherit;
     display: flex;
-    justify-content: center;
     align-items: center;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 13px;
+    background-color:#fff;
+}
+
+.ag-SvFo button:hover{
+    background-color:#f1f9f1 !important;
 }
 
 .ag-SvFo #proFollow {
     border: none;
 }
 
-#_join_leave_team button {
-    background-color: #fff;
-    border: 1px solid #2cb2ea;
-    color: #2cb2ea !important;
+.ag-SvFo .bsflmr-aCTA{
+    width:100%;
 }
 
-#_join_leave_team button:hover {
-    border: 2px solid #2cb2ea;
+.ag-SvFo .bsflmr-aCTA .collapsible{
+    box-shadow:none;
+    border:none;
+    margin:0;
+    position:relative;
+}
+
+.ag-SvFo .bsflmr-aCTA li .collapsible-header{
+    padding:0 5px;
+    margin-left:auto;
+    margin-right:auto;
+    border:none;
+    box-shadow:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:30px;
+    width:70px;
+    border-radius:5px;
+    position:relative;
+    border:1px solid #d1d1d1;
+    border-radius:25px;
+}
+
+.ag-SvFo .bsflmr-aCTA li .collapsible-header i{
+    margin:0;
+    width:50px;
+}
+
+.ag-SvFo .bsflmr-aCTA li.active .collapsible-header,.ag-SvFo .bsflmr-aCTA li:hover .collapsible-header {
+    background-color:#eee;
+}
+
+.ag-SvFo .bsflmr-aCTA li.active .collapsible-header i{
+    color:#2ca2ba;
+}
+
+.ag-SvFo .bsflmr-aCTA li .collapsible-body{
+    width:auto;
+    padding:10px;
+    border:1px solid #d1d1d1;
+    box-shadow:0 0 10px 5px #eee;
+    position:absolute;
+    background-color:#fff;
+    z-index:1;
+    border-radius:10px;
+    right:0;
+}
+
+#_join_leave_team button {
+    background-color: #fff;
+    color: #000 !important;
+    justify-content:start;
+    width:100%;
+    font-size:13px;
+    height:35px;
 }
 
 #_followPro .team_iconDisabled:hover,#_savePro .team_iconDisabled:hover {
@@ -11331,36 +11384,65 @@ particle {
     cursor: not-allowed !important;
 }
 
-.ag-SvFo button span, .ag-SvFo button svg {
-    font-size: 15px;
-    margin-right: 5px;
-    color: #ffffff;
+.ag-SvFo button span, .ag-SvFo button i {
+    font-size: 18px;
+    margin-right: 10px;
+    color:#2cb2ea !important;
+}
+
+#_savePro button,.bp-report button {
+    width: 100%;
+    height: 35px;
+    border: none;
+    background-color: #ffffff;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    justify-content:start;
+    color:#000 !important;
+    font-size:13px;
+    text-transform:capitalize;
 }
 
 .ag-messageBtn {
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
-    flex-direction: column;
+    align-items: center;
+    padding:15px 0;
 }
 
-#_savePro button,.ag-messageBtn button, .bp-report button {
-    width: 35px;
+.ag-messageBtn button{
+    background-color:#2cb2ea;
+    border:1px solid #2cb2ea;
+    border-radius:25px;
+    padding:0 20px;
+    width:auto;
+    color:#fff;
     height: 35px;
-    border: none;
-    background-color: #ffffff;
-    border-radius: 50%;
     cursor: pointer;
+    display:flex;
+    align-items:center;
 }
 
-#_savePro button:hover,.ag-messageBtn button:hover, .bp-report button:hover {
+.ag-messageBtn button:hover{
+   background-color: #f1f9f1;
+   color:#2cb2ea;
+}
+
+#_savePro button:hover, .bp-report button:hover {
     background-color: #f1f9f1;
 }
 
-#_savePro button svg,.ag-messageBtn button span, .bp-report button span {
-    font-size: 18px;
-    color: #9e9e9e;
+.ag-messageBtn button span{
+    font-size: 15px;
+    color: #fff;
+    margin-right:10px;
+    border-radius:50%;
+}
+
+.ag-messageBtn button:hover span{
+    color:#2cb2ea;
 }
 
 .ag-ProTeamBtn #_join_leave_team button, {
@@ -12608,12 +12690,8 @@ particle {
 }
 
 .bPg-CTA-btns {
-    display: flex;
     height: 100%;
     width: 100%;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 25px;
 }
 
 .ag-d-lst {
