@@ -464,10 +464,10 @@
                         {% endif %}
                       </div>
                     </div>
+                    {% if business.pro_business_client.count > 0  %}
                     <div class="_ag-about-sc">
                       <h2><span class="material-icons">group</span> Top clients</h2>
                       <div class="_ag-clients {% if business.pro_business_client %} owl-carousel {% endif %}">
-                        {% if business.pro_business_client %}
                           {% for client in business.pro_business_client.all %}
                           <div class="_ag-clientsCard card">
                               <div class="_ag-clientsCardImg">
@@ -479,14 +479,9 @@
                               </div>
                           </div>
                           {% endfor %}
-                        {% else %}
-                          <div class="pflpages-no-results">
-                            <img src="{%static 'img/note.svg'%}" alt="empty">
-                            <p>Nothing Yet</p>
-                          </div>
-                        {% endif %}
                       </div>
                     </div>
+                    {% endif %}
                     <div class="_ag-about-sc">
                       <h2><span class="material-icons">pin_drop</span> Service areas</h2>
                       <div class="_ag-serviceAreas">
