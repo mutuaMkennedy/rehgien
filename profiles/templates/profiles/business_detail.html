@@ -23,6 +23,7 @@
                     url: "{% url 'profiles:save_pro'%}",
                     data: {
                         'pk': proId,
+                        'source':'detail',
                         'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
                     },
                    dataType: 'json',
@@ -299,25 +300,6 @@
                                   <h6><span class="material-icons">location_on</span> {{business.address|truncatechars:30}}</h6>
                                 </div>
                             </div>
-                            <div class="bPg-CTA-btns">
-                                <div id="_savePro">
-                                    {% include 'profiles/pro-save-section.html' with pro=business %}
-                                </div>
-                                <div class="ag-messageBtn">
-                                  <a href="#_contactProModal" class="modal-trigger">
-                                    <button type="button" name="button">
-                                      <span class="material-icons" >message</span>
-                                    </button>
-                                  </a>
-                                </div>
-                                <div class="bp-report">
-                                  <a href="#problemReport" class="modal-trigger">
-                                    <button type="button" name="button">
-                                      <span class="material-icons">flag</span>
-                                    </button>
-                                  </a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                   </div>
@@ -340,15 +322,44 @@
                             <h6>Connections</h6>
                           </a>
                         </div>
+                        <div class="ag-messageBtn">
+                          <a href="#_contactProModal" class="modal-trigger">
+                            <button type="button" name="button">
+                              <span class="material-icons" >perm_phone_msg</span>
+                              Contact us
+                            </button>
+                          </a>
+                        </div>
                         <div class="ag-SvFo">
-                          <div id="_followPro">
-                              {% include 'profiles/pro-follow-section.html' with pro=business %}
+                          <div class="bsflmr-aCTA">
+                            <ul class="collapsible">
+                                <li>
+                                  <div class="collapsible-header"><i class="material-icons">more_horiz</i></div>
+                                  <div class="collapsible-body">
+                                    <div class="bPg-CTA-btns">
+                                      <div id="_followPro">
+                                          {% include 'profiles/pro-follow-section.html' with pro=business %}
+                                      </div>
+                                      {% if request.user.user_type == 'PRO'%}
+                                      <div id="_join_leave_team">
+                                          {% include 'profiles/add-to-team.html' with receiver=business.user %}
+                                      </div>
+                                      {% endif %}
+                                        <div id="_savePro">
+                                            {% include 'profiles/pro-save-section.html' with pro=business saved='Unsave' save='Save'%}
+                                        </div>
+                                        <div class="bp-report">
+                                          <a href="#problemReport" class="modal-trigger">
+                                            <button type="button" name="button">
+                                              <span class="material-icons">flag</span> Report page
+                                            </button>
+                                          </a>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </li>
+                            </ul>
                           </div>
-                          {% if request.user.user_type == 'PRO'%}
-                          <div id="_join_leave_team">
-                              {% include 'profiles/add-to-team.html' with receiver=business.user %}
-                          </div>
-                          {% endif %}
                         </div>
                     </div>
                   </div>
