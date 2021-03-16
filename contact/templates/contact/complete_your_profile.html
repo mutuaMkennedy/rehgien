@@ -243,99 +243,193 @@
 <p style="text-align: center; line-height: 1.5; word-break: break-word; font-family: inherit; font-size: 16px; mso-line-height-alt: 24px; margin: 0;"><span style="font-size: 16px; color: #6d89bc;">
 	<div style="background: #f1f4f8;border-radius: 10px;padding:15px">
 		<div style="border-radius:10px;width:100%; width:400px; margin-left:auto;margin-right:auto;">
-				<ul style="margin-left:auto; margin-right:auto;list-style:none; font-size:16px;font-family: Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; color: #555555;
-				 padding:0;">
-					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
-						<img src="
-						{% if fields_list.business_name == 'True'%}
-							{{domain}}{% static 'img/check.png'%}
-						{% else %}
-							{{domain}}{% static 'img/dry-clean.png'%}
-						{% endif %}
-						" width='25' style="padding:15px 10px">
-						<span style="padding:15px 0;font-size: 16px;{% if fields_list.business_name == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add your business name</span>
-					<li>
-					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
-						<img src="
-						{% if fields_list.business_profile_image == 'True'%}
-							{{domain}}{% static 'img/check.png'%}
-						{% else %}
-							{{domain}}{% static 'img/dry-clean.png'%}
-						{% endif %}
-						" width='25' style="padding:15px 10px">
-						<span style="padding:15px 0;font-size: 16px;{% if fields_list.business_profile_image == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add your business profile image</span>
-					</li>
-					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
-						<img src="
-							{% if fields_list.phone == 'True'%}
-								{{domain}}{% static 'img/check.png'%}
-							{% else %}
-								{{domain}}{% static 'img/dry-clean.png'%}
-							{% endif %}
-						" width='25' style="padding:15px 10px">
-						<span style="padding:15px 0;font-size: 16px;{% if fields_list.phone == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add your business phone number</span>
-					</li>
-					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
-						<img src="
-							{% if fields_list.business_email == 'True'%}
-								{{domain}}{% static 'img/check.png'%}
-							{% else %}
-								{{domain}}{% static 'img/dry-clean.png'%}
-							{% endif %}
-						" width='25' style="padding:15px 10px">
-						<span style="padding:15px 0;font-size: 16px;{% if fields_list.business_email == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add your business email address</span>
-					</li>
-					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
-						<img src="
-						{% if fields_list.address == 'True'%}
-							{{domain}}{% static 'img/check.png'%}
-						{% else %}
-							{{domain}}{% static 'img/dry-clean.png'%}
-						{% endif %}
-						" width='25' style="padding:15px 10px">
-						<span style="padding:15px 0;font-size: 16px;{% if fields_list.address == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add your business physical address</span>
-					</li>
-					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
-						<img src="
-							{% if fields_list.about == 'True'%}
-								{{domain}}{% static 'img/check.png'%}
-							{% else %}
-								{{domain}}{% static 'img/dry-clean.png'%}
-							{% endif %}
-						" width='25' style="padding:15px 10px">
-						<span style="padding:15px 0;font-size: 16px;{% if fields_list.about == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add a description for your business</span>
-					</li>
-					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
-						<img src="
-							{% if fields_list.professional_category == 'True'%}
-								{{domain}}{% static 'img/check.png'%}
-							{% else %}
-								{{domain}}{% static 'img/dry-clean.png'%}
-							{% endif %}
-						" width='25' style="padding:15px 10px">
-						<span style="padding:15px 0;font-size: 16px;{% if fields_list.professional_category == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Select a business category</span>
-					</li>
-					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
-						<img src="
-							{% if fields_list.service_areas == 'True'%}
-								{{domain}}{% static 'img/check.png'%}
-							{% else %}
-								{{domain}}{% static 'img/dry-clean.png'%}
-							{% endif %}
-						" width='25' style="padding:15px 10px">
-						<span style="padding:15px 0;font-size: 16px;{% if fields_list.service_areas == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Select regions/towns where your business operates</span>
-					</li>
-					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
-						<img src="
-							{% if fields_list.professional_services == 'True'%}
-								{{domain}}{% static 'img/check.png'%}
-							{% else %}
-								{{domain}}{% static 'img/dry-clean.png'%}
-							{% endif %}
-						" width='25' style="padding:15px 10px">
-						<span style="padding:15px 0;font-size: 16px;{% if fields_list.professional_services == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Select services your business offers</span>
-					</li>
-				</ul>
+			<table style="margin-left:auto; margin-right:auto;list-style:none; font-size:16px;font-family: Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; color: #555555;
+			 padding:0;">
+				<tr align='center'>
+					<td>
+							<table>
+								<tbody>
+									<tr align='center'>
+										<td>
+											<img src="
+											{% if fields_list.business_name == 'True'%}
+												{{domain}}{% static 'img/check.png'%}
+											{% else %}
+												{{domain}}{% static 'img/dry-clean.png'%}
+											{% endif %}
+											" width='25' style="padding:15px 10px">
+										</td>
+										<td>
+											<span style="padding:15px 0;font-size: 16px;{% if fields_list.business_name == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add your business name</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table>
+								<tbody>
+									<tr align='center'>
+										<td>
+											<img src="
+											{% if fields_list.business_profile_image == 'True'%}
+												{{domain}}{% static 'img/check.png'%}
+											{% else %}
+												{{domain}}{% static 'img/dry-clean.png'%}
+											{% endif %}
+											" width='25' style="padding:15px 10px">
+										</td>
+										<td>
+											<span style="padding:15px 0;font-size: 16px;{% if fields_list.business_profile_image == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add your business profile image</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table>
+								<tbody>
+									<tr align='center'>
+										<td>
+											<img src="
+												{% if fields_list.phone == 'True'%}
+													{{domain}}{% static 'img/check.png'%}
+												{% else %}
+													{{domain}}{% static 'img/dry-clean.png'%}
+												{% endif %}
+											" width='25' style="padding:15px 10px">
+										</td>
+										<td>
+											<span style="padding:15px 0;font-size: 16px;{% if fields_list.phone == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add your business phone number</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table>
+								<tbody>
+									<tr align='center'>
+										<td>
+											<img src="
+												{% if fields_list.business_email == 'True'%}
+													{{domain}}{% static 'img/check.png'%}
+												{% else %}
+													{{domain}}{% static 'img/dry-clean.png'%}
+												{% endif %}
+											" width='25' style="padding:15px 10px">
+										</td>
+										<td>
+											<span style="padding:15px 0;font-size: 16px;{% if fields_list.business_email == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add your business email address</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table>
+								<tbody>
+									<tr align='center'>
+										<td>
+											<img src="
+											{% if fields_list.address == 'True'%}
+												{{domain}}{% static 'img/check.png'%}
+											{% else %}
+												{{domain}}{% static 'img/dry-clean.png'%}
+											{% endif %}
+											" width='25' style="padding:15px 10px">
+										</td>
+										<td>
+											<span style="padding:15px 0;font-size: 16px;{% if fields_list.address == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add your business physical address</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table>
+								<tbody>
+									<tr align='center'>
+										<td>
+											<img src="
+												{% if fields_list.about == 'True'%}
+													{{domain}}{% static 'img/check.png'%}
+												{% else %}
+													{{domain}}{% static 'img/dry-clean.png'%}
+												{% endif %}
+											" width='25' style="padding:15px 10px">
+										</td>
+										<td>
+											<span style="padding:15px 0;font-size: 16px;{% if fields_list.about == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add a description for your business</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table>
+								<tbody>
+									<tr align='center'>
+										<td>
+											<img src="
+												{% if fields_list.about == 'True'%}
+													{{domain}}{% static 'img/check.png'%}
+												{% else %}
+													{{domain}}{% static 'img/dry-clean.png'%}
+												{% endif %}
+											" width='25' style="padding:15px 10px">
+										</td>
+										<td>
+											<span style="padding:15px 0;font-size: 16px;{% if fields_list.about == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add a description for your business</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table>
+								<tbody>
+									<tr align='center'>
+										<td>
+											<img src="
+												{% if fields_list.professional_category == 'True'%}
+													{{domain}}{% static 'img/check.png'%}
+												{% else %}
+													{{domain}}{% static 'img/dry-clean.png'%}
+												{% endif %}
+											" width='25' style="padding:15px 10px">
+										</td>
+										<td>
+											<span style="padding:15px 0;font-size: 16px;{% if fields_list.professional_category == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Select a business category</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table>
+								<tbody>
+									<tr align='center'>
+										<td>
+											<img src="
+												{% if fields_list.service_areas == 'True'%}
+													{{domain}}{% static 'img/check.png'%}
+												{% else %}
+													{{domain}}{% static 'img/dry-clean.png'%}
+												{% endif %}
+											" width='25' style="padding:15px 10px">
+										</td>
+										<td>
+											<span style="padding:15px 0;font-size: 16px;{% if fields_list.service_areas == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Select regions/towns where your business operates</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table>
+								<tbody>
+									<tr align='center'>
+										<td>
+											<img src="
+												{% if fields_list.professional_services == 'True'%}
+													{{domain}}{% static 'img/check.png'%}
+												{% else %}
+													{{domain}}{% static 'img/dry-clean.png'%}
+												{% endif %}
+											" width='25' style="padding:15px 10px">
+										</td>
+										<td>
+											<span style="padding:15px 0;font-size: 16px;{% if fields_list.professional_services == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Select services your business offers</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</div>
 
