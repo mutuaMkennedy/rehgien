@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     "compressor",
     "django_filters",
     "analytical",
+    "django_celery_beat",
     #'haystack',
     # 'tastypie',
 ]
@@ -355,6 +356,25 @@ TWILIO_AUTH_TOKEN = '7f70419841a1632045d657089acd65c1'
 
 STREAM_API_KEY = 'krfpqyntmyk8'
 STREAM_API_SECRET = 'ynfguub9ds3qufavnzkdnvetrzrftqvs9punjq6zu7jwavcncshceyc8byp93kyq'
+
+# CELERY STUFF
+BROKER_URL =  'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC' #'Africa/Nairobi'
+CELERY_ENABLE_UTC = True
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+
+# This setting is not needed as celery beate allows us to schedule tasks from the admin panel
+# from celery.schedules import crontab
+# CELERY_BEAT_SCHEDULE = {
+#       'send_progress_everyday': {
+#         'task': 'send_pro_profile_completion_progress_message',
+#         'schedule': crontab()
+#       }
+# }
 
 # Analytic services
 CLICKY_SITE_ID = '101303494'
