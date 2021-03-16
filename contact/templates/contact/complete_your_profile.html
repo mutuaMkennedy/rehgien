@@ -305,6 +305,36 @@
 						" width='25' style="padding:15px 10px">
 						<span style="padding:15px 0;font-size: 16px;{% if fields_list.about == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Add a description for your business</span>
 					</li>
+					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
+						<img src="
+							{% if fields_list.professional_category == 'True'%}
+								{{domain}}{% static 'img/check.png'%}
+							{% else %}
+								{{domain}}{% static 'img/dry-clean.png'%}
+							{% endif %}
+						" width='25' style="padding:15px 10px">
+						<span style="padding:15px 0;font-size: 16px;{% if fields_list.professional_category == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Select a business category</span>
+					</li>
+					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
+						<img src="
+							{% if fields_list.service_areas == 'True'%}
+								{{domain}}{% static 'img/check.png'%}
+							{% else %}
+								{{domain}}{% static 'img/dry-clean.png'%}
+							{% endif %}
+						" width='25' style="padding:15px 10px">
+						<span style="padding:15px 0;font-size: 16px;{% if fields_list.service_areas == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Select regions/towns where your business operates</span>
+					</li>
+					<li style="display:flex;align-items:center;border-bottom: 2px solid #fffff;">
+						<img src="
+							{% if fields_list.professional_services == 'True'%}
+								{{domain}}{% static 'img/check.png'%}
+							{% else %}
+								{{domain}}{% static 'img/dry-clean.png'%}
+							{% endif %}
+						" width='25' style="padding:15px 10px">
+						<span style="padding:15px 0;font-size: 16px;{% if fields_list.professional_services == 'True'%}text-decoration: line-through;color: #bec3c9;{%endif%}">Select services your business offers</span>
+					</li>
 				</ul>
 		</div>
 	</div>
