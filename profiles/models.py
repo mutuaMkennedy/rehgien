@@ -35,6 +35,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from contact import views as contact_views
+from . import tasks as profile_celery_tasks
 
 # extending user model
 class User(AbstractUser):
@@ -365,7 +366,7 @@ def send_email_to_receiver(sender, instance, **kwargs):
 	# if the instance is that of accepting the connection request then send a
 	# request accpted email message to the requestor
 	if instance.receiver_accepted == 'Yes':
-		contact_views.team_connection_request_acccepted(requestor_business_profile_pk, receiver_business_profile_pk)
-	# ele this is a new connection request so send a request to connect email message
+		profile_celery_tasks.send_connection_accepted_email.delay(requestor_business_profile_pk,receiver_business_profile_pk)
+	# else this is a new connection request so send a request to connect email message
 	else:
-		contact_views.request_team_connection(requestor_business_profile_pk, receiver_business_profile_pk)
+		profile_celery_tasks.send_connection_request_email.delay(requestor_business_profile_pk,receiver_business_profile_pk)
