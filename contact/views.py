@@ -343,6 +343,10 @@ def send_pro_profile_completion_progress():
 			important_fields['service_areas']= 'True'
 		else:
 			important_fields['service_areas']= 'False'
+		if profile.professional_services:
+			important_fields['professional_services']= 'True'
+		else:
+			important_fields['professional_services']= 'False'
 
 		# Send notification email to pro if one of the important steps is False
 		subject = "People may have a hard time finding your page."
