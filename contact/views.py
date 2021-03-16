@@ -314,6 +314,58 @@ def team_connection_request_acccepted(requestor_business_profile_pk, receiver_bu
 	else:
 		message = 'Something went wrong! Could not complete request.'
 
+# Send email alerts to pros on their profile completion state
+
+def send_pro_profile_completion_progress():
+	domain = 'http://' + Site.objects.get_current().domain
+	profiles = profiles_models.BusinessProfile.objects.all()
+	for profile in profiles:
+		important_fields = {
+		'business_name':'False',
+		'business_profile_image':'False',
+		'phone':'False',
+		'business_email':'False',
+		'address':'False',
+		'about':'False',
+		}
+		for field in important_fields:
+			profile_field = profiles_models.BusinessProfile.objects.values_list(field, flat=True).get(pk=profile.pk)
+			if profile_field:
+				important_fields[field] = 'True'
+
+		# These field are relationship filed and are checked and appended in separately
+		# due to a problem that raised if the fields had many entries
+		if profile.professional_category:
+			important_fields['professional_category']= 'True'
+		else:
+			important_fields['professional_category']= 'False'
+		if profile.service_areas:
+			important_fields['service_areas']= 'True'
+		else:
+			important_fields['service_areas']= 'False'
+
+		# Send notification email to pro if one of the important steps is False
+		subject = "People may have a hard time finding your page."
+		if 'False' in important_fields.values():
+			try:
+				title = "Your page is missing some important information."
+				message = "Without this information, people may have a harder time discovering and learning about your business. Add more info to your page, it will only take a minute or two."
+				context = {
+						'title':title,
+						'message': message,
+						'domain':domain,
+						"edit_page_link":domain + reverse('profiles:pro_business_page_edit',kwargs={'pk':profile.pk}),
+						"fields_list":important_fields
+						 }
+				htmlMessage = render_to_string('contact/complete_your_profile.html', context)
+
+				message = EmailMultiAlternatives(subject,message,'Rehgien <do-not-reply@rehgien.com>', [profile.user.email])
+				message.attach_alternative(htmlMessage, "text/html")
+				message.send()
+			except BadHeaderError:
+				message = 'Something went wrong! Could not complete request. Try again later'
+
+
 #Problem Reports
 
 def check_valid(item):
