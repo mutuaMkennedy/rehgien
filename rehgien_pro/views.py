@@ -51,7 +51,7 @@ def send_review_request_email(email_dict, message, pk, business_name):
 						'\n\n' + \
 						'{b_name}'.format(b_name=business_name)
 	for email in email_dict:
-		datalist.append( (subject, extended_message, '{name} <mutuakennedy81@gmail.com>'.format(name=business_name), [email]) )
+		datalist.append( (subject, extended_message, '{name} <do-not-reply@rehgien.com>'.format(name=business_name), [email]) )
 	try:
 		send_mass_mail(tuple(datalist))
 	except BadHeaderError:
