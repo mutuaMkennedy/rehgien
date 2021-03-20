@@ -25,9 +25,9 @@ from django.views.generic import TemplateView
 from allauth.account.views import confirm_email
 from rest_auth.views import PasswordResetConfirmView
 from django.contrib.sitemaps.views import sitemap
-from listings.sitemap import  StaticViewSitemap
+from listings.sitemap import  StaticViewSitemap, PropertyListingsSitemap
 from markets.sitemap import JobPostSitemap
-from profiles.sitemap import BusinessProfileSitemap
+from profiles.sitemap import StaticBusinessHomepageSitemap, BusinessProfileSitemap
 from resource_center.sitemap import BlogPostSitemap
 from rehgien_pro.sitemap import RehgienProStaticViewSitemap
 from contact.sitemap import ContactStaticViewSitemap
@@ -35,8 +35,9 @@ from contact.sitemap import ContactStaticViewSitemap
 #from haystack.views import FacetedSearchView
 
 sitemaps = {
-    # 'property_listings':PropertyListingsSitemap,
+    'property_listings':PropertyListingsSitemap,
     'job_posts':JobPostSitemap,
+    'static_business_homepage':StaticBusinessHomepageSitemap,
     'business_profiles':BusinessProfileSitemap,
     'blog_post':BlogPostSitemap,
     'static_content':StaticViewSitemap,
