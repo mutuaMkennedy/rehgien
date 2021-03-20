@@ -349,11 +349,12 @@ def send_pro_profile_completion_progress():
 			important_fields['professional_services']= 'False'
 
 		# Send notification email to pro if one of the important steps is False
-		subject = "People may have a hard time finding your page."
+		nameTitle = profile.business_name if profile.business_name else "Your page"
+		subject = "People may have a hard time finding {nT}.".format(nT = nameTitle)
 		if 'False' in important_fields.values():
 			try:
-				title = "Your page is missing some important information."
-				message = "Without this information, people may have a harder time discovering and learning about your business. Add more info to your page, it will only take a minute or two."
+				title = "{nT} is missing some important information.".format(nT = nameTitle)
+				message = "Without this information, people may have a harder time discovering and learning about your business. Add more info to {nT}, it will only take a minute or two.".format(nT = nameTitle)
 				context = {
 						'title':title,
 						'message': message,
