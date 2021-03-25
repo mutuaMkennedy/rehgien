@@ -19153,21 +19153,26 @@ particle {
 
 .fixedGuidedTour{
     position:fixed;
-    bottom:0 !important;
+    bottom:5px !important;
     top:unset !important;
-    right:0 !important;
+    right:75px !important;
     margin:15px;
     z-index:1000!important;
 }
 
 .fixedGuidedTour button{
-    width:54px;
-    height:54px;
+    width:35px !important;
+    height:35px !important;
     display:flex;
     justify-content:center;
     align-items:center;
     border-radius:50%;
     box-shadow:0 0 0 5px rgb(44 178 234 / 0.15);
+    padding:10px;
+}
+
+.fixedGuidedTour button i{
+    font-size:18px;
 }
 
 .fixedGuidedTour .collapsible{
