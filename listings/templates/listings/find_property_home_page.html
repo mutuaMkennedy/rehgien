@@ -21,15 +21,15 @@
           <h3>Discover places you'll love. <!--<span>So, where to next?</span>--></h3>
           <div id="search-section" class="container">
             <div class="row">
-                <form class="HomeSearchBar" autocomplete="off" action="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale'%}" method="GET">
+                <form id="glocSearch" class="HomeSearchBar" autocomplete="off" action="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale'%}" method="GET">
                   <div class="HomeSearchBar_select_wrp">
-                    <label><input type="radio" name="listing_type" value="for_sale" checked="checked"><span>Buy</span></label>
-                    <label><input type="radio" name="listing_type" value="for_rent"><span>Rent</span></label>
+                    <label><input type="radio" name="frm_listing_type" value="for_sale" checked="checked"><span>Buy</span></label>
+                    <label><input type="radio" name="frm_listing_type" value="for_rent"><span>Rent</span></label>
                   </div>
                   <div class="HomeSearchBar_row_Itm">
                     <div id="s_geocoder">
                     </div>
-                    <button type="submit">Search</button>
+                    <button id="submitGloc" type="submit">Search</button>
                   </div>
                 </form>
             </div>
@@ -245,8 +245,25 @@ placeholder:'Enter a locality, place name or city.'
 
 geocoder.addTo('#s_geocoder');
 </script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript">
+  $('#s_geocoder').on('change', function(){
+    $('#submitGloc').click();
+  });
+  $('#glocSearch').on('submit', function(e){
+  e.preventDefault();
+  var innitialForm = $(this);
+  var formArray = $(this).serializeArray();
+  if (formArray[0].value === 'for_rent') {
+    innitialForm.attr('action', "{% url 'listings:property-listings' property_category='homes' property_listing_type='for_rent'%}");
+  }else{
+      innitialForm.attr('action', "{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale'%}");
+  }
+  innitialForm.submit();
+});
+
   document.querySelector(".mapboxgl-ctrl-geocoder--input").name="location";
+
 </script>
 {%endblock%}
 
