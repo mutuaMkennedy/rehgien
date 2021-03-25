@@ -354,7 +354,7 @@
       <div class="col s12 md9 l9 xl9 _startcolumnYhskTJSKO">
         <div class="_basicHomeFacts_dtlVloay">
             <div class="facts1">
-              <li class="dtl-price" >Ksh {{listing.price}}</li>
+              <li class="dtl-price" >Ksh {{listing.price}} {% if listing.listing_type == 'FOR_RENT' %} P/M{% endif %}</li>
               <li class="dtl-features">{{listing.bathrooms}} ba | {{listing.bedrooms}} bd | {{listing.floor_area}} Sqft</li>
               <li class="dtl-hometype">{{listing.home_type}}</li>
             </div>
