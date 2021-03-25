@@ -1050,7 +1050,7 @@
                         var price = document.createElement('h3');
                         price.target = '_blank';
                         price.className = 'all-h-price';
-                        price.textContent = "Ksh: " + prop.price;
+                        price.textContent = "Ksh: " + prop.price {% if property_listing_type == 'for_rent' %} +  " p/m" {% endif %};
 
                         var date = document.createElement('h6');
                         date.target = '_blank';
