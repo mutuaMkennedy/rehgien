@@ -1,0 +1,227 @@
+{% extends 'pro_base.html'%}
+{% load static %}
+{% block title %}<title>Start getting clients on Rehgien | Rehgien Pro</title>{% endblock %}
+{% block header %}{% include 'pro_header2.html'%}{% endblock %}
+{% block content %}
+
+<div id="pro_Hero_background" class="pro_mainHome_Bn_xcrs pro_lander" style="background-image:url(https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_auto/v1617564970/static/images/1_qsbwaq.jpg)">
+   <div class="pro_Bn_xcrsoverlay pro_lander_wrap_ovrly">
+      <div class="container">
+          <div class="row">
+            <div class="col s12 pro_home_Bnr_tt">
+              <h1>Customers are looking for <br>pros like you</h1>
+              <p>Register your services. Get clients in more than one way.</p>
+              <div class="_pro_Bnr_catwRP">
+                <div class="_home_Bnr_catBtns">
+                  <a href="{% url 'rehgien_pro:ProSetupWizardView' %}"><button type="button" name="button">Become a service provider</button></a>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="curvedDivider">
+  <img src="{% static 'img/wave1.svg'%}" alt="divider">
+</div>
+<div class="become_a_pro_container">
+  <div class="container">
+    <div class="row">
+      <div class="bcap_section">
+        <div class="bcapSc_head">
+          <h2>Grow your business with Rehgien</h2>
+          <p>Get clients by listing your services or products on our growing property service network</p>
+        </div>
+        <div class="bcapSc_body">
+          <div class="bacp_rwCards">
+            <div class="card">
+              <div class="card_head">
+                <span>1</span>
+                <h3>Build a free profile</h3>
+              </div>
+              <div class="card_body">
+                There is no fee to join. Sign up, setup your business profile by adding reviews, featured projects and reach a wide audience of customers.
+              </div>
+            </div>
+            <div class="card">
+              <div class="card_head">
+                <span>2</span>
+                <h3>Get leads</h3>
+              </div>
+              <div class="card_body">
+                Get connected with clients through your business profile, products you have listed on Rehgien or from client job posts.
+              </div>
+            </div>
+            <div class="card">
+              <div class="card_head">
+                <span>3</span>
+                <h3>Deliver work and get paid</h3>
+              </div>
+              <div class="card_body">
+                Get instant and direct notifications to your phone when you have a lead so you can quickly engage and get paid.
+              </div>
+            </div>
+          </div>
+          <div class="cta">
+            <a href="{% url 'rehgien_pro:ProSetupWizardView' %}"><button type="button" name="button">Become a service provider</button></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="grey_section">
+    <div class="container">
+      <div class="row">
+        <div class="bcap_section">
+          <div class="bcapSc_head">
+            <h2>Your services are needed</h2>
+          </div>
+          <div class="bcapSc_body">
+            <div class="bacp_rwCards">
+              <div class="card">
+                <span>30+</span>
+                <h3>Professional categories</h3>
+              </div>
+              <div class="card">
+                <span>300+</span>
+                <h3>Services offered</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="bcap_section">
+        <div class="bcapSc_body withBackground" style="background-image:url(https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_auto/v1613565892/static/images/pexels-pixabay-210552_vgjlz0.jpg)">
+          <div class="bacp_ctaBox">
+            <h2>Signup and start getting <br>more leads</h2>
+            <div class="cta">
+              <a href="{% url 'rehgien_pro:ProSetupWizardView' %}"><button type="button" name="button">Become a service provider</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grey_section">
+    <div class="container">
+      <div class="row">
+        <div class="bcap_section">
+          <div class="bcapSc_head">
+            <h2>FAQ</h2>
+          </div>
+          <div class="bcap_FAQ">
+
+                <ul class="collapsible">
+                  <li>
+                    <div class="collapsible-header">
+                      Is it really free?
+                      <span class="material-icons">keyboard_arrow_down</span>
+                    </div>
+                    <div class="collapsible-body"><span>
+                      Yes! Rehgien prides itself for being value centric. Using any of our services is entirely free and we won't charge you a cent.
+                    </span></div>
+                  </li>
+                  <li>
+                    <div class="collapsible-header">
+                      Does it take alot of time to join?
+                    <span class="material-icons">keyboard_arrow_down</span>
+                    </div>
+                    <div class="collapsible-body"><span>
+                      No! Setting up your profile is pretty easy and fast. We only ask you to provide the critical information needed for you to be found by clients.
+                      However, you can enhance your profile further by filling all sections availlable to your profile.
+                    </span></div>
+                  </li>
+                  <li>
+                    <div class="collapsible-header">
+                      Do i need to be logged in to receive leads?
+                    <span class="material-icons">keyboard_arrow_down</span>
+                    </div>
+                    <div class="collapsible-body"><span>
+                      No. We send you instant notifications on your phone and email with the clients information so you can engage directly.
+                    </span></div>
+                  </li>
+                  <li>
+                    <div class="collapsible-header">
+                      What more can i do on Rehgien?
+                    <span class="material-icons">keyboard_arrow_down</span>
+                    </div>
+                    <div class="collapsible-body"><span>
+                      Your professional category influences what you can do on Rehgien and features will be availlable to you based on this factor.
+                      Currently our pros can list their services and/or utilize shops to sell their various products. As for our shops we
+                      currently only have the sell/rent homes feature, but we are expanding this feature to support our 300+ other service groups .
+                    </span></div>
+                  </li>
+                  <li>
+                    <div class="collapsible-header">
+                      What if i can't find my professional category or services?
+                    <span class="material-icons">keyboard_arrow_down</span>
+                    </div>
+                    <div class="collapsible-body"><span>
+                      Don't worry if you can't find your professional category or services when creating your profile. Simply contact us at <b>support@rehgien.com</b> or chat with us live by clicking the chat bubble on your screen and pass
+                      a request that your services be added. Updates will be made immediately.
+                    </span></div>
+                  </li>
+
+                </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="curvedDivider">
+  <img src="{% static 'img/wave1.svg'%}" alt="divider">
+</div>
+<br>
+<br>
+<br>
+<br>
+<section>
+  <div class="container">
+    <div class="getApp-card-row row">
+        <div class="getApp-card card col s12 md6 l6">
+            <div class="getappImgWrp">
+                <img src="{% static 'img/6532.png'%}" alt="phone">
+            </div>
+            <h1>Get more flexibility</h1>
+            <p>Do more on the go. Get our features customized for your phone.</p>
+            <div class="appStoreBadges">
+                <a href="#">
+                  <button type="button" name="button">
+                    <img src="{%static 'img/apple-store-badge.png'%}" alt="applestore">
+                  </button>
+                </a>
+                <a href="#">
+                  <button type="button" name="button">
+                    <img src="{%static 'img/google-play-badge.png'%}" alt="googleplay">
+                  </button>
+                </a>
+            </div>
+        </div>
+        <div class="getApp-card card col s12 md6 l6">
+            <div class="getappImgWrp">
+                <img src="{% static 'img/call-center.png'%}" alt="call-center">
+            </div>
+            <h1>Reach out to us</h1>
+            <p>We are always happy to hear from you.</p>
+            <div class="appStoreBadges">
+                <a href="#">
+                  <button type="button" name="button">
+                    +254 79 889 5352
+                  </button>
+                </a>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block footer %}
+{% include 'footer_section.html'%}
+{% endblock%}
