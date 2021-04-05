@@ -189,7 +189,7 @@
                         </ul>
                         <span class="col s12" style='margin-top:25px;'>Are you a pro?</span>
                         <ul class="col s12 catRe_pros">
-                          <li><a href="{% url 'rehgien_pro:ProSetupWizardView' %}">Join as a pro</a></li>
+                          <li><a href="{% url 'rehgien_pro:pro_join_landing' %}">Join as a pro</a></li>
                           <li><a href="{% url 'partnership:partner_program_home' %}">Partner with us</a></li>
                         </ul>
                       </div>
@@ -202,7 +202,7 @@
 
       <ul id="nav-base2" class="right hide-on-med-and-down">
         {% if request.user.user_type != 'PRO' %}
-        <li><a href="{% url 'rehgien_pro:ProSetupWizardView' %}"><button class="join_as_pro" type="button" name="button">Join as a pro</button></a></li>
+        <li><a href="{% url 'rehgien_pro:pro_join_landing' %}"><button class="join_as_pro" type="button" name="button">Join as a pro</button></a></li>
         {% endif %}
         <li><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">Rehgien Pro</a></li>
         {% if not request.user.is_authenticated %}
@@ -350,7 +350,7 @@
                 <div class="collapsible-header sub_collapsHeader"><h6>Are you a pro?</h6><span class="material-icons">expand_more</span></div>
                 <div class="collapsible-body sub_collapsBody">
                   <div class="Mnav-re_pros">
-                    <a href="{% url 'rehgien_pro:ProSetupWizardView' %}">Join as a pro</a>
+                    <a href="{% url 'rehgien_pro:pro_join_landing' %}">Join as a pro</a>
                     <a href="{% url 'partnership:partner_program_home' %}">Partner with us</a>
                   </div>
                 </div>
