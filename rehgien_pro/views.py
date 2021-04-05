@@ -40,6 +40,9 @@ def check_q_valid(param):
 def homepage(request):
 	return render(request,'rehgien_pro/rehgien_pro_homepage.html',{})
 
+def pro_join_landing(request):
+	return render(request,'rehgien_pro/pro_onboarding/landing_page.html',{})
+
 def send_review_request_email(email_dict, message, pk, business_name):
 	domain = 'https://' + Site.objects.get_current().domain
 	review_page_url = reverse( 'profiles:business_review')
