@@ -19320,3 +19320,253 @@ particle {
   color: #000 !important;
   padding:0.5rem 2rem !important;
 }
+
+.pro_lander{
+    background-attachment:fixed;
+    min-height:400px !important;
+    height:70vh;
+}
+
+.pro_lander .pro_lander_wrap_ovrly{
+    background-color:rgb(0 0 0 / 75%);
+}
+
+.pro_lander .pro_lander_wrap_ovrly ._home_Bnr_catBtns button{
+    height:60px;
+    width:220px;
+}
+
+.become_a_pro_container{
+    font-family:Work Sans, Open Sans, Arial;
+}
+
+.become_a_pro_container .bcapSc_body{
+    border-radius:20px;
+}
+
+.become_a_pro_container .bcapSc_body.withBackground{
+    background-position:bottom;
+    background-size:cover;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+.become_a_pro_container .container{
+    width:90%;
+}
+
+.become_a_pro_container .grey_section{
+    background-color:#044289;
+    padding:50px 0;
+}
+
+.become_a_pro_container .bcap_section .bcapSc_head{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.become_a_pro_container .bcap_section .bcapSc_head h2{
+    font-size: 35px;
+    font-weight: 600;
+    text-align:center;
+    margin-bottom:0;
+    color:#000;
+}
+
+.become_a_pro_container .grey_section .bcap_section .bcapSc_head h2{
+    color:#4caf50;
+}
+
+.become_a_pro_container .bcap_section .bcapSc_head p{
+    max-width:650px;
+    text-align:center;
+}
+
+.bcap_section .bcapSc_body .bacp_rwCards, .become_a_pro_container .bcap_section .bacp_rwCards{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    padding:25px 0;
+}
+
+.bcap_section .bacp_rwCards .card{
+    margin:10px;
+    border:none;
+    box-shadow:none;
+    width:350px !important;
+    height:auto;
+    background-color:transparent;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.grey_section .bcap_section .bacp_rwCards .card span{
+    font-size:45px;
+    color:#ffff;
+    font-weight:600;
+}
+
+.grey_section .bcap_section .bacp_rwCards .card h3{
+    font-size:15px;
+    color:#fff;
+    margin:15px 0 ;
+}
+
+.bcap_section .bacp_rwCards .card h3{
+    font-size:18px;
+    margin:5px 0;
+}
+
+.bcap_section .bcapSc_body .bacp_rwCards .card{
+    margin:10px;
+    border:none;
+    box-shadow:none;
+    width:350px !important;
+    height:auto;
+}
+
+.bcap_section .bcapSc_body .bacp_rwCards .card_head{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.bcap_section .bcapSc_body .bacp_rwCards .card_head span{
+    background-color:#2ba2ca;
+    width:50px;
+    height:50px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:20px;
+    border-radius:50px;
+    color:#fff;
+}
+
+.bcap_section .bcapSc_body .bacp_rwCards .card_head h3{
+    font-family:Work Sans,Open Sans, Arial;
+    font-size:20px;
+    font-weight:500;
+    text-align:center;
+    margin:15px 0;
+}
+
+.bcap_section .bcapSc_body .bacp_rwCards .card_body{
+    text-align:center;
+    font-size:14px;
+}
+
+
+.bcap_section .bcap_FAQ .collapsible{
+    box-shadow:none;
+    border:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.bcap_section .bcap_FAQ .collapsible li{
+    border-radius:10px;
+    width:50%;
+    padding:15px;
+}
+
+@media all and (max-width:768px){
+    .bcap_section .bcap_FAQ .collapsible li{
+        width:100%;
+    }
+}
+
+.bcap_section .bcap_FAQ .collapsible li .collapsible-header{
+    border:none;
+    padding:20px 15px;
+    border-radius:5px;
+    font-weight:600;
+    display:flex;
+    justify-content:space-between;
+    transition: border-left 0.2s ;
+}
+
+.bcap_section .bcap_FAQ .collapsible li .collapsible-header:hover{
+     border-left:4px solid #2ba2ca;
+}
+
+.bcap_section .bcap_FAQ .collapsible li.active .collapsible-header{
+    border-left:4px solid #2ba2ca;
+    border-bottom:none;
+    border-bottom-left-radius:0;
+    border-bottom-right-radius:0;
+}
+
+.bcap_section .bcap_FAQ .collapsible li .collapsible-body{
+    border:none;
+    border-bottom-left-radius:5px;
+    border-bottom-right-radius:5px;
+    font-size:14px;
+    font-weight:500;
+    background-color:#ffff;
+    transition: border 0.2sec ;
+
+}
+
+.bcap_section .bcap_FAQ .collapsible li.active .collapsible-body{
+    border-left:4px solid #2ba2ca;
+    transition: border-left 0.2sec ;
+}
+
+.bcap_section .bcapSc_body .cta{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:50px 0;
+}
+
+.bcap_section .bcapSc_body .cta button{
+    height:65px;
+    width:220px;
+    padding:0 10px;
+    background-color:#cc0000;
+    color:#fff;
+    font-weight:600;
+    border:none;
+    border-radius:5px;
+}
+
+.bcap_section .bcapSc_body .cta button:hover{
+    background-color:#2ca2ba;
+    cursor:pointer;
+    transition:background-color 0.5s;
+}
+
+.become_a_pro_container .bacp_ctaBox{
+    height:350px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    margin:100px 0;
+    background-color:hsl(0 0% 0% / 0.90);
+    border-radius:20px;
+}
+
+.become_a_pro_container .bacp_ctaBox h2{
+    font-size: 35px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 0;
+    color:#fff;
+}
+
+.curvedDivider{
+    height:50px;
+    width:100%;
+    margin-top:-30px;
+}
+
+.curvedDivider img{
+    display: block;
+    margin: 0px auto;
+    width: 100%;
+}
