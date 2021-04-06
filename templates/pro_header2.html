@@ -136,7 +136,7 @@
 
       <ul id="nav-base2" class="right hide-on-med-and-down">
         {% if request.user.user_type != 'PRO' %}
-        <li><a href="{% url 'rehgien_pro:ProSetupWizardView' %}"><button class="join_as_pro" type="button" name="button">Join as a pro</button></a></li>
+        <li><a href="{% url 'rehgien_pro:pro_join_landing' %}"><button class="join_as_pro" type="button" name="button">Join as a pro</button></a></li>
         {% endif %}
         <li><a href="{% url 'homepage'%}">Rehgien Home</a></li>
         {% if not request.user.is_authenticated %}
@@ -222,7 +222,7 @@
         </li>
         <li><a href="{% url 'homepage'%}">Rehgien Home</a></li>
         {% if request.user.user_type != 'PRO' %}
-        <li><a href="{% url 'rehgien_pro:ProSetupWizardView' %}">Join as a pro</a></li>
+        <li><a href="{% url 'rehgien_pro:pro_join_landing' %}">Join as a pro</a></li>
         {% endif %}
         {% if not request.user.is_authenticated %}
         <ul>
