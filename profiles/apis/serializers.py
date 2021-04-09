@@ -168,11 +168,12 @@ class UserAccountSerializer(WritableNestedModelSerializer):
     connection_request_receiver = TeammateConnectionSerializer(many=True)
     listings_home_owner_related = listings_serializers.HomeSerializer(many=True)
     _user_account_percentage_complete_ = serializers.SerializerMethodField()
+    business_pages_following = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.User
         fields = [
         'user_type_choices','account_type_choices','pk', 'username', 'first_name',
-        'last_name', 'email', 'user_type','account_type', 'profile_image', "pro_business_profile",
+        'last_name', 'email', 'user_type','account_type', 'profile_image', 'business_pages_following',"pro_business_profile",
         "profiles_portfolioitem_createdby_related", "connection_requestor",
         "connection_request_receiver", "listings_home_owner_related",'_user_account_percentage_complete_'
         ]
@@ -192,3 +193,18 @@ class UserAccountSerializer(WritableNestedModelSerializer):
         if obj.profile_image:
             total += percent.get('profile_image', 0)
         return "%s"%(total)
+
+    def get_business_pages_following(self, object):
+        business_pages_following = object.business_page_followers.all()
+        page_obj_array = []
+        for page in business_pages_following:
+            fields = {
+            'pk':page.pk,
+            'user':page.user.username,
+            'business_name':page.business_name,
+            'business_profile_image':page.business_profile_image.url,
+            'followers':page.followers.all().values('pk'),
+            'verified':page.verified
+            }
+            page_obj_array.append(fields)
+        return page_obj_array
