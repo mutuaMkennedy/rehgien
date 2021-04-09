@@ -38,6 +38,7 @@ from django.db.models import Exists, OuterRef
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from .wizard_storage import MultiFileSessionStorage
+from profiles.views import ajax_login_required
 #from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 #from haystack.query import SearchQuerySet
 # referencing the custom user model
@@ -346,7 +347,7 @@ def property_detail(request, property_category, pk):
 				'ImageTransformation':ImageTransformation, 'VideoTransformation':VideoTransformation, 'openhouse_dates':openhouse_dates,
 				'happening_today':happening_today})
 
-@login_required(login_url='account_login')
+@ajax_login_required
 def save_property(request):
 	if request.method == 'POST':
 		model_object = ''
@@ -374,10 +375,20 @@ def save_property(request):
 		}
 		if request.is_ajax():
 			html = render_to_string('listings/property_save_section.html', context, request=request)
-			return JsonResponse({'form':html, 'is_saved':is_saved})
+			return JsonResponse({'form':html, 'is_saved':is_saved,'authenticated':True})
+		else:
+			return redirect('listings:homepage')
 	else:
-		messages.error(request, 'Invalid Request!')
-		return redirect('listings:homepage')
+		context = {
+		'is_saved':False,
+		'listing':listing,
+		}
+		if request.is_ajax():
+			html = render_to_string('listings/property_save_section.html', context, request=request)
+			return JsonResponse({'form':html, 'is_saved':False,'authenticated':True, 'error_message':'Invalid Request!'})
+		else:
+			messages.error(request, 'Invalid Request!')
+			return redirect('listings:homepage')
 
 # This view has been discarded in favor of the ListPropertyWizardView below and
 # will be removed together with its corresponding template in future commits
@@ -604,7 +615,7 @@ def set_open_house_reminder(request):
 		messages.error(request, 'Invalid Request!')
 		return redirect('listings:homepage')
 
-@login_required(login_url='account_login')
+@ajax_login_required
 def save_search(request):
 	if request.method == 'POST':
 		search_query_string = request.POST.get('queryString','')
@@ -619,7 +630,10 @@ def save_search(request):
 		# 	message = 'error'
 
 		if request.is_ajax():
-			return JsonResponse({'message':message,})
+			return JsonResponse({'message':message,'authenticated':True})
+		else:
+			messages.error(request, 'We can\'t process your request as submited!')
+			return redirect('listings:homepage')
 	else:
 		messages.error(request, 'Invalid Request!')
 		return redirect('listings:homepage')
