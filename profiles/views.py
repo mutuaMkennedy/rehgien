@@ -24,11 +24,19 @@ except ImportError:
 from django.utils.http import urlencode
 from django.core.exceptions import ObjectDoesNotExist
 from .profile_edit_views import resizePhoto
+from functools import wraps
 
 # referencing the custom user model
 User = get_user_model()
 
-# Create your views here.
+def ajax_login_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return view_func(request, *args, **kwargs)
+        return JsonResponse({ 'authenticated': False })
+    return wrapper
+	
 def check_q_valid(param):
 	return param !="" and param is not None
 
@@ -495,7 +503,7 @@ def portfolio_item_update(request, pk):
 		raise PermissionDenied
 	return render(request, 'profiles/pro_portfolio_update_form.html', {'PortfolioForm':portfolioForm, 'portfolio_object':portfolio_object, 'PoImageForm':img_formset})
 
-@login_required(login_url='account_login')
+@ajax_login_required
 def pro_save(request):
 	if request.method == 'POST':
 		user = int(request.user.id)
@@ -509,6 +517,7 @@ def pro_save(request):
 			business_name = pro.business_name
 
 		has_saved = pro.saves.filter(pk=user).exists()
+		innerText = ''
 		if has_saved:
 			pro.saves.remove(user)
 			is_saved = False
@@ -529,7 +538,9 @@ def pro_save(request):
 		}
 		if request.is_ajax():
 			html = render_to_string('profiles/pro-save-section.html', context, request=request)
-			return JsonResponse({'form':html, 'message':message})
+			return JsonResponse({'form':html, 'message':message,'authenticated':True})
+		else:
+			return redirect('profiles:business_homepage')
 	else:
 		err_message = 'Request method not allowed'
 		context = {
@@ -538,7 +549,9 @@ def pro_save(request):
 		}
 		if request.is_ajax():
 			html = render_to_string('profiles/pro-save-section.html', context, request=request)
-			return JsonResponse({'form':html,'err_message':err_message})
+			return JsonResponse({'form':html,'err_message':err_message,'authenticated':True})
+		else:
+			return redirect('profiles:business_homepage')
 
 @login_required(login_url='account_login')
 def pro_follow(request):
