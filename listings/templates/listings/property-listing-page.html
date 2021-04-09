@@ -1397,11 +1397,16 @@
                               'csrfmiddlewaretoken': '{{ csrf_token }}',
                           },
                           success: function (responseData) {
-                            if (responseData.is_saved === true) {
-                              savedProperty.attr('class', '_lssaveProperty _lsIs_saved')
-                            }else {
-                              savedProperty.attr('class', '_lssaveProperty')
+                            if (responseData.authenticated) {
+                              if (responseData.is_saved === true) {
+                                savedProperty.attr('class', '_lssaveProperty _lsIs_saved')
+                              }else {
+                                savedProperty.attr('class', '_lssaveProperty')
+                              }
+                            }else{
+                               window.location.replace("/accounts/login/?next=" + window.location.pathname + window.location.search);
                             }
+
 
                           },
                           error: function(rs,e){
@@ -1538,6 +1543,7 @@
                       'csrfmiddlewaretoken':'{{csrf_token}}'
                     },
                     success: function (response) {
+                      if (response.authenticated) {
                         if (response['message'] === 'sucess') {
                           successmsgBody.html("<span class='material-icons'>check_circle_outline</span> Success. Search saved.")
                           successmsgBody.css({'display': 'flex','bottom':'10px'})
@@ -1551,6 +1557,10 @@
                              errmsgBody.css('bottom','-100px');
                           }, 6000);
                         };
+                      }else{
+                         window.location.replace("/accounts/login/?next=" + window.location.pathname + window.location.search);
+                      }
+
                       }
                   });
               });

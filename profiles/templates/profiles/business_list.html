@@ -51,12 +51,18 @@
                  },
                 dataType: 'json',
                 success: function (response) {
-                   formBox.html(response['form']);
-                   successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
-                   successmsgBody.css('display', 'flex')
-                   setTimeout(function(){
-                      successmsgBody.css('display', 'none');
-                   }, 6000);
+                    if (response['authenticated']) {
+
+                     formBox.html(response['form']);
+                     successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+                     successmsgBody.css('display', 'flex')
+                     setTimeout(function(){
+                        successmsgBody.css('display', 'none');
+                     }, 6000);
+                   }else{
+                     window.location.replace("/accounts/login/?next=" + window.location.pathname + window.location.search);
+                   }
+
                  },
                  error: function(response,e){
                    errmsgBody.html("<span class='material-icons'>error_outline</span>" + response['err_message'])
