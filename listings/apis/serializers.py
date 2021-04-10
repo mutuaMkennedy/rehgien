@@ -153,6 +153,8 @@ class HomeSerializer(WritableNestedModelSerializer):
     roof = serializers.MultipleChoiceField(choices=ROOF_CHOICES, required=False)
     view = serializers.MultipleChoiceField(choices=VIEW_CHOICES, required=False)
     #read only method field
+    similar_homes_in_this_area = serializers.SerializerMethodField()
+    similar_homes_in_this_region = serializers.SerializerMethodField()
     _total_saves_count_ = serializers.SerializerMethodField()
     _listing_active_until_ = serializers.SerializerMethodField()
     _total_views_count_ = serializers.SerializerMethodField()
@@ -180,9 +182,72 @@ class HomeSerializer(WritableNestedModelSerializer):
 
         'view', 'related_website', 'publishdate', 'phone', 'email','owner',
         #read only method fields
-        '_total_saves_count_','_listing_active_until_','_total_views_count_', '_recent_views_count_',
+        'similar_homes_in_this_area','similar_homes_in_this_region','_total_saves_count_',
+        '_listing_active_until_','_total_views_count_', '_recent_views_count_',
         '_views_trend_',
         ]
+
+    def get_similar_homes_in_this_area(self, obj):
+        homes = models.Home.objects.filter(	\
+                price__range = (obj.price - obj.price * 0.2, obj.price + obj.price * 0.2),
+                location_name__icontains = obj.location_name.split(',')[-1], is_active = True,
+                ).exclude(id = obj.id)[:10]
+
+        home_objects_array = []
+        for home in homes:
+            home_photos_objects = []
+            for home_photo in home.home_photos.all():
+                home_photos_objects.append(str(home_photo.photo.url))
+
+            home_obj = {
+            'pk':home.pk,
+            'listing_type':home.listing_type,
+            'property_category':home.property_category,
+            'property_name':home.property_name,
+            'price':home.price,
+            'home_type':home.home_type.name,
+            'virtual_tour_url':home.virtual_tour_url,
+            'location_name':home.location_name,
+            'bathrooms':home.bathrooms,
+            'bedrooms':home.bedrooms,
+            'floor_area':home.floor_area,
+            'home_photos':home_photos_objects,
+            'garage_sqm':home.garage_sqm,
+            }
+
+            home_objects_array.append(home_obj)
+        return home_objects_array
+
+    def get_similar_homes_in_this_region(self, obj):
+        homes = models.Home.objects.filter(	\
+                price__range = (obj.price - obj.price * 0.2, obj.price + obj.price * 0.2),
+                location_name__icontains = obj.location_name.split(',')[0], is_active = True,
+                ).exclude(id = obj.id)[:10]
+
+        home_objects_array = []
+        for home in homes:
+            home_photos_objects = []
+            for home_photo in home.home_photos.all():
+                home_photos_objects.append(str(home_photo.photo.url))
+
+            home_obj = {
+            'pk':home.pk,
+            'listing_type':home.listing_type,
+            'property_category':home.property_category,
+            'property_name':home.property_name,
+            'price':home.price,
+            'home_type':home.home_type.name,
+            'virtual_tour_url':home.virtual_tour_url,
+            'location_name':home.location_name,
+            'bathrooms':home.bathrooms,
+            'bedrooms':home.bedrooms,
+            'floor_area':home.floor_area,
+            'home_photos':home_photos_objects,
+            'garage_sqm':home.garage_sqm,
+            }
+
+            home_objects_array.append(home_obj)
+        return home_objects_array
 
     def get__total_saves_count_(self, obj):
         return obj.saves.count()
