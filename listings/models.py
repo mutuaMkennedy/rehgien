@@ -50,7 +50,7 @@ class PropertyBase(models.Model):
 		'%(app_label)s_%(class)s_saves_related', related_query_name="%(app_label)s_%(class)s_saves", \
 		 blank =True) #related_name=listings_home_saves_related, related_query_name = listings_home_saves
 	#Owners info
-	related_website = models.CharField(max_length = 100, default = None)
+	related_website = models.CharField(max_length = 200, default = None)
 	owner = models.ForeignKey(settings.AUTH_USER_MODEL, default=None, \
 		related_name='%(app_label)s_%(class)s_owner_related', \
 		related_query_name="%(app_label)s_%(class)s_owner", \
