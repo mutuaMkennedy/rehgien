@@ -198,9 +198,20 @@ class UserAccountSerializer(WritableNestedModelSerializer):
         business_pages_following = object.business_page_followers.all()
         page_obj_array = []
         for page in business_pages_following:
+            business_page_owner = {
+            "pk":page.user.pk,
+            "username": page.user.username,
+            "first_name": page.user.first_name,
+            "last_name": page.user.last_name,
+            "email": page.user.email,
+            "user_type": page.user.user_type,
+            "account_type": page.user.account_type,
+            "profile_image": page.user.profile_image.url,
+            }
+
             fields = {
             'pk':page.pk,
-            'user':page.user.username,
+            'user':business_page_owner,
             'business_name':page.business_name,
             'business_profile_image':page.business_profile_image.url,
             'followers':page.followers.all().values('pk'),
