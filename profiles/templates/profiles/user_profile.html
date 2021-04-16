@@ -429,8 +429,8 @@
                                                   </div>
                                                   <div id="rec-content" class="card-content">
                                                     <ol>
-                                                      <li class="rec-h-name">{{onsale_listings.property_name}}</li>
-                                                      <li class="rec-h-location">{{onsale_listings.location_name}}</li>
+                                                      <li class="rec-h-name">{{onsale_listings.property_name|truncatechars:25}}</li>
+                                                      <li class="rec-h-location">{{onsale_listings.location_name|truncatechars:30}}</li>
                                                       <li class="rec-h-features">{{onsale_listings.bathrooms}} ba| {{onsale_listings.bedrooms}} bds| {{onsale_listings.floor_area}} {{onsale_listings.size_units}}</li>
                                                       <li class="rec-h-price">Ksh: {{onsale_listings.price}}</li>
                                                     </ol>
@@ -551,8 +551,8 @@
                                             </div>
                                             <div id="rec-content" class="card-content">
                                               <ol>
-                                                <li class="rec-h-name">{{rentals.property_name}}</li>
-                                                <li class="rec-h-location">{{rentals.location_name}}</li>
+                                                <li class="rec-h-name">{{rentals.property_name|truncatechars:25}}</li>
+                                                <li class="rec-h-location">{{rentals.location_name|truncatechars:30}}</li>
                                                 <li class="rec-h-features">{{rentals.bathrooms}} ba| {{rentals.bedrooms}} bds| {{rentals.floor_area}} {{rentals.size_units}}</li>
                                                 <li class="rec-h-price">Ksh: {{rentals.price}}</li>
                                               </ol>
