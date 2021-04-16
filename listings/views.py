@@ -200,7 +200,8 @@ def property_listings_results(request, property_category, property_listing_type)
 		#finding n-median price for a n-bedroomed house to populate the template's insights bar
 		n_bds_median_price = 0
 		if listings:
-			n_bds_prices = listings.values_list('price', flat=True).distinct()
+			q_beds = 1 if int(bedrooms) == 0 else int(bedrooms)
+			n_bds_prices = listings.filter(bedrooms = int(q_beds)).values_list('price', flat=True).distinct()
 			n_bds_median_price = statistics.median(n_bds_prices)
 	if check_q_valid(bathrooms):
 		listings = listings.filter(bathrooms__gte=bathrooms)
@@ -212,6 +213,7 @@ def property_listings_results(request, property_category, property_listing_type)
 	if check_q_valid(vr):
 		if vr == 'yes':
 			listings = listings.exclude(virtual_tour_url__isnull = True).exclude(virtual_tour_url__exact = '')
+			
 	# Sorting the results
 	if sort == 'jfy':
 		listings = listings.order_by('-publishdate', 'price') # default sort with our chosen params
