@@ -8458,6 +8458,7 @@ particle {
     background-color: rgb(204 0 0 / 1);
     padding: 5px 15px;
     text-align: start;
+    max-width:68%;
 }
 
 #socialShareModal {
