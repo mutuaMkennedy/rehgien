@@ -1151,21 +1151,14 @@
               $(document).ready(function(){
                 //Updates the result insights section
                   var insightText = document.getElementById('_listingsVS_ctTxt');
-                      if ('{{filter_fields.property_type}}' != '') {
-                          insightText.textContent =
-                              "The median " + {% if property_listing_type == 'for_sale' %}"price"{%else%} "rent"{% endif %} +
-                              " for a " + {% if filter_fields.bedrooms%}"{{filter_fields.bedrooms}}"{%else%}"1"{% endif %} +
-                              "bedroom " + {% if filter_fields.property_type != 'All' %}"{{filter_fields.property_type}}"{%else%}"house "{% endif %} +
-                              "in this area is " + mFormatter(parseInt({{insight_stats.n_bds_median_price}})) + " while the median " +
-                              {% if property_listing_type == 'for_sale'  %}"price"{%else%}"rent"{% endif %} +
-                              " for a 3 bedroom plus house is " + mFormatter(parseInt({{insight_stats.threebd_plus_price_trend}})) +".";
-                        }else {
-                          insightText.textContent =
-                              "The median " + {% if property_listing_type == 'for_sale' %}"price"{%else%}"rent"{% endif %} +
-                              " for a 1 bedroom house in this area is " + mFormatter(parseInt({{insight_stats.Onebd_median_price}})) +
-                              " while the median " + {% if property_listing_type == 'for_sale' %}"price"{%else%} "rent"{% endif %} +
-                              " for a 3 bedroom plus house is " + mFormatter(parseInt({{insight_stats.Threebd_plus_median_price}})) +".";
-                        };
+                      insightText.textContent =
+                          "The median " + {% if property_listing_type == 'for_sale' %}"price "{%else%} "rent "{% endif %} +
+                          "for a " + {% if filter_fields.bedrooms > '0' %}"{{filter_fields.bedrooms}} "{%else%}"1 "{% endif %} +
+                          "bedroom " + {% if filter_fields.property_type != 'All' %}"{{filter_fields.property_type}} "{%else%}"house "{% endif %} +
+                          "in this area is " + {% if filter_fields.bedrooms > '0' %} mFormatter(parseInt({{insight_stats.n_bds_median_price}})){%else%}mFormatter(parseInt({{insight_stats.Onebd_median_price}})){%endif%} + " while the median " +
+                          {% if property_listing_type == 'for_sale'  %}"price "{%else%}"rent "{% endif %} +
+                          "for a 3 bedroom plus house is " + mFormatter(parseInt({{insight_stats.Threebd_plus_median_price}})) +".";
+
 
                   var _1bdStatPg = document.getElementById('_ls_Bx1StatsPg');
                       _1bdStatPg.textContent = mFormatter(parseInt({{insight_stats.Onebd_median_price}}))
