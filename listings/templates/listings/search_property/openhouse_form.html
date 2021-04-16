@@ -116,7 +116,10 @@
               {% if wizard.steps.prev %}
               <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "Previous" %}</button>
               {% endif %}
-              <button class="nextStepLsprop" type="submit">{% trans "Next" %}</button>
+              <div class="nxtStpWrpr">
+                <button class="skipStepLsprop" type="submit">{% trans "Skip" %}</button>
+                <button class="nextStepLsprop" type="submit">{% trans "Next" %}</button>
+              </div>
             </div>
           </div>
           {{ wizard.management_form }}
