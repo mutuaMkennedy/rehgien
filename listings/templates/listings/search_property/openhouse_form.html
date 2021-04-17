@@ -126,6 +126,19 @@
         </form>
     </div>
   </div>
+  <div class="loader-wrapperProcessStep">
+    <img src="{% static 'img/Preloader_2.gif'%}" alt="processing">
+  </div>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+
+  $('.lsPropSteps-footerBtns button').on('click', function(e){
+    $('.loader-wrapperProcessStep').css({'display':'flex','opacity':1});
+  });
+
+  });
+</script>
 
 {% endblock %}
