@@ -194,6 +194,11 @@
         });
     };
 
+    // get site domain
+    var domainRegex = /(?:[\w-]+\.)+[\w-]+/;
+    var domain = domainRegex.exec('{{listing.related_website}}');
+        $('.rltdWbsitLink_external').html(domain);
+        $('.goToExtWeb').attr('href','http://' + domain);
   });
 </script>
 <section id="d-bd">
@@ -608,6 +613,18 @@
               </div>
               <button id="__showMr" class="_adShMore_xytlaxcs" type="button" name="button"><span class="material-icons">expand_more</span>View more</button>
               <button id="__showls" class="_adShMore_xytlaxcs" type="button" name="button"><span class="material-icons">expand_less</span>Show less</button>
+          </div>
+
+          <div class="ds_srcAcxtvy_dtl">
+            <div class="inrObjLght_actvy">
+              Last update made: about {{listing.publishdate|timesince}} ago
+            </div>
+            <div class="inrObjLght_actvy">
+              Listing courtesy of <span class="rltdWbsitLink_external"></span>
+            </div>
+            <div class="inrObjLght_actvy">
+              <a href="{{listing.related_website}}" target="_blank" class="goToExtWeb">Visit originating site.<span class="material-icons">east</span></a>
+            </div>
           </div>
         </div>
       </div>

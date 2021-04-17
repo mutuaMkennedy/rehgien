@@ -5064,6 +5064,30 @@ _dashbordAccount {
     margin: 10px 0;
 }
 
+.add-details-cont .ds_srcAcxtvy_dtl{
+    margin-top:70px;
+}
+
+.add-details-cont .ds_srcAcxtvy_dtl .inrObjLght_actvy{
+    color:#757575;
+    font-size:13px;
+}
+
+.add-details-cont .ds_srcAcxtvy_dtl .inrObjLght_actvy a{
+    display:flex;
+    align-items:center;
+    margin-top:10px;
+    width:fit-content;
+    border-radius:20px;
+    padding:5px 20px;
+    border:1px solid;
+}
+
+.add-details-cont .ds_srcAcxtvy_dtl .inrObjLght_actvy a span{
+    font-size:15px;
+    margin-left:5px;
+}
+
 ._x_sclistingExtraMedia {
     position: absolute;
     right: 10px;
