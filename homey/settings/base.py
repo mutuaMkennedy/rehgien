@@ -408,3 +408,4 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 # Analytic services
 CLICKY_SITE_ID = '101303494'
 GOOGLE_ANALYTICS_GTAG_PROPERTY_ID = 'G-65Q435FWHZ'
+HOTJAR_SITE_ID = '2365112'
