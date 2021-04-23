@@ -321,7 +321,9 @@
         </button>
       </div>
       <div id="map-container">
-            <div id='map'>
+            <div id="map_delayLoad">
+              <div id='map'>
+              </div>
             </div>
             {% if listings %}
               <button type="button" id="hideMapbtn"  class="">
@@ -358,15 +360,18 @@
     </div>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <div id="_lsPage_AllFeatureLoadScriptsWrpr">
-      <div id="_lsPage_AllFeatureLoadScripts">
+    <div id="_lsPage_AllFeatureLoadScripts">
           <script>
+              var mapC = document.createElement('div');
+                  mapC.id = 'map';
+
               mapboxgl.accessToken = 'pk.eyJ1IjoicmV5a2VubmVkeSIsImEiOiJjam9td3ZkMnYwdjB5M3ZueWQ1YzVocThwIn0.PBVWnwga3qG6KX6_CoPy8g';
               if (!mapboxgl.supported()) {
                 alert('Your browser does not support Mapbox GL. To access map features chooses a different browser!');
                 } else {
                   var map = new mapboxgl.Map({
-                      container: 'map',
-                      style: 'mapbox://styles/reykennedy/ckh7o1zaj16uf19livwuytxlq',
+                      container: mapC,
+                      // style: 'mapbox://styles/reykennedy/ckh7o1zaj16uf19livwuytxlq',
                       minZoom: 6.2,
                       maxZoom:18,
                       center: [37.01, -1.10]
@@ -880,6 +885,11 @@
                   }
               {% endif %}
 
+              $(window).on('load', function(){
+                $('#map_delayLoad').html(mapC);
+                map.setStyle('mapbox://styles/reykennedy/ckh7o1zaj16uf19livwuytxlq');
+                map.resize();
+              });
       </script>
       <script type="text/javascript">
         {% if all_listings %}
@@ -922,7 +932,6 @@
             allPointsGeojson.features.forEach(function(feature) {
                 bounds.extend(feature.geometry.coordinates);
             });
-
             map.fitBounds(bounds, {padding:50, duration:0});
 
           //price formatter
@@ -1079,7 +1088,6 @@
 
 
 
-
                         card.addEventListener('mouseover', function() {
                             // Highlight corresponding feature on the map
                             popup.setLngLat(feature.geometry.coordinates)
@@ -1100,7 +1108,6 @@
                             map.getCanvas().style.cursor = '';
                             popup.remove();
                         });
-
 
                         listingEl.appendChild(card);
                         detailsLink.appendChild(image);
