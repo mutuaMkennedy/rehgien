@@ -19640,3 +19640,140 @@ particle {
     background-color:rgb(255 255 255 / 0.9);
     transition:opacity 0.7s;
 }
+
+.contactUsBox{
+    font-family:Work Sans,Open Sans,Arial;
+}
+
+.contactUsBox .contactUs_head h2{
+    text-align:center;
+    font-size:35px;
+    font-weight:600;
+    margin-bottom:0;
+}
+
+.contactUsBox .contactUs_head  p{
+    text-align:center;
+}
+
+@media all and (max-width:768px){
+    .contactUsBox .contactUs_head h2{
+        font-size:28px;
+    }
+    .contactUsBox .contactUs_head p{
+        font-size:12px;
+    }
+}
+
+.contactUs_body{
+    width: 100%;
+    padding:50px 100px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px 2px #eee;
+    margin-bottom:100px;
+}
+
+
+@media all and (max-width:768px){
+    .contactUs_body{
+        padding:25px;
+     }
+}
+
+.contactUs_body form .contactFormFieldWrp{
+    padding:10px;
+}
+
+.contactUs_body form .contactFormFieldWrp h6{
+    font-size:14px;
+    font-weight:500;
+}
+
+.contactUs_body form .contactFormFieldWrp h6 span{
+    color:#ff0000;
+}
+
+.contactUs_body form .contactFormFieldWrp.flexFields{
+    display:flex;
+    flex-wrap:wrap;
+}
+
+.contactUs_body form .contactFormFieldWrp.flexFields div{
+    width:50%;
+    padding-right:15px;
+}
+
+@media all and (max-width:768px){
+    .contactUs_body form .contactFormFieldWrp.flexFields{
+        flex-direction:column;
+    }
+    .contactUs_body form .contactFormFieldWrp.flexFields div{
+        width:100%;
+        padding-right:0px;
+    }
+}
+
+.contactUs_body form .contactFormFieldWrp.flexFields input{
+    height:45px;
+    border:1px solid #ddd;
+    padding:0 10px;
+    box-sizing:border-box;
+}
+
+.contactUs_body form .contactFormFieldWrp.flexFields input::placeholder{
+    color:#757575;
+    font-size:13px;
+}
+
+.contactUs_body form .contactFormFieldWrp.msg{
+    padding:0 10px;
+}
+
+.contactUs_body form .contactFormFieldWrp textarea{
+    padding:10px;
+    height:100px;
+    border:1px solid #ddd;
+}
+
+.contactUs_body form .contactFormFieldWrp .errorlist{
+    margin:0;
+}
+
+.contactUs_body form .contactFormFieldWrp .errorlist li{
+    font-size:12px;
+}
+.contactUs_body form .contactFormSubmit{
+    text-align:center;
+}
+
+.contactUs_body form .contactFormSubmit button{
+    height:45px;
+    background-color:#cc0000;
+    border:none;
+    color:#fff;
+    min-width:200px;
+    padding:0 25px;
+    border-radius:25px;
+    margin-top:20px;
+    font-weight:500;
+}
+
+.contactUs_body form .contactFormSubmit button:hover{
+   cursor:pointer;
+   opacity:0.9;
+}
+
+.contactUs_body .contactUs_bodyFooter h3{
+    margin:35px 0;
+    font-size:15px;
+    text-align:center;
+    font-weight:500;
+    color:#1100ff;
+}
+
+@media all and (max-width:768px){
+    .contactUs_body .contactUs_bodyFooter h3{
+        font-size:13px;
+    }
+}
