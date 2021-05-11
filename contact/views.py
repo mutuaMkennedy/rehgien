@@ -16,6 +16,46 @@ from django.contrib.sites.models import Site
 from django.urls import reverse
 
 
+def contact_support(first_name, last_name, email, phone, message):
+	try:
+		subject = 'You have a new Customer Support Request!'
+		plainMessage = "First Name: {fn}. \nLast Name: {ln}. \nEmail: {e}. \nPhone: {p}. \n\nMessage: \n\n{m}".format(fn=first_name, ln=last_name, e=email, p=phone, m=message)
+
+		send_mail(
+			subject,
+			plainMessage,
+			'Rehgien <do-not-reply@rehgien.com>',
+			['support@rehgien.com'],
+			fail_silently=False,
+		)
+		return True
+
+	except BadHeaderError:
+		return False
+
+def contact_us(request):
+	if request.method == 'POST':
+		contact_form = forms.ContactUsForm(request.POST, request.FILES)
+		if contact_form.is_valid():
+			first_name = contact_form.cleaned_data.get('first_name')
+			last_name = contact_form.cleaned_data.get('last_name')
+			email = contact_form.cleaned_data.get('email')
+			phone = contact_form.cleaned_data.get('phone')
+			message = contact_form.cleaned_data.get('message')
+			sucess = contact_support(first_name, last_name, email, phone, message)
+
+			if sucess:
+				messages.success(request,"Message Sucessfully Sent!")
+			else:
+				messages.error(request,"Something went wrong try again later")
+		else:
+			messages.error(request,"Invalid submission. Check the form for field errors.")
+	else:
+		contact_form = forms.ContactUsForm()
+	context = {'contactForm':contact_form}
+	return render(request, 'contact/contact_us.html', context)
+
+
 def about_us(request):
 	context = {}
 	return render(request,'contact/about_us.html', context)
