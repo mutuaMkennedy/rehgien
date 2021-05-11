@@ -21,6 +21,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from photologue.sitemaps import GallerySitemap, PhotoSitemap
 from listings import views
+from contact import views as contact_views
 from django.views.generic import TemplateView
 from allauth.account.views import confirm_email
 from rest_auth.views import PasswordResetConfirmView
@@ -72,6 +73,8 @@ urlpatterns = [
         name='django.contrib.sitemaps.views.sitemap'),
     path('terms_of_service/', TemplateView.as_view(template_name = 'terms_of_service.html'), name='terms_of_use'),
     path('privacy_policy/', TemplateView.as_view(template_name = 'privacy_policy.html'), name='privacy_policy'),
+    path('contact_us/', contact_views.contact_us, name="contact_us"),
+    path('about_us/', contact_views.about_us, name="about_us"),
     # path('msg/', TemplateView.as_view(template_name = 'index.html')),
     #url(r'^search/', include('haystack.urls')),
 ]
