@@ -1,0 +1,59 @@
+{% extends 'base1.html'%}
+{% block title %}<title>Contact Rehgien|Find our contact Details|Rehgien</title>{% endblock %}
+{% block content %}
+
+<div class="container contactUsBox">
+  <div class="row">
+      <div class="contactUs_head">
+        <h2>Contact us</h2>
+        <p>Rehgien helps you connect with any property service or service provider in a safe and efficent way!</p>
+      </div>
+      <div class="contactUs_body">
+        <form action="{% url 'contact:contact_us'%}" method="post">
+          {% csrf_token %}
+          <div class="contactFormFields">
+            {{contactForm.non_field_errors}}
+              <div class="contactFormFieldWrp flexFields">
+                <div>
+                  <h6>First Name <span>*</span></h6>
+                  {{contactForm.first_name}}
+                  {{ contactForm.first_name.errors }}
+                </div>
+                <div>
+                  <h6>Last Name <span>*</span></h6>
+                  {{contactForm.last_name}}
+                  {{ contactForm.last_name.errors }}
+                </div>
+              </div>
+              <div class="contactFormFieldWrp flexFields">
+                <div>
+                  <h6>Email <span>*</span></h6>
+                  {{contactForm.email}}
+                  {{ contactForm.email.errors }}
+                </div>
+                <div>
+                  <h6>Phone Number <span>*</span></h6>
+                  {{contactForm.phone}}
+                  {{ contactForm.phone.errors }}
+                </div>
+              </div>
+              <div class="contactFormFieldWrp msg">
+                <h6>Your message</h6>
+                {{contactForm.message}}
+                {{ contactForm.message.errors }}
+              </div>
+              <div class="contactFormSubmit">
+                  <button type="submit" name="button">Send message</button>
+              </div>
+          </div>
+        </form>
+        <div class="contactUs_bodyFooter">
+          <h3>For Support &nbsp +254 79 889 5352 &nbsp support@rehgien.com </h3>
+        </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer%}{% include 'footer_section.html'%}{% endblock%}
