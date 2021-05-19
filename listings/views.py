@@ -127,9 +127,10 @@ def property_listings_results(request, property_category, property_listing_type)
 	# Check if there are listings and then do the stats anylysis
 	if listings:
 		all_prices = listings.values_list('price', flat=True).distinct()
-		all_prices_median = statistics.median(all_prices)
-		all_prices_index = list(range(1,len(all_prices)+1)) #adding 1 extra index to compensate for starting range at 1 instead of 0
-		all_prices_trend = trend(all_prices_index , all_prices)
+		if all_prices:
+			all_prices_median = statistics.median(all_prices)
+			all_prices_index = list(range(1,len(all_prices)+1)) #adding 1 extra index to compensate for starting range at 1 instead of 0
+			all_prices_trend = trend(all_prices_index , all_prices)
 
 		_1bd_price = listings.filter(bedrooms = 1).values_list('price', flat=True).distinct()
 		if _1bd_price:
@@ -213,7 +214,7 @@ def property_listings_results(request, property_category, property_listing_type)
 	if check_q_valid(vr):
 		if vr == 'yes':
 			listings = listings.exclude(virtual_tour_url__isnull = True).exclude(virtual_tour_url__exact = '')
-			
+
 	# Sorting the results
 	if sort == 'jfy':
 		listings = listings.order_by('-publishdate', 'price') # default sort with our chosen params
