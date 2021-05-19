@@ -30,6 +30,9 @@ $(document).ready(function(){
      format:'yyyy-mm-dd',
    });
     $('.collapsible').collapsible();
+    $('.collapsible.expandable').collapsible({
+      accordion: false
+    });
     $('.carousel.carousel-slider').carousel({
       fullWidth: true,
       indicators: true,
@@ -52,4 +55,5 @@ $(document).ready(function(){
     $('.fixed-action-btn').floatingActionButton({
       hoverEnabled:false,
     });
+    $('.scrollspy').scrollSpy();
   });
