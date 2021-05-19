@@ -93,7 +93,9 @@ def dashboard_home(request):
 def dashboard_insights(request):
 	if request.user.user_type == 'PRO':
 		pro_page = profiles_models.BusinessProfile.objects.get(user=request.user)
-		percentage_rating = pro_page.average_rating / 5 * 100
+		percentage_rating = 0
+		if pro_page.average_rating:
+			percentage_rating = pro_page.average_rating / 5 * 100
 		context = {
 		"pro_page":pro_page,
 		"percentage_rating":percentage_rating,
