@@ -1,0 +1,238 @@
+{% extends 'pro_base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+  window.onload = function() {
+    document.querySelector(".dash_loader_wrapper").style.display = "none";
+  };
+</script>
+
+<div class="pro-dashboard-wrapper">
+  <header id="pro-dash-hdr">
+    <div class="navbar-fixed">
+      <nav role="navigation">
+      <div class="pro-nav-wrapper">
+        <div class="left_wrap left">
+          <button id="pdash_menu_control" type="button" name="button"><i class="material-icons">menu</i></button>
+          <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo" style="height:60px;" target="_blank">
+            <div class="proDash-base_lgo">
+              <img src="{% static 'img/RehgienProLogo.png'%}" alt="rehgien pro logo">
+            </div>
+          </a>
+        </div>
+
+        <ul id="proDash-action-navUlist"  class="right pro-action-navLinks">
+          <li>
+            <div class="pflNavLink_x_dropdown">
+                <button type="button" name="button" class="dropdown-trigger" data-target='proDashWishListDpdown'>
+                  <span class="material-icons">favorite</span>
+                </button>
+                <div id="proDashWishListDpdown" class="dropdown-content proDashDpdown_elem pdash_dpd_wishl_sc">
+                    <div class="pdash_dpdwn_hd">
+                      <h5>Your Wish List</h5>
+                    </div>
+                    <div class="dpdwn_body">
+                      <div class="dpdwn_wishlist_item">
+                        <img src="{% static 'img/property_sky.jpg'%}" alt="properties">
+                        <span>
+                            <h5>Properties</h5>
+                            <p>{{request.user.listings_home_saves_related.all.count}} Item{{ request.user.listings_home_saves_related.all.count|pluralize }}</p>
+                        </span>
+                      </div>
+                      <div class="dpdwn_wishlist_item">
+                        <img src="{% static 'img/thumbnails/system_&_appliances.jpg'%}" alt="Professionals">
+                        <span>
+                            <h5>Professionals</h5>
+                            <p>{{request.user.business_page_saves.all.count}} Item{{ request.user.business_page_saves.all.count|pluralize }}</p>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="dpdwn_footer"><a href="{% url 'profiles:notifications' %}">View All</a></div>
+                </div>
+            </div>
+          </li>
+          <li>
+            <div class="pflNavLink_x_dropdown">
+                <button type="button" name="button" class="dropdown-trigger" data-target='proDashNotfDpdown'>
+                  <span class="material-icons">notifications</span>
+                </button>
+                <div id="proDashNotfDpdown" class="dropdown-content proDashDpdown_elem pdash_dpd_botf_sc">
+                    <div class="pdash_dpdwn_hd">
+                      <h5>Notifications</h5>
+                    </div>
+                    <div class="dpdwn_body">
+                      <div class="ntfempty_">
+                        <i class="material-icons">notifications_none</i>
+                        <p>No Notifications Right Now</p>
+                      </div>
+                    </div>
+                    <div class="dpdwn_footer"><a href="{% url 'profiles:notifications' %}">See All Notifications</a></div>
+                </div>
+            </div>
+          </li>
+          <li>
+            <div class="pflNavLink_x_dropdown">
+                <button type="button" name="button" class="dropdown-trigger pro-dash-usrAct" data-target='proDashActDpdown'>
+                  <div class="pro-dash-usrActDt">
+                    <img src="
+                    {% if request.user.profile_image %}
+                      {{request.user.profile_image.url}}
+                    {% elif request.user.pro_business_profile.business_profile_image %}
+                      {{request.user.pro_business_profile.business_profile_image.url}}
+                    {% else %}
+                      {% static 'img/avatar.png' %}
+                    {% endif %}
+                    " alt="{{request.user.pro_business_profile.business_name}}">
+                    <div class="pdash_ac_u_mkfirst">{{request.user.pro_business_profile.business_name|make_list|slice:'2'|join:'' }} <i class="material-icons">expand_more</i></div>
+                  </div>
+                  <div id="proDashActDpdown" class="dropdown-content proDashDpdown_elem pdash_dpd_acct_sc">
+                      <div class="pdash_dpd_acct_sc_prof">
+                          <div class="_aeuwends-aks">
+                            <img src="
+                            {% if request.user.profile_image %}
+                              {{request.user.profile_image.url}}
+                            {% elif request.user.pro_business_profile.business_profile_image %}
+                              {{request.user.pro_business_profile.business_profile_image.url}}
+                            {% else %}
+                              {% static 'img/avatar.png' %}
+                            {% endif %}
+                            " alt="{{request.user.pro_business_profile.business_name}}">
+                          </div>
+                          <div class="asdalewl-lsdm_kask">
+                            <h5>Your Profile</h5>
+                            <h6>{{request.user.pro_business_profile.business_name|truncatechars:'25'}}</h6>
+                          </div>
+                      </div>
+                      <ul>
+                        <li><a href="{% url 'profiles:pro_business_page_edit' pk=request.user.pro_business_profile.pk %}">Edit Profile and Settings</a></li>
+                        <li><a href="{% url 'rehgien_pro:dashboard_home'%}">Dashboard</a></li>
+                        <li><a href="{% url 'homepage' %}">Go to Rehgien</a></li>
+                        <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+                      </ul>
+                  </div>
+                </button>
+              </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    </div>
+  </header>
+
+  <div class="container pro-dash-container">
+    <div class="proDashItems-row">
+       <div id="pdash_main_sidebar" data-isopen='True' class="hide-on-med-and-down proDashScNavbar">
+         <div class="proDashScNavbar-links">
+           <div id="pdquick_box" class="proQuickCreate-tab">
+             <div class="proQuickCreate-content">
+               <div class="proQuickCreate-wrp">
+                 <button type="button" name="button" class="dropdown-trigger proQuickCreate-trigger" data-target='proQuickCreate-dropdown'><i class="material-icons">add</i><p>Quick Create</p></button>
+                 <div id="proQuickCreate-dropdown" class="dropdown-content pdash-quick_create">
+                    <div class="dpdwn_head">
+                      Pick an action
+                    </div>
+                     <div class="dpdwn_body">
+                       <div class="qcr_link_item">
+                         <a href="{% url 'listings:property_listing_form' %}" target="_blank"><button type="button"><i class="material-icons">bungalow</i>Post a property</button></a>
+                         <a href="{% url 'markets:job_post_home' %}" target="_blank"><button type="button"><i class="material-icons">work</i>Post a job</button></a>
+                         <a href="{% url 'profiles:portfolio_item_create' %}" target="_blank"><button type="button"><i class="material-icons">create_new_folder</i>Post a project</button></a>
+                       </div>
+                     </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+            <ul id="pdashNav_colls_elems" class="collapsible expandable">
+                <li><button type="button" name="button" class="a-wrapper"><a href="{% url 'rehgien_pro:dashboard_home' %}" id="proDash_home_default" class="proDash_sc_switch {% block homeActive%}{% endblock%}"><i class="material-icons">home</i> <p>Home</p></a></button></li>
+                <li class="active">
+                  <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="material-icons">trending_up</i> <p>Grow</p></a></button><span class="material-icons">expand_less</span></div>
+                  <div class="collapsible-body">
+                      <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:dashboard_insights' %}" class="proDash_sc_switch_clbody proDash_sc_switch {% block insActive%}{% endblock%}"><i class="material-icons">insights</i> <p>Insights</p></a></button>
+                  </div>
+                </li>
+                <li class="active">
+                  <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="material-icons">group_work</i> <p>Manage</p></a></button><span class="material-icons">expand_less</span></div>
+                  <div class="collapsible-body">
+                      <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:dashboard_properties' %}" class="proDash_sc_switch_clbody proDash_sc_switch {% block propActive%}{% endblock%}"><i class="material-icons">maps_home_work</i> <p>Properties</p></a></button>
+                      <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:dashboard_jobs' %}" class="proDash_sc_switch_clbody proDash_sc_switch {% block jobsActive%}{% endblock%}"><i class="material-icons">work</i> <p>Jobs</p></a></button>
+                      <button type="button" name="button" class="a-clslink"><a href="#" class="proDash_sc_switch_clbody proDash_sc_switch"><i class="material-icons">contacts</i> <p>Leads</p></a></button>
+                  </div>
+                </li>
+                <li class="active">
+                  <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="material-icons">local_library</i> <p>Learn</p></a></button><span class="material-icons">expand_less</span></div>
+                  <div class="collapsible-body">
+                      <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=product-updates" class="proDash_sc_switch_clbody proDash_sc_switch" target="_blank"><i class="material-icons">lightbulb</i> <p>Tutorials</p></a></button>
+                      <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=tutorials" class="proDash_sc_switch_clbody proDash_sc_switch" target="_blank"><i class="material-icons">system_update_alt</i> <p>Product Updates</p></a></button>
+                  </div>
+                </li>
+            </ul>
+         </div>
+       </div>
+       <div id="pdash_section_box" class="prodash_section_elements">
+            <div class="dash_loader_wrapper">
+              <img src="{% static 'img/Preloader_2.gif'%}" alt="loading">
+            </div>
+            <div class="prodash_page_sections">
+              {% block dashboard_section %}
+              {% endblock %}
+            </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+
+// sidebar control
+    $('#pdash_menu_control').on('click', function(){
+      let lNav = $('#pdash_main_sidebar');
+      let rCon = $('#pdash_section_box');
+      let collapsible_listItem = $('#pdashNav_colls_elems li');
+      let collapsible_hd = $('#pdashNav_colls_elems li .collapsible-header');
+      let collapsible_bd = $('#pdashNav_colls_elems li .collapsible-body');
+      let collapsible_bd_btn = $('#pdashNav_colls_elems li .collapsible-body button');
+      let lPtx = $('#pdashNav_colls_elems li p');
+      let lacTg = $('#pdashNav_colls_elems li a');
+      let sidebar_button = $('#pdashNav_colls_elems li button');
+      let lacTgActive = $('#AcsNavLinks a.active');
+      let lNavQcreate_btn = $('#pdquick_box');
+      let collapsible_body_icon= $(".proDash_sc_switch_clbody i");
+     if (lNav.attr('data-isOpen') === 'True') {
+       // user wants to minimize sidebar
+       collapsible_listItem.addClass('active').css('margin-bottom','0px');
+       collapsible_hd.css('display','none');
+       collapsible_bd.css({'padding':'0px', 'display':'block'});
+       collapsible_body_icon.css({'display':'flex', 'margin-bottom':'0px'});
+       sidebar_button.css('margin-bottom','15px');
+       lNav.css('width','5%');
+       rCon.css('width','95%');
+       lPtx.css('display','none');
+       lNavQcreate_btn.css('display','none');
+       lacTg.addClass('navIsOpen');
+       lNav.attr('data-isOpen','False');
+     }else{
+       // user wants to maximize
+       collapsible_listItem.addClass('active').css('margin-bottom','20px');
+       collapsible_hd.css('display','flex');
+       collapsible_bd.css({'padding':'10px 34px', 'display':'block'});
+       collapsible_body_icon.css('display','none');
+       sidebar_button.css('margin-bottom','0px')
+       collapsible_bd_btn.css('margin-bottom','10px')
+       lNav.css('width','17%');
+       lPtx.css('display','block');
+       lNavQcreate_btn.css('display','block')
+       lacTg.removeClass('navIsOpen');
+       rCon.css('width','82%');
+       lNav.attr('data-isOpen','True');
+     }
+  });
+
+  })
+</script>
+
+{% endblock %}

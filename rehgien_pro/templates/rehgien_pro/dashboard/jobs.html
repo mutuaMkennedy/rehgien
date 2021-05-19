@@ -1,0 +1,156 @@
+{% extends 'rehgien_pro/dashboard/dashboard_base.html'%}
+{% load static %}
+{% block head_title %}<title>Rehgien Pro | Jobs Management</title>{% endblock %}
+{% block jobsActive %}active{% endblock%}
+{% block dashboard_section %}
+
+<div id="proDash_jobPosts" class="proDashFeedContainer proDash_sectionTab">
+  <div class="proDash-Tab-section">
+    <div class="proDashTab-head">
+        <h2>My Jobs</h2>
+    </div>
+    <div class="quickActions_sc">
+      <div class="quickActionItems">
+        Quick Access:
+        <div class="quickActionItems-links">
+            <a href="{% url 'rehgien_pro:jobs_list'%}" target="_blank"><button type="button" name="button"> <i class="material-icons">work_outline</i>Browse Jobs in Your area</button></a>
+            <a href="{% url 'markets:job_post_home'%}" target="_blank"><button type="button" name="button"> <i class="material-icons">flourescent</i>Learn More about Jobs</button></a>
+        </div>
+      </div>
+    </div>
+    <div class="mng_prop_stats_hd">
+      <div class="mng_prop_type_switch">
+        <ul class="tabs">
+            <li class="tab col s3"><a href="#mng_jb_list">My Postings <span>{{user_job_posts.count}}</span></a></li>
+            <li class="tab col s3"><a href="#mng_jb_proposed">Proposed To<span>{{user_jobs_replied.count}}</span></a></li>
+        </ul>
+      </div>
+      <div class="mng_prop_ext_btns">
+         <a href="{% url 'markets:job_post_create'%}" target="_blank"><button type="button" name="button"><span class="material-icons">add</span>Post a New Job</button></a>
+      </div>
+     </div>
+
+      <div id="mng_jb_list" class="mng_jb_post_list">
+        {% for job in user_job_posts %}
+        <div class="card">
+          <div class="card_head">
+            <div class="row">
+              <div class="col s12 md8 l8 xl8">
+                <div class="mjpl_jb_title">
+                  <a href="{% url 'markets:job_post_update' job.pk%}" target="_blank"><h3>{{job.title}}</h3></a>
+                </div>
+              </div>
+              <div class="col s12 md4 l4 xl4">
+               <div class="mjpl_jb_action_btn">
+                 <div class="mjpl_jb_action_btn_box">
+                   <button class="dropdown-trigger xyuntrigger_btn _tgBtn_opTg" data-target='jbpost_{{job.pk}}' type="button" name="button"><i class="material-icons">more_horiz</i></button>
+                   <div id="jbpost_{{job.pk}}" class="dropdown-content mjpl_jb_action_btn_bubble">
+                     <div class="mjpl_jb_action_btn_bubble_links">
+                           <form action="{% url 'markets:job_post_deactivate' job.pk%}" method="post">
+                             {% csrf_token %}
+                             <button type="submit" name="button">
+                               Remove Job
+                             </button>
+                           </form>
+                         <a href="{% url 'markets:job_post_update' job.pk%}" target="_blank">
+                           <button type="button" name="button">
+                               Edit Job
+                           </button>
+                         </a>
+                         <a href="{% url 'markets:job_post_detail' job.pk%}" target="_blank">
+                           <button type="button" name="button">
+                               View Proposals
+                           </button>
+                         </a>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+              </div>
+            </div>
+          </div>
+          <div class="card_body">
+            <div class="row">
+              <div class="col s12 md4 l4 xl4">
+                <div class="asdlxtjwp-ds">
+                  <span class="t_sdoq-sd">{{job.project_size|lower}} project</span>
+                  <p>Created {{job.job_update_date|timesince}} ago</p>
+                </div>
+              </div>
+              <div class="col s12 md4 l4 xl4">
+                <div class="dwqeef_sao-dplm">
+                  <span class="count">{{job.job_post_proposal.count}}</span>
+                  <p>Proposals</p>
+                </div>
+              </div>
+              <div class="col s12 md4 l4 xl4">
+                <div class="qwdrp_dlpo-mc-dplm">
+                  <span class="count">{{job.job_viewers.count}}</span>
+                  <p>Views</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+      <div id="mng_jb_proposed" class="mng_jb_post_list">
+        {% for job in user_jobs_replied %}
+        <div class="card">
+          <div class="card_head">
+            <div class="row">
+              <div class="col s12 md8 l8 xl8">
+                <div class="mjpl_jb_title">
+                  <h3>{{job.job_post.title}}</h3>
+                </div>
+              </div>
+              <div class="col s12 md4 l4 xl4">
+                <div class="mjpl_jb_action_btn">
+                  <div class="mjpl_jb_action_btn_box">
+                    <button class="dropdown-trigger xyuntrigger_btn _tgBtn_opTg" data-target='jbpost_proposal_{{job.pk}}' type="button" name="button"><i class="material-icons">more_horiz</i></button>
+                    <div id="jbpost_proposal_{{job.pk}}" class="dropdown-content mjpl_jb_action_btn_bubble">
+                      <div class="mjpl_jb_action_btn_bubble_links">
+                          <a href="{% url 'rehgien_pro:job_detail' job.job_post.pk %}" target="_blank">
+                            <button type="button" name="button">
+                                View job
+                            </button>
+                          </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card_body">
+            <div class="row">
+              <div class="col s12 md4 l4 xl4">
+                <div class="asdlxtjwp-ds">
+                  <span class="t_sdoq-sd">{{job.job_post.project_size|lower}} project</span>
+                  <p>Created {{job.job_post.job_update_date|timesince}} ago</p>
+                </div>
+              </div>
+              <div class="col s12 md4 l4 xl4">
+                <div class="dwqeef_sao-dplm">
+                  <span class="count">{{job.job_post.job_post_proposal.count}}</span>
+                  <p>Proposals</p>
+                </div>
+              </div>
+              <div class="col s12 md4 l4 xl4">
+                <div class="qwdrp_dlpo-mc-dplm">
+                  <span class="count">{{job.job_post.job_viewers.count}}</span>
+                  <p>Views</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+
+   </div>
+</div>
+
+{% endblock %}

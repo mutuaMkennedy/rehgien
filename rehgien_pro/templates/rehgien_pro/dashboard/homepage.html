@@ -1,0 +1,335 @@
+{% extends 'rehgien_pro/dashboard/dashboard_base.html'%}
+{% load static %}
+{% block head_title %}<title>Rehgien Pro | Home</title>{% endblock %}
+{% block homeActive %}active{% endblock %}
+{% block dashboard_section %}
+<div id="proDash_home" class="proDashFeedContainer proDash_sectionTab">
+   <div class="proDash-Tab-section">
+       <div class="proDashTab-head">
+           <h2>Home</h2>
+       </div>
+       <div class="quickActions_sc">
+         <div class="quickActionItems">
+           Quick Access:
+           <div class="quickActionItems-links">
+               <a href="#" target="_blank"><button type="button" name="button"> <i class="material-icons">ondemand_video</i>Take a page tour</button></a>
+               <a href="{% url 'profiles:pro_business_page_edit' pk=pro_page.pk%}" target="_blank"><button type="button" name="button"><i class="material-icons">drive_file_rename_outline</i>Profile Page Edit</button></a>
+           </div>
+         </div>
+       </div>
+       <div class="proDash-welcome-card-guide">
+           <h3 class="proDash-sectionTitle">Welcome to Rehgien Pro - Let's get you started</h3>
+           <div class="dash-intro-cards">
+             <div class="row">
+               <div class="col s12 md9 l9 xl9">
+                 <div class="card">
+                   <div class="proDash-milestoneCompletion">
+                     <div id="proDash_mc_progress">
+                       <div class="proDash-mc-progress-state">
+                         <h5>
+                           {{results.complete}}/{{results.milestones|length}}
+                         </h5>
+                       </div>
+                     </div>
+                   </div>
+                   <div class="mls-item-state-wrapper">
+                       <div class="mls-item-state">
+                           <div class="mls-item-state-item">
+                             {% if results.milestones.account_created %}
+                             <span class="material-icons done" >done</span>
+                             {% else %}
+                             <span class="material-icons">person_add</span>
+                             {% endif %}
+                             <h6>Account Created</h6>
+                           </div>
+                           <div class="mls-item-state-item">
+                             {% if results.milestones.business_profile_photo %}
+                             <span class="material-icons done" >done</span>
+                             {% else %}
+                             <span class="material-icons">add_photo_alternate</span>
+                             {% endif %}
+                             <h6>Upload Your Profile Photo</h6>
+                           </div>
+                       </div>
+                       <div class="mls-item-state">
+                           <div class="mls-item-state-item">
+                             {% if results.milestones.professional_services %}
+                             <span class="material-icons done" >done</span>
+                             {% else %}
+                             <span class="material-icons">sort_by_alpha</span>
+                             {% endif %}
+                             <h6>Add Services You Offer</h6>
+                           </div>
+                           <div class="mls-item-state-item">
+                             {% if results.milestones.business_description %}
+                             <span class="material-icons done" >done</span>
+                             {% else %}
+                             <span class="material-icons">history_edu</span>
+                             {% endif %}
+                             <h6>Write your Business Description</h6>
+                           </div>
+                       </div>
+                       <div class="mls-item-state">
+                           <div class="mls-item-state-item">
+                             {% if results.milestones.work_projects %}
+                             <span class="material-icons done" >done</span>
+                             {% else %}
+                             <span class="material-icons">folder_special</span>
+                             {% endif %}
+                             <h6>Upload 3 work projects to your portfolio</h6>
+                           </div>
+                           <div class="mls-item-state-item">
+                             {% if results.milestones.reviews %}
+                             <span class="material-icons done" >done</span>
+                             {% else %}
+                             <span class="material-icons">stars</span>
+                             {% endif %}
+                             <h6>Get 3 Clients To Review You</h6>
+                           </div>
+                       </div>
+                   </div>
+                 </div>
+               </div>
+               <div class="col s12 md3 l3 xl3">
+                 <div class="card small_card">
+                   <div class="talkToUS_wrp">
+                     <h6>Talk to us</h6>
+                     <p>Need help? Click the chat bubble and talk with an agent live.</p>
+                     <span><a href="{% url 'contact_us' %}" target="_blank">Or, you can message us here</a></span>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+       </div>
+       <div class="categorySummaryHighlights_box">
+           <div class="csh-wrapper">
+               <div class="card _one">
+                 <div class="csh_card_head">
+                     <h5>Grow <i class="material-icons">chevron_right</i></h5>
+                     <span>Last 365 days</span>
+                 </div>
+                 <div class="csh_card_body">
+                     <span>0</span>
+                     <h6>Reach</h6>
+                 </div>
+               </div>
+               <div class="card _two">
+                 <div class="csh_card_head">
+                     <h5>Manage <i class="material-icons">chevron_right</i></h5>
+                     <span>Last 365 days</span>
+                 </div>
+                 <div class="csh_card_body">
+                     <span>500</span>
+                     <h6>Leads</h6>
+                 </div>
+               </div>
+               <div class="card _three">
+                 <div class="csh_card_head">
+                   <h5>Learn <i class="material-icons">chevron_right</i></h5>
+                 </div>
+                 <div class="csh_card_body">
+                     <span>Learn on Rehgien</span>
+                     <a href="{% url 'rehgien_pro:blog_posts'%}" target="_blank"><button type="button" name="button">View More</button></a>
+                     <i class="material-icons">local_library</i>
+                 </div>
+               </div>
+           </div>
+       </div>
+       <div class="call_to_action_box">
+           <div class="_home_cta_cards">
+               <div class="row">
+                 <div class="col s12 md6 l6 xl6">
+                   <div class="card _one">
+                     <a href="{% url 'rehgien_pro:jobs_list'%}" target="_blank">
+                       <div class="card_action_item">
+                           <div class="cta_card_head">
+                             <h5>Find Customers<i class="material-icons">chevron_right</i></h5>
+                             <span>View jobs in your area</span>
+                           </div>
+                         <div class="cta_card_body">
+                             <span>0</span>
+                             <h6>No jobs listed yet</h6>
+                         </div>
+                       </div>
+                     </a>
+                     <a href="{% url 'profiles:business_homepage'%}" target="_blank">
+                       <div class="card_action_item">
+                         <div class="cta_card_head">
+                           <h5>Find Professionals<i class="material-icons">chevron_right</i></h5>
+                           <span>Find and work with other pros</span>
+                         </div>
+                         <div class="cta_card_body">
+                             <i class="material-icons">engineering</i>
+                         </div>
+                       </div>
+                     </a>
+                     <a href="{% url 'listings:shop_category'%}" target="_blank">
+                       <div class="card_action_item">
+                         <div class="cta_card_head">
+                           <h5>Shop for products<i class="material-icons">chevron_right</i></h5>
+                           <span>Shop homes, design tools, building materials and more</span>
+                         </div>
+                         <div class="cta_card_body">
+                             <i class="material-icons">store</i>
+                         </div>
+                       </div>
+                     </a>
+                   </div>
+                 </div>
+                 <div class="col s12 md6 l6 xl6">
+                   <div class="ad_slider_car_wrp">
+                     <div class="owl-carousel advert_slider_car pdash_home_carou">
+                       <a href="#" target="_blank">
+                         <div class="card _two" style="background-image:url({% static 'img/web_design_rehgienAgency.jpg'%})">
+                           <div class="cta_card_body">
+                               <h5>Web Design Services</h5>
+                               <span>Put your business out there for the world to see and start getting more customers than before by getting your website designed by us.</span>
+                               <button>Visit Rehgien Agency<i class="material-icons">east</i></button>
+                           </div>
+                         </div>
+                       </a>
+                       <a href="#" target="_blank">
+                         <div class="card _two" style="background-image:url({% static 'img/brand_design_rehgienAgency.jpg'%})">
+                           <div class="cta_card_body">
+                               <h5>Business Branding Services</h5>
+                               <span>Stand out from your competition and put a professional face to your customers through professional business branding</span>
+                               <button>Visit Rehgien Agency<i class="material-icons">east</i></button>
+                           </div>
+                         </div>
+                       </a>
+                       <a href="#" target="_blank">
+                         <div class="card _two" style="background-image:url({% static 'img/photography_rehgienAgency.jpg'%})">
+                           <div class="cta_card_body">
+                               <h5>Professional Photography Services</h5>
+                               <span>Let your photos and videos speak for themselves and never compromise on quality again. Get clean and crisp shots every time.</span>
+                               <button>Visit Rehgien Agency<i class="material-icons">east</i></button>
+                           </div>
+                         </div>
+                       </a>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+           </div>
+       </div>
+       <br>
+       <div class="HomeDash_articlesFeed">
+         <h3 class="proDash-sectionTitle">News Feed and Pro Resources</h3>
+         <div class="row">
+             <div class="col s12 md8 l8 xl8">
+               <div class="article_stream">
+                 {% comment %}
+                 <div class="no_results">
+                   <p>We could not find any articles. New articles will appear here</p>
+                 </div>
+                 {% endcomment %}
+                 {% for post in blog_posts %}
+
+                   <div class="card dashArticle">
+                     <div class="dashArticleHead">
+                       <h5>{{post.blog_category.category_name}}</h5>
+                       <a href="{% url 'rehgien_pro:blog_posts'%}?{{post.blog_category.category_name}}" target="_blank"><span>More {{post.blog_category.category_name}} Articles <i class="material-icons">chevron_right</i></span></a>
+                     </div>
+                     <a href="{{post.get_absolute_url}}" target="_blank">
+                     <div class="dashArticleBody">
+                       <div class="dashArticleImg_wrapper">
+                         <img src="{% if post.thumbnail %}{{post.thumbnail.url}} {% else %} {% static 'img/partnership.jpg'%} {%endif%}" alt="Photo">
+                       </div>
+                       <div class="dashArticleDetails">
+                         <h3>{{post.title}}</h3>
+                         <h6>{{post.publishdate.date}}</h6>
+                       </div>
+                     </div>
+                     </a>
+                   </div>
+
+                 {% endfor %}
+               </div>
+             </div>
+             <div class="col s12 md4 l4 xl4">
+               <div class="dashHm_resource_accessLinks">
+                 <div class="card">
+                   <div class="dashRsosHead">
+                     <h5>Pro Resources</h5>
+                   </div>
+                   <div class="hsos_acLink">
+                     <div class="dashRsosBody">
+                       <i class="material-icons">contact_support</i>
+                       <span>
+                         <h6>Need Help</h6>
+                         <p>Have a question? Talk to an agent live by clicking the chat bubble on your screen</p>
+                       </span>
+                     </div>
+                   </div>
+                   <div class="hsos_acLink">
+                     <a href="{% url 'rehgien_pro:blog_posts'%}">
+                       <div class="dashRsosBody">
+                         <i class="material-icons">auto_stories</i>
+                         <span>
+                           <h6>Rehgien Pro Learn</h6>
+                           <p>Get the latest updates, news and tutorials from Rehgien Pro</p>
+                         </span>
+                       </div>
+                     </a>
+                   </div>
+                 </div>
+               </div>
+
+             </div>
+         </div>
+       </div>
+   </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    var bsProfilePercentComplete = {{results.complete}};
+
+    function showBsProfileProgress(){
+      var bar = new ProgressBar.Circle(proDash_mc_progress, {
+        strokeWidth: 7,
+        easing: 'easeInOut',
+        duration: 1400,
+        color: 'rgb(44 178 234 / 90%)',
+        trailColor: 'rgb(44 178 234 / 40%)',
+        trailWidth: 7,
+        svgStyle: null
+      });
+
+      bar.animate(bsProfilePercentComplete/6,{
+        duration: 3500
+      }); // Number from 0.0 to 1.0
+    };
+    showBsProfileProgress();
+
+    $(".owl-carousel").owlCarousel({
+        loop:false,
+        rewind:true,
+        autoplay: true,
+        autoplayTimeout: 10000,
+        autoplayHoverPause: true,
+        margin:0,
+        nav:true,
+        responsiveClass:true,
+        responsive:{
+           0:{
+               items:1,
+               nav:true
+           },
+           480:{
+               items:1,
+               nav:false
+           },
+           768:{
+               items:1,
+               nav:true,
+           }
+       }
+      });
+
+  });
+
+</script>
+{% endblock %}

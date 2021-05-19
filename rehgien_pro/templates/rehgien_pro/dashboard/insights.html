@@ -1,0 +1,195 @@
+{% extends 'rehgien_pro/dashboard/dashboard_base.html'%}
+{% load static %}
+{% block head_title %}<title>Rehgien Pro | Growth Insights</title>{% endblock %}
+{% block insActive %}active{% endblock %}
+{% block dashboard_section %}
+
+<div id="proDash_insights" class="proDashFeedContainer proDash_sectionTab">
+   <div class="proDash-Tab-section">
+     <div class="row">
+       <div class="col s12 md8 l8 xl8" style="padding:0;">
+           <div class="proDashTab-head">
+               <h2>Your Insights</h2>
+           </div>
+           <div id="ins_scr_Profile" class="proDash_Ins_profile_status">
+             <div class="proDash_Ins_profile_status_sc_hd">
+               <h3 class="proDash-sectionTitle">Finish setting up your profile</h3>
+               <p>Unlock the full power of your account and help your business present a professional face to pottential
+               clients & customers by completing your profile.</p>
+             </div>
+             <div class="proDash_Ins_profile_row">
+                 <div class="proDash_Ins_profile_cards">
+                     <a href="{% url 'profiles:pro_business_page_edit' pk=pro_page.pk %}" href="_blank">
+                       <div class="card profile_actions">
+                         <div class="ins_action_icon">
+                           <i class="material-icons _one">draw</i>
+                         </div>
+                         <h6>Write an effective business description</h6>
+                       </div>
+                     </a>
+                     <a href="{% url 'profiles:pro_business_page_edit' pk=pro_page.pk %}" href="_blank">
+                       <div class="card profile_actions">
+                         <div class="ins_action_icon">
+                           <i class="material-icons _two">drive_folder_upload</i>
+                         </div>
+                         <h6>Upload 5 work projects to your portfolio</h6>
+                       </div>
+                     </a>
+                     <a href="{% url 'profiles:pro_business_page_edit' pk=pro_page.pk %}" href="_blank">
+                       <div class="card profile_actions">
+                         <div class="ins_action_icon">
+                           <i class="material-icons _three">design_services</i>
+                         </div>
+                         <h6>Add services you provide</h6>
+                       </div>
+                     </a>
+                     <a href="{% url 'profiles:pro_business_page_edit' pk=pro_page.pk %}" href="_blank">
+                       <div class="card profile_actions">
+                         <div class="ins_action_icon">
+                           <i class="material-icons _four">star_rate</i>
+                         </div>
+                         <h6>Request Reviews</h6>
+                       </div>
+                     </a>
+                 </div>
+             </div>
+             <div class="proDash_Ins_profile_strength">
+               <div class="card">
+                 <div class="card_head">
+                   <h5>Profile Strength</h5>
+                   <a href="{% url 'profiles:pro_business_page_edit' pk=pro_page.pk %}" target="_blank"><span>Edit Profile <i class="material-icons">chevron_right</i></span></a>
+                 </div>
+                 <div class="card_body">
+                   <div class="profile-rating-score">
+                     <span>{{pro_page.average_rating}} <sub>\5</sub></span>
+                     <h6>{{pro_page.pro_business_review.all.count}} total review(s)</h6>
+                   </div>
+                   <div class="profile-rating-visual">
+                     <div class="profile-rating-bar">
+                       <div class="profile-rating-bar-pgr" style="width:{{percentage_rating}}%"><span>Your Rating: {{pro_page.average_rating}}/5 <div></div></span></div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+           <br>
+           <div id="ins_scr_Photos_videos" class="proDash_Ins_media_tips">
+             <h3 class="proDash-sectionTitle">Photos & Videos</h3>
+             <div class="proDash_Ins_media_tips-cards">
+               <div class="card">
+                 <div class="card_head">
+                   <h5>Show off photos of completed projects</h5>
+                 </div>
+                 <div class="card_body">
+                 <div class="card_body_content">
+                   <p>
+                     Want to stand out on Rehgien? Start by uploading quality photos of your latest work.
+                     Uploaded projects form your portfolio.
+                   </p>
+                   <a href="{% url 'profiles:portfolio_item_create'%}"><button type="button" name="button">Upload photos</button></a>
+                 </div>
+                 <div class="card_body_content-icon">
+                   <img src="{% static 'img/portfolio.png'%}" alt="portfolio">
+                 </div>
+                 </div>
+               </div>
+               <div class="card clean">
+                 <div class="card_head">
+                   <h5>Improve your photo & video quality</h5>
+                 </div>
+                 <div class="card_body">
+                 <div class="card_body_content">
+                   <p>
+                     The quality of your photos/videos has the biggest impact on how well your business perfoms on Rehgien.
+                     Do your photos/videos meet the recommended standards?
+                   </p>
+                   <a href="#"><button type="button" name="button">Show me media quality recommendations</button></a>
+                 </div>
+                 <div class="card_body_content-icon">
+                   <img src="{% static 'img/picture.png'%}" alt="picture">
+                 </div>
+                 </div>
+               </div>
+               <div class="card clean">
+                 <div class="card_head">
+                   <h5>Invest in your photography</h5>
+                 </div>
+                 <div class="card_body">
+                 <div class="card_body_content">
+                   <p>
+                     Pros with professional photos/videos get more exposure, receive more inquiries, and win more jobs.
+                     Many Pros achieve more success on Rehgien by upgrading their photos.
+                   </p>
+                   <a href="{% url 'profiles:business_homepage'%}"><button type="button" name="button">Find a professional photographer</button></a>
+                 </div>
+                 <div class="card_body_content-icon">
+                   <img src="{% static 'img/photo.png'%}" alt="photo">
+                 </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+           <br>
+           <div id="ins_scr_Reviews" class="proDash_Ins_reviews_tips">
+             <h3 class="proDash-sectionTitle">Reviews</h3>
+             <div class="proDash_Ins_review_tips-cards">
+               <div class="card">
+                 <div class="card_head">
+                   <h5>Get reviewed to start building your reputation on Rehgien</h5>
+                 </div>
+                 <div class="card_body">
+                 <div class="card_body_content">
+                   <p>
+                     90% of consumers read online reviews before contacting a business and reviews are the #1 reason homeowners on Rehgien
+                     hire a professional.
+                   </p>
+                   <a href="#"><button type="button" name="button">Request Reviews</button></a>
+                 </div>
+                 <div class="card_body_content-icon">
+                   <img src="{% static 'img/feedback.png'%}" alt="feedback">
+                 </div>
+                 </div>
+               </div>
+               <div class="card clean">
+                 <div class="card_head">
+                   <h5>Tips on reviews</h5>
+                 </div>
+                 <div class="card_body">
+                 <div class="card_body_content">
+                   <a href="#"><button type="button" name="button">Tips for getting great reviews</button></a>
+                 </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+       </div>
+       <div class="col s12 md4 l4 xl4" style="padding:0;">
+         <div class="pDash_ins_sidenav">
+           <div class="pDash_ins_sidenav_content">
+             <div class="cta">
+               <div class="cat_body" style="background-image:url({% static 'img/coffee_cup_phone.jpg'%})">
+                 <div class="cat_body_cont">
+                   <h6>We can help develop your brand</h6>
+                   <p>Our marketing agency can help you grow your brand and make sure
+                   you are taking advantage of every opportunity on and off Rehgien.</p>
+                   <a href="#"><button type="button" name="button">Learn More Here</button></a>
+                 </div>
+               </div>
+             </div>
+             <div class="insights-pageJumpLinks">
+               <h5>Jump to</h5>
+               <ul>
+                 <li><a href="#ins_scr_Profile">Profile</a></li>
+                 <li><a href="#ins_scr_Photos_videos">Photos & Videos</a></li>
+                 <li><a href="#ins_scr_Reviews">Reviews</a></li>
+               </ul>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+</div>
+
+{% endblock %}
