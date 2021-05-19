@@ -203,7 +203,8 @@ def property_listings_results(request, property_category, property_listing_type)
 		if listings:
 			q_beds = 1 if int(bedrooms) == 0 else int(bedrooms)
 			n_bds_prices = listings.filter(bedrooms = int(q_beds)).values_list('price', flat=True).distinct()
-			n_bds_median_price = statistics.median(n_bds_prices)
+			if n_bds_prices:
+				n_bds_median_price = statistics.median(n_bds_prices)
 	if check_q_valid(bathrooms):
 		listings = listings.filter(bathrooms__gte=bathrooms)
 	if check_q_valid(properties_array):
