@@ -17,6 +17,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.http import urlencode
 from markets import models as market_models
 from location import models as location_models
+from profiles import models as profiles_models
+from listings import models as listings_models
 from resource_center import models as resource_models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
@@ -26,7 +28,6 @@ try:
 except ImportError:
 	import json
 from profiles import pro_profile_setup_forms as pro_setup_forms
-from profiles import models as profiles_models
 from formtools.wizard.views import SessionWizardView
 from django.utils.functional import cached_property
 from django.contrib.sites.models import Site
@@ -34,8 +35,123 @@ from django.contrib.sites.models import Site
 
 User = get_user_model()
 
+#helper functions
 def check_q_valid(param):
 	return param !="" and param is not None
+
+def milestones_complete(user_pk):
+	user = User.objects.get(pk=int(user_pk))
+	milestones = { 'account_created':False, 'business_profile_photo':False,
+	 'professional_services':False, 'business_description':False,
+	 'work_projects':False, 'reviews':False
+	}
+
+	complete = 0
+	if user.user_type == 'PRO':
+		milestones['account_created'] = True
+		complete +=1
+	if user.pro_business_profile.business_profile_image:
+		milestones['business_profile_photo'] = True
+		complete +=1
+	if user.pro_business_profile.professional_services:
+		milestones['professional_services'] = True
+		complete +=1
+	if user.pro_business_profile.about:
+		milestones['business_description'] = True
+		complete +=1
+	if user.profiles_portfolioitem_createdby_related.count() > 2 :
+		milestones['work_projects'] = True
+		complete +=1
+	if user.pro_business_profile.pro_business_review.count() > 2 :
+		milestones['reviews'] = True
+		complete +=1
+	results = {
+	"milestones":milestones,
+	"complete": complete
+	}
+	return results
+
+#pro Dash board views
+
+@login_required(login_url='account_login')
+def dashboard_home(request):
+	if request.user.user_type == 'PRO':
+		results = milestones_complete(request.user.pk)
+		pro_page = profiles_models.BusinessProfile.objects.get(user=request.user)
+		blog_posts = resource_models.BlogPost.objects.all().order_by('-publishdate')[:10]
+		context = {
+		"results":results,
+		"pro_page":pro_page,
+		"blog_posts":blog_posts
+		}
+		return render(request, 'rehgien_pro/dashboard/homepage.html', context)
+	else:
+		messages.error(request,'Denied. Upgrade to a Pro to continue.')
+		return redirect('rehgien_pro:pro_join_landing')
+
+@login_required(login_url='account_login')
+def dashboard_insights(request):
+	if request.user.user_type == 'PRO':
+		pro_page = profiles_models.BusinessProfile.objects.get(user=request.user)
+		percentage_rating = pro_page.average_rating / 5 * 100
+		context = {
+		"pro_page":pro_page,
+		"percentage_rating":percentage_rating,
+		}
+		return render(request, 'rehgien_pro/dashboard/insights.html', context)
+	else:
+		messages.error(request,'Denied. Upgrade to a Pro to continue.')
+		return redirect('rehgien_pro:pro_join_landing')
+
+@login_required(login_url='account_login')
+def dashboard_properties(request):
+	if request.user.user_type == 'PRO':
+		ImageTransformation = dict(
+		format = "jpeg",
+		transformation = [
+			dict(height=112, width=200, crop="fill",quality="auto", gravity="center",
+			format="auto", dpr="auto"),
+			]
+		)
+		pro_page = profiles_models.BusinessProfile.objects.get(user=request.user)
+
+		home_types = listings_models.HomeType.objects.all()
+		all_properties = listings_models.Home.objects.all()
+		user_fs_properties = all_properties.filter(owner=request.user, listing_type = "FOR_SALE")
+		user_fr_properties = all_properties.filter(owner=request.user, listing_type = "FOR_RENT")
+
+		context = {
+		"ImageTransformation":ImageTransformation,
+		"pro_page":pro_page,
+		"home_types":home_types,
+		"all_properties":all_properties,
+		"user_fs_properties":user_fs_properties,
+		"user_fr_properties":user_fr_properties,
+
+		}
+		return render(request, 'rehgien_pro/dashboard/property_page.html', context)
+	else:
+		messages.error(request,'Denied. Upgrade to a Pro to continue.')
+		return redirect('rehgien_pro:pro_join_landing')
+
+@login_required(login_url='account_login')
+def dashboard_jobs(request):
+	if request.user.user_type == 'PRO':
+		pro_page = profiles_models.BusinessProfile.objects.get(user=request.user)
+		user_job_posts = market_models.JobPost.objects.filter(active=True,job_poster=request.user).order_by('-job_update_date')
+		user_jobs_replied = market_models.JobPostProposal.objects.filter(job_post__active=True, proposal_sender=request.user).order_by('-proposal_send_date')
+
+		context = {
+		"pro_page":pro_page,
+		"user_job_posts":user_job_posts,
+		"user_jobs_replied":user_jobs_replied,
+		}
+		return render(request, 'rehgien_pro/dashboard/jobs.html', context)
+	else:
+		messages.error(request,'Denied. Upgrade to a Pro to continue.')
+		return redirect('rehgien_pro:pro_join_landing')
+
+#other views
 
 def homepage(request):
 	return render(request,'rehgien_pro/rehgien_pro_homepage.html',{})
