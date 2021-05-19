@@ -6,6 +6,12 @@ app_name = 'rehgien_pro'
 
 urlpatterns = [
 	path('', views.homepage, name = 'rehgien_pro_homepage'),
+
+	path('home/', views.dashboard_home, name = 'dashboard_home'),
+	path('insights/', views.dashboard_insights, name = 'dashboard_insights'),
+	path('myproperties/', views.dashboard_properties, name = 'dashboard_properties'),
+	path('jobs/', views.dashboard_jobs, name = 'dashboard_jobs'),
+
 	path('join/', views.pro_join_landing, name = 'pro_join_landing'),
 	path('onboarding/', views.ProSetupWizardView.as_view(views.FORMS), name='ProSetupWizardView'),
 	path('find_customers/jobs/list/', views.jobs_list, name = 'jobs_list'),
