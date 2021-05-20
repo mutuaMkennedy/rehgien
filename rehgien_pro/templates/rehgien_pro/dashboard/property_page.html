@@ -23,45 +23,64 @@
     <div class="mng_prop_filters">
       <h3 class="proDash-sectionTitle">Search Your Properties</h3>
       <div class="mng_prop_filter_form_wrapper">
-        <form class="mng_prop_filter_form" action="index.html" method="post">
+        <form class="mng_prop_filter_form" action="{% url 'rehgien_pro:dashboard_properties' %}" method="post">
           {% csrf_token %}
           <div class="mng_prop_filter_fields">
             <div class="mng_prop_filter_field mngpfl_location_input">
-              <input type="text" name="location" value="" placeholder="Enter a location name">
+              <input type="text" name="location_name_in" value="{% if filter_fields.location_name_in %}{{filter_fields.location_name_in}}{% endif %}" placeholder="Enter a location name">
             </div>
             <div data-isOpen="false" id="target_pro_col_filt" class="mng_prop_collapsible_fields">
                 <div class="mng_prop_filter_field mngpfl_drpd_input">
                   <div class="input-field">
-                     <select name="listing_type">
-                       <option value="All" selected>Listing Type</option>
-                       <option value="for_sale">For Sale</option>
-                       <option value="for_sale">For Rent</option>
+                     <select name="listing_type_in">
+                       {% if filter_fields.listing_type_in %}
+                         <option value="All" {% if filter_fields.listing_type_in == 'all' %}selected{% endif %}>Listing Type</option>
+                         <option value="for_sale" {% if filter_fields.listing_type_in == 'for_sale' %}selected{% endif %}>For Sale</option>
+                         <option value="for_rent" {% if filter_fields.listing_type_in == 'for_rent' %}selected{% endif %}>For Rent</option>
+                       {% else %}
+                         <option value="All" selected>Listing Type</option>
+                         <option value="for_sale">For Sale</option>
+                         <option value="for_rent">For Rent</option>
+                       {% endif %}
                      </select>
                    </div>
                 </div>
                 <div class="mng_prop_filter_field mngpfl_drpd_input">
                   <div class="input-field">
-                     <select name="property_type">
-                       <option value="All" selected>Property Type</option>
-                       {% for home_type in home_types%}
-                       <option value="{{home_type.name}}">{{home_type.name}}</option>
-                       {% endfor %}
+                     <select name="property_type_in">
+                       {% if filter_fields.property_type_in %}
+                         <option value="All" {% if filter_fields.property_type_in == 'all'%} selected {% endif %}>Property Type</option>
+                         {% for home_type in home_types%}
+                         <option value="{{home_type.name}}" {% if filter_fields.property_type_in == home_type.name|lower %} selected {% endif %}>{{home_type.name}}</option>
+                         {% endfor %}
+                       {% else %}
+                         <option value="All" selected>Property Type</option>
+                         {% for home_type in home_types%}
+                         <option value="{{home_type.name}}">{{home_type.name}}</option>
+                         {% endfor %}
+                        {% endif %}
                      </select>
                    </div>
                 </div>
                 <div class="mng_prop_filter_field mngpfl_drpd_input">
                   <div class="input-field">
-                     <select name="status_type">
-                       <option value="All" selected>Status</option>
-                       <option value="active">Active</option>
-                       <option value="inactive">Inactive</option>
+                     <select name="active_status_in">
+                       {% if filter_fields.active_status_in %}
+                         <option value="All" {% if filter_fields.active_status_in == 'all' %} selected {% endif %}>Status</option>
+                         <option value="active" {% if filter_fields.active_status_in == 'active' %} selected {% endif %}>Active</option>
+                         <option value="inactive" {% if filter_fields.active_status_in == 'inactive' %} selected {% endif %}>Inactive</option>
+                       {% else %}
+                         <option value="All" selected>Status</option>
+                         <option value="active">Active</option>
+                         <option value="inactive">Inactive</option>
+                       {% endif %}
                      </select>
                    </div>
                 </div>
             </div>
                          <button id="mng_prop_collapsible_switch" class="mng_prop_collapsible_switch hide-on-med-and-up" type="button" name="button">More Filters <i class="material-icons">expand_less</i></button>
             <div class="mng_prop_filters_submit">
-              <button type="button" name="button">Search</button>
+              <button type="submit" name="button">Search</button>
             </div>
           </div>
         </form>
