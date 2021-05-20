@@ -15,10 +15,11 @@
       <nav role="navigation">
       <div class="pro-nav-wrapper">
         <div class="left_wrap left">
-          <button id="pdash_menu_control" type="button" name="button"><i class="material-icons">menu</i></button>
+          <button id="pdash_menu_control" class="menu_control_btn hide-on-med-and-down " type="button" name="button"><i class="material-icons">menu</i></button>
+          <a data-target="pdash-mobile-nav" class="sidenav-trigger sdnav_menu_control_btn"><i class="material-icons">menu</i></a>
           <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo" style="height:60px;" target="_blank">
             <div class="proDash-base_lgo">
-              <img src="{% static 'img/RehgienProLogo.png'%}" alt="rehgien pro logo">
+              <img src="{% static 'img/RehgienProLogo.png'%}" alt="logo">
             </div>
           </a>
         </div>
@@ -84,7 +85,7 @@
                     {% else %}
                       {% static 'img/avatar.png' %}
                     {% endif %}
-                    " alt="{{request.user.pro_business_profile.business_name}}">
+                    " alt="">
                     <div class="pdash_ac_u_mkfirst">{{request.user.pro_business_profile.business_name|make_list|slice:'2'|join:'' }} <i class="material-icons">expand_more</i></div>
                   </div>
                   <div id="proDashActDpdown" class="dropdown-content proDashDpdown_elem pdash_dpd_acct_sc">
@@ -98,7 +99,7 @@
                             {% else %}
                               {% static 'img/avatar.png' %}
                             {% endif %}
-                            " alt="{{request.user.pro_business_profile.business_name}}">
+                            " alt="">
                           </div>
                           <div class="asdalewl-lsdm_kask">
                             <h5>Your Profile</h5>
@@ -121,6 +122,39 @@
 
     </div>
   </header>
+
+  <div id="pdash-mobile-nav" class="sidenav pdash_mobile_nav">
+    <div class="pdash_mobileNav_header">
+      <button class="sidenav-close" type="button"></button>
+        <a class="sidenav-close" href="{% url 'rehgien_pro:rehgien_pro_homepage'%}"><img src="{% static 'img/RehgienProLogo.png'%}" alt="logo"></a>
+    </div>
+    <div class="pdash_mobileNav_collaps">
+      <ul class="collapsible expandable">
+          <li><a href="{% url 'rehgien_pro:dashboard_home' %}" class=""><button type="button" name="button"><i class="material-icons">home</i> <p>Home</p></button></a></li>
+          <li class="active">
+            <div class="collapsible-header"><a href="#"><button type="button" name="button"><i class="material-icons">trending_up</i> <p>Grow</p></button></a><span class="material-icons">expand_less</span></div>
+            <div class="collapsible-body">
+                <a href="{% url 'rehgien_pro:dashboard_insights' %}" class=""><button type="button" name="button"><p>Insights</p></button></a>
+            </div>
+          </li>
+          <li class="active">
+            <div class="collapsible-header"><a href="#"><button type="button" name="button"><i class="material-icons">group_work</i> <p>Manage</p></button></a><span class="material-icons">expand_less</span></div>
+            <div class="collapsible-body">
+                <a href="{% url 'rehgien_pro:dashboard_properties' %}" class=""><button type="button" name="button"><p>Properties</p></button></a>
+                <a href="{% url 'rehgien_pro:dashboard_jobs' %}" class=""><button type="button" name="button"><p>Jobs</p></button></a>
+                <a href="#" class=""><button type="button" name="button"><p>Leads</p></button></a>
+            </div>
+          </li>
+          <li class="active">
+            <div class="collapsible-header"><a href="#"><button type="button" name="button"><i class="material-icons">local_library</i> <p>Learn</p></button></a><span class="material-icons">expand_less</span></div>
+            <div class="collapsible-body">
+                <a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=product-updates" class="" target="_blank"><button type="button" name="button"><p>Tutorials</p></button></a>
+                <a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=tutorials" class="" target="_blank"><button type="button" name="button"><p>Product Updates</p></button></a>
+            </div>
+          </li>
+      </ul>
+    </div>
+  </div>
 
   <div class="container pro-dash-container">
     <div class="proDashItems-row">
@@ -227,7 +261,7 @@
        lPtx.css('display','block');
        lNavQcreate_btn.css('display','block')
        lacTg.removeClass('navIsOpen');
-       rCon.css('width','82%');
+       rCon.css('width','83%');
        lNav.attr('data-isOpen','True');
      }
   });
