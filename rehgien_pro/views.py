@@ -108,6 +108,11 @@ def dashboard_insights(request):
 @login_required(login_url='account_login')
 def dashboard_properties(request):
 	if request.user.user_type == 'PRO':
+		location_name_in = str(request.POST.get('location_name_in', '')).lower()
+		listing_type_in = str(request.POST.get('listing_type_in', '')).lower()
+		property_type_in = str(request.POST.get('property_type_in', '')).lower()
+		active_status_in = str(request.POST.get('active_status_in', '')).lower()
+
 		ImageTransformation = dict(
 		format = "jpeg",
 		transformation = [
@@ -118,10 +123,33 @@ def dashboard_properties(request):
 		pro_page = profiles_models.BusinessProfile.objects.get(user=request.user)
 
 		home_types = listings_models.HomeType.objects.all()
+
 		all_properties = listings_models.Home.objects.all()
+
+		if location_name_in:
+			all_properties = all_properties.filter(location_name__icontains = location_name_in)
+		if listing_type_in == 'for_sale':
+			all_properties = all_properties.filter(listing_type = 'FOR_SALE')
+		elif listing_type_in == 'for_rent':
+			all_properties = all_properties.filter(listing_type = 'FOR_RENT')
+
+		if property_type_in != 'all' and property_type_in != '':
+			all_properties = all_properties.filter(home_type__name__iexact = property_type_in)
+
+		if active_status_in == 'active':
+			all_properties = all_properties.filter(is_active = True)
+		elif active_status_in == 'inactive':
+			all_properties = all_properties.filter(is_active = False)
+
 		user_fs_properties = all_properties.filter(owner=request.user, listing_type = "FOR_SALE")
 		user_fr_properties = all_properties.filter(owner=request.user, listing_type = "FOR_RENT")
 
+		filter_fields = {
+			"location_name_in":location_name_in,
+			"listing_type_in":listing_type_in,
+			"property_type_in":property_type_in,
+			"active_status_in":active_status_in,
+		}
 		context = {
 		"ImageTransformation":ImageTransformation,
 		"pro_page":pro_page,
@@ -129,6 +157,7 @@ def dashboard_properties(request):
 		"all_properties":all_properties,
 		"user_fs_properties":user_fs_properties,
 		"user_fr_properties":user_fr_properties,
+		"filter_fields":filter_fields
 
 		}
 		return render(request, 'rehgien_pro/dashboard/property_page.html', context)
