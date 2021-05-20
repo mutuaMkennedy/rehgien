@@ -61,7 +61,7 @@
                  </div>
                  <div class="card_body">
                    <div class="profile-rating-score">
-                     <span>{{pro_page.average_rating}} <sub>\5</sub></span>
+                     <span>{% if pro_page.average_rating %}{{pro_page.average_rating}}{%else%}0{%endif%} <sub>\5</sub></span>
                      <h6>{{pro_page.pro_business_review.all.count}} total review(s)</h6>
                    </div>
                    <div class="profile-rating-visual">
