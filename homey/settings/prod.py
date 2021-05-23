@@ -16,6 +16,14 @@ DATABASES = {
 
 STATICFILES_STORAGE = 'homey.storage.ForgivingManifestStaticFilesStorage'
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.eu.mailgun.org"
+EMAIL_HOST_USER = "postmaster@mg.rehgien.com"
+EMAIL_HOST_PASSWORD = '6b096ae5c848dcdd0d227aab48294bd3-6ae2ecad-a5b2b2ce'
+EMAIL_PORT = 587
+EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = 'Rehgien <do-not-reply@rehgien.com>'
+
 #claudinary settings
 cloudinary.config(
   cloud_name = "rehgien-inc",
