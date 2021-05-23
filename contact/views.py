@@ -24,7 +24,7 @@ def contact_support(first_name, last_name, email, phone, message):
 		send_mail(
 			subject,
 			plainMessage,
-			'Rehgien <do-not-reply@rehgien.com>',
+			'Rehgien <do-not-reply@mg.rehgien.com>',
 			['support@rehgien.com'],
 			fail_silently=False,
 		)
