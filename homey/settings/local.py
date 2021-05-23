@@ -34,6 +34,13 @@ DATABASES = {
     }
 }
 
+EMAIL_USE_TLS = False
+EMAIL_HOST = "rs2.noc254.com"
+EMAIL_HOST_USER = "do-not-reply@rehgien.com"
+EMAIL_HOST_PASSWORD = 'donotreply20$$Rehgien'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'Rehgien <do-not-reply@rehgien.com>'
 
 #claudinary settings
 cloudinary.config(
