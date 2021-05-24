@@ -22208,3 +22208,637 @@ particle {
     color:rgb(0 0 0 / 0.5);
     font-weight:600;
 }
+
+.ragency_nav_section{
+    display:flex;
+    align-items:center;
+    padding:10px 40px;
+}
+
+.ragency_nav_section_links{
+  padding:0 25px;
+  overflow-x:auto;
+}
+
+@media all and (max-width:768px){
+    .ragency_nav_section{
+        padding:10px;
+    }
+    .ragency_nav_section_links{
+        padding:0 10px;
+    }
+
+}
+
+.ragency_nav_section ul{
+    display:flex;
+    flex-wrap:nowrap;
+    margin:0;
+}
+
+.ragency_nav_section ul li{
+    margin:5px 0;
+    margin-right:10px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+}
+
+.ragency_nav_section ul li .rg_agencyTooltip{
+    font-size:9px;
+    color:#cc0000;
+    display:flex;
+    align-items:center;
+}
+
+.ragency_nav_section ul li .rg_agencyTooltip i{
+    font-size:11px;
+    margin-right:2px;
+}
+
+.ragency_nav_section ul li a{
+    color:#000;
+    font-weight:500;
+    font-size:14px;
+    text-transform:uppercase;
+}
+
+@media all and (max-width:768px){
+    .ragency_nav_section ul li a{
+        background-color:#1100ff;
+        border-radius:25px;
+        padding:5px 25px;
+        width:max-content;
+        color:#fff;
+        margin-top:2px;
+    }
+}
+
+.ragency_nav_section ul li a:hover{
+    color:#757575;
+}
+
+.ragency_nav_section ul li span{
+    display:inline-flex;
+    background-color:#d1d1d1;
+    width:1px;
+    height:20px;
+}
+
+.ragency_banner_wrapper{
+    padding:0 40px;
+}
+
+.ragency_banner_wrapper .ragency_banner{
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:cover;
+    min-height:500px;
+    position:relative;
+    border-radius:25px;
+    background-color:#1a3e1c;
+}
+
+@media all and (max-width:768px){
+    .ragency_banner_wrapper{
+        padding:0 10px;
+    }
+    .ragency_banner_wrapper .ragency_banner{
+        border-radius:10px;
+    }
+}
+
+.ragency_banner_wrapper .ragency_banner .ragency_banner_overlay{
+    position:absolute;
+    height:100%;
+    top:0;
+    left:0;
+    width:100%;
+    border-radius:25px;
+    /* background-color:rgb(0 0 0 / 0.45); */
+}
+
+@media all and (max-width:768px){
+    .ragency_banner_wrapper .ragency_banner .ragency_banner_overlay{
+        background-color:rgb(0 0 0 / 0.2);
+        border-radius:10px;
+    }
+}
+
+.ragency_banner_wrapper .ragency_banner .container{
+    width:100%;
+    height:100%;
+}
+
+.ragency_banner_wrapper .ragency_banner .container .row,
+.ragency_banner_wrapper .ragency_banner .container .row .col{
+    height:100%;
+    padding:0;
+}
+
+.ragency_banner_wrapper .ragency_banner .container .ragencyBanner_content{
+    height:100%;
+    display:flex;
+    align-items:center;
+}
+
+.ragency_banner_wrapper .ragency_banner .container .ragencyBanner_content .ragencyBanner_text{
+    padding:50px 40px;
+    color:#fff;
+    font-family:Ubuntu, Montserrat, Work Sans, Open Sans;
+}
+
+@media all and (max-width:768px){
+    .ragency_banner_wrapper .ragency_banner .container .ragencyBanner_content .ragencyBanner_text{
+        padding:20px;
+    }
+}
+
+.ragencyBanner_content .ragencyBanner_text span{
+    display:inline-flex;
+    margin-bottom:10px;
+    text-transform:uppercase;
+    font-weight:500;
+    width:auto;
+    color:#cc0000;
+    border-radius:25px;
+    font-size:14px;
+}
+
+.ragencyBanner_content .ragencyBanner_text h1{
+    margin:0;
+    margin-bottom:20px;
+    font-size:40px;
+    font-family:Ubuntu;
+    font-weight:600;
+}
+
+.ragencyBanner_content .ragencyBanner_text p{
+    margin:0;
+    line-height:23px;
+    margin-bottom:25px;
+    color:#d1d1d1;
+}
+
+.ragencyBanner_content .ragencyBanner_text button{
+    min-width:250px;
+    height:60px;
+    background-color:#cc0000;
+    border:1px solid #cc0000;
+    color:#fff;
+    font-weight:600;
+    font-size:14px;
+    text-transform:uppercase;
+    border-radius:65px;
+}
+
+.ragency_body_content .container{
+    width:90%;
+}
+
+.ragency_body_content .col{
+    padding:0;
+}
+
+.ragency_body_content .ragency_section_head{
+    margin-bottom:40px;
+}
+
+.ragency_bd_hw_iworks{
+    padding:60px 0 !important;
+}
+
+.ragency_body_content .ragency_section_head h2{
+    text-align:center;
+    margin:0;
+    margin-bottom:15px;
+    font-size:35px;
+    font-weight:600;
+    font-family:Ubuntu, Montserrat;
+    text-transform:uppercase;
+}
+
+.ragency_body_content .ragency_section_head p{
+    text-align:center;
+    font-weight:600;
+    margin:0;
+}
+
+.ragency_bd_hw_iworks .card{
+    width:270px;
+    min-height:350px;
+    height:auto;
+    margin:15px;
+    border-radius:25px;
+    padding:25px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 0 20px 2px #eee;
+    transition:transform 0.5s;
+/*     background-color:#1100ff; */
+}
+
+
+.ragency_bd_hw_iworks .card:hover{
+    cursor:pointer;
+    transition:transform 0.5s;
+    transform:scale(1.05);
+}
+
+.ragency_bd_hw_iworks .card .hw_iworks_card_body{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+/*     color:#ffff; */
+}
+
+.ragency_bd_hw_iworks .card .hw_iworks_card_body h3{
+    font-size:20px;
+    margin:0;
+    font-weight:500;
+    margin-bottom:15px;
+}
+
+.ragency_bd_hw_iworks .card .hw_iworks_card_body img{
+    width:70px;
+    margin-bottom:25px;
+}
+
+.ragency_bd_hw_iworks .card .hw_iworks_card_body p{
+    text-align:center;
+    font-size:14px;
+    line-height:16px;
+}
+
+.section_wh_back_wh{
+    background-color:#fff;
+    padding:10px;
+}
+
+.ragency_wh_you_get{
+    padding:60px 0px !important;
+}
+
+.ragency_wh_you_get .card{
+    margin-bottom:25px;
+    width:100%;
+    display:flex;
+    flex-wrap:nowrap;
+    min-height:200px;
+    height:200px;
+    border-radius:10px;
+    box-shadow:0 0 20px 2px #eee;
+    cursor:pointer;
+    transition:transform 1s;
+}
+
+@media all and (max-width:768px){
+    .ragency_wh_you_get .card{
+        flex-direction:column;
+        height:auto;
+    }
+}
+
+.ragency_wh_you_get .card:hover{
+    transform:scale(1.05);
+    transition:transform 0.5s;
+    z-index:2;
+}
+
+.ragency_wh_you_get .card .wh_yget_card_head img{
+    width:250px;
+    height:100%;
+    border-top-left-radius:10px;
+    border-bottom-left-radius:10px;
+    object-fit:cover;
+}
+
+@media all and (max-width:768px){
+    .ragency_wh_you_get .card .wh_yget_card_head img{
+        width:100%;
+        border-radius:10px;
+    }
+}
+
+.ragency_wh_you_get .card .wh_yget_card_body{
+    padding:25px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.ragency_wh_you_get .card .wh_yget_card_body h3{
+    margin:0;
+    font-size:20px;
+    font-weight:500;
+}
+
+.ragency_wh_you_get .card .wh_yget_card_body p{
+    font-size:14px;
+    line-height:16px;
+}
+
+.ragency_intro_call{
+    padding:60px 0 !important;
+    min-height:500px;
+}
+
+@media all and (max-width:768px){
+    .ragency_intro_call{
+        display:flex !important;
+        flex-direction:column-reverse !important;
+    }
+}
+
+.ragency_intro_call .card{
+    width:100%;
+    box-shadow:none;
+    margin:0;
+    display:flex;
+    align-items:center;
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:cover;
+    border-radius:25px;
+    height:auto;
+}
+
+.ragency_intro_call .card .ragency_card_grid .top_col{
+    display:flex;
+    justify-content:space-between;
+    padding:0;
+}
+
+@media all and (max-width:768px){
+  .ragency_intro_call .card .ragency_card_grid .top_col{
+      display:none;
+  }
+}
+
+.ragency_intro_call .card .ragency_card_grid img{
+    height:200px;
+    object-fit:cover;
+    border-radius:55px;
+    margin:10px;
+}
+
+.ragency_intro_call .card .ragency_card_grid img.cgrid_img_1{
+    border-bottom-right-radius:5px;
+    width:calc(20% - 20px);
+}
+
+.ragency_intro_call .card .ragency_card_grid img.cgrid_img_2{
+    border-radius:100px;
+    width:calc(15% - 20px);
+}
+
+.ragency_intro_call .card .ragency_card_grid img.cgrid_img_3{
+    width:calc(65% - 20px);
+    border-radius:100px;
+    border-top-right-radius:5px;
+    border-bottom-left-radius:5px;
+}
+
+.ragency_intro_call .card .ragency_card_grid img.cgrid_img_4{
+    border-radius:100px;
+    border-top-right-radius:5px;
+    border-bottom-left-radius:5px;
+    width:calc(100% - 10px);
+}
+
+@media all and (max-width:768px){
+    .ragency_intro_call .card .ragency_card_grid,
+    .ragency_intro_call .card .ragency_card_grid .bottom_col{
+        height:100%;
+    }
+    .ragency_intro_call .card .ragency_card_grid img.cgrid_img_4{
+        height:250px;
+        border-radius:5px;
+        margin:0;
+    }
+}
+
+.ragency_intro_call .card .introcall_card_body{
+    margin-right:40px;
+    position:relative;
+    background-color:#fff;
+}
+
+@media all and (max-width:768px){
+  .ragency_intro_call .card .introcall_card_body{
+      margin-top:25px;
+      margin-right:0;
+  }
+}
+
+.ragency_intro_call .card .introcall_card_body h3{
+    text-align: start;
+    margin: 0;
+    margin-bottom: 25px;
+    font-size: 35px;
+    font-weight: 600;
+    font-family: Ubuntu, Montserrat;
+    text-transform: uppercase;
+}
+
+.ragency_intro_call .card .introcall_card_body p{
+    margin:0;
+    margin-bottom:25px;
+    font-size:14px;
+    font-weight:500;
+    line-height:16px;
+    display:flex;
+    flex-direction:column;
+}
+
+.ragency_intro_call .card .introcall_card_body p span{
+    margin:5px 0;
+    display:flex;
+    align-items:center;
+    font-weight:500;
+}
+
+.ragency_intro_call .card .introcall_card_body p span i{
+    margin-right:15px;
+    color:#1100ff;
+    font-size:30px;
+}
+
+.ragency_intro_call .card .introcall_card_body button{
+    min-width:250px;
+    height:60px;
+    background-color:#cc0000;
+    border:2px solid #cc0000;
+    border-radius:55px;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.section_blk_back_{
+    background-color:#000;
+    min-height:600px;
+    display:flex;
+    align-items:center;
+    padding:40px 0;
+}
+
+.ragency_contact_us .card_contact{
+    width:100%;
+    height:auto;
+    padding:0;
+}
+
+.ragency_contact_us .card_contact .col{
+    padding:0;
+}
+
+@media all and (max-width:768px){
+    .ragency_contact_us .card_contact{
+        margin:10px 0;
+    }
+}
+
+.ragency_contact_us .card_contact .rag_bd_contactMsg span{
+    font-size:14px;
+    color:#9e9e9e;
+    text-transform:uppercase;
+    font-weight:500;
+}
+
+.ragency_contact_us .card_contact .rag_bd_contactMsg h3{
+    margin:0;
+    margin-top:40px;
+    color:#fff;
+    font-weight:500;
+    font-size:35px;
+    font-family:Ubuntu, Montserrat,Work Sans, Open Sans;
+}
+
+.ragency_contact_us .card_contact .rag_bd_contactMsg p{
+    color:#9e9e9e;
+    font-size:14px;
+    margin:0;
+    margin-top:5px;
+    font-weight:500;
+}
+
+.ragency_contact_us .card_contact .rag_bd_contact_alt{
+    color:#fff;
+    font-weight:500;
+    display:flex;
+    flex-direction:column;
+    margin-top:30px;
+    font-size:13px;
+}
+
+.ragency_contact_us .card_contact .rag_bd_contact_alt span{
+    margin:5px 0;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields .errorlist{
+    margin:5px 0;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields .errorlist li{
+    font-size:11px;
+    margin:0;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields .col{
+    padding:0;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields .rag_c_fields_row .col,
+.card_contact .rag_bd_form .ragency_cform_fields .rag_c_fields_col .col{
+    padding:0 15px;
+    margin:10px 0;
+}
+
+@media all and (max-width:768px){
+    .card_contact .rag_bd_form .ragency_cform_fields .rag_c_fields_row .col,
+    .card_contact .rag_bd_form .ragency_cform_fields .rag_c_fields_col .col{
+        padding:0;
+    }
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields input{
+    margin:0px;
+    border-bottom:1px solid #9e9e9e !important;
+    font-size:13px;
+    color:#03a84e;
+    height:35px;
+    width:100%;
+    box-sizing:border-box;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields input::placeholder{
+    font-size:13px;
+    color:#9e9e9e;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields input:focus{
+    border-bottom:1px solid #03a84e !important;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields textarea{
+    border:none;
+    border-bottom:1px solid #9e9e9e;
+    width:100%;
+    line-height:35px;
+    margin:0px;
+    color:#03a84e;
+}
+
+
+.card_contact .rag_bd_form .ragency_cform_fields textarea:focus{
+    outline:none;
+    border:none;
+    border-bottom:1px solid #03a84e !important;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields h6{
+    color:#fff;
+    text-transform:uppercase;
+    font-size:11px;
+    font-weight:600;
+    margin:0;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields h6 span{
+    margin-left:10px;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields .select-wrapper ul li{
+    min-height:35px;
+    line-height:35px;
+}
+
+.card_contact .rag_bd_form .ragency_cform_fields .select-wrapper ul li span{
+    color:#000;
+    font-size:14px;
+    padding:5px 10px;
+}
+
+.rag_c_fields_submit{
+    padding:15px;
+}
+
+.rag_c_fields_submit button{
+    margin-top:20px;
+    height:60px;
+    min-width:250px;
+    background-color:#fff;
+    border:none;
+    border-radius:30px;
+    font-weight:500;
+}
+
+.rag_c_fields_submit button:hover,
+.rag_c_fields_submit button:focus{
+    background-color:#1100ff;
+    cursor:pointer;
+    color:#fff;
+}
