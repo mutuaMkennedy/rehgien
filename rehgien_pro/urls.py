@@ -19,4 +19,7 @@ urlpatterns = [
 	path('resources/blog/', views.blog_posts, name = 'blog_posts'),
 	path('resources/blog/<slug:slug>/', views.blog_detail, name = 'blog_detail'),
 	path('resources/blog/ajax_autocomplete/', views.ajax_blog_post_autocomplete, name = 'ajax_blog_post_autocomplete'),
+
+	# Rehgien Agency Url Paths
+	path('rehgien_agency/', views.r_agency_home, name = 'r_agency_home'),
 ]
