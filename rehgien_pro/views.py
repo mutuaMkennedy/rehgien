@@ -15,6 +15,7 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.http import urlencode
+from . import forms
 from markets import models as market_models
 from location import models as location_models
 from profiles import models as profiles_models
@@ -439,3 +440,48 @@ def blog_detail(request, slug):
 	'post':post
 	}
 	return render(request, 'rehgien_pro/blog_post_detail.html', context)
+
+# Views for Rehgien Agency
+def contact_rehgien_agency_team(first_name, last_name, company_name, email, phone, message, service_type):
+	try:
+		subject = 'You have a new Customer Support Request!'
+		plainMessage = "First Name: {fn}. \nLast Name: {ln}. \nCompany: {co}. \nEmail: {e}. \nPhone: {p}. \nService Type: {svc} \n\nMessage: \n\n{m}".format(fn=first_name, ln=last_name, e=email, p=phone, m=message, co=company_name, svc=service_type)
+
+		send_mail(
+			subject,
+			plainMessage,
+			'Rehgien <do-not-reply@rehgien.com>',
+			['support@rehgien.com'],
+			fail_silently=False,
+		)
+		return True
+
+	except BadHeaderError:
+		return False
+
+def r_agency_home(request):
+	if request.method == 'POST':
+		contact_form = forms.ContactAgencyTeamForm(request.POST, request.FILES)
+		if contact_form.is_valid():
+			first_name = contact_form.cleaned_data.get('first_name')
+			last_name = contact_form.cleaned_data.get('last_name')
+			company_name = contact_form.cleaned_data.get('company_name')
+			email = contact_form.cleaned_data.get('email')
+			phone = contact_form.cleaned_data.get('phone')
+			message = contact_form.cleaned_data.get('message')
+			service_type = contact_form.cleaned_data.get('service_type')
+			sucess = contact_rehgien_agency_team(first_name, last_name, company_name, email, phone, message,service_type)
+
+			if sucess:
+				messages.success(request,"Message Sucessfully Sent!")
+			else:
+				messages.error(request,"Something went wrong try again later")
+		else:
+			messages.error(request,"Invalid submission. Check the form for field errors.")
+	else:
+		contact_form = forms.ContactAgencyTeamForm()
+
+	context = {
+		'contactForm':contact_form
+	}
+	return render(request,'rehgien_pro/rehgien_agency/homepage.html', context)
