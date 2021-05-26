@@ -206,14 +206,14 @@ class UserAccountSerializer(WritableNestedModelSerializer):
             "email": page.user.email,
             "user_type": page.user.user_type,
             "account_type": page.user.account_type,
-            "profile_image": page.user.profile_image.url,
+            "profile_image": page.user.profile_image.url if page.user.profile_image else '',
             }
 
             fields = {
             'pk':page.pk,
             'user':business_page_owner,
             'business_name':page.business_name,
-            'business_profile_image':page.business_profile_image.url,
+            'business_profile_image':page.business_profile_image.url if page.business_profile_image else '',
             'followers':page.followers.all().values('pk'),
             'verified':page.verified
             }
