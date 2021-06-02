@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.contrib.auth import get_user_model
 from . import models
 from . import profile_edit_forms as forms
+from . import views as prof_views
 
 
 # referencing the custom user model
@@ -60,7 +61,7 @@ def business_page_editor_mode(request, pk):
 					 })
 	else:
 		messages.error(request, 'Permission denied!')
-		return redirect('profiles:account')
+		return redirect('homepage')
 
 def resizePhoto(photo,x,y,width,height):
 	image = Image.open(photo.file).convert('RGB')
@@ -306,7 +307,7 @@ def busines_profile_update(request, pk, slug):
 				return JsonResponse({'page_info_section':html ,'message':message})
 		else:
 			messages.error(request, 'Invalid form requested. Changes no saved')
-			return redirect('profiles:account')
+			return redirect('homepage')
 	else:
 		messages.error(request, 'Invalid request. Changes no saved')
-		return redirect('profiles:account')
+		return redirect('homepage')
