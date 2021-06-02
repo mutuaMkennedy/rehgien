@@ -91,7 +91,7 @@ def job_post_detail(request,pk):
         return render(request,'markets/job_post_detail.html',context)
     else:
         messages.error('Permission denied!')
-        return redirect('profiles:account')
+        return redirect('homepage')
 
 @login_required(login_url='account_login')
 def job_post_create(request):
@@ -125,7 +125,7 @@ def job_post_update(request,pk):
                 job_post_form.save()
 
                 messages.success(request, 'Your request has been updated Successfully!')
-                return redirect('profiles:account')
+                return redirect('profiles:my_jobs')
             else:
                 messages.error(request,'Could not complete request. Try again later.')
         else:
@@ -142,13 +142,13 @@ def job_post_deactivate(request,pk):
             job_post.active = False
             job_post.save()
             messages.success(request,"Job successfully deactivated")
-            return redirect('profiles:account')
+            return redirect('profiles:my_jobs')
         else:
             messages.error(request,'Request not allowed!')
-            return redirect('profiles:account')
+            return redirect('profiles:my_jobs')
     else:
         messages.error(request,"Permission denied")
-        return redirect('profiles:account')
+        return redirect('profiles:my_jobs')
 
 @login_required(login_url='account_login')
 def submit_proposal(request, pk):
