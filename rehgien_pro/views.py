@@ -186,7 +186,11 @@ def dashboard_jobs(request):
 #other views
 
 def homepage(request):
-	return render(request,'rehgien_pro/rehgien_pro_homepage.html',{})
+	if request.user.is_authenticated:
+		if request.user.user_type == 'PRO':
+			return redirect('rehgien_pro:dashboard_home')
+	else:
+		return render(request,'rehgien_pro/rehgien_pro_homepage.html',{})
 
 def pro_join_landing(request):
 	return render(request,'rehgien_pro/pro_onboarding/landing_page.html',{})
