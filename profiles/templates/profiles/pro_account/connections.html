@@ -1,0 +1,183 @@
+{% extends 'profiles/pro_account/account_base.html' %}
+{% load static %}
+{% load humanize %}
+{% load cloudinary %}
+{% block title %}<title>My Followers | Rehgien</title>{% endblock %}
+
+{% block bread_crumb %}
+<div class="mngAcct_bdcrWrp">
+  <div class="mngAcct_bdcrWrp_links">
+      <ul>
+        <li><a href="#">Profile</a> <i class="material-icons">chevron_right</i></li>
+        <li><a href="#!">Connections</a></li>
+      </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block pro_account_section %}
+  <div class="proAcMng_MyJobsPtfl">
+    <div id="upfPageAcScs" class="_upfPageAcScs">
+    </div>
+    <div id="upfPageAcErr" class="_upfPageAcErr">
+    </div>
+    <div class="proAcMng_MyJobsPtfl_wrp">
+      <div class="row">
+        <div class="_connectionsHeader">
+
+          <div class="_connectionsPgFilter">
+            <div class="_connectionsPgElms">
+              <div class="_cnsPgFilterHdr">
+                <h1>My connections <span>{{all_connections.count}}</span></h1>
+                <h6>Showing {{connections.count}} results</h6>
+              </div>
+              <form class="_cnsPgFilterForm" action="{% url 'profiles:user_connections'%}" method="get">
+                  {% csrf_token %}
+                  <div class="_cnsPgFilterFormFields">
+                      <input type="text" name="_myConName" value="{% if name %} {{name}} {% endif %}" placeholder="Search by name or username">
+                      <button type="submit" name="button"><span class="material-icons">search</span></button>
+                  </div>
+              </form>
+            </div>
+          </div>
+          <div id="_rmvdAlertTip">
+            <p><span class="material-icons">check_circle</span>
+              You removed one of your connections. Removed connections clear on page refresh.
+            </p>
+          </div>
+        </div>
+        <div id="mg_Connections">
+            <div class="_myConnectionsBox">
+                {% if all_connections %}
+                  <div class="_myConnectionsCards">
+                      {% if connections %}
+                          {% for connection in connections %}
+                              {% if request.user == connection.requestor %}
+                                 <a href="{{connection.receiver.pro_business_profile.get_absolute_url}}">
+                                    <div id="_myProConnection{{forloop.counter}}" class="card _myProConnection">
+                                        <div class="_myProConnectionImg">
+                                          <img src="
+                                          {% if connection.receiver.profile_image %}
+                                            {{connection.receiver.profile_image.url}}
+                                          {% else %}
+                                            {%static 'img/avatar.png'%}
+                                          {% endif %}
+                                          " alt="avatar">
+                                        </div>
+                                        <div class="_myProConnectionOvw">
+                                            <div class="_myProConnectionOvwT">
+                                                <h3>{{connection.receiver.get_full_name}} <span class="material-icons" style="color:green;">verified</span></h3>
+                                                <h4>@{{connection.receiver.username}}</h4>
+                                                <p>{{connection.receiver.user_type}}</p>
+                                                <div class="_myCoProScore">
+                                                    Pro Score<span>120</span>
+                                                </div>
+                                            </div>
+                                            <span class="_connectedDt" >Connected {{connection.created_at|timesince}} ago</span>
+                                            <div class="_myProConnectionAbtn">
+                                              <button type="button" name="button"><span class="material-icons">forum</span>Message</button>
+                                              <div id="_remove_connection{{connection.receiver.pk}}" style='width:100%'>
+                                                {% include 'profiles/remove_connection.html' with connection=connection%}
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </a>
+                              {% elif request.user == connection.receiver %}
+                                  <a href="{{connection.requestor.pro_business_profile.get_absolute_url}}">
+                                    <div id="_myProConnection{{forloop.counter}}" class="card _myProConnection">
+                                        <div class="_myProConnectionImg">
+                                          <img src="
+                                          {% if connection.requestor.profile_image %}
+                                            {{connection.requestor.profile_image.url}}
+                                          {% else %}
+                                            {%static 'img/avatar.png'%}
+                                          {% endif %}
+                                          " alt="avatar">
+                                        </div>
+                                        <div class="_myProConnectionOvw">
+                                            <div class="_myProConnectionOvwT">
+                                                <h3>{{connection.requestor.get_full_name}} <span class="material-icons" style="color:green;">verified</span></h3>
+                                                <h4>@{{connection.requestor.username}}</h4>
+                                                <p>{{connection.requestor.user_type}}</p>
+                                                <div class="_myCoProScore">
+                                                    Pro Score<span>120</span>
+                                                </div>
+                                            </div>
+                                            <span class="_connectedDt" >Connected {{connection.created_at|timesince}} ago</span>
+                                            <div class="_myProConnectionAbtn">
+                                              <button type="button" name="button"><span class="material-icons">forum</span>Message</button>
+                                              <div id="_remove_connection{{connection.requestor.pk}}" style='width:100%'>
+                                                {% include 'profiles/remove_connection.html' with connection=connection%}
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </a>
+                              {% endif %}
+                          {%endfor%}
+                      {% else %}
+                      <div class="_connectionsEmpty">
+                        No results found. Try refining your search
+                      </div>
+                      {% endif %}
+                  </div>
+                {% else %}
+                  <div class="mngEmptyResultsSet">
+                      <div class="mngEmptyResultsSetMsg">
+                        <img src="{% static 'img/network.png'%}" alt="">
+                        <h6>You have no connections yet</h6>
+                        <p>Connect with other professionals to strengthen your profile.</p>
+                        <a href="{% url 'profiles:business_homepage'%}"><button type="button" name="button">Find professionals</button></a>
+                      </div>
+                  </div>
+                {% endif %}
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function(event){
+      $(document).on('click','._proTeam', function(event){
+         event.preventDefault();
+         var user = $(this).attr('value');
+         var targetId = $(this).attr('data-targetuser-id');
+         var successmsgBody = $('#upfPageAcScs')
+         var errmsgBody = $('#upfPageAcScs')
+         var formBox= $('#_remove_connection' + targetId.toString());
+         $.ajax({
+           type : 'post',
+           url : '{% url "profiles:remove_connection"%}',
+           data : {
+              'user':user,
+              'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+           },
+           dataType: 'json',
+           // success
+           success: function(response) {
+             formBox.html(response['form']);
+             successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['message'])
+             successmsgBody.css({'display': 'flex','bottom':'10px'})
+             $('#_rmvdAlertTip').css('display','flex')
+             $('#_rmvdAlertTip p').css('top','0')
+
+             setTimeout(function(){
+                successmsgBody.css('bottom','-100px');
+             }, 6000);
+
+           },
+           error: function(response,e){
+             errmsgBody.html("<span class='material-icons'>error_outline</span>" + response['err_message'])
+             errmsgBody.css({'display': 'flex','bottom':'10px'})
+             setTimeout(function(){
+                errmsgBody.css('bottom', '-100px');
+             }, 6000);
+           },
+         });
+      });
+    });
+  </script>
+{% endblock %}

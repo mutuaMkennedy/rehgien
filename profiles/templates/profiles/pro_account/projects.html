@@ -1,0 +1,107 @@
+{% extends 'profiles/pro_account/account_base.html' %}
+{% load static %}
+{% load humanize %}
+{% load cloudinary %}
+{% block title %}<title>My Projects | Rehgien</title>{% endblock %}
+
+{% block bread_crumb %}
+<div class="mngAcct_bdcrWrp">
+  <div class="mngAcct_bdcrWrp_links">
+      <ul>
+        <li><a href="#">Profile</a> <i class="material-icons">chevron_right</i></li>
+        <li><a href="#!">Projects</a></li>
+      </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block pro_account_section %}
+  <div class="proAcMng_ProjectsPtfl">
+    <div id="upfPageAcScs" class="_upfPageAcScs">
+    </div>
+    <div id="upfPageAcErr" class="_upfPageAcErr">
+    </div>
+    <h2>Your Projects</h2>
+    <div class="proAcMng_ProjectsPtfl_wrp">
+      <div class="row">
+        {% if projects %}
+          <div class="proAcMng_ProjectsPtfl_grid">
+            {% for project in projects %}
+              <div id="mng_savedProperty_{{project.pk}}" class="card">
+                <div class="card_top">
+                    <div class="card_img">
+                      <div class="card_img_overlay"></div>
+                      {% for project_photo in project.portfolio_item_photo.all %}
+                        {% if forloop.last %}
+                          {% cloudinary project_photo.photo ImageTransformation %}
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                    <div class="card_body">
+                        <h5>{{project.name|truncatechars:25}}</h5>
+                        <h6>{{project.portfolio_item_photo.all.count}} Photo{{project.portfolio_item_photo.all.count|pluralize}}</h6>
+                    </div>
+
+                   <div class="projCard_action_links">
+                     <button class='dropdown-trigger ' href='#' data-target='projectNo{{project.pk}}'><i class="material-icons">more_vert</i></button>
+
+                     <ul id='projectNo{{project.pk}}' class='dropdown-content'>
+                       <li><a href="{%url 'profiles:portfolio_item_update' pk=project.pk %}"><button type="button" name="button">Edit</button></a></li>
+                       <li><button class="_delete_Project"  data-projectpk='{{project.pk}}' type="button" name="button">Delete Project</button></li>
+                     </ul>
+                   </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="mngEmptyResultsSet">
+              <div class="mngEmptyResultsSetMsg">
+                <img src="{% static 'img/project.png'%}" alt="">
+                <h6>You have not added any projects yet</h6>
+                <p>Show potential clients your skill by adding quality photos of your work as projects.</p>
+                <a href="{% url 'profiles:portfolio_item_create'%}"><button type="button" name="button">Add a Project</button></a>
+              </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+
+  <script type="text/javascript">
+    $(document).on('click', '._removePropFrom_Saves', function(){
+          console.log('here');
+          var savedProperty = $(this);
+          var pk = savedProperty.attr('data-propertypk');
+          var rowID = $('#mng_savedProperty_' + pk );
+          var successmsgBody = $('#upfPageAcScs');
+          var errmsgBody = $('#upfPageAcScs');
+
+          $.ajax({
+              type: "POST",
+              url: "{% url 'listings:save_property'%}",
+              data: {
+                  'pk': pk,
+                  'property_category':'homes',
+                  'csrfmiddlewaretoken': '{{ csrf_token }}',
+              },
+              success: function (responseData) {
+                  rowID.css('display','none')
+                  successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + 'Successfully removed home from saved!')
+                  successmsgBody.css('display', 'flex')
+                  setTimeout(function(){
+                     successmsgBody.css('display', 'none');
+                  }, 6000);
+              },
+              error: function(rs,e){
+                errmsgBody.html("<span class='material-icons'>error_outline</span>" + 'Something went wrong unable to unsave property!')
+                errmsgBody.css('display', 'flex')
+                setTimeout(function(){
+                   errmsgBody.css('display', 'none');
+                }, 6000);
+              },
+        });
+    });
+  </script>
+{% endblock %}

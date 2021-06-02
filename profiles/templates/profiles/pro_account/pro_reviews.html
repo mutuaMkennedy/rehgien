@@ -1,0 +1,359 @@
+{% extends 'profiles/pro_account/account_base.html' %}
+{% load static %}
+{% load humanize %}
+{% load cloudinary %}
+{% block title %}<title>Favourite Properties | Rehgien</title>{% endblock %}
+
+{% block bread_crumb %}
+<div class="mngAcct_bdcrWrp">
+  <div class="mngAcct_bdcrWrp_links">
+      <ul>
+        <li><a href="#">Profile</a> <i class="material-icons">chevron_right</i></li>
+        <li><a href="#!">Reviews</a></li>
+      </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block pro_account_section %}
+  <div class="proAcMng_ProjectsPtfl">
+    <div id="upfPageAcScs" class="_upfPageAcScs">
+    </div>
+    <div id="upfPageAcErr" class="_upfPageAcErr">
+    </div>
+    <h2>Your Reviews</h2>
+    <div class="proAcMng_Reviews_wrp">
+      <div class="row">
+        {% if reviews %}
+          <div class="proAcMng_Reviews_Cta_sctional">
+            <p>You have {{reviews.count}} review{{reviews.count|pluralize}}</p>
+            <button type="button" name="button" data-target="slide-out-rq_reviews" class="sidenav-trigger"><i class="material-icons">add</i>Get Reviews</button>
+          </div>
+          <div class="proAcMng_Reviews_grid">
+            {% for reviews in reviews %}
+              <div id="mng_ReviewsCard_{{project.pk}}" class="card">
+                <div class="card_body">
+                    <div class="reviewsPro-header">
+                      <div class="card_top">
+                        <img src="
+                          {% if reviews.reviewer.profile_image %}
+                            {{reviews.reviewer.profile_image.url}}
+                          {% else %}
+                          {% static 'img/avatar.png'%}
+                          {% endif %}
+                        " alt="">
+                        <div class="reviewsPro_user">
+                          <h5>{{reviews.reviewer.username}}</h5>
+                          <h6>{{reviews.review_date.date}}</h6>
+                        </div>
+                      </div>
+                      <div class="MngrvwsrTNGS">
+                        <div class="MngrevCo-h-ar-reP">
+                            {% if reviews.recommendation_rating == 5%}
+                            <h2>
+                                <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                              Highly likely to recommend.
+                            </h2>
+                            {% endif %}
+                            {% if reviews.recommendation_rating == 4%}
+                            <h2>
+                              <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                              Likely to recommend.
+                            </h2>
+                            {% endif %}
+                            {% if reviews.recommendation_rating == 3%}
+                            <h2>
+                              <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                              Slightly likely to recommend.</h2>
+                            {% endif %}
+                            {% if reviews.recommendation_rating == 2%}
+                            <h2>
+                              <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                              Not likely to recommend.</h2>
+                            {% endif %}
+                            {% if reviews.recommendation_rating == 1%}
+                            <h2>
+                              <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                              Never likely to recomend.</h2>
+                            {% endif %}
+                        </div>
+                        <div class="MngrevCo-or">
+                          {% if reviews.responsive_rating == 5%}
+                          <div>
+                            Responsiveness:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.responsive_rating == 4%}
+                          <div>
+                            Responsiveness:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.responsive_rating == 3%}
+                          <div>
+                            Responsiveness:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.responsive_rating == 2%}
+                          <div>
+                            Responsiveness:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.responsive_rating == 1%}
+                          <div>
+                            Responsiveness:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.knowledge_rating == 5%}
+                          <div>
+                            Service Knowledge:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.knowledge_rating == 4%}
+                          <div>
+                            Service Knowledge:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.knowledge_rating == 3%}
+                          <div>
+                            Service Knowledge:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.knowledge_rating == 2%}
+                          <div>
+                            Service Knowledge:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.knowledge_rating == 1%}
+                          <div>
+                            Service Knowledge:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.quality_of_service_rating == 5%}
+                          <div>
+                            Quality of service:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.quality_of_service_rating == 4%}
+                          <div>
+                            Quality of service:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.quality_of_service_rating == 3%}
+                          <div>
+                            Quality of service:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.quality_of_service_rating == 2%}
+                          <div>
+                            Quality of service:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.quality_of_service_rating == 1%}
+                          <div>
+                            Quality of service:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.professionalism_rating == 5%}
+                          <div>
+                            Professional Conduct:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.professionalism_rating == 4%}
+                          <div>
+                            Professional Conduct:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.professionalism_rating == 3%}
+                          <div>
+                            Professional Conduct:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.professionalism_rating == 2%}
+                          <div>
+                            Professional Conduct:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                          {% if reviews.professionalism_rating == 1%}
+                          <div>
+                            Professional Conduct:
+                            <li><span class="material-icons">star_rate</span><span class="material-icons">star_rate</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span><span class="material-icons">star_outline</span></li>
+                          </div>
+                          {% endif %}
+                        </div>
+                        <div class="MngrevCO-content">
+                          <p>{{reviews.comment}}</p>
+                        </div>
+                        <div class="reviewsPro_interactions">
+                          <li>Likes: <span>{{reviews.likes.count}}</span></li>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="mngEmptyResultsSet">
+              <div class="mngEmptyResultsSetMsg">
+                <img src="{% static 'img/feedback.png'%}" alt="">
+                <h6>Get reviewed and start building your reputation on rehgien.</h6>
+                <p>90% of consumers read online reviews before contacting a business and reviews <br>are the #1 reason homeowners on Rehgien hire a professional.</p>
+                <a href="#"><button type="button" name="button" data-target="slide-out-rq_reviews" class="sidenav-trigger">Get Reviews</button></a>
+              </div>
+          </div>
+        {% endif %}
+          <div id="slide-out-rq_reviews" class="sidenav rq_revwSidenAV">
+            <div class="mngAct_grvw_formBox col s12"">
+              <form method="post" class="col s12">
+                  {% csrf_token %}
+                  <div class="mngAct_grvw_formeLSM col s12">
+                      <div class="col s12 md7 l7 xl7 mngAct_grvw_formFields">
+                          <h3>Get Reviews</h3>
+                          <div class="mngAct_grvw_formFieldSct ">
+                              <p>Send an email to your clients and ask for reviews</p>
+                                <br>
+                                <br>
+                                <div id="mngAct_grvw_formFieldEmail" class="mngAct_grvw_formField">
+                                <h5>Email Adress</h5>
+                                  {{form.email}}
+                                  {{form.email.errors}}
+                                </div>
+                                <div class="mngAct_grvw_formField">
+                                  <h5>Write them a message</h5>
+                                  {{form.message}}
+                                  {{form.email.errors}}
+                                </div>
+                                <div class="mngAct_grvw_formSubmit">
+                                  <button type="Submit" name="button">Send</button>
+                                </div>
+                          </div>
+                      </div>
+                      <div class="col s12 md5 l5 xl5 ">
+                        <div class="col s12 mngRQrVWhelper_card_tRg">
+                          <div class="card">
+                              <h4>Why do i need reviews?</h4>
+                              <div class="mngRQrVWhelper_card_tRgTip">
+                                  <p>
+                                    More and more customers are depending on online reviews to find and select
+                                    property professionals.
+                                    Client reviews tell other clients that you can be trusted and your work is credible.
+                                    Pros with atleast 3 reviews are 70% more likely to get hired on Rehgien.
+                                  </p>
+                              </div>
+                          </div>
+                          <div class="card">
+                              <h4>Who should i ask for Reviews?</h4>
+                              <div class="mngRQrVWhelper_card_tRgTip">
+                                  <p>
+                                    Clients and colleages who love your work
+                                  </p>
+                              </div>
+                          </div>
+                          <div class="card">
+                              <h4>What happens after i ask for a review?</h4>
+                              <div class="mngRQrVWhelper_card_tRgTip">
+                                  <p>
+                                    We send an email to the clients you specified with a link to your profile and review page.
+                                    After the client writes you a review it is submitted and made visible on your profile.
+                                    You and other users on Rehgien can report a review to us if there is a problem with it.
+                                  </p>
+                              </div>
+                          </div>
+                          <div class="card">
+                              <h4>What makes a great review?</h4>
+                              <div class="mngRQrVWhelper_card_tRgTip">
+                                  <p>
+                                    Reviews are meant to help other clients know about your work and quality. Therefore, ask
+                                    your clients to describe your contribution to their projet/service.
+                                  </p>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+              </form>
+            </div>
+            <div class="sidenav-close slide-out-rq_reviewsClose">
+
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'tagsInputAutocomplete/jquery.tagsinput-revisited.min.js'%}"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('#mngAct_grvw_formFieldEmail input').tagsInput({
+          // min/max number of characters
+          minChars: 2,
+          maxChars:null,
+          // max number of tags
+          limit:null,
+          // RegExp
+          validationPattern:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          // duplicate validation
+          unique:true,
+          // // allows new tags
+          interactive: true,
+          // // custom placeholder
+          placeholder: 'Enter client email addresses separated by a comma',
+          // // width/height
+          width: 'auto',
+          height: 'auto',
+          // // hides the regular input field
+          hide: true,
+          // // custom delimiter
+          delimiter: ',',
+          // // removes tags with backspace
+          removeWithBackspace: true,
+          // // an array of whitelisted values
+          whitelist: null,
+          onAddTag: (inp, tg)=>{
+            let tags = $('#mngAct_grvw_formFieldEmail').find('.tag-text');
+            let tagsArray = [];
+            $.each(tags, function( index, tag ) {
+              tagsArray.push(tag.innerHTML);
+            });
+            $('#mngAct_grvw_formFieldEmail input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+          },
+          onRemoveTag: (inp, tg)=>{
+           let tags = $('#mngAct_grvw_formFieldEmail').find('.tag-text');
+           let tagsArray = [];
+           $.each(tags, function( index, tag ) {
+             tagsArray.push(tag.innerHTML);
+           });
+           $('#jb_location input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+         },
+          onChange: ()=>{
+             let tags = $('#id_ProReviewers-email_tagsinput').find('.tag-text');
+             let tagsArray = [];
+             $.each(tags, function( index, tag ) {
+               tagsArray.push(tag.innerHTML);
+             });
+             $('#jb_location input').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+          }
+    });
+    })
+  </script>
+{% endblock %}

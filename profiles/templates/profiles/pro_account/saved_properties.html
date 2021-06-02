@@ -1,0 +1,145 @@
+{% extends 'profiles/pro_account/account_base.html' %}
+{% load static %}
+{% load humanize %}
+{% load cloudinary %}
+{% block title %}<title>Favourite Properties | Rehgien</title>{% endblock %}
+
+{% block bread_crumb %}
+<div class="mngAcct_bdcrWrp">
+  <div class="mngAcct_bdcrWrp_links">
+      <ul>
+        <li><a href="#">Profile</a> <i class="material-icons">chevron_right</i></li>
+        <li><a href="{% url 'profiles:user_wishlist'%}">Wish List</a> <i class="material-icons">chevron_right</i></li>
+        <li><a href="#!">Saved Properties</a></li>
+      </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block pro_account_section %}
+  <div class="proAcMng_savedProperties">
+    <div id="upfPageAcScs" class="_upfPageAcScs">
+    </div>
+    <div id="upfPageAcErr" class="_upfPageAcErr">
+    </div>
+    <h2>Saved Homes</h2>
+    <div class="proAcMng_savedProperties_wrp">
+      <div class="row">
+        {% if saved_homes %}
+          <div class="proAcMng_savedProperties_grid">
+            {% for home in saved_homes %}
+              <div id="mng_savedProperty_{{home.pk}}" class="card">
+                <div class="card_top">
+                  <div class="card_action_links">
+                    <button class="_removePropFrom_Saves"  data-propertypk='{{home.pk}}' type="button" name="button"><i class="material-icons">favorite</i></button>
+                  </div>
+                  <a href="{{ home.get_absolute_url }}">
+                    <div class="card_img">
+                      {% for home_photo in home.home_photos.all %}
+                        {% if forloop.last %}
+                          {% cloudinary home_photo.photo ImageTransformation %}
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                    <div class="card_body">
+                        <h5>{{home.property_name|truncatechars:25}}</h5>
+                        <h4>KSH: {{home.price|intcomma}} {% if home.listing_type == 'FOR_RENT' %}P/M{% endif %}</h4>
+                        <h6>{{home.bathrooms}}ba {{home.bathrooms}}bds {{home.bathrooms}}sqft <span> {{home.location_name|truncatechars:30}}</span></h6>
+                    </div>
+                  </a>
+                </div>
+                <div class="card_footer">
+                    <div class="col s12 md6 l6 xl6">
+                      <div class="card_footer_prop_feature">
+                        <i class="material-icons">villa</i>
+                        <div class="card_footer_prop_feature_desc">
+                          <h6>Home Type</h6>
+                          <span>{% if home.home_type.name %}{{home.home_type.name}}{% else %}__{% endif %}</span>
+                        </div>
+                      </div>
+                      <div class="card_footer_prop_feature">
+                        <i class="material-icons">room_preferences</i>
+                        <div class="card_footer_prop_feature_desc">
+                          <h6>Total Rooms</h6>
+                          <span>{% if home.total_rooms %}{{home.total_rooms}}{% else %}__{% endif %}</span>
+                        </div>
+                      </div>
+                      <div class="card_footer_prop_feature">
+                        <i class="material-icons">event</i>
+                        <div class="card_footer_prop_feature_desc">
+                          <h6>Year Built</h6>
+                          <span>{% if home.year_built %}{{home.year_built}}{% else %}__{% endif %}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col s12 md6 l6 xl6">
+                      <div class="card_footer_prop_feature">
+                        <i class="material-icons">local_parking</i>
+                        <div class="card_footer_prop_feature_desc">
+                          <h6>Parking</h6>
+                          <span>{% if home.parking %}{{home.parking}}{% else %}__{% endif %}</span>
+                        </div>
+                      </div>
+                      <div class="card_footer_prop_feature">
+                        <i class="material-icons">terrain</i>
+                        <div class="card_footer_prop_feature_desc">
+                          <h6>View</h6>
+                          <span>{% if home.view %}{{home.view}}{% else %}__{% endif %}</span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="mngEmptyResultsSet">
+              <div class="mngEmptyResultsSetMsg">
+                <img src="{% static 'img/fav_list.png'%}" alt="">
+                <h6>You have not saved any properties yet</h6>
+                <p>Save your favourite properties so you can easily find them later.</p>
+                <a href="{% url 'listings:property_homepage'%}"><button type="button" name="button">Find properties</button></a>
+              </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+
+  <script type="text/javascript">
+    $(document).on('click', '._removePropFrom_Saves', function(){
+          console.log('here');
+          var savedProperty = $(this);
+          var pk = savedProperty.attr('data-propertypk');
+          var rowID = $('#mng_savedProperty_' + pk );
+          var successmsgBody = $('#upfPageAcScs');
+          var errmsgBody = $('#upfPageAcScs');
+
+          $.ajax({
+              type: "POST",
+              url: "{% url 'listings:save_property'%}",
+              data: {
+                  'pk': pk,
+                  'property_category':'homes',
+                  'csrfmiddlewaretoken': '{{ csrf_token }}',
+              },
+              success: function (responseData) {
+                  rowID.css('display','none')
+                  successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + 'Successfully removed home from saved!')
+                  successmsgBody.css('display', 'flex')
+                  setTimeout(function(){
+                     successmsgBody.css('display', 'none');
+                  }, 6000);
+              },
+              error: function(rs,e){
+                errmsgBody.html("<span class='material-icons'>error_outline</span>" + 'Something went wrong unable to unsave property!')
+                errmsgBody.css('display', 'flex')
+                setTimeout(function(){
+                   errmsgBody.css('display', 'none');
+                }, 6000);
+              },
+        });
+    });
+  </script>
+{% endblock %}

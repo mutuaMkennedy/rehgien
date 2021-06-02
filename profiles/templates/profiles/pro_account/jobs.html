@@ -1,0 +1,142 @@
+{% extends 'profiles/pro_account/account_base.html' %}
+{% load static %}
+{% load humanize %}
+{% load cloudinary %}
+{% block title %}<title>My Job Posts | Rehgien</title>{% endblock %}
+
+{% block bread_crumb %}
+<div class="mngAcct_bdcrWrp">
+  <div class="mngAcct_bdcrWrp_links">
+      <ul>
+        <li><a href="#">Profile</a> <i class="material-icons">chevron_right</i></li>
+        <li><a href="#!">Jobs</a></li>
+      </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block pro_account_section %}
+  <div class="proAcMng_MyJobsPtfl">
+    <div id="upfPageAcScs" class="_upfPageAcScs">
+    </div>
+    <div id="upfPageAcErr" class="_upfPageAcErr">
+    </div>
+    <h2>Your Job Posts</h2>
+    <div class="proAcMng_MyJobsPtfl_wrp">
+      <div class="row">
+        {% if jobs %}
+          <div class="proAcMng_MyJobsPtfl_grid">
+            {% for job in jobs %}
+              <div id="mng_MyJobs_{{job.pk}}" class="card">
+                <div class="card_head">
+                  <div class="row">
+                    <div class="col s12 md8 l8 xl8">
+                      <div class="mng_MyJobs_title">
+                        <a href="{% url 'markets:job_post_update' job.pk%}" target="_blank"><h3>{{job.title}}</h3></a>
+                      </div>
+                    </div>
+                    <div class="col s12 md4 l4 xl4">
+                     <div class="mng_MyJobs_action_btn">
+                       <div class="mng_MyJob_action_btn_box">
+                         <button class="dropdown-trigger mng_MyJobTrgrBntn " data-target='mng_MyJob_{{job.pk}}' type="button" name="button"><i class="material-icons">more_horiz</i></button>
+                         <div id="mng_MyJob_{{job.pk}}" class="dropdown-content mng_MyJob_action_btn_bubble">
+                           <div class="mng_MyJob_action_btn_bubble_links">
+                                 <form action="{% url 'markets:job_post_deactivate' job.pk%}" method="post">
+                                   {% csrf_token %}
+                                   <button type="submit" name="button">
+                                     Remove Job
+                                   </button>
+                                 </form>
+                               <a href="{% url 'markets:job_post_update' job.pk%}" target="_blank">
+                                 <button type="button" name="button">
+                                     Edit Job
+                                 </button>
+                               </a>
+                               <a href="{% url 'markets:job_post_detail' job.pk%}" target="_blank">
+                                 <button type="button" name="button">
+                                     View Proposals
+                                 </button>
+                               </a>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card_body">
+                  <div class="row">
+                    <div class="col s12 md4 l4 xl4">
+                      <div class="mng_MyJob-dssTAT">
+                        <span class="t_sdoqdasd-sd">{{job.project_size|lower}} project</span>
+                        <p>Created {{job.job_update_date|timesince}} ago</p>
+                      </div>
+                    </div>
+                    <div class="col s12 md4 l4 xl4">
+                      <div class="mng_MyJob-dssTATCnt">
+                        <span class="count">{{job.job_post_proposal.count}}</span>
+                        <p>Proposal{{job.job_post_proposal.count|pluralize}}</p>
+                      </div>
+                    </div>
+                    <div class="col s12 md4 l4 xl4">
+                      <div class="mng_MyJob-dssTATCnt">
+                        <span class="count">{{job.job_viewers.count}}</span>
+                        <p>View{{job.job_viewers.count|pluralize}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="mngEmptyResultsSet">
+              <div class="mngEmptyResultsSetMsg">
+                <img src="{% static 'img/Note_list_re_r4u9.svg'%}" alt="">
+                <h6>Post a job and attract pottential hires</h6>
+                <p>Jobs are a powerfull way to find and hire pros for a project. <br>Jobs you list appear here so you can manage and view all submitted proposals.</p>
+                <a href="{% url 'markets:job_post_create'%}"><button type="button" name="button">Post a  New Job</button></a>
+              </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+
+  <script type="text/javascript">
+    $(document).on('click', '._removePropFrom_Saves', function(){
+          console.log('here');
+          var savedProperty = $(this);
+          var pk = savedProperty.attr('data-propertypk');
+          var rowID = $('#mng_savedProperty_' + pk );
+          var successmsgBody = $('#upfPageAcScs');
+          var errmsgBody = $('#upfPageAcScs');
+
+          $.ajax({
+              type: "POST",
+              url: "{% url 'listings:save_property'%}",
+              data: {
+                  'pk': pk,
+                  'property_category':'homes',
+                  'csrfmiddlewaretoken': '{{ csrf_token }}',
+              },
+              success: function (responseData) {
+                  rowID.css('display','none')
+                  successmsgBody.html("<span class='material-icons'>check_circle_outline</span>" + 'Successfully removed home from saved!')
+                  successmsgBody.css('display', 'flex')
+                  setTimeout(function(){
+                     successmsgBody.css('display', 'none');
+                  }, 6000);
+              },
+              error: function(rs,e){
+                errmsgBody.html("<span class='material-icons'>error_outline</span>" + 'Something went wrong unable to unsave property!')
+                errmsgBody.css('display', 'flex')
+                setTimeout(function(){
+                   errmsgBody.css('display', 'none');
+                }, 6000);
+              },
+        });
+    });
+  </script>
+{% endblock %}

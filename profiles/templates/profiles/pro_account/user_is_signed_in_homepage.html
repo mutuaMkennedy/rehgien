@@ -1,0 +1,332 @@
+{% extends 'base1.html' %}
+{% load static %}
+{%load cloudinary %}
+{% block title %} <title>Rehgien | Find any property service,find property & home professionals</title>{% endblock %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+
+
+<div class="usr_isSignedInHmWrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 md3 l3 xl3 hide-on-med-and-down">
+              <div class="card userActFloatSgnDhMM">
+                <div class="usrActFltSgnDhMM_tP">
+                      <div class="usrActFlCSFgnDhMMtP_imgWrp">
+                        <img src="
+                        {% if request.user.profile_image%}
+                          {{ request.user.profile_image.url}}
+                        {% else %}
+                          {% static 'img/avatar.png'%}
+                        {% endif %}
+                        " alt="">
+                      </div>
+                      <div class="usrADSlCSJHFgnDUhMMIUSSP_HdBody">
+                        <h3>{{request.user.username}}</h3>
+                        <div class="usrHmPrUflCardfWrs">
+                          <div class="usrHmPrUflCardfWrs_count">
+                            <h5>Follower{% if request.user.user_type == 'PRO'%}{{request.user.pro_business_profile.followers.all.count|pluralize}}{%else%}s{%endif%}</h5>
+                            <span>{% if request.user.user_type == 'PRO'%}{{request.user.pro_business_profile.followers.all.count}}{%else%}0{%endif%}</span>
+                          </div>
+                          <div class="usrHmPrUflCardfWrs_count">
+                            <h5>Following</h5>
+                            <span>{{request.user.business_page_followers.all.count}}</span>
+                          </div>
+                        </div>
+                        <div class="usrHmPrUflCard_cTAeDR">
+                        <a href="{% url 'profiles:user_wishlist'%}"><button type="button" name="button">View Profile</button></a>
+                        </div>
+                      </div>
+                </div>
+                <div class="usr_ActTypeHmPgs">
+                  <span>{{request.user.user_type}}</span>
+                </div>
+              </div>
+              <div class="card userActFloatSgnDhMM">
+                  <div class="usrLgnInFltActListHdr">
+                    <h5>Your Wish List</h5>
+                  </div>
+                  <div class="usrLgnInFltActListBdy">
+                    <ul>
+                        <li>
+                          <a href="{% url 'profiles:user_saved_properties'%}">
+                            <div class="usrLgnInFltActListBdyImgWrp">
+                              <img src="{% static 'img/property_sky.jpg'%}" alt="">
+                            </div>
+                            <div class="usrLgnInFltActListBdyCt">
+                              <h6>Properties</h6>
+                              <span>{{request.user.listings_home_saves_related.all.count}} Item{{ request.user.listings_home_saves_related.all.count|pluralize }}</span>
+                            </div>
+
+                          </a>
+                        </li>
+                        <li>
+                          <a href="{% url 'profiles:saved_pros'%}">
+                            <div class="usrLgnInFltActListBdyImgWrp">
+                              <img src="{% static 'img/thumbnails/system_&_appliances.jpg'%}" alt="">
+                            </div>
+                            <div class="usrLgnInFltActListBdyCt">
+                              <h6>Professionals</h6>
+                              <span>{{request.user.business_page_saves.all.count}} Item{{ request.user.business_page_saves.all.count|pluralize }}</span>
+                            </div>
+                          </a>
+                        </li>
+                    </ul>
+                    <div class="usrLgnInFltActListAcBtn">
+                    <a href="{% url 'profiles:user_wishlist'%}"><button type="button" name="button">View All</button></a>
+                    </div>
+                  </div>
+              </div>
+              <div class="card userActFloatSgnDhMM">
+                <div class="usrLgnInFltActListHdr">
+                  <h5>Your Pages</h5>
+                </div>
+                <div class="usrActFltSgnDhMM_pgPrf">
+                    {% if request.user.user_type == 'PRO' %}
+                      <a href="{% url 'profiles:pro_business_page_edit' pk=request.user.pro_business_profile.pk %}">
+                        <div class="usrActFltSgnDhMM_pgPrf_imgWrp">
+                          <img src="
+                          {% if request.user.pro_business_profile.business_profile_image %}
+                            {{request.user.pro_business_profile.business_profile_image.url}}
+                          {% else %}
+                            {% static 'img/avatar.png' %}
+                          {% endif %}
+                          " alt="">
+                        </div>
+                        <div class="usrActFltSgnDhMM_pgPrf_HdBody">
+                            <h3>{{request.user.pro_business_profile.business_name}}</h3>
+                            <h5>{{request.user.pro_business_profile.professional_category.professional_group}}</h5>
+                            <h6>{{request.user.pro_business_profile.professional_category|capfirst}}</h6>
+                        </div>
+                      </a>
+                      {% else %}
+                      <div class="fltcardNoEmmtyRslts">
+                        <h6>Only pros can own pages. If you are a pro upgrade now and start getting clients.</h6>
+                        <a href="#"><button type="button" name="button">Join as a pro now</button></a>
+                      </div>
+                      {% endif %}
+                </div>
+              </div>
+              <div class="card userActFloatSgnDhMM">
+                  <div class="usrLgdnIn_fOOTER">
+                    <div class="usrLgdnIn_fOOTER_main">
+                      <ul>
+                        <li><a href="http://blog.rehgien.com/"> Blog</a></li>
+                        <li><a href="#"> Advertise</a></li>
+                        <li><a href="#"> Mobile App</a></li>
+                        <li><a href="{% url 'contact_us' %}"> Contact Us</a></li>
+                      </ul>
+                      <ul>
+                          <li><a href="{% url 'about_us'%}"> About Us</a></li>
+                          <li><a href="#"> FAQ'S</a></li>
+                          <li><a href="{% url 'privacy_policy'%}"> Privacy Policy</a></li>
+                          <li><a href="{% url 'terms_of_use'%}"> Terms of use</a></li>
+                      </ul>
+                    </div>
+                    <div class="usrLgdnIn_fOOTER_socials">
+                      <ul>
+                        <li>
+                          <a href="https://www.facebook.com/rehgien" class="black-text">
+                          <img src="{% static 'img/facebook.svg'%}" alt="facebook">
+                          </a>
+                        </li>
+                        <li>
+                          <a href="https://twitter.com/rehgien" class="black-text">
+                            <img src="{% static 'img/twitter.svg'%}" alt="twitter">
+                          </a>
+                        </li>
+                        <li>
+                          <a href="https://www.linkedin.com/company/rehgien-inc/" class="black-text">
+                            <img src="{% static 'img/linkedin.svg'%}" alt="linkedin">
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                    <p class="copyrightSmbs">Rehgien Inc 	&copy  {% now "Y"  %}. All rights reserved</p>
+                  </div>
+              </div>
+            </div>
+            <div class="col s12 md9 l9 xl9">
+              <div class="usrLgnIn-MainFeedBox">
+                <div class="mnHrUsryWelcomText">
+                  <h3>Welcome to Rehgien, {{request.user.username}}!</h3>
+                </div>
+                <div class="usrLgnIn-MainFeedContFlow">
+                  <div class="usrLgnIn-MainFeedContsCTN">
+                    <h2 class="usrLgnMnfdCntfScHed">Shop by Category <a href="{% url 'listings:shop_category'%}"><span>View all</span></a></h2>
+                    <div class="usrhMoWLSMALL owl-carousel">
+                      <a href="{% url 'listings:property_homepage'%}">
+                          <div class="card usrLgnMnfdCntfCard">
+                            <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/home_fwwsxs.jpg">
+                            <div class="usrLgnMnfdCntfDTLX">
+                              <h6>Sale & rental Homes</h6>
+                            </div>
+                          </div>
+                      </a>
+                      <div class="card usrLgnMnfdCntfCard disabled">
+                        <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/furniture_hmz2jm.jpg">
+                        <div class="usrLgnMnfdCntfDTLX">
+                          <h6>Furniture</h6>
+                        </div>
+                        <button class="lockedItem"><i class="material-icons">lock</i></button>
+                      </div>
+                      <div class="card usrLgnMnfdCntfCard disabled">
+                        <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/artwork_o1ph9x.jpg">
+                        <div class="usrLgnMnfdCntfDTLX">
+                          <h6>Home decor</h6>
+                        </div>
+                        <button class="lockedItem"><i class="material-icons">lock</i></button>
+                      </div>
+                      <div class="card usrLgnMnfdCntfCard disabled">
+                        <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/architecture_mbkqfl.jpg">
+                        <div class="usrLgnMnfdCntfDTLX">
+                          <h6>Architectural Designs</h6>
+                        </div>
+                        <button class="lockedItem"><i class="material-icons">lock</i></button>
+                      </div>
+                      <div class="card usrLgnMnfdCntfCard disabled">
+                        <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/home_improvement_tem5nf.jpg">
+                        <div class="usrLgnMnfdCntfDTLX">
+                          <h6>Home improvement</h6>
+                        </div>
+                        <button class="lockedItem"><i class="material-icons">lock</i></button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="usrLgnIn-MainFeedContsCTN">
+                    <h2 class="usrLgnMnfdCntfScHed">Find Professionals <a href="{% url 'profiles:business_homepage' %}#allPros"><span>View all</span></a></h2>
+                    <div class="usrhMoWLSMALL owl-carousel">
+                      {% for group in professional_groups%}
+                        <a href="{% url 'profiles:business_list'%}?p_cat={{group.slug}}">
+                          <div class="card usrLgnMnfdCntfCard">
+                            {% cloudinary group.group_image ImageTransformation %}
+                            <div class="usrLgnMnfdCntfDTLX">
+                              <h6>{{group.group_name|capfirst}}</h6>
+                            </div>
+                          </div>
+                        </a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="usrLgnIn-MainFeedContsCTN">
+                    <h2 class="usrLgnMnfdCntfScHed">My Postings <a href="{% url 'profiles:my_jobs'%}"><span>All Postings</span></a></h2>
+                    <div class="usrJbPstINbDY">
+                          <div class="card usrJbPstINCardHmr">
+                            {% if my_job_posts %}
+                            <div class="usrJbPstINCardPostings">
+                              {% for job_post in my_job_posts %}
+                                <div class="usrJbPstINCardPostingsItem">
+                                  <h5>{{job_post.title}}</h5>
+                                  <div class="usrJbPstINCardPostingsItemStats">
+                                    <p>Created {{job_post.job_creation_date.date|timesince}} ago</p>
+                                    <span>{{job_post.job_viewers.all.count}} View{{job_post.job_viewers.all.count|pluralize}}</span>
+                                    <span>{{job_post.job_post_proposal.all.count}} Proposal{{job_post.job_post_proposal.all.count|pluralize}}</span>
+                                  </div>
+                                </div>
+                              {% endfor %}
+                                <div class="usrJbPstINCardPostingsFooter">
+                                  <p>Save time and let service providers find you!</p>
+                                  <a href="{% url 'markets:job_post_create' %}"><button type="button" name="button">Post a New Job</button></a>
+                                </div>
+                            </div>
+                            {% else %}
+                              <div class="usrJbPstINCardHmrEmptyRslts">
+                                <h6>A simple way to get the service you need</h6>
+                                <p>A job post on rehgien is a simple powerfull way to match you to service providers.</p>
+                                <a href="{% url 'markets:job_post_create' %}"><button type="button" name="button">Post a Job</button></a>
+                                <a href="{% url 'markets:job_post_home' %}"><span>Or, Learn how it works</span></a>
+                              </div>
+                            {% endif %}
+                          </div>
+                    </div>
+                  </div>
+
+                  <div class="usrLgnIn-MainFeedContsCTN">
+                    <h2 class="usrLgnMnfdCntfScHed">Top News</h2>
+                    <div class="owl-carousel usrhMoWLlARGE">
+                      {% for article in articles%}
+                        <a href="{{article.link}}" target="_blank">
+                          <div class="card usrLgnMnfdArctclfCard">
+                            <div class="usrLgnMnfdArctclfCardImg">
+                              <img src="{{article.featured_image}}" alt="">
+                            </div>
+                            <div class="usrLgnMnfdArctclfCardBdTxt">
+                            <h6>{{article.title}}</h6>
+                            {{article.excerpt|safe|truncatechars:150}}
+                            </div>
+                          </div>
+                        </a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="usrLgnIn-MainFeedContsCTN">
+                    <h2 class="usrLgnMnfdCntfScHed">Shop our top home types</h2>
+                    <div class="usrhMoWLSMALL owl-carousel">
+                      {% for type in home_types %}
+                          <div class="card usrLgnMnfdCntfCard">
+                            <img src="{{type.photo.url}}" alt="">
+                            <div class="usrLgnMnfdCntfDTLX">
+                              <h6>{{type.name|capfirst}}</h6>
+                              <div class="usrLgnMnfdCntfDTLXActionFooter">
+                                <a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_sale' %}?property_type={{type.name}}"><span>Buy</span></a>
+                                <a href="{% url 'listings:property-listings' property_category='homes' property_listing_type='for_rent' %}?property_type={{type.name}}"><span>Rent</span></a>
+                              </div>
+                            </div>
+                          </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".usrhMoWLSMALL").owlCarousel({
+      loop:true,
+      margin:10,
+      nav:true,
+      responsiveClass:true,
+      responsive:{
+         0:{
+             items:2,
+             nav:true
+         },
+         480:{
+             items:4,
+             nav:false
+         },
+         768:{
+             items:4,
+             nav:true,
+         }
+     }
+    });
+  $(".usrhMoWLlARGE").owlCarousel({
+      loop:true,
+      stagePadding:0,
+      margin:10,
+      nav:true,
+      responsiveClass:true,
+      responsive:{
+         0:{
+             items:1,
+             nav:true
+         },
+         480:{
+             items:1,
+             nav:false
+         },
+         768:{
+             items:1,
+             nav:true,
+         }
+     }
+    });
+});
+</script>
+{% endblock %}

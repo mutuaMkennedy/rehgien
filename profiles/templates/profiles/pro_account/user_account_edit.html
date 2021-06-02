@@ -1,0 +1,245 @@
+{% extends 'profiles/pro_account/account_base.html' %}
+{% load static %}
+{% load humanize %}
+{% load cloudinary %}
+{% block title %}<title>Favourite Properties | Rehgien</title>{% endblock %}
+
+{% block bread_crumb %}
+<div class="mngAcct_bdcrWrp">
+  <div class="mngAcct_bdcrWrp_links">
+      <ul>
+        <li><a href="#">Profile</a> <i class="material-icons">chevron_right</i></li>
+        <li><a href="#!">Account Settings</a></li>
+      </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block pro_account_section %}
+  <div class="proAcMng_EditAct">
+    <div id="upfPageAcScs" class="_upfPageAcScs">
+    </div>
+    <div id="upfPageAcErr" class="_upfPageAcErr">
+    </div>
+    <h2>Account Information</h2>
+    <div class="proAcMng_EditAct_wrp">
+      <div class="row">
+        <div class="proAcMng_EditAct_grid">
+          <div class="ed_profile_cont">
+            <div class="accMngLoadingWrp">
+              <img src="{% static 'img/Preloader_2.gif'%}" alt="">
+            </div>
+            <div class="ed_profile_row">
+                <form id="userAccountForm_Flds_lajdu" autocomplete="off" class="user-pf-form" action="{% url 'profiles:edit_account_info' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="u-pf-details">
+                    <div class="upf-fieldWrappers">
+                      <div class="upf-start-box">
+                          <div class="upf-username">
+                            <p>Your username</p>
+                            {{basic_form.username}}
+                            {{basic_form.username.errors}}
+                          </div>
+                          <div class="upf-first_name">
+                            <p>Your first name</p>
+                            {{basic_form.first_name}}
+                            {{basic_form.first_name.errors}}
+                          </div>
+                          <div class="upf-last_name">
+                            <p>Your last name</p>
+                            {{basic_form.last_name}}
+                            {{basic_form.last_name.errors}}
+                          </div>
+                          <div class="upf-email">
+                            <p>Your email</p>
+                            {{basic_form.email}}
+                            {{basic_form.email.errors}}
+                          </div>
+                          <div class="upf-profile_image">
+                            <p>Your profile Image</p>
+                            <div class="profile_imageForm">
+                              {% if basic_form.instance.profile_image %}
+                                <img id="__currentPImg" class="__currentPImg" src="{{basic_form.instance.profile_image.url}}" alt="{{user.username}}" style="width:100px;height:100px;object-fit:cover;">
+                              {% else %}
+                                <img id="__currentPImg" class="__currentPImg" src="{%static 'img/avatar.png'%}" alt="{{user.username}}" style="width:100px;height:100px;object-fit:cover;">
+                              {% endif %}
+                              <div id="upfPhotoInputSelector" class="upf-profile_imageSlt">
+                                {{basic_form.profile_image}}
+                                {{basic_form.profile_image.errors}}
+                              </div>
+                            </div>
+
+                            <div id="__selectedImageWrp">
+                              <img id="__selectedImage" src="" alt="New Image">
+                            </div>
+                            {{basic_form.x}}
+                            {{basic_form.y}}
+                            {{basic_form.width}}
+                            {{basic_form.height}}
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mng-edSubmitBtn">
+                      <button id="updateAcctInfo" type="submit" name="button">
+                        Save
+                      </button>
+                  </div>
+                </form>
+            </div>
+            <div id="cropEditorModal" class="prfEditMode-cropModal closed">
+              <div class="prfEMod-cropEditorModalContent">
+                  <div class="prfEMod-cropEditHead">
+                      <h2>Crop to fit your picture <br><span>( Scroll to zoom )</span></h2>
+                  </div>
+                  <div class="prfEMod-cropEditBody">
+                        <img id="prfEMod-crop-tg-image" src="" style="max-width: 100%;">
+                  </div>
+                  <div class="prfEMod-cropEditFooter">
+                    <button id="prfEMod-photoEditDone" type="button" name="button">Done</button>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script type="text/javascript">
+      $(document).ready(function(){
+         $('#userAccountForm_Flds_lajdu').on('submit',function() {
+           $('.accMngLoadingWrp').css('display','flex');
+         });
+        {% comment ' not needed but will probably use this later '%}
+        // $('#userAccountForm_Flds_lajdu').on('submit', function(event){
+        //    event.preventDefault();
+        //    var formData = new FormData(this);
+        //
+        //    loaderImg.show();
+        //    var saveBtn = $('#updatePageProfile');
+        //     saveBtn.attr('disabled', 'disabled');
+        //     saveBtn.css({'background': '#fff', 'color':'#eee'});
+        //
+        //    $.ajax({
+        //      type : $(this).attr('method'),
+        //      url : $(this).attr('action'),
+        //      data :formData,
+        //      cache: false,
+        //      contentType: false,
+        //      processData: false,
+        //      // success
+        //      success: function(response) {
+        //         $('#kdaIPOb_OXpimg').html(response['ac_details']);
+        //         $('#acctGreet_odsyb').html(response['ac_greet']);
+        //         $('#_PcntComplSc_opsnc').html(response['profile_completion']);
+        //
+        //         $('#__selectedImageWrp')
+        //           .css('display','none');
+        //
+        //         $('#__currentPImg')
+        //           .attr('src', $("#upfSelectedPhoto-udf img").attr('src'))
+        //
+        //           let msgBody;
+        //           if (response['success'] != undefined ) {
+        //            msgBody = $('#upfPageAcScs');
+        //            msgBody.html("<span class='material-icons'>check_circle_outline</span>" + response['success'])
+        //            msgBody.css({'display':'flex', 'z-index':'1003'});
+        //          }else {
+        //            msgBody = $('#upfPageAcErr');
+        //            msgBody.html("<span class='material-icons'>error_outline</span>" + response['error']);
+        //            msgBody.css({'display':'flex', 'z-index':'1003'});
+        //          };
+        //
+        //          setTimeout(function(){
+        //             msgBody.css('display', 'none');
+        //          }, 6000);
+        //
+        //        loaderImg.hide();
+        //        saveBtn.removeAttr('disabled');
+        //        saveBtn.css({'background': '#eee', 'color':'#000'});
+        //
+        //      },
+        //      error: function(response,e){
+        //        $('#upfPageAcErr').html("<span class='material-icons'>error_outline</span>" + 'Something went wrong. Try again later');
+        //
+        //        $('#upfPageAcErr').css('display', 'flex');
+        //        setTimeout(function(){
+        //           $('#_epPaImg_reponse_msg_err').css({'display':'flex', 'z-index':'1003'});
+        //        }, 6000);
+        //
+        //        loaderImg.hide();
+        //        saveBtn.removeAttr('disabled');
+        //        saveBtn.css({'background': '#eee', 'color':'#000'});
+        //
+        //      },
+        //    });
+        // });
+        {% endcomment %}
+      $("#upfPhotoInputSelector input").change(function () {
+          if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              $('#__selectedImage')
+                .attr('src', e.target.result)
+                .width(70)
+                .height(70);
+              $('#__selectedImageWrp')
+              .css('display','flex');
+
+              $("#prfEMod-crop-tg-image").attr("src", e.target.result);
+              $("#cropEditorModal").removeClass("closed").trigger('modalOpen');
+            }
+            reader.readAsDataURL(this.files[0]);
+          }
+        });
+
+        $('#prfEMod-photoEditDone').on('click', function(e){
+          e.preventDefault()
+          $('#cropEditorModal').addClass("closed").trigger('modalClosed');
+        })
+
+        var cropBoxData ;
+        var canvasData ;
+        let crpImg = $('#prfEMod-crop-tg-image');
+        $('#cropEditorModal').on('modalOpen', function(){
+          $('#prfEMod-crop-tg-image').cropper({
+              viewMode: 1,
+              dragMode:'move',
+              aspectRatio: 1/1,
+              cropBoxResizable:false,
+              cropBoxMovable: true,
+              toggleDragModeOnDblclick:false,
+              minCropBoxWidth: 200,
+              minCropBoxHeight: 200,
+              data:{
+                width: 200,
+                height: 200,
+              },
+              ready: function () {
+                crpImg.cropper("setCanvasData", canvasData);
+                crpImg.cropper("setCropBoxData", cropBoxData);
+              },
+            });
+
+        }).on("modalClosed", function () {
+            cropBoxData = crpImg.cropper("getCropBoxData");
+            canvasData = crpImg.cropper("getCanvasData");
+            canvas = crpImg.cropper("getCroppedCanvas", {
+                                width: 200,
+                                height: 200,
+                                imageSmoothingEnabled:true,
+                                });
+            var cropData = crpImg.cropper("getData");
+            crpImg.cropper("destroy");
+            $("#__selectedImageWrp").html(canvas);
+
+            $("#id_x").val(cropData["x"]);
+            $("#id_y").val(cropData["y"]);
+            $("#id_height").val(cropData["height"]);
+            $("#id_width").val(cropData["width"]);
+          });
+      });
+  </script>
+
+{% endblock %}

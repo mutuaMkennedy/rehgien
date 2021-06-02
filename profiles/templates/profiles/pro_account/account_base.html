@@ -1,0 +1,124 @@
+{% extends 'base1.html '%}
+{% load static %}
+{% block content %}
+<div class="pro_account_scMng">
+  <div class="pro_profile_navbar">
+    <ul>
+      {% if request.user.user_type == 'PRO'%}
+        <li><a href="{% url 'profiles:pro_business_page_edit' pk=request.user.pro_business_profile.pk %}">Your Profile</a></li>
+        <li><a href="{% url 'profiles:projects'%}">Projects</a></li>
+        <li><a href="{% url 'profiles:pro_reviews_list'%}">Reviews</a></li>
+      {% endif %}
+        <li><a href="{% url 'profiles:user_wishlist'%}">Wish List</a></li>
+        <li><a href="{% url 'profiles:my_jobs'%}">Jobs</a></li>
+        <li><a href="{% url 'profiles:user_followers'%}">Followers</a></li>
+      {% if request.user.user_type == 'PRO'%}
+        <li><a href="{% url 'profiles:user_connections'%}">Connections</a></li>
+      {% endif %}
+        <li><a href="{% url 'profiles:account_settings'%}">Account Settings</a></li>
+    </ul>
+  </div>
+
+  <div class="pAcct_mng_section_box">
+    <div class="container">
+        <div class="row">
+          {% block bread_crumb %}{% endblock %}
+          <div class="col s12 md3 l3 xl3 hide-on-med-and-down">
+            <div class="card acMng_user_floating_card">
+              <div class="acMng_uflCardBox acMngusrActFltSgnDhMM_tP">
+                    <div class="acMngusrActFlCSFgnDhMMtP_imgWrp">
+                      <img src="
+                      {% if request.user.profile_image%}
+                        {{ request.user.profile_image.url}}
+                      {% else %}
+                        {% static 'img/avatar.png'%}
+                      {% endif %}
+                      " alt="">
+                    </div>
+                    <div class="acMngusrADSlCSJHFgnDUhMMIUSSP_HdBody">
+                      <h3>{{request.user.username}}</h3>
+                      <div class="acMngusrHmPrUflCardfWrs">
+                        <div class="acMngusrHmPrUflCardfWrs_count">
+                          <h5>Follower{% if request.user.user_type == 'PRO'%}{{request.user.pro_business_profile.followers.all.count|pluralize}}{%else%}s{%endif%}</h5>
+                          <span>{% if request.user.user_type == 'PRO'%}{{request.user.pro_business_profile.followers.all.count}}{%else%}0{%endif%}</span>
+                        </div>
+                        <div class="acMngusrHmPrUflCardfWrs_count">
+                          <h5>Following</h5>
+                          <span>{{request.user.business_page_followers.all.count}}</span>
+                        </div>
+                      </div>
+                      <div class="acMngusrHmPrUflCard_cTAeDR">
+                      <a href="{% url 'profiles:edit_account_info'%}"><button type="button" name="button">Edit Account Info</button></a>
+                      </div>
+                    </div>
+              </div>
+              <div class="acMnguflCard_AddInfo">
+                <div class="acMnguflCard_AddInfo_item">
+                  <span><i class="material-icons">person</i>User Type</span>
+                  <h6>{{request.user.user_type}}</h6>
+                </div>
+                <div class="acMnguflCard_AddInfo_item">
+                  <span><i class="material-icons">date_range</i>Member Since</span>
+                  <h6>{{request.user.date_joined.date}}</h6>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="card acMng_user_floating_card">
+              <div class="acMng_uflCardHdr">
+                <h5>Your Pages</h5>
+              </div>
+              <div class="acMng_uflCardBox">
+                {% if request.user.user_type == 'PRO'%}
+                    <div class="acMng_uflCard_imgWrp">
+                      <img src="
+                          {% if request.user.pro_business_profile.business_profile_image %}
+                            {{request.user.pro_business_profile.business_profile_image.url}}
+                          {% else %}
+                            {% static 'img/avatar.png' %}
+                          {% endif %}
+                      " alt="">
+                    </div>
+                    <div class="acMnguflCard_HdBody">
+                        <h3>{{request.user.pro_business_profile.business_name}}</h3>
+                        <h5>{{request.user.pro_business_profile.professional_category.professional_group}}</h5>
+                        <h6>{{request.user.pro_business_profile.professional_category|capfirst}}</h6>
+                    </div>
+                {% else %}
+                  <div class="acMngfltcardNoEmmtyRslts">
+                    <h6>Only pros can own pages. If you are a pro upgrade now and start getting clients.</h6>
+                    <a href="#"><button type="button" name="button">Join as a pro now</button></a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <br>
+            <div class="card acMng_user_floating_card">
+              <div class="acMng_uflCardHdr">
+                <h5>Sponsored</h5>
+              </div>
+              <div class="acMng_uflCardAdBx">
+                    <div class="acMng_uflCard_AdimgWrp">
+                      <img src="{% static 'img/blog_rehgien.png'%}" alt="">
+                    </div>
+                    <div class="acMnguflCard_AdBody">
+                      <h5>Stay on the hook</h5>
+                      <p>Get the latest news, announcements and articles on the rehgien official blog</p>
+                      <a href="http://blog.rehgien.com/" target="_blank"><button type="button" name="button">Visit Our Blog Now <i class="material-icons">north_east</i></button></a>
+                    </div>
+              </div>
+            </div>
+          </div>
+          <div class="col s12 md9 l9 xl9">
+            <div class="pAcct_mng_section_side">
+                {% block pro_account_section %}{% endblock %}
+            </div>
+          </div>
+
+        </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+{% block footer %}{% include 'footer_section.html' %}{% endblock %}
