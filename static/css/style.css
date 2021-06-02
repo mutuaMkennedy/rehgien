@@ -21461,6 +21461,19 @@ particle {
     width:max-content;
 }
 
+.pAcct_mng_section_box .pAcct_mng_loader_wrapper{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .pAcct_mng_section_box .container{
     width:100%;
     padding:20px 40px;
@@ -22740,6 +22753,18 @@ particle {
     font-size: 13px;
     color: rgb(0 0 0 / 0.5);
     font-weight: 600;
+}
+
+.usr_isSignedInHmWrapper .usrAcct_loader_wrapper{
+    height:100%;
+    position:absolute;
+    left:0;
+    width:100%;
+    background-color:#fff;
+    z-index:120;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .usr_isSignedInHmWrapper .container{
