@@ -479,7 +479,10 @@ class ListPropertyWizardView(SessionWizardView):
 	file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_property_media'))
 
 	def dispatch(self, request, *args, **kwargs):
-		return super(ListPropertyWizardView, self).dispatch(request, *args, **kwargs)
+		if request.user.user_type == 'PRO' and request.user.pro_business_profile.professional_category.professional_group.slug =='real-estate-services':
+			return super(ListPropertyWizardView, self).dispatch(request, *args, **kwargs)
+		else:
+			return HttpResponseRedirect(reverse('homepage'))
 
 	def get_template_names(self):
 		return [TEMPLATES[self.steps.current]]
