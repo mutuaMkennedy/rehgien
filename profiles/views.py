@@ -11,6 +11,7 @@ from markets import models as markets_models
 from location import models as location_models
 from django.core.exceptions import PermissionDenied
 from . import forms
+from . import pro_profile_setup_forms
 from . import models
 from listings import models as listings_models
 from django.db.models import Avg,Count
@@ -25,6 +26,10 @@ from django.utils.http import urlencode
 from django.core.exceptions import ObjectDoesNotExist
 from .profile_edit_views import resizePhoto
 from functools import wraps
+import requests
+from requests_cache.backends import RedisCache
+from requests_cache import CachedSession
+from datetime import timedelta
 
 # referencing the custom user model
 User = get_user_model()
@@ -36,7 +41,7 @@ def ajax_login_required(view_func):
             return view_func(request, *args, **kwargs)
         return JsonResponse({ 'authenticated': False })
     return wrapper
-	
+
 def check_q_valid(param):
 	return param !="" and param is not None
 
@@ -46,48 +51,62 @@ def check_value_valid(param):
 def check_service_valid(param):
 	return param <= 8 and param >= 1
 
+"""
+	User related account page views begin here
+"""
+
 @login_required(login_url='account_login')
-def account_page(request):
+def user_is_signed_in_homepage(request):
 	ImageTransformation = dict(
-	format = "jpeg",
+	format = "jpg",
 	transformation = [
-		dict(height=112, width=200, crop="fill",quality="auto", gravity="center",
-		format="auto", dpr="auto"),
-		]
-	)
-	user = request.user
+		dict(crop="fill",height = 408, width = 250,quality="auto", gravity="center", loading="lazy",
+		 format="auto", dpr="auto", fl="progressive:steep"),
+			]
+		)
+	professional_groups = models.ProfessionalGroup.objects.all()
+	popular_services = models.ProfessionalService.objects.all()[:10]
+	recommended_services = models.ProfessionalService.objects.all()[:10]
+	home_types = listings_models.HomeType.objects.all()
 
-	user_sale_posts = listings_models.Home.objects.all().filter(owner=request.user, listing_type__icontains='FOR_SALE')
-	user_rental_posts =  listings_models.Home.objects.all().filter(owner=request.user, listing_type__icontains='FOR_RENT')
+	# Job Posts
+	my_job_posts = markets_models.JobPost.objects.filter(active=True, job_poster=request.user)[:2]
 
-	user_sale_favs = user.listings_home_saves_related.filter(listing_type__icontains='FOR_SALE')
-	user_rental_favs =  user.listings_home_saves_related.filter(listing_type__icontains='FOR_RENT')
+	# Blog articles from our blog website blog.rehgien.com
+	session = CachedSession(backend='redis', namespace='my-rq-cache',expire_after=timedelta(days=1))
+	articles_reponse = session.get('http://blog.rehgien.com/wp-json/wp/v2/posts?per_page=5&_embed')
+	articles_reponse = articles_reponse.json()
+	articles = []
+	for a in articles_reponse:
+		data = {
+		'title':a['title']['rendered'],
+		'featured_image':'',
+		'link':a['link'],
+		'excerpt':a['excerpt']['rendered']
+		}
 
-	job_post = markets_models.JobPost.objects.filter(active=True,job_poster=request.user)
-	my_job_replies = markets_models.JobPostProposal.objects.filter(job_post__active=True, proposal_sender=request.user)
-
-	#porfolio
-	portfolio_items = models.PortfolioItem.objects.all().filter(created_by=request.user)
-
-	#connections
-	pro_connections = models.TeammateConnection.objects.filter(Q(requestor=request.user, receiver_accepted = 'Yes')|Q(receiver = request.user, receiver_accepted = 'Yes'))
-
-	#pros the user is following
-	following = user.business_page_followers.all()
-
-	#account edit forms
-	basic_form = forms.UserEditForm(instance=user)
-
-	return render(request, 'profiles/user_profile.html', {
-	'user': user, 'user_sale_posts':user_sale_posts, 'user_rental_posts':user_rental_posts,
-	'user_sale_favs':user_sale_favs, 'user_rental_favs':user_rental_favs, 'ImageTransformation':ImageTransformation,
-	"job_post":job_post,"my_job_replies":my_job_replies,
-	"basic_form":basic_form,"pro_connections":pro_connections,'following':following,
-	'portfolio_items':portfolio_items
-	})
+		for b in a['_embedded']['wp:featuredmedia']:
+			data['featured_image'] = b['source_url']
+		articles.append(data)
+	context = {
+	"professional_groups":professional_groups,
+	"popular_services":popular_services,
+	"recommended_services":recommended_services,
+	"articles":articles,
+	"my_job_posts":my_job_posts,
+	"home_types":home_types
+	}
+	return render(request, 'profiles/pro_account/user_is_signed_in_homepage.html', context)
 
 @login_required(login_url='account_login')
-def edit_basic_profile(request):
+def account_settings(request):
+	context = {
+
+	}
+	return render(request, 'profiles/pro_account/account_settings.html', context)
+
+@login_required(login_url='account_login')
+def edit_account_info(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 				basic_form = forms.UserEditForm(request.POST, request.FILES, instance=request.user)
@@ -122,13 +141,13 @@ def edit_basic_profile(request):
 						return JsonResponse({'ac_details':ac_details ,'ac_greet':ac_greet, 'profile_completion':profile_completion,
 							'success':message})
 					else:
-						return redirect('profiles:account')
+						messages.success(request, message)
+						return redirect('profiles:edit_account_info')
 				else:
 					context = {
 					'user':request.user,
 					'basic_form':basic_form
 					}
-					print(basic_form.errors.as_data())
 					message = 'Invalid submission. Could not update!'
 					if request.is_ajax():
 						ac_details = render_to_string('profiles/account_details_section.html', context, request=request)
@@ -137,13 +156,165 @@ def edit_basic_profile(request):
 						return JsonResponse({'ac_details':ac_details ,'ac_greet':ac_greet,'profile_completion':profile_completion,
 							'error':message})
 					else:
-						return redirect('profiles:account')
+						messages.error(request, message)
+						return render(request, 'profiles/pro_account/user_account_edit.html', {'basic_form':basic_form})
 		else:
 			basic_form = forms.UserEditForm(instance=request.user)
+			return render(request, 'profiles/pro_account/user_account_edit.html', {'basic_form':basic_form})
 	else:
-		raise PermissionDenied
-		return render(request, 'profiles/user_profile.html', {'basic_form':basic_form})
+		messages.success(request, 'Access restricted')
+		return redirect('homepage')
 
+@login_required(login_url='account_login')
+def user_wishlist(request):
+	context = {}
+	return render(request,'profiles/pro_account/wishlist.html',context)
+
+@login_required(login_url='account_login')
+def user_saved_properties(request):
+	ImageTransformation = dict(
+	format = "jpeg",
+	transformation = [
+		dict(height=200, width=310, crop="fill",quality="auto", gravity="center",
+		format="auto", dpr="auto"),
+		]
+	)
+	saved_homes = request.user.listings_home_saves_related.all()
+	context = {
+	"saved_homes":saved_homes,
+	"ImageTransformation":ImageTransformation
+	}
+	return render(request,'profiles/pro_account/saved_properties.html',context)
+
+@login_required(login_url='account_login')
+def saved_pros(request):
+	saved_pros = request.user.business_page_saves.all()
+	context = {
+	"saved_pros":saved_pros,
+	}
+	return render(request,'profiles/pro_account/saved_pros.html',context)
+
+# View not done. Will complete this later
+@login_required(login_url='account_login')
+def saved_searches(request):
+	saved_searches = request.user.user_saved_search.all()
+	context = {
+	"saved_searches":saved_searches,
+	}
+	return render(request,'profiles/pro_account/saved_searches.html',context)
+
+@login_required(login_url='account_login')
+def my_jobs(request):
+	jobs = markets_models.JobPost.objects.filter(job_poster=request.user)
+	context = {
+	"jobs":jobs
+	}
+	return render(request, 'profiles/pro_account/jobs.html', context)
+
+@login_required(login_url = 'account_login')
+def user_connections(request):
+	if request.user.user_type =='PRO':
+		if request.method =='GET':
+			all_connections = models.TeammateConnection.objects.filter(Q(requestor=request.user, receiver_accepted = 'No')|Q(receiver = request.user, receiver_accepted = 'No'))
+			connections = models.TeammateConnection.objects.filter(Q(requestor=request.user, receiver_accepted = 'No')|Q(receiver = request.user, receiver_accepted = 'No'))
+			#filtering
+			name = str(request.GET.get('_myConName', ''))
+			if name !='':
+				#check if name is username
+				username = User.objects.filter(username = name).exists()
+				full_name = User.objects.filter(Q(first_name__icontains = name)|Q(last_name__icontains = name)).exists()
+
+				if username:
+					user = User.objects.get(username = name)
+					connections = connections.filter(Q(requestor=user.pk)|Q(receiver = user.pk))
+				elif full_name:
+					user = User.objects.filter(Q(first_name__icontains = name)|Q(last_name__icontains = name))
+					connections = connections.filter(
+								Q(requestor__first_name__icontains=name)|Q(receiver__first_name__icontains = name)|
+								Q(requestor__last_name__icontains=name)|Q(receiver__last_name__icontains = name)
+								)
+				else:
+					connecions = ''
+		else:
+			return redirect('homepage')
+			messages.error(request, 'Invalid request')
+		return render(request, 'profiles/pro_account/connections.html', {"all_connections":all_connections, 'connections':connections,'name':name})
+	else:
+		messages.error(request,'Access restricted')
+		return redirect('homepage')
+
+@login_required(login_url='account_login')
+def user_followers(request):
+	# The pro's followers
+	# Since only pros can have followers we fetch their followers from their business profile
+	# and if the requesting user is not a pro we assign and empty string since
+	# non-pro users dont have a business profile so they cant have followers
+	# Therefore we return an instance of the pro users
+	followers = ''
+	if request.user.user_type == 'PRO':
+		followers = request.user.pro_business_profile.followers.all()
+
+	# The user's following
+	# any user can follow a pro i.e. even pros can follow each other
+	# So here we just fetch all the business pages the user is followng
+	# Therefore we return an instance of the profile object
+	following = ''
+	if request.user.business_page_followers:
+		following = request.user.business_page_followers.all()
+
+	return render(request, 'profiles/pro_account/followers.html', {'followers':followers, 'my_following':following})
+
+@login_required(login_url='account_login')
+def projects(request):
+	if request.user.user_type =='PRO':
+		ImageTransformation = dict(
+		format = "jpeg",
+		transformation = [
+			dict(height=200, width=310, crop="fill",quality="auto", gravity="center",
+			format="auto", dpr="auto"),
+			]
+		)
+		projects = request.user.profiles_portfolioitem_createdby_related.all()
+		context = {
+		"projects":projects,
+		"ImageTransformation":ImageTransformation
+		}
+		return render(request,'profiles/pro_account/projects.html',context)
+	else:
+		messages.error(request,'Access restricted')
+		return redirect('homepage')
+
+@login_required(login_url='account_login')
+def reviews(request):
+	if request.user.user_type =='PRO':
+		data = {
+	'message':"As a {proCat} professional my business heavily depends on recommendations ".format(proCat = request.user.pro_business_profile.professional_category.professional_group.group_name) +
+				"from clients. Therefore, I would appreciate it if you would write a brief review of me on Rehgien.com," +
+				" an influential directory of property and home service professionals."
+	}
+		if request.method == 'POST':
+			form = pro_profile_setup_forms.ProReviewers(request.POST, request.FILES)
+			if form.is_valid():
+				email_dict = form.cleaned_data.get('email')
+				message = form.cleaned_data.get('message')
+				prof_views.send_review_request_email(email,message, request.user.pro_business_profile.pk, request.user.pro_business_profile.business_name)
+				messages.success(request, 'Great! Invites successfully sent')
+		else:
+			form = pro_profile_setup_forms.ProReviewers(data)
+			reviews = request.user.pro_business_profile.pro_business_review.all()
+		context = {
+		"form":form,
+		"reviews":reviews,
+		}
+		return render(request,'profiles/pro_account/pro_reviews.html',context)
+	else:
+		messages.error(request,'Access restricted')
+		return redirect('homepage')
+"""
+	New user account page views End here
+"""
+
+# Other views start here
 def business_homepage(request):
 	popular_services = models.ProfessionalService.objects.all()[:10]
 	recommended_services = models.ProfessionalService.objects.all()[:10]
@@ -458,7 +629,7 @@ def portfolio_item_create(request):
 			ImageForm = forms.PortfolioItemPhotoForm()
 	else:
 		messages.error(request,'Restricted. You dont have permissions for this request.')
-		return redirect('profiles:account')
+		return redirect('homepage')
 	return render(request, 'profiles/pro_portfolio_create_form.html', {"PortfolioForm": PortfolioForm, "PoImageForm": ImageForm})
 
 @login_required(login_url='account_login')
@@ -493,7 +664,7 @@ def portfolio_item_update(request, pk):
 							p.save()
 
 				messages.success(request, 'Update Successull')
-				return redirect('profiles:account')
+				return redirect('profiles:projects')
 			else:
 				messages.error(request, 'Unable to update. Invalid request')
 		else:
@@ -695,7 +866,7 @@ def remove_connection(request):
 				return JsonResponse({'form':html, 'message':message})
 		else:
 			messages.error(request, 'You are not authorized for this action!')
-			return redirect('profiles:account')
+			return redirect('homepage')
 
 def connection_request_action(request):
 	if request.method == 'POST':
@@ -747,58 +918,9 @@ def connection_request_action(request):
 					return redirect('profiles:notifications')
 		else:
 			messages.error(request, 'You are not authorized for this action!')
-			return redirect('profiles:account')
+			return redirect('homepage')
 	else:
 		return redirect('profiles:notifications')
-
-@login_required(login_url = 'account_login')
-def user_connections(request):
-	if request.method =='GET':
-		all_connections = models.TeammateConnection.objects.filter(Q(requestor=request.user, receiver_accepted = 'No')|Q(receiver = request.user, receiver_accepted = 'No'))
-		connections = models.TeammateConnection.objects.filter(Q(requestor=request.user, receiver_accepted = 'No')|Q(receiver = request.user, receiver_accepted = 'No'))
-		#filtering
-		name = str(request.GET.get('_myConName', ''))
-		if name !='':
-			#check if name is username
-			username = User.objects.filter(username = name).exists()
-			full_name = User.objects.filter(Q(first_name__icontains = name)|Q(last_name__icontains = name)).exists()
-
-			if username:
-				user = User.objects.get(username = name)
-				connections = connections.filter(Q(requestor=user.pk)|Q(receiver = user.pk))
-			elif full_name:
-				user = User.objects.filter(Q(first_name__icontains = name)|Q(last_name__icontains = name))
-				connections = connections.filter(
-							Q(requestor__first_name__icontains=name)|Q(receiver__first_name__icontains = name)|
-							Q(requestor__last_name__icontains=name)|Q(receiver__last_name__icontains = name)
-							)
-			else:
-				connecions = ''
-	else:
-		return redirect('profiles:account')
-		messages.error(request, 'Invalid request')
-	return render(request, 'profiles/connections_list.html', {"all_connections":all_connections, 'connections':connections,'name':name})
-
-@login_required(login_url='account_login')
-def user_followers(request):
-	# The pro's followers
-	# Since only pros can have followers we fetch their followers from their business profile
-	# and if the requesting user is not a pro we assign and empty string since
-	# non-pro users dont have a business profile so they cant have followers
-	# Therefore we return an instance of the pro users
-	followers = ''
-	if request.user.user_type == 'PRO':
-		followers = request.user.pro_business_profile.followers.all()
-
-	# The user's following
-	# any user can follow a pro i.e. even pros can follow each other
-	# So here we just fetch all the business pages the user is followng
-	# Therefore we return an instance of the profile object
-	following = ''
-	if request.user.business_page_followers:
-		following = request.user.business_page_followers.all()
-
-	return render(request, 'profiles/user_followers_list.html', {'followers':followers, 'my_following':following})
 
 @login_required(login_url='account_login')
 def notifications(request):
