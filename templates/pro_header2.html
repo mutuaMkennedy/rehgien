@@ -134,125 +134,171 @@
         </div>
       </div>
 
-      <ul id="nav-base2" class="right hide-on-med-and-down">
+      <ul id="nav-base2" class="right">
         {% if request.user.user_type != 'PRO' %}
-        <li><a href="{% url 'rehgien_pro:pro_join_landing' %}"><button class="join_as_pro" type="button" name="button">Join as a pro</button></a></li>
+        <li class="hide-on-med-and-down"><a href="{% url 'rehgien_pro:pro_join_landing' %}"><button class="join_as_pro" type="button" name="button">Join as a pro</button></a></li>
         {% endif %}
-        <li><a href="{% url 'homepage'%}">Rehgien Home</a></li>
-        {% if not request.user.is_authenticated %}
-        <li><a href="{% url 'account_login' %}" class="modal-trigger"> LogIn</a></li>
-        <li>or</li>
-        <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+        {% if request.user.is_authenticated and request.user.user_type == 'PRO' %}
+        <li class="hide-on-med-and-down"><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}"><button class="gToRgnProBtnNav" type="button" name="button">Rehgien Pro</button></a></li>
         {% else %}
-        <li><a id='ac-trigger'>
-            <span class="material-icons">account_circle</span>
-          </a>
-      </li>
+        <li class="hide-on-med-and-down"><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">Rehgien Pro</a></li>
+        {% endif %}
+        {% if not request.user.is_authenticated %}
+        <li><a href="{% url 'account_login' %}" class="modal-trigger"> Sign In</a></li>
+        {% else %}
+        <li>
+          <div class="global_Nav_dropdown">
+              <button type="button" name="button" class="dropdown-trigger" data-target='globalWishListDpdown'>
+                <span class="material-icons">favorite</span>
+              </button>
+              <div id="globalWishListDpdown" class="dropdown-content globalDpdown_elem global_dpd_wishl_sc">
+                  <div class="global_dpdwn_hd">
+                    <h5>Your Wish List</h5>
+                  </div>
+                  <div class="globalDpdwn_body">
+                    <a href="{% url 'profiles:user_saved_properties'%}">
+                      <div class="globalDpdwn_wishlist_item">
+                        <img src="{% static 'img/property_sky.jpg'%}" alt="properties">
+                        <span>
+                            <h5>Properties</h5>
+                            <p>{{request.user.listings_home_saves_related.all.count}} Item{{ request.user.listings_home_saves_related.all.count|pluralize }}</p>
+                        </span>
+                      </div>
+                    </a>
 
+                    <a href="{% url 'profiles:saved_pros'%}">
+                      <div class="globalDpdwn_wishlist_item">
+                        <img src="{% static 'img/thumbnails/system_&_appliances.jpg'%}" alt="Professionals">
+                        <span>
+                            <h5>Professionals</h5>
+                            <p>{{request.user.business_page_saves.all.count}} Item{{ request.user.business_page_saves.all.count|pluralize }}</p>
+                        </span>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="globalDpdwn_footer"><a href="{% url 'profiles:user_wishlist'%}">View All</a></div>
+              </div>
+          </div>
+        </li>
+        <li>
+          <div class="global_Nav_dropdown">
+              <button type="button" name="button" class="dropdown-trigger" data-target='globalNotfDpdown'>
+                <span class="material-icons">notifications</span>
+              </button>
+              <div id="globalNotfDpdown" class="dropdown-content globalDpdown_elem global_dpd_botf_sc">
+                  <div class="global_dpdwn_hd">
+                    <h5>Notifications</h5>
+                  </div>
+                  <div class="globalDpdwn_body">
+                    <div class="globalntfempty_">
+                      <i class="material-icons">notifications_none</i>
+                      <p>No Notifications Right Now</p>
+                    </div>
+                  </div>
+                  <div class="globalDpdwn_footer"><a href="{% url 'profiles:notifications' %}">See All Notifications</a></div>
+              </div>
+          </div>
+        </li>
+        <li>
+          <div class="global_Nav_dropdown">
+              <button type="button" name="button" class="dropdown-trigger global-dash-usrAct" data-target='globalActDpdown'>
+                <div class="global-usrActDt">
+                  <img src="
+                    {% if request.user.profile_image%}
+                      {{ request.user.profile_image.url}}
+                    {% else %}
+                      {% static 'img/avatar.png'%}
+                    {% endif %}
+                  " alt="">
+                  <div class="global_ac_u_mkfirst">
+                      {{request.user.username|make_list|slice:'2'|join:'' }}
+                    <i class="material-icons">expand_more</i>
+                  </div>
+                </div>
+                <div id="globalActDpdown" class="dropdown-content globalDpdown_elem global_dpd_acct_sc">
+                    <div class="global_dpd_acct_sc_prof">
+                        <div class="_globalaeuwends-aks">
+                          <img src="
+                            {% if request.user.profile_image%}
+                              {{ request.user.profile_image.url}}
+                            {% else %}
+                              {% static 'img/avatar.png'%}
+                            {% endif %}
+                          " alt="">
+                        </div>
+                        <div class="globalAsdalewl-lsdm_kask">
+                          <h5>Your Profile</h5>
+                          <h6>
+                                {{request.user.username|truncatechars:'25' }}
+                          </h6>
+                        </div>
+                    </div>
+                    <ul>
+                      {% if request.user.user_type == 'PRO'%}
+                      <li><a href="{% url 'profiles:pro_business_page_edit' pk=request.user.pro_business_profile.pk %}">Go to business page</a></li>
+                      <li><a href="{% url 'rehgien_pro:dashboard_home'%}">Dashboard</a></li>
+                      {% endif %}
+                      <li><a href="{% url 'profiles:account_settings'%}">Account Settings</a></li>
+                      <li><a href="{% url 'homepage' %}">Go to Rehgien</a></li>
+                      <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+                    </ul>
+                </div>
+              </button>
+            </div>
+        </li>
+       {% endif %}
       </ul>
-      {% endif %}
     </div>
   </nav>
-    <div id="ac-dropdown" class="hide-on-med-and-down">
-      <button id="acDropdownClose" type="button" style="background-image:url({%static 'img/close.svg' %});"></button>
-      <div class="ac-drd-img valign-wrapper">
-      <div class="ac-drd-img-wrapper">
-        {% if request.user.profile_image%}
-        <img src="{{request.user.profile_image.url}}" alt="profile.img" style="width:40px">
-        {% else %}
-        <img src="{% static 'img/avatar.png'%}" alt="avatar.png"style="width:40px">
-        {% endif %}
-      </div>
-        <div class="ac-drd-li-wrapper">
-          <li>Hello {{request.user.first_name}}</li>
-        </div>
-      </div>
-      <div class="ac-drd-linkItems">
-        <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
-        <li><a href="{% url 'account_logout' %}">Logout</a></li>
-      </div>
-    </div>
-
-    <ul id="mobile-nav" class="sidenav">
-      <ul class="Mnav-logoUl">
-        <li>
-              <div class="sidenavBtnClose">
-                  <button type="button" name="button" class="sidenav-close">
-                    <span class="material-icons">clear</span>
-                  </button>
-              </div>
-              <div class="brand-logo center Mnav-logoWrapper">
-                <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">
-                  <img src="{% static 'img/RehgienProLogo.png'%}" alt="rehgien pro logo">
-                </a>
-              </div>
-        </li>
-      </ul>
-      <ul class="Mnav-UlItems collapsible">
-        <li><a href="{%url 'rehgien_pro:rehgien_pro_homepage'%}">Home</a></li>
-        <li>
-          <div class="collapsible-header Mnav-collapsible-header"><h6>Solutions</h6><span class="material-icons">expand_more</span></div>
-          <div class="collapsible-body Mnav-collapsible-body">
-            <ul>
-              <div class="Mnav-re_pros pro_links">
-                <h6><span class="material-icons">person_search</span>Find customers</h6>
-                <li><a href="{%url 'rehgien_pro:jobs_list'%}">
-                  Let us connnect you to your next client. Your next project is a step away!
-                </a></li>
-                <h6><span class="material-icons">duo</span>Customer Experience</h6>
-                <li><a href="#" class="link_disabled">
-                  Engage with your clients more deeply. Chat live or have video calls with ease.
-                </a></li>
-                <h6><span class="material-icons">folder</span>Project management</h6>
-                <li><a href="#" class="link_disabled">
-                  Organize your projects build teams and collaborate for maximum productivity.
-                </a></li>
-                <h6><span class="material-icons">3d_rotation</span>Virtual Experiences</h6>
-                <li><a href="#" class="link_disabled">
-                  Go 3D with virtual reality tools and showcase your best work
-                  in the best possible way.
-                </a></li>
-                <h6><span class="material-icons">campaign</span>Marketing options</h6>
-                <li><a href="#" class="link_disabled">
-                    Meet new clients with our integrated marketing tools
-                </a></li>
-              </div>
-            </ul>
-          </div>
-        </li>
-        <li><a href="{% url 'homepage'%}">Rehgien Home</a></li>
-        {% if request.user.user_type != 'PRO' %}
-        <li><a href="{% url 'rehgien_pro:pro_join_landing' %}">Join as a pro</a></li>
-        {% endif %}
-        {% if not request.user.is_authenticated %}
-        <ul>
-          <div class="Mnav-authWrapper">
-            <li>You are not signed in</li>
-            <div class="Mnav-authLinks">
-              <li><a href="{% url 'account_login' %}" class="modal-trigger">LogIn</a></li>
-              <li>or</li>
-              <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+  <ul id="mobile-nav" class="sidenav">
+    <ul class="Mnav-logoUl">
+      <li>
+            <div class="sidenavBtnClose">
+                <button type="button" name="button" class="sidenav-close">
+                  <span class="material-icons">clear</span>
+                </button>
             </div>
-          </div>
-        </ul>
-        {% else %}
-
-        <li>
-          <div class="collapsible-header Mnav-collapsible-header acctNAVd">
-              <a style="color:#000;"><span class="material-icons">account_circle</span></a>
-              <span class="material-icons">expand_more</span>
-          </div>
-          <div class="collapsible-body Mnav-collapsible-body">
-            <ul>
-              <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
-              <li><a href="{% url 'account_logout' %}">Logout</a></li>
-            </ul>
-          </div>
-        </li>
-        {% endif %}
-      </ul>
-
+            <div class="brand-logo center Mnav-logoWrapper">
+              <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">
+                <img src="{% static 'img/RehgienProLogo.png'%}" alt="rehgien pro logo">
+              </a>
+            </div>
+      </li>
     </ul>
+    <ul class="Mnav-UlItems collapsible expandable">
+      <li><a href="{%url 'rehgien_pro:rehgien_pro_homepage'%}"><p><i class="material-icons">home</i>Home</p></a></li>
+      <li class="active">
+        <div class="collapsible-header Mnav-collapsible-header"><p><i class="material-icons">cloud_circle</i>Solutions</p><span class="material-icons">expand_more</span></div>
+        <div class="collapsible-body Mnav-collapsible-body">
+          <ul>
+            <div class="Mnav-re_pros pro_links">
+              <!-- <h6><span class="material-icons">person_search</span>Find customers</h6> -->
+              <li><a href="{%url 'rehgien_pro:jobs_list'%}"><p><i class="material-icons">person_search</i>Find customers</p></a></li>
+              <!-- <h6><span class="material-icons">duo</span>Customer Experience</h6> -->
+              <li><a href="#" class="link_disabled"><p><i class="material-icons">duo</i>Customer Experience</p></a></li>
+              <!-- <h6><span class="material-icons">folder</span>Project management</h6> -->
+              <li><a href="#" class="link_disabled"><p><i class="material-icons">folder</i>Project management</p></a></li>
+              <!-- <h6><span class="material-icons">3d_rotation</span>Virtual Experiences</h6> -->
+              <li><a href="#" class="link_disabled"><p><i class="material-icons">3d_rotation</i>Virtual Experiences</p></a></li>
+              <!-- <h6><span class="material-icons">campaign</span>Marketing options</h6> -->
+              <li><a href="#" class="link_disabled"><p><i class="material-icons">campaign</i>Marketing options</p></a></li>
+            </div>
+          </ul>
+        </div>
+      </li>
+      <li><a href="{% url 'homepage'%}"><p><i class="material-icons">weekend</i>Rehgien Home</p></a></li>
+      <li class="active">
+        <div class="collapsible-header  Mnav-collapsible-header"><p><i class="material-icons">upgrade</i>Are you a pro?</p><span class="material-icons">expand_more</span></div>
+        <div class="collapsible-body Mnav-collapsible-body">
+          <ul class="collapsible">
+              <li style="border-bottom:none"><a href="{% url 'rehgien_pro:pro_join_landing' %}"><p>Join as a pro</p></a></li>
+              <li style="border-bottom:none"><a href="{% url 'partnership:partner_program_home' %}"><p>Partner with us</p></a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+
+  </ul>
   </div>
 </header>
 

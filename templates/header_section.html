@@ -147,236 +147,286 @@
           </div>
       </div>
 
-      <ul id="nav-base2" class="right hide-on-med-and-down">
+      <ul id="nav-base2" class="right">
         {% if request.user.user_type != 'PRO' %}
-        <li><a href="{% url 'rehgien_pro:pro_join_landing' %}"><button class="join_as_pro" type="button" name="button">Join as a pro</button></a></li>
+        <li class="hide-on-med-and-down"><a href="{% url 'rehgien_pro:pro_join_landing' %}"><button class="join_as_pro" type="button" name="button">Join as a pro</button></a></li>
         {% endif %}
-        <li><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">Rehgien Pro</a></li>
-        {% if not request.user.is_authenticated %}
-        <li><a href="{% url 'account_login' %}" class="modal-trigger"> LogIn</a></li>
-        <li>or</li>
-        <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+        {% if request.user.is_authenticated and request.user.user_type == 'PRO' %}
+        <li class="hide-on-med-and-down"><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}"><button class="gToRgnProBtnNav" type="button" name="button">Rehgien Pro</button></a></li>
         {% else %}
-        <li><a id='ac-trigger'>
-            <span class="material-icons">account_circle</span>
-          </a>
+        <li class="hide-on-med-and-down"><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">Rehgien Pro</a></li>
+        {% endif %}
+        {% if not request.user.is_authenticated %}
+        <li><a href="{% url 'account_login' %}" class="modal-trigger"> Sign In</a></li>
+        {% else %}
+        <li>
+          <div class="global_Nav_dropdown">
+              <button type="button" name="button" class="dropdown-trigger" data-target='globalWishListDpdown'>
+                <span class="material-icons">favorite</span>
+              </button>
+              <div id="globalWishListDpdown" class="dropdown-content globalDpdown_elem global_dpd_wishl_sc">
+                  <div class="global_dpdwn_hd">
+                    <h5>Your Wish List</h5>
+                  </div>
+                  <div class="globalDpdwn_body">
+                    <a href="{% url 'profiles:user_saved_properties'%}">
+                      <div class="globalDpdwn_wishlist_item">
+                        <img src="{% static 'img/property_sky.jpg'%}" alt="properties">
+                        <span>
+                            <h5>Properties</h5>
+                            <p>{{request.user.listings_home_saves_related.all.count}} Item{{ request.user.listings_home_saves_related.all.count|pluralize }}</p>
+                        </span>
+                      </div>
+                    </a>
+
+                    <a href="{% url 'profiles:saved_pros'%}">
+                      <div class="globalDpdwn_wishlist_item">
+                        <img src="{% static 'img/thumbnails/system_&_appliances.jpg'%}" alt="Professionals">
+                        <span>
+                            <h5>Professionals</h5>
+                            <p>{{request.user.business_page_saves.all.count}} Item{{ request.user.business_page_saves.all.count|pluralize }}</p>
+                        </span>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="globalDpdwn_footer"><a href="{% url 'profiles:user_wishlist'%}">View All</a></div>
+              </div>
+          </div>
         </li>
-      {% endif %}
+        <li>
+          <div class="global_Nav_dropdown">
+              <button type="button" name="button" class="dropdown-trigger" data-target='globalNotfDpdown'>
+                <span class="material-icons">notifications</span>
+              </button>
+              <div id="globalNotfDpdown" class="dropdown-content globalDpdown_elem global_dpd_botf_sc">
+                  <div class="global_dpdwn_hd">
+                    <h5>Notifications</h5>
+                  </div>
+                  <div class="globalDpdwn_body">
+                    <div class="globalntfempty_">
+                      <i class="material-icons">notifications_none</i>
+                      <p>No Notifications Right Now</p>
+                    </div>
+                  </div>
+                  <div class="globalDpdwn_footer"><a href="{% url 'profiles:notifications' %}">See All Notifications</a></div>
+              </div>
+          </div>
+        </li>
+        <li>
+          <div class="global_Nav_dropdown">
+              <button type="button" name="button" class="dropdown-trigger global-dash-usrAct" data-target='globalActDpdown'>
+                <div class="global-usrActDt">
+                  <img src="
+                    {% if request.user.profile_image%}
+                      {{ request.user.profile_image.url}}
+                    {% else %}
+                      {% static 'img/avatar.png'%}
+                    {% endif %}
+                  " alt="">
+                  <div class="global_ac_u_mkfirst">
+                      {{request.user.username|make_list|slice:'2'|join:'' }}
+                    <i class="material-icons">expand_more</i>
+                  </div>
+                </div>
+                <div id="globalActDpdown" class="dropdown-content globalDpdown_elem global_dpd_acct_sc">
+                    <div class="global_dpd_acct_sc_prof">
+                        <div class="_globalaeuwends-aks">
+                          <img src="
+                            {% if request.user.profile_image%}
+                              {{ request.user.profile_image.url}}
+                            {% else %}
+                              {% static 'img/avatar.png'%}
+                            {% endif %}
+                          " alt="">
+                        </div>
+                        <div class="globalAsdalewl-lsdm_kask">
+                          <h5>Your Profile</h5>
+                          <h6>
+                                {{request.user.username|truncatechars:'25' }}
+                          </h6>
+                        </div>
+                    </div>
+                    <ul>
+                      {% if request.user.user_type == 'PRO'%}
+                      <li><a href="{% url 'profiles:pro_business_page_edit' pk=request.user.pro_business_profile.pk %}">Go to business page</a></li>
+                      <li><a href="{% url 'rehgien_pro:dashboard_home'%}">Dashboard</a></li>
+                      {% endif %}
+                      <li><a href="{% url 'profiles:account_settings'%}">Account Settings</a></li>
+                      <li><a href="{% url 'homepage' %}">Go to Rehgien</a></li>
+                      <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+                    </ul>
+                </div>
+              </button>
+            </div>
+        </li>
+       {% endif %}
       </ul>
 
     </div>
   </nav>
-    <div id="ac-dropdown" class="hide-on-med-and-down">
-      <button id="acDropdownClose" type="button" style="background-image:url({%static 'img/close.svg' %});"></button>
-      <div class="ac-drd-img valign-wrapper">
-      <div class="ac-drd-img-wrapper">
-        {% if request.user.profile_image%}
-        <img src="{{request.user.profile_image.url}}" alt="profile.img" style="width:40px">
-        {% else %}
-        <img src="{% static 'img/avatar.png'%}" alt="avatar.png"style="width:40px">
-        {% endif %}
-      </div>
-        <div class="ac-drd-li-wrapper">
-          <li>Hello {{request.user.first_name}}</li>
-        </div>
-      </div>
-      <div class="ac-drd-linkItems">
-        <li><a href="{% url 'profiles:account'%}">Account</a></li>
-        <li><a href="{% url 'account_logout' %}">Logout</a></li>
-      </div>
-    </div>
 
-    <ul id="mobile-nav" class="sidenav">
-      <ul class="Mnav-logoUl">
-        <li>
-              <div class="sidenavBtnClose">
-                  <button type="button" name="button" class="sidenav-close">
-                    <span class="material-icons">clear</span>
-                  </button>
-              </div>
-              <div class="brand-logo center Mnav-logoWrapper">
-                <a href="{% url 'listings:homepage'%}">
-                  <img src="{% static 'img/RehgienLogoBlack.png'%}" alt="rehgien logo">
-                </a>
-              </div>
-        </li>
-      </ul>
-      <ul class="Mnav-UlItems collapsible">
-        <li><a href="{%url 'homepage'%}">Home</a></li>
-        <li>
-          <div class="collapsible-header Mnav-collapsible-header"><h6>Find professionals</h6><span class="material-icons">expand_more</span></div>
-          <div class="collapsible-body Mnav-collapsible-body">
-            <ul class="collapsible">
-              <span><a href="{% url 'profiles:business_homepage' %}#allPros">View all categories</a></span>
-              <li>
-                <div class="collapsible-header sub_collapsHeader"><h6>Real Estate Services</h6><span class="material-icons">expand_more</span></div>
-                <div class="collapsible-body sub_collapsBody">
-                  <div class="Mnav-re_pros">
-                    <a href="{% url 'profiles:business_list'%}?p_cat=valuers">valuers</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=real-estate-agents">realestate agents</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=property-managers">property managers</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=facility-managers">facility managers</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=building-inspectors">building-inspectors</a>
-                  </div>
-                </div>
-              </li>
-
-              <li>
-                <div class="collapsible-header sub_collapsHeader"><h6>Surveying and construction</h6><span class="material-icons">expand_more</span></div>
-                <div class="collapsible-body sub_collapsBody">
-                  <div class="Mnav-re_pros">
-                    <a href="{% url 'profiles:business_list'%}?p_cat=land-surveyors">land surveyors</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=quantity-surveyors">quantity surveyors</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=construction-managers">construction managers</a>
-                  </div>
-                </div>
-              </li>
-
-              <li>
-                <div class="collapsible-header sub_collapsHeader"><h6>Architecture and building design</h6><span class="material-icons">expand_more</span></div>
-                <div class="collapsible-body sub_collapsBody">
-                  <div class="Mnav-re_pros">
-                    <a href="{% url 'profiles:business_list'%}?p_cat=architects">architects</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=landscape-architects">landscape architects</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=landscape-designers">landscape designers</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=general-contrators">general contrators</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=interior-designers-and-decorators">interior designers and decorators</a>
-                  </div>
-                </div>
-              </li>
-
-              <li>
-                <div class="collapsible-header sub_collapsHeader"><h6>General services</h6><span class="material-icons">expand_more</span></div>
-                <div class="collapsible-body sub_collapsBody">
-                  <div class="Mnav-re_pros">
-                    <a href="{% url 'profiles:business_list'%}?p_cat=photographers">photographers</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=movers">movers</a>
-                  </div>
-                </div>
-              </li>
-
-              <li>
-                <div class="collapsible-header sub_collapsHeader"><h6>Renovation and remodeling</h6><span class="material-icons">expand_more</span></div>
-                <div class="collapsible-body sub_collapsBody">
-                  <div class="Mnav-re_pros">
-                    <a href="{% url 'profiles:business_list'%}?p_cat=carpenters">carpenters</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=door-dealers">door dealers</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=carpet-dealers">carpet dealers</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=building-supplies-suppliers">building supplies dealers</a>
-                  </div>
-                </div>
-              </li>
-
-              <li>
-                <div class="collapsible-header sub_collapsHeader"><h6>Appliances and systems</h6><span class="material-icons">expand_more</span></div>
-                <div class="collapsible-body sub_collapsBody">
-                  <div class="Mnav-re_pros">
-                    <a href="{% url 'profiles:business_list'%}?p_cat=plumbers">plumbers</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=home-automation-and-home-media">home automation and home media</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=electricians">electricians</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=solar-energy-systems">solar energy systems</a>
-                  </div>
-                </div>
-              </li>
-
-              <li>
-                <div class="collapsible-header sub_collapsHeader"><h6>Cleaning services</h6><span class="material-icons">expand_more</span></div>
-                <div class="collapsible-body sub_collapsBody">
-                  <div class="Mnav-re_pros">
-                    <a href="{% url 'profiles:business_list'%}?p_cat=house-cleaners">house cleaners</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=carpet-and-upholstery-cleaners">carpet and upholstery cleaners</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=window-cleaners">window cleaners</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=garbage-cleaners">garbage cleaners</a>
-                    <a href="{% url 'profiles:business_list'%}?p_cat=pest-control">pest control</a>
-                  </div>
-                </div>
-              </li>
-
-              <li>
-                <div class="collapsible-header sub_collapsHeader"><h6>Are you a pro?</h6><span class="material-icons">expand_more</span></div>
-                <div class="collapsible-body sub_collapsBody">
-                  <div class="Mnav-re_pros">
-                    <a href="{% url 'rehgien_pro:pro_join_landing' %}">Join as a pro</a>
-                    <a href="{% url 'partnership:partner_program_home' %}">Partner with us</a>
-                  </div>
-                </div>
-              </li>
-
-            </ul>
-          </div>
-        </li>
-        <li>
-          <div class="collapsible-header Mnav-collapsible-header"><h6>Shop by category</h6><span class="material-icons">expand_more</span></div>
-          <div class="collapsible-body Mnav-collapsible-body">
-            <ul class="collapsible">
-              <span><a href="{% url 'listings:shop_category' %}">View all categories</a></span>
-              <li>
-                  <div class="collapsible-header sub_collapsHeader"><h6>Real estate</h6><span class="material-icons">expand_more</span></div>
-                  <div class="collapsible-body sub_collapsBody">
-                    <div class="Mnav-re_pros">
-                      <a href="{% url 'listings:property_homepage' %}">Sale & rental homes</a>
-                      <a href="#" class="link_disabled">Architectural Designs</a>
-                    </div>
-                  </div>
-              </li>
-
-              <li>
-                  <div class="collapsible-header sub_collapsHeader"><h6>Furniture</h6><span class="material-icons">expand_more</span></div>
-                  <div class="collapsible-body sub_collapsBody">
-                    <div class="Mnav-re_pros">
-                      <a href="#" class="link_disabled">Bedroom</a>
-                      <a href="#" class="link_disabled">Kitchen</a>
-                      <a href="#" class="link_disabled">Living room</a>
-                    </div>
-                  </div>
-              </li>
-
-              <li>
-                  <div class="collapsible-header sub_collapsHeader"><h6>Home Decor</h6><span class="material-icons">expand_more</span></div>
-                  <div class="collapsible-body sub_collapsBody">
-                    <div class="Mnav-re_pros">
-                      <a href="#" class="link_disabled">Artwork</a>
-                      <a href="#" class="link_disabled">Wall decor</a>
-                    </div>
-                  </div>
-              </li>
-            </ul>
-          </div>
-        </li>
-        <li><a href="{% url 'markets:job_post_home'%}">Post a Job</a></li>
-        <li><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}">Rehgien Pro</a></li>
-        {% if request.user.user_type != 'PRO' %}
-        <li><a href="{% url 'rehgien_pro:pro_join_landing' %}">Join as a pro</a></li>
-        {% endif %}
-        {% if not request.user.is_authenticated %}
-        <ul>
-          <div class="Mnav-authWrapper">
-            <li>You are not signed in</li>
-            <div class="Mnav-authLinks">
-              <li><a href="{% url 'account_login' %}" class="modal-trigger">LogIn</a></li>
-              <li>or</li>
-              <li><a href="{% url 'account_signup' %}" class="modal-trigger">SignUp</a></li>
+  <ul id="mobile-nav" class="sidenav">
+    <ul class="Mnav-logoUl">
+      <li>
+            <div class="sidenavBtnClose">
+                <button type="button" name="button" class="sidenav-close">
+                  <span class="material-icons">clear</span>
+                </button>
             </div>
-          </div>
-        </ul>
-        {% else %}
-
-        <li>
-          <div class="collapsible-header Mnav-collapsible-header acctNAVd">
-              <a style="color:#000;"><span class="material-icons">account_circle</span></a>
-              <span class="material-icons">expand_more</span>
-          </div>
-          <div class="collapsible-body Mnav-collapsible-body">
-            <ul>
-              <li><a href="{% url 'profiles:account'%}">My Profile</a></li>
-              <li><a href="{% url 'account_logout' %}">Logout</a></li>
-            </ul>
-          </div>
-        </li>
-        {% endif %}
-      </ul>
-
+            <div class="brand-logo center Mnav-logoWrapper">
+              <a href="{% url 'listings:homepage'%}">
+                <img src="{% static 'img/RehgienLogoBlack.png'%}" alt="rehgien logo">
+              </a>
+            </div>
+      </li>
     </ul>
+
+    <ul class="Mnav-UlItems collapsible expandable">
+      <li><a href="{%url 'homepage'%}"><p><i class="material-icons">home</i>Home</p></a></li>
+      <li class="active">
+        <div class="collapsible-header Mnav-collapsible-header"><p><i class="material-icons">engineering</i>Find professionals</p><span class="material-icons">expand_more</span></div>
+        <div class="collapsible-body Mnav-collapsible-body">
+          <ul class="collapsible">
+            <span><a href="{% url 'profiles:business_homepage' %}#allPros">View all categories</a></span>
+            <li>
+              <div class="collapsible-header sub_collapsHeader"><p>Real Estate Services</p><span class="material-icons">expand_more</span></div>
+              <div class="collapsible-body sub_collapsBody">
+                <div class="Mnav-re_pros">
+                  <a href="{% url 'profiles:business_list'%}?p_cat=valuers"><p>valuers</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=real-estate-agents"><p>realestate agents</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=property-managers"><p>property managers</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=facility-managers"><p>facility managers</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=building-inspectors"><p>building-inspectors</p></a>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="collapsible-header sub_collapsHeader"><p>Surveying and construction</p><span class="material-icons">expand_more</span></div>
+              <div class="collapsible-body sub_collapsBody">
+                <div class="Mnav-re_pros">
+                  <a href="{% url 'profiles:business_list'%}?p_cat=land-surveyors"><p>land surveyors</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=quantity-surveyors"><p>quantity surveyors</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=construction-managers"><p>construction managers</p></a>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="collapsible-header sub_collapsHeader"><p>Architecture and building design</p><span class="material-icons">expand_more</span></div>
+              <div class="collapsible-body sub_collapsBody">
+                <div class="Mnav-re_pros">
+                  <a href="{% url 'profiles:business_list'%}?p_cat=architects"><p>architects</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=landscape-architects"><p>landscape architects</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=landscape-designers"><p>landscape designers</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=general-contrators"><p>general contrators</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=interior-designers-and-decorators"><p>interior designers and decorators</p></a>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="collapsible-header sub_collapsHeader"><p>General services</p><span class="material-icons">expand_more</span></div>
+              <div class="collapsible-body sub_collapsBody">
+                <div class="Mnav-re_pros">
+                  <a href="{% url 'profiles:business_list'%}?p_cat=photographers"><p>photographers</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=movers"><p>movers</p></a>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="collapsible-header sub_collapsHeader"><p>Renovation and remodeling</p><span class="material-icons">expand_more</span></div>
+              <div class="collapsible-body sub_collapsBody">
+                <div class="Mnav-re_pros">
+                  <a href="{% url 'profiles:business_list'%}?p_cat=carpenters"><p>carpenters</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=door-dealers"><p>door dealers</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=carpet-dealers"><p>carpet dealers</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=building-supplies-suppliers"><p>building supplies dealers</p></a>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="collapsible-header sub_collapsHeader"><p>Appliances and systems</p><span class="material-icons">expand_more</span></div>
+              <div class="collapsible-body sub_collapsBody">
+                <div class="Mnav-re_pros">
+                  <a href="{% url 'profiles:business_list'%}?p_cat=plumbers"><p>plumbers</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=home-automation-and-home-media"><p>home automation and home media</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=electricians"><p>electricians</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=solar-energy-systems"><p>solar energy systems</p></a>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="collapsible-header sub_collapsHeader"><p>Cleaning services</p><span class="material-icons">expand_more</span></div>
+              <div class="collapsible-body sub_collapsBody">
+                <div class="Mnav-re_pros">
+                  <a href="{% url 'profiles:business_list'%}?p_cat=house-cleaners"><p>house cleaners</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=carpet-and-upholstery-cleaners"><p>carpet and upholstery cleaners</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=window-cleaners"><p>window cleaners</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=garbage-cleaners"><p>garbage cleaners</p></a>
+                  <a href="{% url 'profiles:business_list'%}?p_cat=pest-control"><p>pest control</p></a>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </li>
+      <li class="active">
+        <div class="collapsible-header Mnav-collapsible-header"><p><i class="material-icons">storefront</i>Shop by category</p><span class="material-icons">expand_more</span></div>
+        <div class="collapsible-body Mnav-collapsible-body">
+          <ul class="collapsible">
+            <span><a href="{% url 'listings:shop_category' %}">View all categories</a></span>
+            <li>
+                <div class="collapsible-header sub_collapsHeader"><p>Real estate</p><span class="material-icons">expand_more</span></div>
+                <div class="collapsible-body sub_collapsBody">
+                  <div class="Mnav-re_pros">
+                    <a href="{% url 'listings:property_homepage' %}"><p>Sale & rental homes</p></a>
+                    <a href="#" class="link_disabled"><p>Architectural Designs</p></a>
+                  </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="collapsible-header sub_collapsHeader"><p>Furniture</p><span class="material-icons">expand_more</span></div>
+                <div class="collapsible-body sub_collapsBody">
+                  <div class="Mnav-re_pros">
+                    <a href="#" class="link_disabled"><p>Bedroom</p></a>
+                    <a href="#" class="link_disabled"><p>Kitchen</p></a>
+                    <a href="#" class="link_disabled"><p>Living room</p></a>
+                  </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="collapsible-header sub_collapsHeader"><p>Home Decor</p><span class="material-icons">expand_more</span></div>
+                <div class="collapsible-body sub_collapsBody">
+                  <div class="Mnav-re_pros">
+                    <a href="#" class="link_disabled"><p>Artwork</p></a>
+                    <a href="#" class="link_disabled"><p>Wall decor</p></a>
+                  </div>
+                </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li><a href="{% url 'markets:job_post_home'%}"><p><i class="material-icons">post_add</i>Post a Job</p></a></li>
+      <li><a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}"><p><i class="material-icons">business_center</i>Rehgien Pro</p></a></li>
+      <li class="active">
+        <div class="collapsible-header  Mnav-collapsible-header"><p><i class="material-icons">upgrade</i>Are you a pro?</p><span class="material-icons">expand_more</span></div>
+        <div class="collapsible-body Mnav-collapsible-body">
+          <ul class="collapsible">
+              <li style="border-bottom:none"><a href="{% url 'rehgien_pro:pro_join_landing' %}"><p>Join as a pro</p></a></li>
+              <li style="border-bottom:none"><a href="{% url 'partnership:partner_program_home' %}"><p>Partner with us</p></a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+
+  </ul>
   </div>
 </header>
 
