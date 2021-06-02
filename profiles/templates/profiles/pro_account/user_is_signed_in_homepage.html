@@ -4,9 +4,16 @@
 {% block title %} <title>Rehgien | Find any property service,find property & home professionals</title>{% endblock %}
 {% block content %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
-
+<script type="text/javascript">
+  window.onload = function() {
+    document.querySelector(".usrAcct_loader_wrapper").style.display = "none";
+  };
+</script>
 
 <div class="usr_isSignedInHmWrapper">
+  <div class="usrAcct_loader_wrapper">
+    <img src="{% static 'img/Preloader_2.gif'%}" alt="loading">
+  </div>
     <div class="container">
         <div class="row">
             <div class="col s12 md3 l3 xl3 hide-on-med-and-down">

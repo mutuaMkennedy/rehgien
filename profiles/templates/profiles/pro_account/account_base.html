@@ -1,6 +1,12 @@
 {% extends 'base1.html '%}
 {% load static %}
 {% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+  window.onload = function() {
+    document.querySelector(".pAcct_mng_loader_wrapper").style.display = "none";
+  };
+</script>
 <div class="pro_account_scMng">
   <div class="pro_profile_navbar">
     <ul>
@@ -20,6 +26,9 @@
   </div>
 
   <div class="pAcct_mng_section_box">
+    <div class="pAcct_mng_loader_wrapper">
+      <img src="{% static 'img/Preloader_2.gif'%}" alt="loading">
+    </div>
     <div class="container">
         <div class="row">
           {% block bread_crumb %}{% endblock %}
