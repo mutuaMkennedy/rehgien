@@ -35,22 +35,26 @@
                       <h5>Your Wish List</h5>
                     </div>
                     <div class="dpdwn_body">
-                      <div class="dpdwn_wishlist_item">
-                        <img src="{% static 'img/property_sky.jpg'%}" alt="properties">
-                        <span>
-                            <h5>Properties</h5>
-                            <p>{{request.user.listings_home_saves_related.all.count}} Item{{ request.user.listings_home_saves_related.all.count|pluralize }}</p>
-                        </span>
-                      </div>
-                      <div class="dpdwn_wishlist_item">
-                        <img src="{% static 'img/thumbnails/system_&_appliances.jpg'%}" alt="Professionals">
-                        <span>
-                            <h5>Professionals</h5>
-                            <p>{{request.user.business_page_saves.all.count}} Item{{ request.user.business_page_saves.all.count|pluralize }}</p>
-                        </span>
-                      </div>
+                      <a href="{% url 'profiles:user_saved_properties'%}">
+                        <div class="dpdwn_wishlist_item">
+                          <img src="{% static 'img/property_sky.jpg'%}" alt="properties">
+                          <span>
+                              <h5>Properties</h5>
+                              <p>{{request.user.listings_home_saves_related.all.count}} Item{{ request.user.listings_home_saves_related.all.count|pluralize }}</p>
+                          </span>
+                        </div>
+                      </a>
+                      <a href="{% url 'profiles:saved_pros'%}">
+                        <div class="dpdwn_wishlist_item">
+                          <img src="{% static 'img/thumbnails/system_&_appliances.jpg'%}" alt="Professionals">
+                          <span>
+                              <h5>Professionals</h5>
+                              <p>{{request.user.business_page_saves.all.count}} Item{{ request.user.business_page_saves.all.count|pluralize }}</p>
+                          </span>
+                        </div>
+                      </a>
                     </div>
-                    <div class="dpdwn_footer"><a href="{% url 'profiles:notifications' %}">View All</a></div>
+                    <div class="dpdwn_footer"><a href="{% url 'profiles:user_wishlist' %}">View All</a></div>
                 </div>
             </div>
           </li>
@@ -78,9 +82,7 @@
                 <button type="button" name="button" class="dropdown-trigger pro-dash-usrAct" data-target='proDashActDpdown'>
                   <div class="pro-dash-usrActDt">
                     <img src="
-                    {% if request.user.profile_image %}
-                      {{request.user.profile_image.url}}
-                    {% elif request.user.pro_business_profile.business_profile_image %}
+                    {% if request.user.pro_business_profile.business_profile_image %}
                       {{request.user.pro_business_profile.business_profile_image.url}}
                     {% else %}
                       {% static 'img/avatar.png' %}
@@ -92,9 +94,7 @@
                       <div class="pdash_dpd_acct_sc_prof">
                           <div class="_aeuwends-aks">
                             <img src="
-                            {% if request.user.profile_image %}
-                              {{request.user.profile_image.url}}
-                            {% elif request.user.pro_business_profile.business_profile_image %}
+                            {% if request.user.pro_business_profile.business_profile_image %}
                               {{request.user.pro_business_profile.business_profile_image.url}}
                             {% else %}
                               {% static 'img/avatar.png' %}
@@ -107,9 +107,10 @@
                           </div>
                       </div>
                       <ul>
-                        <li><a href="{% url 'profiles:pro_business_page_edit' pk=request.user.pro_business_profile.pk %}">Edit Profile and Settings</a></li>
+                        <li><a href="{% url 'profiles:pro_business_page_edit' pk=request.user.pro_business_profile.pk %}">Edit business page</a></li>
                         <li><a href="{% url 'rehgien_pro:dashboard_home'%}">Dashboard</a></li>
-                        <li><a href="{% url 'homepage' %}">Go to Rehgien</a></li>
+                        <li><a href="{% url 'profiles:account_settings'%}">Account Settings</a></li>
+                        <li><a href="{% url 'homepage' %}">Go to Rehgien Home</a></li>
                         <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
                       </ul>
                   </div>
