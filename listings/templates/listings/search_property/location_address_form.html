@@ -16,7 +16,7 @@
   <div class="listPropertyWizardProgress" style="width:0%"></div>
   <div class="container">
     <div class="wiz_exit">
-      <a href="{% url 'profiles:account'%}"><button type="button" name="button"><span class="material-icons">keyboard_backspace</span>Exit to account</button></a>
+      <a href="{% url 'rehgien_pro:dashboard_properties'%}"><button type="button" name="button"><span class="material-icons">keyboard_backspace</span>Exit to account</button></a>
     </div>
     <div class="row">
         <form method="post" class="col s12">
@@ -100,7 +100,7 @@
       $('#id_AddressInfo-long').val(e.result.geometry.coordinates[0]);
     });
       $("#wizGeocoder input").val($('.wizaddressFIeld input').val());
-      
+
       $('.lsPropSteps-footerBtns button').on('click', function(e){
         $('.loader-wrapperProcessStep').css({'display':'flex','opacity':1});
       });
