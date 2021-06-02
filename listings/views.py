@@ -54,23 +54,26 @@ def shop_category_homepage(request):
 	return render(request, 'listings/shop_categories.html', {})
 
 def homepage(request):
-	ImageTransformation = dict(
-	format = "jpg",
-	transformation = [
-		dict(crop="fill",height = 408, width = 250,quality="auto", gravity="center", loading="lazy",
-		 format="auto", dpr="auto", fl="progressive:steep"),
-			]
-		)
-	professional_groups = profiles_models.ProfessionalGroup.objects.all()
-	popular_services = profiles_models.ProfessionalService.objects.all()[:10]
-	recommended_services = profiles_models.ProfessionalService.objects.all()[:10]
-	context ={
-		"professional_groups":professional_groups,
-		"popular_services":popular_services,
-		"recommended_services":recommended_services,
-		'ImageTransformation':ImageTransformation
-	}
-	return render(request, 'listings/homey.html', context)
+	if request.user.is_authenticated:
+		return redirect('profiles:user_is_signed_in_homepage')
+	else:
+		ImageTransformation = dict(
+		format = "jpg",
+		transformation = [
+			dict(crop="fill",height = 408, width = 250,quality="auto", gravity="center", loading="lazy",
+			 format="auto", dpr="auto", fl="progressive:steep"),
+				]
+			)
+		professional_groups = profiles_models.ProfessionalGroup.objects.all()
+		popular_services = profiles_models.ProfessionalService.objects.all()[:10]
+		recommended_services = profiles_models.ProfessionalService.objects.all()[:10]
+		context ={
+			"professional_groups":professional_groups,
+			"popular_services":popular_services,
+			"recommended_services":recommended_services,
+			'ImageTransformation':ImageTransformation
+		}
+		return render(request, 'listings/homey.html', context)
 
 def property_homepage(request):
 	onsale_recent = models.Home.objects.filter(listing_type__iexact = 'for_sale').order_by('publishdate')[:6]
@@ -431,7 +434,7 @@ def property_listing_form(request):
 						file_instance2 = models.PropertyVideo(video = vid, home = models.Home.objects.get(id=instance.id))
 						file_instance2.save()
 					messages.success(request, 'Your Listing has been posted Successfully!')
-					return redirect('profiles:account')
+					return redirect('rehgien_pro:dashboard_properties')
 				else:
 					messages.error(request,'Could not complete request. Try again later.')
 		else:
@@ -441,7 +444,7 @@ def property_listing_form(request):
 			open_house_formset = open_house_iformset()
 	else:
 		messages.error(request,'Restricted. Your account type is not allowed to access this service.')
-		return redirect('profiles:account')
+		return redirect('homepage')
 	return render(request, 'listings/property_listing_form.html', {'PropertyForm': PropertyForm, 'ImageForm': PhotoForm,
 	 		'VideoForm':VideoForm,'open_house_formset':open_house_formset})
 
@@ -531,7 +534,7 @@ class ListPropertyWizardView(SessionWizardView):
 				vid_instance.save()
 
 		messages.success(self.request,'Your Listing has been posted Successfully!')
-		return redirect('profiles:account')
+		return redirect('rehgien_pro:dashboard_properties')
 
 @login_required(login_url='account_login')
 def property_update(request, property_category, pk):
@@ -567,7 +570,7 @@ def property_update(request, property_category, pk):
 				open_house_formset.save()
 
 				messages.success(request, 'Update Successull')
-				return redirect('profiles:account')
+				return redirect('rehgien_pro:dashboard_properties')
 			else:
 				messages.error(request, 'Unable to update. Make sure no fields are empty')
 		else:
@@ -593,10 +596,10 @@ def property_delete(request,property_category,pk):
 	if request.user == listing.owner:
 		listing.delete()
 		messages.success(request, 'Successfully deleted!!')
-		return redirect('profiles:account')
+		return redirect('rehgien_pro:dashboard_properties')
 	else:
 		raise PermissionDenied
-		return redirect('profiles:account')
+		return redirect('rehgien_pro:dashboard_properties')
 
 @login_required(login_url='account_login')
 def set_open_house_reminder(request):
