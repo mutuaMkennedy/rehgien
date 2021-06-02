@@ -31,14 +31,21 @@
         });
     });
 </script>
+<div class="pro_profile_navbar">
+  <ul>
+      <li><a href="{% url 'profiles:pro_business_page_edit' pk=request.user.pro_business_profile.pk %}">Your Profile</a></li>
+      <li><a href="{% url 'profiles:user_wishlist'%}">Wish List</a></li>
+      <li><a href="{% url 'profiles:projects'%}">Projects</a></li>
+      <li><a href="{% url 'profiles:pro_reviews_list'%}">Reviews</a></li>
+      <li><a href="{% url 'profiles:my_jobs'%}">Jobs</a></li>
+      <li><a href="{% url 'profiles:user_followers'%}">Followers</a></li>
+      <li><a href="{% url 'profiles:user_connections'%}">Connections</a></li>
+      <li><a href="{% url 'profiles:account_settings'%}">Account Settings</a></li>
+  </ul>
+  <a href="{{request.user.pro_business_profile.get_absolute_url}}"><button type="button" name="button">View page as visitor</button></a>
+</div>
 
 <div id="_proile_editor_view" class="ag-dtl-wrapper">
-    <div class="bs-pfl-swc-wrp">
-      <ul id="bs-pfl-switch" class="tabs">
-          <li class="tab col s3"><a href="#ag-about-vw">Posts</a></li>
-      </ul>
-      {% if request.user == bs_profile.user %} <a href="{{bs_profile.get_absolute_url}}"><button type="button" name="button">View page as visitor</button></a>{%endif %}
-    </div>
     <section>
       <div class="container" style="width:95%">
         <div class="row">
@@ -100,25 +107,25 @@
                         <h1>Who we are</h1>
                       </div>
                       <div class="_ag-about-sc bsProfEdSTEP3">
-                        <h2 class=""><div><span class="material-icons">assignment</span> Overview</div><a href="#e_profileOverview-Modal" id="_trigOVW" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
+                        <h2 id="scroll_to_desc_edit" class=""><div><span class="material-icons">assignment</span> Overview</div><a href="#e_profileOverview-Modal" id="_trigOVW" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
                         <div id="_editor_mode_about">
                           {%include 'profiles/editor_mode_files/about.html'%}
                         </div>
                       </div>
                       <div class="_ag-about-sc bsProfEdSTEP4">
-                        <h2 class=""><div><span class="material-icons">verified</span> Services</div><a href="#e_profileServices-Modal" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
+                        <h2 id="scroll_to_svc_edit" class=""><div><span class="material-icons">verified</span> Services</div><a href="#e_profileServices-Modal" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
                         <div id="_editor_mode_services" class="_ag-skillBtns">
                           {%include 'profiles/editor_mode_files/services.html'%}
                         </div>
                       </div>
                       <div class="_ag-about-sc bsProfEdSTEP5">
-                        <h2 class=""><div><span class="material-icons">group</span> Our top clients</div><a href="#e_topClients-Modal" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
+                        <h2 id="scroll_to_clients_edit" class=""><div><span class="material-icons">group</span> Our top clients</div><a href="#e_topClients-Modal" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
                         <div id="_editor_mode_clients">
                           {%include 'profiles/editor_mode_files/top_clients.html'%}
                         </div>
                       </div>
                       <div class="_ag-about-sc bsProfEdSTEP6">
-                        <h2 class=""><div><span class="material-icons">pin_drop</span> Service areas</div><a href="#e_profileServiceAreas-Modal" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
+                        <h2 id="scroll_to_svcAreas_edit" class=""><div><span class="material-icons">pin_drop</span> Service areas</div><a href="#e_profileServiceAreas-Modal" class="modal-trigger"><span class="material-icons pulse">create</span></a></h2>
                         <div id="_editor_mode_service_areas" class="_ag-serviceAreas">
                           {%include 'profiles/editor_mode_files/service_areas.html'%}
                         </div>
