@@ -7588,8 +7588,7 @@ particle {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-gap: 15px;
-    padding: 15px 25px !important;
-    padding-left: 0 !important;
+    padding: 15px 0px !important;
 }
 
 ._myConnectionsCards img {
@@ -7611,6 +7610,7 @@ particle {
     align-items: center;
     padding: 15px;
     box-shadow: 0 0 5px 1px #eee;
+    border:1px solid #d1d1d1;
     margin: 5px;
     position: relative;
     border-radius: 5px;
@@ -13528,8 +13528,7 @@ particle {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-gap: 15px;
-    padding: 15px 25px !important;
-    padding-left:0 !important;
+    padding: 15px 0px !important;
 }
 
 ._uMyFollowingImg img {
@@ -13545,7 +13544,7 @@ particle {
     box-shadow: 0 0 5px 1px #eee;
     border-radius: 10px;
     margin: 5px;
-/*     border:1px solid #d1d1d1; */
+    border:1px solid #d1d1d1;
 }
 
 ._ProFollower {
@@ -21549,6 +21548,12 @@ particle {
     padding-left:0 !important;
 }
 
+@media all and (max-width:768px){
+    .proAcMng_wishList .proAcMng_wishList_cards_wrp .col{
+        padding-right:0 !important;
+    }
+}
+
 .proAcMng_wishList .proAcMng_wishList_cards_wrp .row h3{
     margin:0;
     font-size:15px;
@@ -22319,8 +22324,9 @@ particle {
 .proAcMng_Reviews_wrp .proAcMng_Reviews_grid .card{
     width:100%;
     height:auto;
-    box-shadow:none;
+    box-shadow:0 0 5px 1px #eee;
     padding:20px;
+    border:1px solid #d1d1d1;
 }
 
 .proAcMng_Reviews_grid .card .card_body .card_top{
@@ -22658,7 +22664,8 @@ particle {
     padding: 15px 25px;
     height: auto;
     border-radius: 5px;
-    box-shadow: 0 0 5px 2px #eee;
+    box-shadow: 0 0 5px 1px #eee;
+    border:1px solid #d1d1d1;
     margin-right: 15px;
     transition:transform 0.5s;
     margin:0;
