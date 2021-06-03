@@ -242,7 +242,7 @@ main {
 }
 
 #nav-base2 li .global_Nav_dropdown button{
-    background-color: #fff;
+    background-color: transparent;
     border: none;
     padding: 0;
     cursor: pointer;
@@ -259,6 +259,10 @@ main {
     color: #747474;
     border-radius: 50%;
     margin: 0 2px;
+}
+
+#main_hdr_hmpg_aiuu #nav-base2 li .global_Nav_dropdown button span{
+    color:#fff;
 }
 
 #nav-base2 li .global_Nav_dropdown button.global-dash-usrAct{
@@ -294,6 +298,10 @@ main {
     font-size: 13px;
     font-weight: 500;
     text-transform: uppercase;
+}
+
+#main_hdr_hmpg_aiuu #nav-base2 li .global_Nav_dropdown button.global-dash-usrAct .global-usrActDt .global_ac_u_mkfirst{
+    color:#fff;
 }
 
 #nav-base2 li .global_Nav_dropdown button.global-dash-usrAct .global-usrActDt .global_ac_u_mkfirst i{
@@ -376,7 +384,7 @@ main {
 #nav-base2 li .global_Nav_dropdown .global_dpd_acct_sc ul li a{
     padding: 0;
     font-size: 13px;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(0 0 0 / 0.7) !important;
 }
 
 #nav-base2 li .global_Nav_dropdown .global_dpd_acct_sc ul li a:hover{
@@ -19066,10 +19074,10 @@ particle {
 }
 
 .prodash_section_elements .dash_loader_wrapper{
-    position:absolute;
+    position:fixed;
     top:0;
     left:0;
-    height:100%;
+    height:100vh;
     width:100%;
     z-index:100;
     background-color:rgb(255 255 255 / 1);
@@ -21462,10 +21470,10 @@ particle {
 }
 
 .pAcct_mng_section_box .pAcct_mng_loader_wrapper{
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    height: 100%;
+    height: 100vh;
     width: 100%;
     z-index: 100;
     background-color: #fff;
@@ -22756,8 +22764,9 @@ particle {
 }
 
 .usr_isSignedInHmWrapper .usrAcct_loader_wrapper{
-    height:100%;
-    position:absolute;
+    height:100vh;
+    position:fixed;
+    top:0;
     left:0;
     width:100%;
     background-color:#fff;
