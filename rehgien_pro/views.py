@@ -186,9 +186,8 @@ def dashboard_jobs(request):
 #other views
 
 def homepage(request):
-	if request.user.is_authenticated:
-		if request.user.user_type == 'PRO':
-			return redirect('rehgien_pro:dashboard_home')
+	if request.user.is_authenticated and request.user.user_type == 'PRO':
+		return redirect('rehgien_pro:dashboard_home')
 	else:
 		return render(request,'rehgien_pro/rehgien_pro_homepage.html',{})
 
