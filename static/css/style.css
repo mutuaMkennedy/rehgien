@@ -22468,6 +22468,31 @@ particle {
     margin-bottom:15px;
 }
 
+.proAcMng_Reviews_wrp .rq_revwSidenAV .mngAct_grvw_formBox .mngAct_grvw_formFields .mngAct_grvw_formFieldSct{
+    position:relative;
+}
+
+.proAcMng_Reviews_wrp .rq_revwSidenAV .mngAct_grvw_formBox .mngAct_grvw_formFields .mngAct_grvw_formFieldSct .accMngLoadingWrp{
+    position:absolute;
+    top:0;
+    width:100%;
+    height:100%;
+    background-color:#fff;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:10;
+}
+
+.proAcMng_Reviews_wrp .rq_revwSidenAV .mngAct_grvw_formBox .mngAct_grvw_formFields .mngAct_grvw_formFieldSct .accMngLoadingWrp img{
+    width:100px;
+}
+
+.proAcMng_Reviews_wrp .rq_revwSidenAV .mngAct_grvw_formBox .mngAct_grvw_formFields .mngAct_grvw_formFieldSct .accMngLoadingWrp span{
+    font-size:13px;
+}
+
 .proAcMng_Reviews_wrp .rq_revwSidenAV .mngAct_grvw_formBox .mngAct_grvw_formFields .mngAct_grvw_formFieldSct  p{
    font-size:14px;
    margin:0;
