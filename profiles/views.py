@@ -13,6 +13,7 @@ from django.core.exceptions import PermissionDenied
 from . import forms
 from . import pro_profile_setup_forms
 from . import models
+from rehgien_pro import views as rehgien_pro_views
 from listings import models as listings_models
 from django.db.models import Avg,Count
 from django.db.models import Prefetch
@@ -292,21 +293,28 @@ def reviews(request):
 				"from clients. Therefore, I would appreciate it if you would write a brief review of me on Rehgien.com," +
 				" an influential directory of property and home service professionals."
 	}
+		reviews = request.user.pro_business_profile.pro_business_review.all()
 		if request.method == 'POST':
 			form = pro_profile_setup_forms.ProReviewers(request.POST, request.FILES)
 			if form.is_valid():
 				email_dict = form.cleaned_data.get('email')
 				message = form.cleaned_data.get('message')
-				prof_views.send_review_request_email(email,message, request.user.pro_business_profile.pk, request.user.pro_business_profile.business_name)
+				rehgien_pro_views.send_review_request_email(email_dict,message, request.user.pro_business_profile.pk, request.user.pro_business_profile.business_name)
 				messages.success(request, 'Great! Invites successfully sent')
+				return redirect('profiles:pro_reviews_list')
+			else:
+				context = {
+				"form":form,
+				"reviews":reviews,
+				}
+				return render(request,'profiles/pro_account/pro_reviews.html',context)
 		else:
 			form = pro_profile_setup_forms.ProReviewers(data)
-			reviews = request.user.pro_business_profile.pro_business_review.all()
-		context = {
-		"form":form,
-		"reviews":reviews,
-		}
-		return render(request,'profiles/pro_account/pro_reviews.html',context)
+			context = {
+			"form":form,
+			"reviews":reviews,
+			}
+			return render(request,'profiles/pro_account/pro_reviews.html',context)
 	else:
 		messages.error(request,'Access restricted')
 		return redirect('homepage')
