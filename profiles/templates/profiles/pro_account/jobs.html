@@ -25,6 +25,10 @@
     <div class="proAcMng_MyJobsPtfl_wrp">
       <div class="row">
         {% if jobs %}
+          <div class="proAcMng_MyJobs_Cta_sctional proAcMng_ScCta_sctionatOP">
+            <p>You have {{jobs.count}} Job post{{jobs.count|pluralize}}</p>
+            <a href="{% url 'markets:job_post_create'%}"><button type="button" name="button"><i class="material-icons">add</i>Post a New Job</button></a>
+          </div>
           <div class="proAcMng_MyJobsPtfl_grid">
             {% for job in jobs %}
               <div id="mng_MyJobs_{{job.pk}}" class="card">

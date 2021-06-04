@@ -25,6 +25,10 @@
     <div class="proAcMng_ProjectsPtfl_wrp">
       <div class="row">
         {% if projects %}
+          <div class="proAcMng_Projects_Cta_sctional proAcMng_ScCta_sctionatOP">
+            <p>You have {{projects.count}} project{{projects.count|pluralize}}</p>
+            <a href="{% url 'profiles:portfolio_item_create'%}"><button type="button" name="button"><i class="material-icons">add</i>Add a New Project</button></a>
+          </div>
           <div class="proAcMng_ProjectsPtfl_grid">
             {% for project in projects %}
               <div id="mng_savedProperty_{{project.pk}}" class="card">
