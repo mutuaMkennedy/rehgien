@@ -640,6 +640,11 @@ def portfolio_item_create(request):
 		return redirect('homepage')
 	return render(request, 'profiles/pro_portfolio_create_form.html', {"PortfolioForm": PortfolioForm, "PoImageForm": ImageForm})
 
+"""
+	This update view is crashing probably referencing removed model fields or attributes.
+	Seems i forgot to update this view and its templates. Will check and fix this asap.
+	For better insight on new updates to be made reference changes from portfolio_item_create view and its template.
+"""
 @login_required(login_url='account_login')
 def portfolio_item_update(request, pk):
 	portfolio_object = get_object_or_404(models.PortfolioItem, pk=pk)
