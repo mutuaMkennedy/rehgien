@@ -223,12 +223,16 @@
         {% endif %}
           <div id="slide-out-rq_reviews" class="sidenav rq_revwSidenAV">
             <div class="mngAct_grvw_formBox col s12"">
-              <form method="post" class="col s12">
+              <form id="MngRvwsPrForm" method="post" class="col s12">
                   {% csrf_token %}
                   <div class="mngAct_grvw_formeLSM col s12">
                       <div class="col s12 md7 l7 xl7 mngAct_grvw_formFields">
                           <h3>Get Reviews</h3>
                           <div class="mngAct_grvw_formFieldSct ">
+                              <div class="accMngLoadingWrp">
+                                <img src="{% static 'img/Preloader_2.gif'%}" alt="">
+                                <span>Sending requests. Please wait</span>
+                              </div>
                               <p>Send an email to your clients and ask for reviews</p>
                                 <br>
                                 <br>
@@ -304,6 +308,9 @@
 
   <script type="text/javascript">
     $(document).ready(function(){
+      $('#MngRvwsPrForm').on('submit',function() {
+        $('.accMngLoadingWrp').css('display','flex');
+      });
       $('#mngAct_grvw_formFieldEmail input').tagsInput({
           // min/max number of characters
           minChars: 2,
