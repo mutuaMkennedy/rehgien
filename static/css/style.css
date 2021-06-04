@@ -22275,25 +22275,25 @@ particle {
     padding:10px;
 }
 
-.proAcMng_Reviews_wrp .proAcMng_Reviews_Cta_sctional{
+.pAcct_mng_section_side .proAcMng_ScCta_sctionatOP{
     display:flex;
     align-items:center;
     justify-content:space-between;
 }
 
 @media all and (max-width:768px){
-    .proAcMng_Reviews_wrp .proAcMng_Reviews_Cta_sctional{
+    .pAcct_mng_section_side .proAcMng_ScCta_sctionatOP{
         flex-direction:column-reverse;
         align-items:flex-start;
     }
 }
 
-.proAcMng_Reviews_wrp .proAcMng_Reviews_Cta_sctional p{
+.pAcct_mng_section_side .proAcMng_ScCta_sctionatOP p,{
     margin:0;
     font-size:14px;
 }
 
-.proAcMng_Reviews_wrp .proAcMng_Reviews_Cta_sctional button{
+.pAcct_mng_section_side .proAcMng_ScCta_sctionatOP button{
     height:40px;
     min-width:200px;
     background-color:#1100ff;
@@ -22308,16 +22308,16 @@ particle {
 }
 
 @media all and (max-width:768px){
-    .proAcMng_Reviews_wrp .proAcMng_Reviews_Cta_sctional p{
+    .pAcct_mng_section_side .proAcMng_ScCta_sctionatOP p{
         margin-top:10px;
     }
 
-    .proAcMng_Reviews_wrp .proAcMng_Reviews_Cta_sctional button{
+    .pAcct_mng_section_side .proAcMng_ScCta_sctionatOP button{
         margin-top:10px;
     }
 }
 
-.proAcMng_Reviews_wrp .proAcMng_Reviews_Cta_sctional button i{
+.pAcct_mng_section_side .proAcMng_ScCta_sctionatOP button i{
     margin-right:10px;
 }
 
