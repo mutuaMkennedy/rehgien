@@ -47,7 +47,7 @@ $(document).ready(function(){
                 " <span class='material-icons'>check_circle_outline</span>" +
                 " <p> Save Sucessfull! <span> " +
                 "   <a href='" + "{% url 'profiles:portfolio_item_create'%}" +"'><button type='button' name='button'>Add another</button></a>" +
-                "   <a href='" + "{% url 'profiles:account'%}" + "'><button type='button' name='button'>Back to account</button></a>" +
+                "   <a href='" + "{% url 'profiles:projects'%}" + "'><button type='button' name='button'>Back to account</button></a>" +
                 "  </span></p>"
                 );
 
@@ -71,10 +71,10 @@ $(document).ready(function(){
     <div class="row">
       <div class="_portfolio_form_Elm">
           <div class="_portfolio_form_header">
-            <a href="{% url 'profiles:account'%}">
+            <a href="{% url 'profiles:projects'%}">
               <button type="button" class="modal-close">
                 <span class="material-icons">west</span> &nbsp
-                Back to account
+                Back to Projects
               </button>
             </a>
           </div>
