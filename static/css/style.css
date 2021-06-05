@@ -21969,6 +21969,7 @@ particle {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    object-fit:cover;
 }
 
 .acMng_user_floating_card .acMngusrADSlCSJHFgnDUhMMIUSSP_HdBody{
@@ -22057,6 +22058,7 @@ particle {
     width: 33px;
     height: 33px;
     border-radius: 50%;
+    object-fit:cover;
 }
 
 .acMng_user_floating_card .acMnguflCard_HdBody{
