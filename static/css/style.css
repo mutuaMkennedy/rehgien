@@ -22860,6 +22860,7 @@ particle {
     width:50px;
     height:50px;
     border-radius:50%;
+    object-fit:cover;
 }
 
 .usr_isSignedInHmWrapper .card.userActFloatSgnDhMM .usrActFltSgnDhMM_tP{
@@ -22929,6 +22930,7 @@ particle {
     width:33px;
     height:33px;
     border-radius:50%;
+    object-fit:cover;
 }
 
 .usrActFltSgnDhMM_pgPrf .usrActFltSgnDhMM_pgPrf_HdBody{
