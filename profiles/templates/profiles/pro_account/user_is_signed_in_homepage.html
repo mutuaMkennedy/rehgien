@@ -250,21 +250,32 @@
 
                   <div class="usrLgnIn-MainFeedContsCTN">
                     <h2 class="usrLgnMnfdCntfScHed">Top News</h2>
-                    <div class="owl-carousel usrhMoWLlARGE">
-                      {% for article in articles%}
-                        <a href="{{article.link}}" target="_blank">
-                          <div class="card usrLgnMnfdArctclfCard">
-                            <div class="usrLgnMnfdArctclfCardImg">
-                              <img src="{{article.featured_image}}" alt="">
-                            </div>
-                            <div class="usrLgnMnfdArctclfCardBdTxt">
-                            <h6>{{article.title}}</h6>
-                            {{article.excerpt|safe|truncatechars:150}}
-                            </div>
-                          </div>
-                        </a>
-                      {% endfor %}
+                    {% if articles %}
+                      <div class="owl-carousel usrhMoWLlARGE">
+                          {% for article in articles%}
+                            <a href="{{article.link}}" target="_blank">
+                              <div class="card usrLgnMnfdArctclfCard">
+                                <div class="usrLgnMnfdArctclfCardImg">
+                                  <img src="{{article.featured_image}}" alt="">
+                                </div>
+                                <div class="usrLgnMnfdArctclfCardBdTxt">
+                                <h6>{{article.title}}</h6>
+                                {{article.excerpt|safe|truncatechars:150}}
+                                </div>
+                              </div>
+                            </a>
+                          {% endfor %}
+                      </div>
+                    {% else %}
+                    <div class="card usrArtNwsPstINCardHmr">
+                      <div class="usrArticlePstINCardHmrEmptyRslts">
+                        <h6>No news found. </h6>
+                        <p>This is quite unusual but we couldn't load your daily news.
+                          Please check back here later.</p>
+                        <a href="http://blog.rehgien.com/"><span>However, you can also try out our blog</span></a>
+                      </div>
                     </div>
+                    {% endif %}
                   </div>
                   <div class="usrLgnIn-MainFeedContsCTN">
                     <h2 class="usrLgnMnfdCntfScHed">Shop our top home types</h2>
