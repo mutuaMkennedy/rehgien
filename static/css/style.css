@@ -23228,6 +23228,49 @@ particle {
     display:none;
 }
 
+.usrLgnIn-MainFeedContFlow .usrArtNwsPstINCardHmr{
+    width: 100%;
+    border-radius: 5px;
+    height: auto;
+    position: relative;
+    border: 1px solid #d1d1d1;
+    box-shadow: 0 0 5px 2px #eee;
+    padding: 15px;
+    margin: 0;
+}
+
+.usrLgnIn-MainFeedContFlow .usrArticlePstINCardHmrEmptyRslts{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 0;
+}
+
+.usrLgnIn-MainFeedContFlow .usrArticlePstINCardHmrEmptyRslts h6{
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    margin: 0;
+    margin-bottom: 15px;
+}
+
+.usrLgnIn-MainFeedContFlow .usrArticlePstINCardHmrEmptyRslts p{
+    margin: 0;
+    margin-bottom: 15px;
+    font-size: 13px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.usrLgnIn-MainFeedContFlow .usrArticlePstINCardHmrEmptyRslts a span{
+    font-weight: 600;
+    font-size: 13px;
+    color: #1100ff;
+    display: inline-flex;
+    text-decoration: underline;
+}
+
 .usrLgnIn-MainFeedContFlow .card.usrLgnMnfdArctclfCard{
     width: 100%;
     border-radius: 5px;
