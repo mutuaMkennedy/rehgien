@@ -75,20 +75,24 @@ def user_is_signed_in_homepage(request):
 
 	# Blog articles from our blog website blog.rehgien.com
 	session = CachedSession(backend='redis', namespace='my-rq-cache',expire_after=timedelta(days=1))
-	articles_reponse = session.get('http://blog.rehgien.com/wp-json/wp/v2/posts?per_page=5&_embed')
-	articles_reponse = articles_reponse.json()
-	articles = []
-	for a in articles_reponse:
-		data = {
-		'title':a['title']['rendered'],
-		'featured_image':'',
-		'link':a['link'],
-		'excerpt':a['excerpt']['rendered']
-		}
 
-		for b in a['_embedded']['wp:featuredmedia']:
-			data['featured_image'] = b['source_url']
-		articles.append(data)
+	articles = []
+	try:
+		articles_reponse = session.get('http://blog.rehgien.com/wp-json/wp/v2/posts?per_page=5&_embed')
+		articles_reponse = articles_reponse.json()
+		for a in articles_reponse:
+			data = {
+			'title':a['title']['rendered'],
+			'featured_image':'',
+			'link':a['link'],
+			'excerpt':a['excerpt']['rendered']
+			}
+
+			for b in a['_embedded']['wp:featuredmedia']:
+				data['featured_image'] = b['source_url']
+			articles.append(data)
+	except:
+		pass
 	context = {
 	"professional_groups":professional_groups,
 	"popular_services":popular_services,
