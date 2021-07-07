@@ -208,7 +208,7 @@ class UserAccountSerializer(WritableNestedModelSerializer):
             "account_type": page.user.account_type,
             "profile_image": page.user.profile_image.url if page.user.profile_image else '',
             }
-
+            
             fields = {
             'pk':page.pk,
             'user':business_page_owner,
