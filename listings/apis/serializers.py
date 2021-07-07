@@ -160,6 +160,8 @@ class HomeSerializer(WritableNestedModelSerializer):
     _total_views_count_ = serializers.SerializerMethodField()
     _recent_views_count_ = serializers.SerializerMethodField()
     _views_trend_ = serializers.SerializerMethodField()
+    users_who_saved_this_home = serializers.SerializerMethodField()
+    user_who_owns_this_home = serializers.SerializerMethodField()
     class Meta:
         model = models.Home
         fields = [
@@ -182,10 +184,40 @@ class HomeSerializer(WritableNestedModelSerializer):
 
         'view', 'related_website', 'publishdate', 'phone', 'email','owner',
         #read only method fields
+        "users_who_saved_this_home","user_who_owns_this_home",
         'similar_homes_in_this_area','similar_homes_in_this_region','_total_saves_count_',
         '_listing_active_until_','_total_views_count_', '_recent_views_count_',
         '_views_trend_',
         ]
+
+    def get_users_who_saved_this_home(self,obj):
+        users_who_saved = []
+        for user in obj.saves.all():
+            user_object = {
+                "pk":user.pk,
+                "username": user.username,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "user_type": user.user_type,
+                "account_type": user.account_type,
+                "profile_image": user.profile_image.url if user.profile_image else '',
+            }
+            users_who_saved.append(user_object)
+        return users_who_saved
+
+    def get_user_who_owns_this_home(self, obj):
+        object_owner = [{
+            "pk":obj.owner.pk,
+            "username": obj.owner.username,
+            "first_name": obj.owner.first_name,
+            "last_name": obj.owner.last_name,
+            "email": obj.owner.email,
+            "user_type": obj.owner.user_type,
+            "account_type": obj.owner.account_type,
+            "profile_image": obj.owner.profile_image.url if obj.owner.profile_image else '',
+            }]
+        return object_owner
 
     def get_similar_homes_in_this_area(self, obj):
         homes = models.Home.objects.filter(	\
