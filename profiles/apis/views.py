@@ -32,6 +32,10 @@ class UsersListAPI(ListAPIView):
     serializer_class = serializers.UserAccountSerializer
     queryset = User.objects.all()
 
+class UsersAccountRetrieve(RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserAccountSerializer
+
 class UserAccountEditApi(RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserAccountSerializer
