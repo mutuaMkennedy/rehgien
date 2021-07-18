@@ -72,6 +72,7 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
     pro_business_hours = BusinessHoursSerializer(many=True)
     pro_business_review = ReviewSerializer(many=True)
     service_areas = location_serializers.KenyaTownSerializer(many=True)
+    pro_portfolio_items = serializers.SerializerMethodField()
     _pro_average_rating_ = serializers.SerializerMethodField()
     _business_profile_percentage_complete_ = serializers.SerializerMethodField()
     class Meta:
@@ -82,8 +83,49 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
         "facebook_page_link","twitter_page_link","linkedin_page_link","instagram_page_link",
         "about_video","about","service_areas","saves","followers","member_since",
         "featured","verified","pro_business_client","pro_business_hours","pro_business_review",
-        "_pro_average_rating_","_business_profile_percentage_complete_",
+        "pro_portfolio_items","_pro_average_rating_","_business_profile_percentage_complete_",
         ]
+
+    def get_pro_portfolio_items(self,obj):
+        portfolio_object = profiles_models.PortfolioItem.objects.filter(created_by=obj.user.pk)
+        portfolio_item_array = []
+        for ptf in portfolio_object:
+            ptf_object_photos = []
+
+            # looping over all the photos related to this portfolio object
+            for pic in ptf.portfolio_item_photo.all():
+                photo_object = {
+                    'pk':pic.pk,
+                    'portfolio_item':pic.portfolio_item.pk,
+                    'photo':pic.photo.url if pic.photo else '',
+                }
+                ptf_object_photos.append(photo_object)
+
+            # creating the user object arrray
+            user_object = {
+                'id':ptf.created_by.pk,
+                'username':ptf.created_by.username,
+                'first_name':ptf.created_by.first_name,
+                'last_name':ptf.created_by.last_name,
+                'email':ptf.created_by.email,
+                'user_type':ptf.created_by.user_type,
+                'profile_image':ptf.created_by.profile_image.url if ptf.created_by.profile_image else '',
+                }
+
+            # and finally creating the portfolio object arrray
+            portfolio_object = {
+                'pk':ptf.pk,
+                'name': ptf.name,
+                'description': ptf.description,
+                'video': ptf.video,
+                'photos':ptf_object_photos,
+                'created_at': ptf.created_at,
+                'created_by': user_object,
+             }
+
+            portfolio_item_array.append(portfolio_object)
+
+        return portfolio_item_array
 
     def get__pro_average_rating_(self,obj):
         rating = obj.pro_business_review.all().aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
@@ -208,7 +250,7 @@ class UserAccountSerializer(WritableNestedModelSerializer):
             "account_type": page.user.account_type,
             "profile_image": page.user.profile_image.url if page.user.profile_image else '',
             }
-            
+
             fields = {
             'pk':page.pk,
             'user':business_page_owner,
