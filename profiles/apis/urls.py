@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path('user/account/list/', api_views.UsersListAPI.as_view(), name='user_list' ),
+    path('user/account/<int:pk>/retrieve/', api_views.UsersAccountRetrieve.as_view(), name='UsersAccountRetrieve' ),
     path('user/account/<int:pk>/edit/', api_views.UserAccountEditApi.as_view(), name='edit_account'),
     path('user/listings/property/homes/', api_views.UserListingsListApi.as_view(), name='listings_list'),
     path('profiles/professional_group/list/', api_views.ProfessionalGroupListApi.as_view(), name='ProfessionalGroupListApi'),
