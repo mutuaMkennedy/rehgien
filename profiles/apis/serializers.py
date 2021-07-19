@@ -37,13 +37,26 @@ class ProfessionalServiceSerializer(serializers.ModelSerializer):
         fields = ['pk',"service_name","service_image","slug"]
 
 class ReviewSerializer(serializers.ModelSerializer):
+    reviewer_user_object = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.Review
         fields = [
         'pk',"recommendation_rating_choices","responsive_rating_choices","knowledge_rating_choices","professionalism_rating_choices",
         "quality_rating_choices","profile","recommendation_rating","responsive_rating","knowledge_rating","professionalism_rating",
-        "quality_of_service_rating","comment","likes","reviewer","review_date",
+        "quality_of_service_rating","comment","likes","reviewer","review_date","reviewer_user_object"
         ]
+
+    def get_reviewer_user_object(self,obj):
+        user_object = {
+            'id':obj.reviewer.pk,
+            'username':obj.reviewer.username,
+            'first_name':obj.reviewer.first_name,
+            'last_name':obj.reviewer.last_name,
+            'email':obj.reviewer.email,
+            'user_type':obj.reviewer.user_type,
+            'profile_image':obj.reviewer.profile_image.url if obj.reviewer.profile_image else '',
+            }
+        return user_object
 
 class LikeReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -195,13 +208,38 @@ class PortfolioItemSerializer2(WritableNestedModelSerializer):
         ]
 
 class TeammateConnectionSerializer(serializers.ModelSerializer):
+    requestor_user_object = serializers.SerializerMethodField()
+    receiver_user_object = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.TeammateConnection
         fields = [
-        'pk',"requestor", "receiver", "accepted_choices","receiver_accepted", "starred"
+        'pk',"requestor", "receiver", "accepted_choices","receiver_accepted", "starred",
+        "requestor_user_object","receiver_user_object"
         ]
 
+    def get_requestor_user_object(self,obj):
+        user_object = {
+            'id':obj.requestor.pk,
+            'username':obj.requestor.username,
+            'first_name':obj.requestor.first_name,
+            'last_name':obj.requestor.last_name,
+            'email':obj.requestor.email,
+            'user_type':obj.requestor.user_type,
+            'profile_image':obj.requestor.profile_image.url if obj.requestor.profile_image else '',
+            }
+        return user_object
 
+    def get_receiver_user_object(self,obj):
+        user_object = {
+            'id':obj.receiver.pk,
+            'username':obj.receiver.username,
+            'first_name':obj.receiver.first_name,
+            'last_name':obj.receiver.last_name,
+            'email':obj.receiver.email,
+            'user_type':obj.receiver.user_type,
+            'profile_image':obj.receiver.profile_image.url if obj.receiver.profile_image else '',
+            }
+        return user_object
 
 class UserAccountSerializer(WritableNestedModelSerializer):
     pro_business_profile = BusinessProfileSerializer(many=False)
