@@ -86,6 +86,8 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
     pro_business_review = ReviewSerializer(many=True)
     service_areas = location_serializers.KenyaTownSerializer(many=True)
     pro_portfolio_items = serializers.SerializerMethodField()
+    pro_followers = serializers.SerializerMethodField()
+    pro_saves = serializers.SerializerMethodField()
     _pro_average_rating_ = serializers.SerializerMethodField()
     _business_profile_percentage_complete_ = serializers.SerializerMethodField()
     class Meta:
@@ -96,7 +98,8 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
         "facebook_page_link","twitter_page_link","linkedin_page_link","instagram_page_link",
         "about_video","about","service_areas","saves","followers","member_since",
         "featured","verified","pro_business_client","pro_business_hours","pro_business_review",
-        "pro_portfolio_items","_pro_average_rating_","_business_profile_percentage_complete_",
+        "pro_portfolio_items","pro_followers","pro_saves",
+        "_pro_average_rating_","_business_profile_percentage_complete_",
         ]
 
     def get_pro_portfolio_items(self,obj):
@@ -147,7 +150,6 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
         else:
             return 0
 
-
     def get__business_profile_percentage_complete_(self,obj):
         percent = {
         'business_profile_image': 10, 'professional_category':10, 'phone':5, 'business_email':10,
@@ -181,6 +183,36 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
         if obj.about:
             total += percent.get('about', 0)
         return "%s"%(total)
+
+    def get_pro_saves(self,obj):
+        saves_array = []
+        for save in obj.saves.all():
+            saves_object = {
+                'id':save.pk,
+                'username':save.username,
+                'first_name':save.first_name,
+                'last_name':save.last_name,
+                'email':save.email,
+                'user_type':save.user_type,
+                'profile_image':save.profile_image.url if save.profile_image else '',
+            }
+            saves_array.append(saves_object)
+        return saves_array
+
+    def get_pro_followers(self,obj):
+        followers_array = []
+        for follower in obj.followers.all():
+            follower_object = {
+                'id':follower.pk,
+                'username':follower.username,
+                'first_name':follower.first_name,
+                'last_name':follower.last_name,
+                'email':follower.email,
+                'user_type':follower.user_type,
+                'profile_image':follower.profile_image.url if follower.profile_image else '',
+            }
+            followers_array.append(follower_object)
+        return followers_array
 
 class SocialBusinessProfileSerializer(WritableNestedModelSerializer):
     class Meta:
