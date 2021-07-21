@@ -248,8 +248,8 @@ class TeammateConnectionSerializer(serializers.ModelSerializer):
         model = profiles_models.TeammateConnection
         fields = [
         'pk',"requestor", "receiver", "accepted_choices","receiver_accepted", "starred",
-        "requestor_user_object","receiver_user_object","requestor_business_profile",
-        "receiver_business_profile"
+        "created_at", "requestor_user_object","receiver_user_object",
+        "requestor_business_profile", "receiver_business_profile"
         ]
 
     def get_requestor_user_object(self,obj):
