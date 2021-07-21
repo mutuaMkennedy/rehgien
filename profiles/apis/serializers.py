@@ -210,11 +210,14 @@ class PortfolioItemSerializer2(WritableNestedModelSerializer):
 class TeammateConnectionSerializer(serializers.ModelSerializer):
     requestor_user_object = serializers.SerializerMethodField()
     receiver_user_object = serializers.SerializerMethodField()
+    requestor_business_profile = serializers.SerializerMethodField()
+    receiver_business_profile = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.TeammateConnection
         fields = [
         'pk',"requestor", "receiver", "accepted_choices","receiver_accepted", "starred",
-        "requestor_user_object","receiver_user_object"
+        "requestor_user_object","receiver_user_object","requestor_business_profile",
+        "receiver_business_profile"
         ]
 
     def get_requestor_user_object(self,obj):
@@ -240,6 +243,32 @@ class TeammateConnectionSerializer(serializers.ModelSerializer):
             'profile_image':obj.receiver.profile_image.url if obj.receiver.profile_image else '',
             }
         return user_object
+
+    def get_requestor_business_profile(self, obj):
+        if obj.requestor.user_type == 'PRO':
+            profile = {
+            "pk": obj.requestor.pro_business_profile.pk,
+            "user": obj.requestor.pro_business_profile.user.username,
+            "professional_category": obj.requestor.pro_business_profile.professional_category.category_name,
+            "business_name": obj.requestor.pro_business_profile.business_name,
+            "business_profile_image": obj.requestor.pro_business_profile.business_profile_image.url if obj.requestor.pro_business_profile.business_profile_image else ''
+            }
+            return profile
+        else:
+            return ''
+
+    def get_receiver_business_profile(self, obj):
+        if obj.receiver.user_type == 'PRO':
+            profile = {
+            "pk": obj.receiver.pro_business_profile.pk,
+            "user": obj.receiver.pro_business_profile.user.username,
+            "professional_category": obj.receiver.pro_business_profile.professional_category.category_name,
+            "business_name": obj.receiver.pro_business_profile.business_name,
+            "business_profile_image": obj.receiver.pro_business_profile.business_profile_image.url if obj.receiver.pro_business_profile.business_profile_image else ''
+            }
+            return profile
+        else:
+            return ''
 
 class UserAccountSerializer(WritableNestedModelSerializer):
     pro_business_profile = BusinessProfileSerializer(many=False)
