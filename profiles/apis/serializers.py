@@ -202,6 +202,21 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
     def get_pro_followers(self,obj):
         followers_array = []
         for follower in obj.followers.all():
+            user_followers = []
+            if follower.user_type == 'PRO':
+                for f in follower.pro_business_profile.followers.all():
+                    follower_user_obj = {
+                    'id':f.pk,
+                    'username':f.username,
+                    'first_name':f.first_name,
+                    'last_name':f.last_name,
+                    'email':f.email,
+                    'user_type':f.user_type,
+                    'profile_image':f.profile_image.url if f.profile_image else '',
+                    }
+
+                    user_followers.append(follower_user_obj)
+
             follower_object = {
                 'id':follower.pk,
                 'username':follower.username,
@@ -210,6 +225,7 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
                 'email':follower.email,
                 'user_type':follower.user_type,
                 'profile_image':follower.profile_image.url if follower.profile_image else '',
+                'followers':user_followers
             }
             followers_array.append(follower_object)
         return followers_array
@@ -349,13 +365,27 @@ class UserAccountSerializer(WritableNestedModelSerializer):
             "account_type": page.user.account_type,
             "profile_image": page.user.profile_image.url if page.user.profile_image else '',
             }
+            page_followers = []
+            for fl in page.followers.all():
+                array = {
+                    "pk":fl.pk,
+                    "username": fl.username,
+                    "first_name": fl.first_name,
+                    "last_name": fl.last_name,
+                    "email": fl.email,
+                    "user_type": fl.user_type,
+                    "account_type": fl.account_type,
+                    "profile_image": fl.profile_image.url if fl.profile_image else '',
+                }
+                page_followers.append(array)
 
             fields = {
             'pk':page.pk,
             'user':business_page_owner,
             'business_name':page.business_name,
             'business_profile_image':page.business_profile_image.url if page.business_profile_image else '',
-            'followers':page.followers.all().values('pk'),
+            # 'followers':page.followers.all().values('pk', 'user_type'), ::: this method fails to serialize profile image cloudinary field
+            'followers': page_followers,
             'verified':page.verified
             }
             page_obj_array.append(fields)
