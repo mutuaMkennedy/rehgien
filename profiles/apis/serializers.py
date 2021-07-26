@@ -202,8 +202,20 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
     def get_pro_followers(self,obj):
         followers_array = []
         for follower in obj.followers.all():
-            user_followers = []
+            business_page_array = []
             if follower.user_type == 'PRO':
+                user_followers = []
+                business_page = {
+                    "pk":follower.pro_business_profile.pk,
+                    "user":follower.pro_business_profile.user.username,
+                    "professional_category":follower.pro_business_profile.professional_category.category_name,
+                    "business_profile_image":follower.pro_business_profile.business_profile_image.url if follower.pro_business_profile.business_profile_image else '',
+                    "business_name":follower.pro_business_profile.business_name,
+                    "phone":follower.pro_business_profile.phone,
+                    "business_email":follower.pro_business_profile.business_email,
+                    'followers':user_followers
+                }
+
                 for f in follower.pro_business_profile.followers.all():
                     follower_user_obj = {
                     'id':f.pk,
@@ -217,6 +229,8 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
 
                     user_followers.append(follower_user_obj)
 
+                business_page_array.append(business_page)
+
             follower_object = {
                 'id':follower.pk,
                 'username':follower.username,
@@ -225,7 +239,7 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
                 'email':follower.email,
                 'user_type':follower.user_type,
                 'profile_image':follower.profile_image.url if follower.profile_image else '',
-                'followers':user_followers
+                'business_page':business_page_array
             }
             followers_array.append(follower_object)
         return followers_array
