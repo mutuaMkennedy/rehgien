@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from markets import models
+from django.db.models import Avg
 
 # referencing the custom user model
 User = get_user_model()
@@ -15,6 +16,18 @@ class JobPostProposalSerializer(serializers.ModelSerializer):
         ]
 
     def get_proposal_sender_object(self,obj):
+        business_page_rating = obj.proposal_sender.pro_business_profile.pro_business_review.all().aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
+        business_page_object = {
+            "pk":obj.proposal_sender.pro_business_profile.pk,
+            "user":obj.proposal_sender.pro_business_profile.user.username,
+            "professional_category":obj.proposal_sender.pro_business_profile.professional_category.category_name,
+            "business_profile_image":obj.proposal_sender.pro_business_profile.business_profile_image.url if obj.proposal_sender.pro_business_profile.business_profile_image else '',
+            "business_name":obj.proposal_sender.pro_business_profile.business_name,
+            "phone":obj.proposal_sender.pro_business_profile.phone,
+            "business_email":obj.proposal_sender.pro_business_profile.business_email,
+            "pro_average_rating":business_page_rating if business_page_rating else '0'
+        }
+
         user_object = {
             'pk':obj.proposal_sender.pk,
             'username':obj.proposal_sender.username,
@@ -23,8 +36,11 @@ class JobPostProposalSerializer(serializers.ModelSerializer):
             'email':obj.proposal_sender.email,
             'user_type':obj.proposal_sender.user_type,
             'profile_image':obj.proposal_sender.profile_image.url if obj.proposal_sender.profile_image else '',
+            'business_page':business_page_object
+
             }
         return user_object
+
 
 class JobPostSerializer(serializers.ModelSerializer):
     job_post_proposal = JobPostProposalSerializer(many=True, required=False)
