@@ -340,12 +340,13 @@ class UserAccountSerializer(WritableNestedModelSerializer):
     listings_home_owner_related = listings_serializers.HomeSerializer(many=True)
     _user_account_percentage_complete_ = serializers.SerializerMethodField()
     business_pages_following = serializers.SerializerMethodField()
+    business_pages_saved = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.User
         fields = [
         'user_type_choices','account_type_choices','pk', 'username', 'first_name',
-        'last_name', 'email', 'user_type','account_type', 'profile_image', 'business_pages_following',"pro_business_profile",
-        "profiles_portfolioitem_createdby_related", "connection_requestor",
+        'last_name', 'email', 'user_type','account_type', 'profile_image', 'business_pages_following', 'business_pages_saved',
+        "pro_business_profile", "profiles_portfolioitem_createdby_related", "connection_requestor",
         "connection_request_receiver", "listings_home_owner_related",'_user_account_percentage_complete_'
         ]
 
@@ -400,6 +401,46 @@ class UserAccountSerializer(WritableNestedModelSerializer):
             'business_profile_image':page.business_profile_image.url if page.business_profile_image else '',
             # 'followers':page.followers.all().values('pk', 'user_type'), ::: this method fails to serialize profile image cloudinary field
             'followers': page_followers,
+            'verified':page.verified
+            }
+            page_obj_array.append(fields)
+        return page_obj_array
+
+    def get_business_pages_saved(self, object):
+        business_pages_saved = object.business_page_saves.all()
+        page_obj_array = []
+        for page in business_pages_saved:
+            business_page_owner = {
+            "pk":page.user.pk,
+            "username": page.user.username,
+            "first_name": page.user.first_name,
+            "last_name": page.user.last_name,
+            "email": page.user.email,
+            "user_type": page.user.user_type,
+            "account_type": page.user.account_type,
+            "profile_image": page.user.profile_image.url if page.user.profile_image else '',
+            }
+            page_saves = []
+            for fl in page.saves.all():
+                array = {
+                    "pk":fl.pk,
+                    "username": fl.username,
+                    "first_name": fl.first_name,
+                    "last_name": fl.last_name,
+                    "email": fl.email,
+                    "user_type": fl.user_type,
+                    "account_type": fl.account_type,
+                    "profile_image": fl.profile_image.url if fl.profile_image else '',
+                }
+                page_saves.append(array)
+
+            fields = {
+            'pk':page.pk,
+            'user':business_page_owner,
+            'business_name':page.business_name,
+            'business_profile_image':page.business_profile_image.url if page.business_profile_image else '',
+            # 'followers':page.page_saves.all().values('pk', 'user_type'), ::: this method fails to serialize profile image cloudinary field
+            'followers': page_saves,
             'verified':page.verified
             }
             page_obj_array.append(fields)
