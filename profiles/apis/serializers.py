@@ -439,8 +439,8 @@ class UserAccountSerializer(WritableNestedModelSerializer):
             'user':business_page_owner,
             'business_name':page.business_name,
             'business_profile_image':page.business_profile_image.url if page.business_profile_image else '',
-            # 'followers':page.page_saves.all().values('pk', 'user_type'), ::: this method fails to serialize profile image cloudinary field
-            'followers': page_saves,
+            # 'saves':page.page_saves.all().values('pk', 'user_type'), ::: this method fails to serialize profile image cloudinary field
+            'saves': page_saves,
             'verified':page.verified
             }
             page_obj_array.append(fields)
