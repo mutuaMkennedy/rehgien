@@ -49,4 +49,8 @@ urlpatterns = [
     path('profiles/client/<int:pk>/retrieve/', api_views.ClientDetailApi.as_view(), name='client_retrieve'),
     path('profiles/client/<int:pk>/update/', api_views.ClientUpdateApi.as_view(), name='client_update'),
     path('profiles/client/<int:pk>/delete/', api_views.ClientDeleteApi.as_view(), name='client_delete'),
+
+    #OTP send and verification URLs
+    path('otp/verify_phone/send_otp/', api_views.validate_phone_send_otp, name = 'send_otp'),
+    path('otp/verify_phone/verify_otp/', api_views.validate_sent_otp, name = 'verify_sent_otp'),
     ]
