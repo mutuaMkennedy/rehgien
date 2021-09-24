@@ -24,9 +24,123 @@ from rest_framework.permissions import (
                                         )
 from rest_framework.response import Response
 import django_filters
+from rest_framework.decorators import api_view
+from .utils import otp_generator
+from .africas_talking import send_otp_sms
 
 # referencing the custom user model
 User = get_user_model()
+
+"""
+Phone OTP send and validation views start here
+"""
+def send_otp(phone_number):
+    """
+        Helper function for generating and sending otp code to user's phone.
+    """
+
+    if phone_number:
+        otp_code = otp_generator()
+        phone = str(phone_number)
+        try:
+            #send code to phone Number
+            sms = send_otp_sms(otp_code)
+            if sms == True:
+                return str(otp_code) # that we will store in the db for later validation when the user sends the code for verification
+            else:
+                return False
+        except Exception as e:
+            print(e)
+            return False
+
+def check_otp_count(phone_number):
+    old_otp = models.PhoneOTP.objects.filter(phone__exact = phone_number)
+    if old_otp.exists():
+        if old_otp.first().count > 7:
+            message = {'status': False, 'detail': 'Maximum OTP code requests reached. Contact customer support.'}
+            return message
+        else:
+            return True
+    else:
+        return True
+
+@api_view(['POST'])
+def validate_phone_send_otp(request):
+    phone_number = ''
+    try:
+        phone_number = str(request.data['phone'])
+    except:
+        pass
+    #check if phone number exist in the request
+    if phone_number:
+        user_obj = User.objects.filter(phone__iexact = phone_number)
+        if user_obj.exists(): #check if user exist
+            return Response({'status': False, 'detail': 'User with that phone number already exists.'})
+        else:
+            otp_count_check_status = check_otp_count(phone_number)
+            if otp_count_check_status == True: # if true, meaning check passed, continue with the rest of the program
+                otp_code = send_otp(phone_number)
+                if otp_code != False:
+                    """
+                    Checking whether otp code object exists before we create a new one.
+                    If exists increase the count if not create the otp object
+                    """
+                    old_otp = ''
+                    try:
+                        old_otp = models.PhoneOTP.objects.get(phone__exact = phone_number)
+                    except:
+                        pass
+                    if old_otp:
+                        ins_count = old_otp.count
+                        old_otp.count = ins_count + 1 # Increase the count
+                        old_otp.otp = otp_code # Update the old otp with the new otp code
+                        old_otp.save(update_fields=['count','otp'])
+                    else:
+                        models.PhoneOTP.objects.create(
+                            phone = phone_number,
+                            otp = otp_code,
+                            count = 1
+                        )
+
+                    return Response({'status':True, 'detail': 'OTP code sent succesfully.'})
+                else:
+                    return Response({'status': False, 'detail':'OTP code not sent. Try again later.'})
+            else: # Check failed and user has maxed out 7 otp requests allowed.
+                return Response(otp_count_check_status)
+    else:
+        return Response({'phone':'Phone number is required e.g. +254xxxxxxxxx'})
+
+@api_view(['POST'])
+def validate_sent_otp(request):
+    phone_number = ''
+    otp_code = ''
+    try:
+        phone_number = str(request.data['phone'])
+        otp_code = str(request.data['otp'])
+    except:
+        pass
+
+    if phone_number and otp_code:
+        otp_instance = ''
+        try:
+            otp_instance = models.PhoneOTP.objects.get(phone__iexact=phone_number)
+        except:
+            pass
+        if otp_instance:
+            if otp_instance.logged == False:
+                otp_instance.logged = True
+                otp_instance.save( update_fields=['logged'])
+                return Response({'status': True, 'detail':'Phone number sucessfully verified.'})
+            else:
+                return Response({'status': True, 'detail':'Phone number alredy verified.'})
+        else:
+            return Response({'status': False, 'detail':'OTP code provided does not match. Make sure you entered the correct code or request another code.'})
+    else:
+        return Response({'phone':'Field is required','otp':'Field is required'})
+
+"""
+Phone OTP send and validation views end here
+"""
 
 class UsersListAPI(ListAPIView):
     serializer_class = serializers.UserAccountSerializer

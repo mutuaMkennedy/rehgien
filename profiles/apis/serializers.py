@@ -445,3 +445,8 @@ class UserAccountSerializer(WritableNestedModelSerializer):
             }
             page_obj_array.append(fields)
         return page_obj_array
+
+class PhoneOtpSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = profiles_models.PhoneOTP
+        fields = '__all__'

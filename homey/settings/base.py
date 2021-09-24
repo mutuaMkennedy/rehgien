@@ -5,6 +5,7 @@ import cloudinary.api
 from datetime import timedelta
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+import africastalking
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -17,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 SECRET_KEY = 'ib)4kavk+9ds#_!v8y5*qoy2@)g1gfa@y2u(4tpvej$feb!!oj'
 
 ALLOWED_HOSTS = ['localhost','165.227.185.180','127.0.0.1','rehgiendev2.remote.moe',
-                '207.154.205.115','rehgien.com', 'www.rehgien.com']
+                '207.154.205.115','rehgien.com', 'www.rehgien.com', '197.156.137.177', '3340-41-90-43-119.ngrok.io']
 
 ADMINS = [('Mutua', 'do-not-reply@rehgien.com')]
 # Application definition
