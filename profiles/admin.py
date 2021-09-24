@@ -16,6 +16,7 @@ class CustomUserAdmin(UserAdmin):
                 'fields': (
                     'user_type',
                     'profile_image',
+                    'phone',
                 ),
             },
         ),
@@ -70,6 +71,8 @@ class PortfolioItemAdmin(AdminVideoMixin,LeafletGeoAdmin):
 	inlines = [PortfolioItemPhotoInline]
 	list_display = ("name","created_by")
 
+class PhoneOtpAdmin(admin.ModelAdmin):
+    list_display = ("phone","otp","count","logged")
 
 
 admin.site.register(models.User, CustomUserAdmin)
@@ -79,3 +82,4 @@ admin.site.register(models.ProfessionalService,ProfessionalServiceAdmin)
 admin.site.register(models.BusinessProfile,BusinessProfileAdmin)
 admin.site.register(models.PortfolioItem, PortfolioItemAdmin)
 admin.site.register(models.TeammateConnection)
+admin.site.register(models.PhoneOTP,PhoneOtpAdmin)
