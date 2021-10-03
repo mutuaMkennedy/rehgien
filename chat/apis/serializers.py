@@ -3,6 +3,8 @@ from stream_chat import StreamChat
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from rest_auth.models import TokenModel
+from rest_framework_simplejwt.tokens import RefreshToken
+
 # referencing the custom user model
 User = get_user_model()
 
@@ -13,10 +15,11 @@ class StreamTokenSerializer(serializers.ModelSerializer):
     user_id = serializers.SerializerMethodField()
     user_name = serializers.SerializerMethodField()
     user_avatar = serializers.SerializerMethodField()
+    tokens_for_user = serializers.SerializerMethodField()
 
     class Meta:
         model = TokenModel
-        fields = ('auth_token','stream_token','user_id', 'user_name','user_avatar')
+        fields = ('auth_token','stream_token','tokens_for_user','user_id', 'user_name','user_avatar')
 
     def get_stream_token(self, obj):
         client = StreamChat(api_key=settings.STREAM_API_KEY, api_secret=settings.STREAM_API_SECRET)
@@ -35,3 +38,16 @@ class StreamTokenSerializer(serializers.ModelSerializer):
             return obj.user.profile_image.url
         else:
             return default_avatar
+
+    def get_tokens_for_user(self, obj):
+        """
+            We are manually generating the user JWT auth tokens which we will use
+            after a successfull user sign up. This will also eliminate the need
+            of firing the token request api to get the auth tokens after sign up.
+        """
+        refresh = RefreshToken.for_user(obj.user)
+
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
