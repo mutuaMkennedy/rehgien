@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 SECRET_KEY = 'ib)4kavk+9ds#_!v8y5*qoy2@)g1gfa@y2u(4tpvej$feb!!oj'
 
 ALLOWED_HOSTS = ['localhost','165.227.185.180','127.0.0.1','rehgiendev2.remote.moe',
-                '207.154.205.115','rehgien.com', 'www.rehgien.com', '197.156.137.177', '3340-41-90-43-119.ngrok.io']
+                '207.154.205.115','rehgien.com', 'www.rehgien.com', '197.156.137.177','260d-41-90-43-119.ngrok.io']
 
 ADMINS = [('Mutua', 'do-not-reply@rehgien.com')]
 # Application definition
@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.instagram',
     # 'allauth.socialaccount.providers.linkedin',
     # 'allauth.socialaccount.providers.linkedin_oauth2',
@@ -326,6 +327,7 @@ REST_FRAMEWORK = {
     )
 }
 
+# REST_USE_JWT = True
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=6),
@@ -359,6 +361,10 @@ REST_AUTH_SERIALIZERS = {
     'TOKEN_SERIALIZER': 'chat.apis.serializers.StreamTokenSerializer',
 }
 
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'profiles.apis.serializers.CustomRegisterSerializer',
+}
+
 AUTH_USER_MODEL = 'profiles.User'
 
 CORS_ORIGIN_WHITELIST = [
@@ -370,7 +376,7 @@ CORS_ORIGIN_WHITELIST = [
 
 # allauth further Configs
 ACCOUNT_AUTHENTICATION_METHOD = "username"
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'profiles.forms.profile_form'
 
 
