@@ -27,6 +27,9 @@ import django_filters
 from rest_framework.decorators import api_view
 from .utils import otp_generator
 from .africas_talking import send_otp_sms
+import django_filters
+import re
+
 
 # referencing the custom user model
 User = get_user_model()
@@ -141,10 +144,61 @@ def validate_sent_otp(request):
 """
 Phone OTP send and validation views end here
 """
+email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+phone_regex = r'^\+?1?\d{9,14}$'
+@api_view(['GET'])
+def lookup_user_obj_for_login(request):
+    """
+    This function check whether a user exists in the db then sends that users
+    username which the client app can use to automatically login the user.
+    """
+    q = request.GET.get('email_or_phone', '')
+    if re.fullmatch(email_regex, q):
+        user_obj = User.objects.filter(email__iexact=q)
+        response_obj = ''
+        if user_obj.exists():
+            response_obj = {
+            'status': True,
+            'user':{
+                'pk':user_obj.first().pk,
+                'username':user_obj.first().username,
+                }
+            }
+        else:
+            response_obj = {'status': False, 'detail':'User not found. Make sure you entered the correct email.'}
+        return Response(response_obj)
+    elif re.fullmatch(phone_regex,q):
+        user_obj = User.objects.filter(phone__iexact=q)
+        response_obj = ''
+        if user_obj.exists():
+            response_obj = {
+            'status': True,
+            'user':{
+                'pk':user_obj.first().pk,
+                'username':user_obj.first().username,
+                }
+            }
+        else:
+            response_obj = {'status': False, 'detail':'User not found. Make sure you entered the correct phone number.'}
+        return Response(response_obj)
+    else:
+        return Response({'status':False, 'detail':'Email or Phone number you provided is invalid.'})
+
+
+class UserAccountsFilter(django_filters.FilterSet):
+    email = django_filters.rest_framework.CharFilter(field_name="email", lookup_expr='iexact')
+    phone = django_filters.rest_framework.CharFilter(field_name="phone", lookup_expr='icontains')
+    class Meta:
+        model = User
+        fields = {
+            'email', 'phone',
+        }
 
 class UsersListAPI(ListAPIView):
     serializer_class = serializers.UserAccountSerializer
     queryset = User.objects.all()
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_class = UserAccountsFilter
 
 class UsersAccountRetrieve(RetrieveAPIView):
     queryset = User.objects.all()
