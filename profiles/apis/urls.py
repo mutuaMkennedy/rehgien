@@ -1,9 +1,12 @@
-from django.urls import path, include
+from django.urls import path, include,re_path
 from django.conf.urls import url
 from profiles.apis import views as api_views
 from . import views
+from . import social_authentication
 
 urlpatterns = [
+    # Custom api endpoint for checking is user exists in login
+    re_path(r'^user/account/lookup/$', api_views.lookup_user_obj_for_login, name = 'lookup_email_or_phone'),
     path('user/account/list/', api_views.UsersListAPI.as_view(), name='user_list' ),
     path('user/account/<int:pk>/retrieve/', api_views.UsersAccountRetrieve.as_view(), name='UsersAccountRetrieve' ),
     path('user/account/<int:pk>/edit/', api_views.UserAccountEditApi.as_view(), name='edit_account'),
@@ -53,4 +56,9 @@ urlpatterns = [
     #OTP send and verification URLs
     path('otp/verify_phone/send_otp/', api_views.validate_phone_send_otp, name = 'send_otp'),
     path('otp/verify_phone/verify_otp/', api_views.validate_sent_otp, name = 'verify_sent_otp'),
+
+    # social authentication url endpoints
+    path('rest-auth/facebook/', social_authentication.FacebookLogin.as_view(), name = 'fb_login'),
+    path('rest-auth/google/', social_authentication.GoogleLogin.as_view(), name = 'google_login'),
+
     ]
