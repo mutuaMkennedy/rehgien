@@ -7,11 +7,49 @@ from listings import models as listings_models
 from listings.apis import serializers as listings_serializers
 from location.api import serializers as location_serializers
 from django.db.models import Avg
+from rest_auth.registration.serializers import RegisterSerializer
+from django.db import transaction
+from django.db import IntegrityError
 
 # referencing the custom user model
 User = get_user_model()
 
 #serializing usermodel + their Listings
+
+class CustomRegisterSerializer(RegisterSerializer):
+    email = serializers.EmailField(min_length=None,allow_blank=True, required=False)
+    phone = serializers.CharField(max_length=30,allow_blank=True,required=False)
+    first_name = serializers.CharField(max_length=65,allow_blank=True,required=False)
+    last_name = serializers.CharField(max_length=65,allow_blank=True,required=False)
+
+    def validate_phone(self,phone):
+        usr = User.objects.filter(phone=phone)
+        if usr.exists():
+            raise serializers.ValidationError(
+                    ("A user is already registered with this phone number."))
+        else:
+            return phone
+
+    # Define transaction.atomic to rollback the save operation in case of error
+    @transaction.atomic
+    def save(self, request):
+        user = super().save(request)
+        """
+            Checking if there is data in the fields before trying to save to avoid Integrity errors
+            caused by empty fields
+        """
+        if self.data.get('email'):
+            user.email = self.data.get('email')
+        if self.data.get('phone'):
+            user.phone = self.data.get('phone')
+        if self.data.get('first_name'):
+            user.first_name = self.data.get('first_name')
+        if self.data.get('last_name'):
+            user.last_name = self.data.get('last_name')
+        user.save()
+        return user
+
+
 class UserSerializer(serializers.ModelSerializer):
     listings_home_owner_related = serializers.PrimaryKeyRelatedField(many=True, queryset= listings_models.Home.objects.all())
     class Meta:
