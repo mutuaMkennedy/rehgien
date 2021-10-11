@@ -1,5 +1,9 @@
 from . import serializers
 # from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.core.mail import send_mail, BadHeaderError
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth import get_user_model
 from profiles import models
 from rest_framework import filters
@@ -26,13 +30,56 @@ from rest_framework.response import Response
 import django_filters
 from rest_framework.decorators import api_view
 from .utils import otp_generator
-from .africas_talking import send_otp_sms
+from .africas_talking import send_otp_sms,send_password_reset_otp_sms
 import django_filters
 import re
+from django.db.models import Q
 
 
 # referencing the custom user model
 User = get_user_model()
+
+site_name = Site.objects.get_current().name
+
+email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+phone_regex = r'^\+?1?\d{9,14}$'
+@api_view(['GET'])
+def lookup_user_obj_for_login(request):
+    """
+    This function check whether a user exists in the db then sends that users
+    username which the client app can use to automatically login the user.
+    """
+    q = request.GET.get('email_or_phone', '')
+    if re.fullmatch(email_regex, q):
+        user_obj = User.objects.filter(email__iexact=q)
+        response_obj = ''
+        if user_obj.exists():
+            response_obj = {
+            'status': True,
+            'user':{
+                'pk':user_obj.first().pk,
+                'username':user_obj.first().username,
+                }
+            }
+        else:
+            response_obj = {'status': False, 'detail':'User not found. Make sure you entered the correct email.'}
+        return Response(response_obj)
+    elif re.fullmatch(phone_regex,q):
+        user_obj = User.objects.filter(phone__iexact=q)
+        response_obj = ''
+        if user_obj.exists():
+            response_obj = {
+            'status': True,
+            'user':{
+                'pk':user_obj.first().pk,
+                'username':user_obj.first().username,
+                }
+            }
+        else:
+            response_obj = {'status': False, 'detail':'User not found. Make sure you entered the correct phone number.'}
+        return Response(response_obj)
+    else:
+        return Response({'status':False, 'detail':'Email or Phone number you provided is invalid.'})
 
 """
 Phone OTP send and validation views start here
@@ -144,15 +191,15 @@ def validate_sent_otp(request):
 """
 Phone OTP send and validation views end here
 """
-email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-phone_regex = r'^\+?1?\d{9,14}$'
-@api_view(['GET'])
-def lookup_user_obj_for_login(request):
+
+"""
+Reset password with OTP code views start here
+"""
+def check_if_account_exists(q):
     """
-    This function check whether a user exists in the db then sends that users
-    username which the client app can use to automatically login the user.
+    Helper function to check whether account requesting to reset password exists
+    before sending any OTP codes
     """
-    q = request.GET.get('email_or_phone', '')
     if re.fullmatch(email_regex, q):
         user_obj = User.objects.filter(email__iexact=q)
         response_obj = ''
@@ -165,8 +212,8 @@ def lookup_user_obj_for_login(request):
                 }
             }
         else:
-            response_obj = {'status': False, 'detail':'User not found. Make sure you entered the correct email.'}
-        return Response(response_obj)
+            response_obj = {'status': False, 'detail':'We could not find an account associated with the email you provided. Check your email and try again!'}
+        return(response_obj)
     elif re.fullmatch(phone_regex,q):
         user_obj = User.objects.filter(phone__iexact=q)
         response_obj = ''
@@ -179,11 +226,204 @@ def lookup_user_obj_for_login(request):
                 }
             }
         else:
-            response_obj = {'status': False, 'detail':'User not found. Make sure you entered the correct phone number.'}
-        return Response(response_obj)
+            response_obj = {'status': False, 'detail':'We could not find an account associated with the phone number you provided. Check your phone number and try again!'}
+        return(response_obj)
     else:
-        return Response({'status':False, 'detail':'Email or Phone number you provided is invalid.'})
+        return ({'status':False, 'detail':'Email or Phone number you provided is invalid.'})
 
+def send_passcode_email(otp_code,contact_name,recepient_email):
+    """
+    Helper function for sending OTP to user's email
+    """
+    try:
+        subject = f"{otp_code} is your {site_name} account recovery code."
+        plainMessage = f'Hi {contact_name},\n\nWe received a request to reset your {site_name} password.\nEnter the following password reset code:\n{otp_code}.'
+        context = {
+        "message":plainMessage
+        }
+
+        htmlMessage = render_to_string('profiles/account_email/password_reset_with_code.html', context)
+
+        message = EmailMultiAlternatives(subject,plainMessage,'Rehgien <do-not-reply@rehgien.com>', [recepient_email])
+        message.attach_alternative(htmlMessage, "text/html")
+        message.send()
+        return True
+
+    except BadHeaderError as e:
+        return({'status':True, 'detail':f'OTP not sent to {recepient_email}: {e}'})
+
+@api_view(['POST'])
+def send_otp_to_email_or_phone(request):
+    """
+    Function that will send otp code to user's phone or email.
+    """
+    q = ''
+    try:
+        q = str(request.data['email_or_phone'])
+    except:
+        pass
+
+    if q:
+        account_exists = check_if_account_exists(q) # check if account exists matching the provided detailos
+        if account_exists['status'] == True:
+            otp_code = otp_generator()
+            # check if q is an email address or phone number to determine where to send OTP
+            if re.fullmatch(phone_regex, q):
+
+                phone_number = str(q)
+                #send code to phone Number
+                sms = send_password_reset_otp_sms(otp_code)
+                if sms == True:
+                    # Logging the otp code in the db
+                    old_otp = ''
+                    try:
+                        old_otp = models.ResetPasswordOTP.objects.get(phone__exact=phone_number)
+                    except:
+                        pass
+
+                    if old_otp:
+                        ins_count = old_otp.count
+                        old_otp.count = ins_count + 1
+                        old_otp.otp = otp_code
+                        old_otp.save(update_fields=['count','otp'])
+                    else:
+                        instance = models.ResetPasswordOTP.objects.create(
+                            phone = phone_number,
+                            otp = otp_code,
+                            count = 1
+                        )
+
+                    return Response({'status':True, 'user':account_exists['user']})
+                else:
+                    sms_send_error = sms
+                    return Response(sms_send_error)
+
+            elif re.fullmatch(email_regex, q):
+                recepient_email = q
+                contact_name = account_exists['user']['username']
+                email_sent = send_passcode_email(otp_code,contact_name,recepient_email)
+
+                if email_sent == True:
+                        # Logging the otp code in the db
+                        old_otp = ''
+                        try:
+                            old_otp = models.ResetPasswordOTP.objects.get(email__exact=recepient_email)
+                        except:
+                            pass
+
+                        if old_otp:
+                            ins_count = old_otp.count
+                            old_otp.count = ins_count + 1
+                            old_otp.otp = otp_code
+                            old_otp.save(update_fields=['count','otp'])
+                        else:
+                            instance = models.ResetPasswordOTP.objects.create(
+                                email = recepient_email,
+                                otp = otp_code,
+                                count = 1
+                            )
+
+                        return Response({'status':True, 'user':account_exists['user']})
+                else:
+                    error = email_sent
+                    return Response(error)
+
+        else:
+            return Response({'status':False, 'detail':account_exists['detail']})
+    else:
+        return Response({'email_or_phone': 'This field is required.'})
+
+@api_view(['POST'])
+def verify_password_reset_otp(request):
+    otp_code = ''
+    email_or_phone = ''
+    try:
+        otp_code = str(request.data['otp'])
+        email_or_phone = str(request.data['email_or_phone'])
+    except:
+        pass
+    if otp_code and email_or_phone:
+        account = check_if_account_exists(email_or_phone)
+        if account['status'] == True:
+            if re.fullmatch(phone_regex, email_or_phone): #if its a valid phone number
+                phone_number = str(email_or_phone)
+                otp_obj = models.ResetPasswordOTP.objects.filter(otp = otp_code, phone = phone_number)
+                if otp_obj.exists():
+                    # otp code provided is correct so verify it
+                    a = otp_obj.first()
+                    a.verified = True
+                    a.save()
+
+                    return Response({'status':True, 'detail':'OTP sucesfully verified', 'user':account['user']})
+                else:
+                    return Response({'status':False, 'detail':'Invalid OTP.'})
+
+            elif re.fullmatch(email_regex, email_or_phone):
+                email_adr = str(email_or_phone)
+                otp_obj = models.ResetPasswordOTP.objects.filter(otp = otp_code, email = email_adr)
+                if otp_obj.exists():
+                    # otp code provided is correct so verify it
+                    a = otp_obj.first()
+                    a.verified = True
+                    a.save()
+
+                    return Response({'status':True, 'detail':'OTP sucesfully verified', 'user':account['user']})
+                else:
+                    return Response({'status':False, 'detail':'Invalid OTP.'})
+            else:
+                return Response({'status':False, 'detail':'Phone number or email provided is invalid.'})
+        else:
+            return Response({'status':False, 'detail':account_exists['detail']})
+    else:
+        return Response({'otp':'This field is required.', 'email_or_phone':'This field is required.'})
+
+@api_view(['POST'])
+def reset_user_password(request):
+    u_name = ''
+    new_password_one = ''
+    new_password_two = ''
+    otp_code = ''
+    try:
+        u_name = str(request.data['username'])
+        new_password_one = str(request.data['new_password1'])
+        new_password_two = str(request.data['new_password2'])
+        otp_code = str(request.data['otp'])
+    except:
+        pass
+
+    if new_password_one and new_password_two and u_name and otp_code:
+        user = ''
+        try:
+            user = User.objects.get(username = u_name)
+        except:
+            pass
+        if user:
+            # check if an otp object instance exists in the db
+            otp = models.ResetPasswordOTP.objects.filter(Q(otp = otp_code, phone = user.phone) | Q(otp = otp_code, email = user.email))
+            if otp.exists():
+                if otp.first().verified == True:
+                    if new_password_one == new_password_two:
+                        user.set_password(new_password_one)
+                        user.save()
+
+                        # Since OTP has been verified and used to reset password, delete it to prevent reuse
+                        otp.first().delete()
+                        return Response({'status':True,'detail':'Password sucesfully changed. You can now use your new password to login to your account.'})
+                    else:
+                        return Response({'status':False,'detail':'new_password1 and new_password2 do not match!'})
+                else:
+                    return Response({'status':False,'detail':'OTP not verified. Verify OTP to confirm you own this account!'})
+            else:
+                return Response({'status':False,'detail':'Invalid OTP! Provide a valid OTP or request a new one.'})
+        else:
+            return Response({'statua':False,'detail':f'User {u_name} not found. Check username and try again!'})
+    else:
+        return Response({'new_password1':'This field is required.','new_password2':'This field is required.', 'username':'This field is required.', 'otp': 'This field is required.'})
+
+
+"""
+Reset password with OTP code views end here
+"""
 
 class UserAccountsFilter(django_filters.FilterSet):
     email = django_filters.rest_framework.CharFilter(field_name="email", lookup_expr='iexact')
