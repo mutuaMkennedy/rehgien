@@ -74,6 +74,8 @@ class PortfolioItemAdmin(AdminVideoMixin,LeafletGeoAdmin):
 class PhoneOtpAdmin(admin.ModelAdmin):
     list_display = ("phone","otp","count","logged")
 
+class ResetPasswordOTPAdmin(admin.ModelAdmin):
+    list_display = ("email","phone","otp","count","verified")
 
 admin.site.register(models.User, CustomUserAdmin)
 admin.site.register(models.ProfessionalGroup,ProfessionalGroupAdmin)
@@ -83,3 +85,4 @@ admin.site.register(models.BusinessProfile,BusinessProfileAdmin)
 admin.site.register(models.PortfolioItem, PortfolioItemAdmin)
 admin.site.register(models.TeammateConnection)
 admin.site.register(models.PhoneOTP,PhoneOtpAdmin)
+admin.site.register(models.ResetPasswordOTP,ResetPasswordOTPAdmin)
