@@ -88,7 +88,32 @@ class PhoneOTP(models.Model):
 
 	class Meta:
 		verbose_name_plural = 'Phone Otp'
-		
+
+"""
+# TODO:
+Add password reset limit that restricts a user from resetting their password
+more than x times in a day
+"""
+class ResetPasswordOTP(models.Model):
+	email = models.EmailField(blank=True, null=True, unique=True)
+	phone_regex = RegexValidator( regex = r'^\+?1?\d{9,14}$', message ="Phone number must be entered in the format: '+254xxxxxxxxx'. Up to 14 digits allowed.")
+	phone = models.CharField(validators=[phone_regex], max_length=17, null=True, blank=True)
+	otp = models.CharField(max_length = 9, blank = True, null= True)
+	count = models.IntegerField(default = 0, help_text = 'Number of times otp has been sent')
+	verified = models.BooleanField(default = False, help_text = 'If otp verification got successful')
+
+
+	def __str__(self):
+		rsp = ''
+		if self.phone:
+			rsp = 'OTP ' + str(self.otp) +  ' sent to ' + str(self.phone)
+		elif self.email:
+			rsp = 'OTP ' + str(self.otp) +  ' sent to ' + str(self.email)
+		return rsp
+
+	class Meta:
+		verbose_name_plural = 'Reset Password OTP'
+
 #Professional model tables from here
 class ProfessionalGroup(models.Model):
 	group_name = models.CharField(max_length=100, blank=False)
