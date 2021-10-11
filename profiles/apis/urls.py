@@ -61,4 +61,8 @@ urlpatterns = [
     path('rest-auth/facebook/', social_authentication.FacebookLogin.as_view(), name = 'fb_login'),
     path('rest-auth/google/', social_authentication.GoogleLogin.as_view(), name = 'google_login'),
 
+    # Password reset with OTP
+    path('account/password/reset/send_otp/', api_views.send_otp_to_email_or_phone, name = 'send_password_reset_otp'),
+    path('account/password/reset/verify_otp/', api_views.verify_password_reset_otp, name = 'verify_password_reset_otp'),
+    path('account/password/reset/confirm/', api_views.reset_user_password, name = 'reset_user_password'),
     ]
