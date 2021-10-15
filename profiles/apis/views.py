@@ -457,6 +457,11 @@ class ProfessionalGroupListApi(ListAPIView):
     queryset = models.ProfessionalGroup.objects.all()
     serializer_class = serializers.ProfessionalGroupSerializer
 
+class ProfessionalGroupEditApi(RetrieveUpdateAPIView):
+    queryset = models.ProfessionalGroup.objects.all()
+    serializer_class = serializers.ProfessionalGroupSerializer
+    permission_classes = [IsAuthenticated]
+
 class ProfessionalCategoryListApi(ListAPIView):
     queryset = models.ProfessionalCategory.objects.all()
     serializer_class = serializers.ProfessionalCategorySerializer
