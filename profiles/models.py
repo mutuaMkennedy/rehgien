@@ -120,6 +120,8 @@ class ProfessionalGroup(models.Model):
 	group_image = CloudinaryField('image', blank=True, null=True, overwrite=True, resource_type='image',
 							folder='professional_group_cover_photos')
 	slug = models.SlugField(max_length=250, blank=True)
+	interests = models.ManyToManyField(settings.AUTH_USER_MODEL, blank = True, \
+			related_name='group_interests')
 
 	class Meta:
 		verbose_name_plural = "ProfessionalGroups"
