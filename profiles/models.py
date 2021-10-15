@@ -144,6 +144,8 @@ class ProfessionalCategory(models.Model):
 		return self.category_name
 
 class ProfessionalService(models.Model):
+	professional_category = models.ForeignKey(ProfessionalCategory, on_delete=models.PROTECT,\
+									default = None, related_name='pro_category', null =True)
 	service_name = models.CharField(max_length=100, blank=False)
 	service_image =  CloudinaryField('image', blank=True, null=True, overwrite=True, resource_type='image',
 							folder='professional_group_cover_photos')
