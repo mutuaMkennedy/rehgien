@@ -75,9 +75,10 @@ class ProfessionalCategorySerializer(serializers.ModelSerializer):
         fields = ['pk', "category_name","category_image","slug","professional_group",]
 
 class ProfessionalServiceSerializer(serializers.ModelSerializer):
+    professional_category = ProfessionalCategorySerializer()
     class Meta:
         model = profiles_models.ProfessionalService
-        fields = ['pk',"service_name","service_image","slug"]
+        fields = ['pk',"professional_category","service_name","service_image","slug"]
 
 class ReviewSerializer(serializers.ModelSerializer):
     reviewer_user_object = serializers.SerializerMethodField()
