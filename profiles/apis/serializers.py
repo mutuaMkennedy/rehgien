@@ -59,9 +59,14 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 class ProfessionalGroupSerializer(serializers.ModelSerializer):
+    total_services = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.ProfessionalGroup
-        fields = ['pk',"group_image","slug"]
+        fields = ['pk',"group_image","slug","interests","total_services"]
+
+    def get_total_services(self,obj):
+        categories = profiles_models.ProfessionalCategory.objects.filter(professional_group = obj.pk)
+        return categories.count()
 
 class ProfessionalCategorySerializer(serializers.ModelSerializer):
     professional_group = ProfessionalGroupSerializer(many=False, read_only=True)
@@ -379,14 +384,22 @@ class UserAccountSerializer(WritableNestedModelSerializer):
     _user_account_percentage_complete_ = serializers.SerializerMethodField()
     business_pages_following = serializers.SerializerMethodField()
     business_pages_saved = serializers.SerializerMethodField()
+    has_interest_group = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.User
         fields = [
         'user_type_choices','account_type_choices','pk', 'username', 'first_name',
         'last_name', 'email', 'user_type','account_type', 'profile_image', 'business_pages_following', 'business_pages_saved',
         "pro_business_profile", "profiles_portfolioitem_createdby_related", "connection_requestor",
-        "connection_request_receiver", "listings_home_owner_related",'_user_account_percentage_complete_'
+        "connection_request_receiver", "listings_home_owner_related",'_user_account_percentage_complete_', 'has_interest_group'
         ]
+
+    def get_has_interest_group(self, obj):
+        groups = obj.group_interests.all()
+        status = False
+        if groups:
+            status = True
+        return status
 
     def get__user_account_percentage_complete_(self,obj):
         percent = { 'username': 10, 'first_name': 15, 'last_name': 15, 'email': 20,
