@@ -34,6 +34,7 @@ from .africas_talking import send_otp_sms,send_password_reset_otp_sms
 import django_filters
 import re
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 
 # referencing the custom user model
@@ -657,3 +658,142 @@ class ClientDeleteApi(DestroyAPIView):
     queryset = models.Client.objects.all()
     serializer_class = serializers.ClientSerializer
     permission_classes = [IsBusinessProfileOwnerOrReadOnly]
+
+# Service search history
+
+class ServiceSearchHistoryListApi(ListAPIView):
+    queryset = models.ServiceSearchHistory.objects.all()
+    serializer_class = serializers.ServiceSearchHistorySerializer
+
+class ServiceSearchHistoryDetailApi(RetrieveAPIView):
+    queryset = models.ServiceSearchHistory.objects.all()
+    serializer_class = serializers.ServiceSearchHistorySerializer
+
+"""
+ A custom api view for handling all the logic of creating
+ and updating a search history object
+"""
+@api_view(['POST'])
+def create_or_update_search_history(request):
+    user_id = ''
+    service_id = ''
+    try:
+        user_id = str(request.data['user_id'])
+        service_id = str(request.data['service_id'])
+    except:
+        pass
+
+    if user_id and service_id:
+        search_obj = models.ServiceSearchHistory.objects.filter(user = user_id, professional_service = service_id)
+        response_message = ''
+        if search_obj.exists():
+            # don't create a new object, update the count only
+            instance = search_obj.first()
+            innitial_count = instance.search_count
+            instance.search_count = innitial_count + 1
+            instance.save()
+
+            n_search = get_object_or_404(models.ServiceSearchHistory, pk=search_obj.first().pk)
+            a = {
+                "pk":n_search.pk,
+                "user":n_search.user.username,
+                "professional_service":n_search.professional_service.service_name,
+                "search_count":n_search.search_count,
+                "search_date":n_search.search_date,
+            }
+            response_message = {'status':True, 'search':a }
+        else:
+            # create a search object
+            user_obj = ''
+            service_obj = ''
+            try:
+                user_obj = User.objects.get(pk=user_id)
+                service_obj = models.ProfessionalService.objects.get(pk=service_id)
+            except:
+                pass
+
+            if user_obj and service_obj:
+                n_search = models.ServiceSearchHistory.objects.create(
+                    user = user_obj,
+                    professional_service = service_obj,
+                    search_count = 1
+                    )
+
+                a = {
+                    "pk":n_search.pk,
+                    "user":n_search.user.username,
+                    "professional_service":n_search.professional_service.service_name,
+                    "search_count":n_search.search_count,
+                    "search_date":n_search.search_date,
+                }
+                response_message = {'status':True, 'search':a }
+            else:
+                response_message = {'status':False, 'detail':f'User with user_id:{user_id} or Service with service_id:{service_id} do not exist or are invalid.'}
+
+        return Response(response_message)
+
+    else:
+        return Response({'user_id':'This field is required.', 'service_id':'This field is required.'})
+
+def get_total_searches(service):
+    """" Sort get key function for search_history_stats api view"""
+    return service.get('total_searches')
+
+@api_view(['GET'])
+def search_history_stats(request):
+    """
+    Function will return statistic results for all searches made
+    """
+    searches = models.ServiceSearchHistory.objects.all()
+    services = models.ProfessionalService.objects.all()
+    recent_searches_items = searches.order_by('-search_date')[0:10]
+
+    recent_searches = []
+    if recent_searches_items:
+        for svc in recent_searches_items:
+            service_image_url = svc.professional_service.service_image.url if svc.professional_service.service_image else ''
+            service_obj = {
+                'user':svc.user.username,
+                'professional_service':{
+                        'pk':svc.professional_service.pk,
+                        'service_name':svc.professional_service.service_name,
+                        'service_image': service_image_url,
+                        'slug':svc.professional_service.slug,
+                    },
+                'search_count':svc.search_count,
+                'search_date':svc.search_date,
+            }
+
+            recent_searches.append(service_obj)
+
+    # Constructing an array of popular searches
+    services_array = []
+    if services:
+        for svc in services:
+            search_items = searches.filter(professional_service=svc)
+            if search_items.exists():
+                total_search_count = 0
+                for sch in search_items:
+                    in_count = total_search_count
+                    total_search_count = in_count + sch.search_count
+
+                service_image_url = search_items.first().professional_service.service_image.url if search_items.first().professional_service.service_image else ''
+
+                service_obj = {
+                    'user':search_items.first().user.username,
+                    'professional_service':{
+                            'pk':search_items.first().professional_service.pk,
+                            'service_name':search_items.first().professional_service.service_name,
+                            'service_image': service_image_url,
+                            'slug':search_items.first().professional_service.slug,
+                        },
+                    'unique_search_count':search_items.count(),
+                    'global_search_count':total_search_count,
+                    'total_searches':search_items.count() + total_search_count
+                }
+
+                services_array.append(service_obj)
+    # Then we sort the array to get the top 10 popular searches/services
+    popular_searches = sorted(services_array, key=get_total_searches, reverse=True)[0:10]
+
+    return Response({'recent_searches':recent_searches,'popular_searches':popular_searches})
