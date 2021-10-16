@@ -70,15 +70,39 @@ class ProfessionalGroupSerializer(serializers.ModelSerializer):
 
 class ProfessionalCategorySerializer(serializers.ModelSerializer):
     professional_group = ProfessionalGroupSerializer(many=False, read_only=True)
+    professional_services = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.ProfessionalCategory
-        fields = ['pk', "category_name","category_image","slug","professional_group",]
+        fields = ['pk', "category_name","category_image","slug","professional_group",
+                    "professional_services"]
+
+    def get_professional_services(self,obj):
+        services = []
+        for svc in obj.pro_category.all():
+            item = {
+                "pk":svc.pk,
+                "professional_category":svc.professional_category.pk,
+                "service_name":svc.service_name,
+                # "service_image",
+                "slug":svc.slug,
+            }
+
+            services.append(item)
+        return services
 
 class ProfessionalServiceSerializer(serializers.ModelSerializer):
     professional_category = ProfessionalCategorySerializer()
     class Meta:
         model = profiles_models.ProfessionalService
         fields = ['pk',"professional_category","service_name","service_image","slug"]
+
+class ServiceSearchHistorySerializer(serializers.ModelSerializer):
+    professional_service = ProfessionalServiceSerializer()
+    class Meta:
+        model = profiles_models.ServiceSearchHistory
+        fields = [
+        'pk','user', 'professional_service', 'search_count', 'search_date'
+        ]
 
 class ReviewSerializer(serializers.ModelSerializer):
     reviewer_user_object = serializers.SerializerMethodField()
@@ -381,6 +405,7 @@ class UserAccountSerializer(WritableNestedModelSerializer):
     profiles_portfolioitem_createdby_related = PortfolioItemSerializer(many=True)
     connection_requestor = TeammateConnectionSerializer(many=True)
     connection_request_receiver = TeammateConnectionSerializer(many=True)
+    user_service_search_history = serializers.SerializerMethodField()
     listings_home_owner_related = listings_serializers.HomeSerializer(many=True)
     _user_account_percentage_complete_ = serializers.SerializerMethodField()
     business_pages_following = serializers.SerializerMethodField()
@@ -392,7 +417,8 @@ class UserAccountSerializer(WritableNestedModelSerializer):
         'user_type_choices','account_type_choices','pk', 'username', 'first_name',
         'last_name', 'email', 'user_type','account_type', 'profile_image', 'business_pages_following', 'business_pages_saved',
         "pro_business_profile", "profiles_portfolioitem_createdby_related", "connection_requestor",
-        "connection_request_receiver", "listings_home_owner_related",'_user_account_percentage_complete_', 'has_interest_group'
+        "connection_request_receiver", "listings_home_owner_related",'_user_account_percentage_complete_', 'has_interest_group',
+        'user_service_search_history'
         ]
 
     def get_has_interest_group(self, obj):
@@ -497,6 +523,10 @@ class UserAccountSerializer(WritableNestedModelSerializer):
             }
             page_obj_array.append(fields)
         return page_obj_array
+
+    def get_user_service_search_history(self, object):
+        searches = object.user_service_search_history.order_by('-search_date')
+        return ServiceSearchHistorySerializer(searches,many=True).data
 
 class PhoneOtpSerializer(serializers.ModelSerializer):
     class Meta:
