@@ -77,6 +77,9 @@ class PhoneOtpAdmin(admin.ModelAdmin):
 class ResetPasswordOTPAdmin(admin.ModelAdmin):
     list_display = ("email","phone","otp","count","verified")
 
+class ServiceSearchHistoryAdmin(admin.ModelAdmin):
+    list_display = ("user","professional_service","search_count","search_date")
+
 admin.site.register(models.User, CustomUserAdmin)
 admin.site.register(models.ProfessionalGroup,ProfessionalGroupAdmin)
 admin.site.register(models.ProfessionalCategory,ProfessionalCategoryAdmin)
@@ -86,3 +89,4 @@ admin.site.register(models.PortfolioItem, PortfolioItemAdmin)
 admin.site.register(models.TeammateConnection)
 admin.site.register(models.PhoneOTP,PhoneOtpAdmin)
 admin.site.register(models.ResetPasswordOTP,ResetPasswordOTPAdmin)
+admin.site.register(models.ServiceSearchHistory,ServiceSearchHistoryAdmin)
