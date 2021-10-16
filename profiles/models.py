@@ -157,6 +157,20 @@ class ProfessionalService(models.Model):
 	def __str__(self):
 		return self.service_name
 
+class ServiceSearchHistory(models.Model):
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, blank = True, \
+			null = True, related_name='user_service_search_history', on_delete=models.SET_NULL)
+	professional_service = models.ForeignKey(ProfessionalService, on_delete=models.PROTECT,\
+				default = None, related_name='pro_service_search_history', null =True, blank=True)
+	search_count = models.PositiveIntegerField(default=0, null=True, blank=True)
+	search_date = models.DateTimeField(auto_now = True, auto_now_add = False, null=True, blank=True)
+
+	def __str__(self):
+		return self.user.username + ' ' + self.professional_service.service_name + ' ' + str(self.search_count)
+
+	class Meta:
+		verbose_name_plural = 'Service Search History'
+
 
 class BusinessProfile(models.Model):
 
