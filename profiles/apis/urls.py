@@ -66,4 +66,10 @@ urlpatterns = [
     path('account/password/reset/send_otp/', api_views.send_otp_to_email_or_phone, name = 'send_password_reset_otp'),
     path('account/password/reset/verify_otp/', api_views.verify_password_reset_otp, name = 'verify_password_reset_otp'),
     path('account/password/reset/confirm/', api_views.reset_user_password, name = 'reset_user_password'),
+
+    # Search history
+    path('search/search_history/list/', api_views.ServiceSearchHistoryListApi.as_view(), name = 'search_history'),
+    path('search/search_history/<int:pk>/retrieve/', api_views.ServiceSearchHistoryDetailApi.as_view(), name = 'search_history_retrieve'),
+    path('search/search_history/save/', api_views.create_or_update_search_history, name = 'create_or_update_search_history'),
+    path('search/search_history/stats/', api_views.search_history_stats, name = 'search_history_stats'),
     ]
