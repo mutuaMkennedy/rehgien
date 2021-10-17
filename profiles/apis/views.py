@@ -739,15 +739,45 @@ def get_total_searches(service):
     """" Sort get key function for search_history_stats api view"""
     return service.get('total_searches')
 
-@api_view(['GET'])
-def search_history_stats(request):
-    """
-    Function will return statistic results for all searches made
-    """
-    searches = models.ServiceSearchHistory.objects.all()
-    services = models.ProfessionalService.objects.all()
-    recent_searches_items = searches.order_by('-search_date')[0:10]
+def get_popular_searches(services, searches):
+    services_array = []
+    if services:
+        for svc in services:
+            search_items = searches.filter(professional_service=svc)
+            if search_items.exists():
+                total_search_count = 0
+                for sch in search_items:
+                    in_count = total_search_count
+                    total_search_count = in_count + sch.search_count
 
+                service_image_url = search_items.first().professional_service.service_image.url if search_items.first().professional_service.service_image else ''
+                pro_group_image_url = search_items.first().professional_service.professional_category.professional_group.group_image.url if search_items.first().professional_service.professional_category.professional_group.group_image else ''
+
+                service_obj = {
+                    'user':search_items.first().user.username,
+                    'professional_service':{
+                            'pk':search_items.first().professional_service.pk,
+                            'service_name':search_items.first().professional_service.service_name,
+                            'service_image': service_image_url,
+                            'slug':search_items.first().professional_service.slug,
+                        },
+                    'professional_group':{
+                            "pk":search_items.first().professional_service.professional_category.professional_group.pk,
+                            "group_name":search_items.first().professional_service.professional_category.professional_group.group_name,
+                            "group_image":pro_group_image_url,
+                            "slug":search_items.first().professional_service.professional_category.professional_group.slug,
+                        },
+                    'unique_search_count':search_items.count(),
+                    'global_search_count':total_search_count,
+                    'total_searches':search_items.count() + total_search_count
+                }
+
+                services_array.append(service_obj)
+    popular_searcvices = sorted(services_array, key=get_total_searches, reverse=True)[0:10]
+    return popular_searcvices
+
+def get_recent_searches(services, searches):
+    recent_searches_items = searches.order_by('-search_date')[0:10]
     recent_searches = []
     if recent_searches_items:
         for svc in recent_searches_items:
@@ -765,35 +795,17 @@ def search_history_stats(request):
             }
 
             recent_searches.append(service_obj)
+    return recent_searches
 
-    # Constructing an array of popular searches
-    services_array = []
-    if services:
-        for svc in services:
-            search_items = searches.filter(professional_service=svc)
-            if search_items.exists():
-                total_search_count = 0
-                for sch in search_items:
-                    in_count = total_search_count
-                    total_search_count = in_count + sch.search_count
-
-                service_image_url = search_items.first().professional_service.service_image.url if search_items.first().professional_service.service_image else ''
-
-                service_obj = {
-                    'user':search_items.first().user.username,
-                    'professional_service':{
-                            'pk':search_items.first().professional_service.pk,
-                            'service_name':search_items.first().professional_service.service_name,
-                            'service_image': service_image_url,
-                            'slug':search_items.first().professional_service.slug,
-                        },
-                    'unique_search_count':search_items.count(),
-                    'global_search_count':total_search_count,
-                    'total_searches':search_items.count() + total_search_count
-                }
-
-                services_array.append(service_obj)
-    # Then we sort the array to get the top 10 popular searches/services
-    popular_searches = sorted(services_array, key=get_total_searches, reverse=True)[0:10]
-
+@api_view(['GET'])
+def search_history_stats(request):
+    """
+    Function will return statistic results for all searches made
+    """
+    searches = models.ServiceSearchHistory.objects.all()
+    services = models.ProfessionalService.objects.all()
+    # getting recent searches
+    recent_searches = get_recent_searches(services,searches)
+    # Get popular searches
+    popular_searches = get_popular_searches(services,searches)
     return Response({'recent_searches':recent_searches,'popular_searches':popular_searches})
