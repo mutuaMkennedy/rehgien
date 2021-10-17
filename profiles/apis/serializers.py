@@ -10,7 +10,7 @@ from django.db.models import Avg
 from rest_auth.registration.serializers import RegisterSerializer
 from django.db import transaction
 from django.db import IntegrityError
-
+from . import views
 # referencing the custom user model
 User = get_user_model()
 
@@ -411,6 +411,8 @@ class UserAccountSerializer(WritableNestedModelSerializer):
     business_pages_following = serializers.SerializerMethodField()
     business_pages_saved = serializers.SerializerMethodField()
     has_interest_group = serializers.SerializerMethodField()
+    groups_interested_in = serializers.SerializerMethodField()
+    recommended_services = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.User
         fields = [
@@ -418,7 +420,7 @@ class UserAccountSerializer(WritableNestedModelSerializer):
         'last_name', 'email', 'user_type','account_type', 'profile_image', 'business_pages_following', 'business_pages_saved',
         "pro_business_profile", "profiles_portfolioitem_createdby_related", "connection_requestor",
         "connection_request_receiver", "listings_home_owner_related",'_user_account_percentage_complete_', 'has_interest_group',
-        'user_service_search_history'
+        "groups_interested_in", 'user_service_search_history','recommended_services'
         ]
 
     def get_has_interest_group(self, obj):
@@ -527,6 +529,60 @@ class UserAccountSerializer(WritableNestedModelSerializer):
     def get_user_service_search_history(self, object):
         searches = object.user_service_search_history.order_by('-search_date')
         return ServiceSearchHistorySerializer(searches,many=True).data
+
+    def get_recommended_services(self,object):
+        rec_services = []
+        interest_group = object.group_interests.all()
+        if interest_group:
+            for grp in interest_group:
+                searches = profiles_models.ServiceSearchHistory.objects.all()
+                services = profiles_models.ProfessionalService.objects.filter(professional_category__professional_group__pk=grp.pk)
+                popular_services = views.get_popular_searches(services,searches)
+
+                pop_services_array = []
+                for svc in popular_services:
+                    arr = {
+                        "pk":svc['professional_service']['pk'],
+                        "service_name":svc['professional_service']['service_name'],
+                        "service_image":svc['professional_service']['service_image'],
+                        "slug":svc['professional_service']['slug'],
+                    }
+                    pop_services_array.append(arr)
+
+                category_array = []
+                for catg in grp.pro_category_group.all():
+                    arr = {
+                    "category_name":catg.category_name,
+                    "category_image":catg.category_image.url if catg.category_image else '',
+                    "slug":catg.slug,
+                    }
+                    category_array.append(arr)
+
+                array = {
+                "group_name":grp.group_name,
+                "group_image":grp.group_image.url if grp.group_image else '',
+                "slug":grp.slug,
+                "professional_categories":category_array,
+                "professional_services":pop_services_array
+                }
+                rec_services.append(array)
+
+            return rec_services
+        else:
+            return rec_services
+
+    def get_groups_interested_in(self, object):
+        group_objects = object.group_interests.all()
+        groups = []
+        for grp in group_objects:
+            array={
+                "pk":grp.pk,
+                "group_name":grp.group_name,
+                "group_image":grp.group_image.url if grp.group_image.url else '',
+                "slug":grp.slug,
+            }
+            groups.append(array)
+        return groups
 
 class PhoneOtpSerializer(serializers.ModelSerializer):
     class Meta:
