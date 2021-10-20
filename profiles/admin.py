@@ -80,6 +80,26 @@ class ResetPasswordOTPAdmin(admin.ModelAdmin):
 class ServiceSearchHistoryAdmin(admin.ModelAdmin):
     list_display = ("user","professional_service","search_count","search_date")
 
+class MatchMakerAdmin(admin.ModelAdmin):
+    list_display = ("professional_service",)
+
+class QuestionOptionsInline(admin.StackedInline):
+    model = models.QuestionOptions
+    extra = 3
+
+class ClientAnswerInline(admin.StackedInline):
+    model = models.ClientAnswer
+    extra = 3
+
+class ProAnswerInline(admin.StackedInline):
+    model = models.ProAnswer
+    extra = 3
+
+class QuestionAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("title",)}
+    inlines = [QuestionOptionsInline,ClientAnswerInline,ProAnswerInline]
+    list_display = ("title","question_type","matchMaker",)
+
 admin.site.register(models.User, CustomUserAdmin)
 admin.site.register(models.ProfessionalGroup,ProfessionalGroupAdmin)
 admin.site.register(models.ProfessionalCategory,ProfessionalCategoryAdmin)
@@ -90,3 +110,6 @@ admin.site.register(models.TeammateConnection)
 admin.site.register(models.PhoneOTP,PhoneOtpAdmin)
 admin.site.register(models.ResetPasswordOTP,ResetPasswordOTPAdmin)
 admin.site.register(models.ServiceSearchHistory,ServiceSearchHistoryAdmin)
+admin.site.register(models.MatchMaker,MatchMakerAdmin)
+admin.site.register(models.Question,QuestionAdmin)
+admin.site.register(models.QuestionOptions)
