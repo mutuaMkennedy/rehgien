@@ -72,4 +72,9 @@ urlpatterns = [
     path('search/search_history/<int:pk>/retrieve/', api_views.ServiceSearchHistoryDetailApi.as_view(), name = 'search_history_retrieve'),
     path('search/search_history/save/', api_views.create_or_update_search_history, name = 'create_or_update_search_history'),
     path('search/search_history/stats/', api_views.search_history_stats, name = 'search_history_stats'),
+
+    # Matchmaking Process
+    path('search/matchmaking/questions/list/', api_views.MatchMakerListApi.as_view(), name = 'match_maker_list'),
+    path('search/matchmaking/questions/<int:professional_service>/retrieve/', api_views.MatchMakerRetrieveApi.as_view(), name = 'match_maker_retrieve'),
+    path('search/matchmaking/pros/find_match/', api_views.match_client_with_pros, name = 'match_client_with_pros'),
     ]
