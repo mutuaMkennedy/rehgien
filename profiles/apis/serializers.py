@@ -98,10 +98,11 @@ class ProfessionalServiceSerializer(serializers.ModelSerializer):
 
 class ServiceSearchHistorySerializer(serializers.ModelSerializer):
     professional_service = ProfessionalServiceSerializer()
+    project_location = location_serializers.KenyaTownSerializer()
     class Meta:
         model = profiles_models.ServiceSearchHistory
         fields = [
-        'pk','user', 'professional_service', 'search_count', 'search_date'
+        'pk','user', 'professional_service','project_location', 'search_count', 'search_date'
         ]
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -588,3 +589,31 @@ class PhoneOtpSerializer(serializers.ModelSerializer):
     class Meta:
         model = profiles_models.PhoneOTP
         fields = '__all__'
+
+class QuestionOptionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = profiles_models.QuestionOptions
+        fields = [
+            "pk","question","name",
+        ]
+
+class QuestionSerializer(serializers.ModelSerializer):
+    question_option = QuestionOptionsSerializer(many=True)
+    class Meta:
+        model = profiles_models.Question
+        fields = [
+            "pk","matchMaker","step","title","slug","client_question","pro_question","question_type","question_option"
+        ]
+
+class MatchMakerSerializer(serializers.ModelSerializer):
+    professional_service = ProfessionalServiceSerializer()
+    matchmaker_question = serializers.SerializerMethodField()
+    class Meta:
+        model = profiles_models.MatchMaker
+        fields = [
+            "pk","professional_service","description","matchmaker_question"
+        ]
+
+    def get_matchmaker_question(self, object):
+        questions = object.matchmaker_question.order_by('step')
+        return QuestionSerializer(questions,many=True).data
