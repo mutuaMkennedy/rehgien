@@ -1,7 +1,7 @@
 from . import serializers
 from location import models
 from rest_framework.generics import ListAPIView
-
+import django_filters
 
 
 class DistrictsListApi(ListAPIView):
@@ -48,6 +48,16 @@ class UniversitiesListApi(ListAPIView):
     queryset = models.Universities.objects.all()
     serializer_class = serializers.UniversitiesSerializer
 
+class KenyaTownsFilter(django_filters.FilterSet):
+    town_name = django_filters.rest_framework.CharFilter(field_name="town_name", lookup_expr='icontains')
+    class Meta:
+        model = models.KenyaTown
+        fields = {
+            'town_name'
+        }
+
 class KenyaTownListApi(ListAPIView):
     queryset = models.KenyaTown.objects.all()
     serializer_class = serializers.KenyaTownSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_class = KenyaTownsFilter
