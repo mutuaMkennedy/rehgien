@@ -162,6 +162,8 @@ class ServiceSearchHistory(models.Model):
 			null = True, related_name='user_service_search_history', on_delete=models.SET_NULL)
 	professional_service = models.ForeignKey(ProfessionalService, on_delete=models.PROTECT,\
 				default = None, related_name='pro_service_search_history', null =True, blank=True)
+	project_location = models.ForeignKey(location_models.KenyaTown, blank = False, \
+						on_delete=models.SET_NULL, null=True, related_name='project_location_service_search_history')
 	search_count = models.PositiveIntegerField(default=0, null=True, blank=True)
 	search_date = models.DateTimeField(auto_now = True, auto_now_add = False, null=True, blank=True)
 
@@ -431,3 +433,76 @@ def send_email_to_receiver(sender, instance, **kwargs):
 	# else this is a new connection request so send a request to connect email message
 	else:
 		profile_celery_tasks.send_connection_request_email.delay(requestor_business_profile_pk,receiver_business_profile_pk)
+
+"""
+Matchmaking model for holding Filter options that will allow for a better and
+dynamic filtering process.
+"""
+class MatchMaker(models.Model):
+	professional_service = models.OneToOneField(ProfessionalService, on_delete=models.CASCADE,\
+							default = None, related_name='matchmaking_service')
+	description = models.TextField()
+
+	def __str__(self):
+		return self.professional_service.service_name
+
+	class Meta:
+		verbose_name_plural = "Matchmaking Process"
+
+class Question(models.Model):
+	QUESTION_TYPE = (
+	('MULTIPLE_CHOICE','Multiple Choice'),
+	('SINGLE_CHOICE', 'Single Choice'),
+	('TEXT_INPUT','Text Input')
+	)
+	step = models.PositiveIntegerField(default=0, help_text="The step where the question will appear")
+	title = models.CharField(max_length=100, help_text="A short title of question e.g. Number of rooms, Cleaning Type")
+	slug = models.SlugField(max_length=250, blank=True)
+	client_question = models.TextField(help_text="The question that clients will be asked e.g. How many rooms are you painting?",null=True)
+	pro_question= models.TextField(help_text="The question that professionals will be asked?", null=True)
+	question_type = models.CharField(choices=QUESTION_TYPE, max_length=100, default='TEXT_INPUT', blank=False)
+	matchMaker = models.ForeignKey(MatchMaker,on_delete=models.CASCADE,\
+						default = None, related_name='matchmaker_question')
+
+	def __str__(self):
+		return self.title
+
+	class Meta:
+		verbose_name_plural = "Matchmaking Questions"
+
+class QuestionOptions(models.Model):
+	question = models.ForeignKey(Question,on_delete=models.SET_NULL,\
+							default = None, null=True, blank=False, related_name='question_option')
+	name = models.CharField(max_length=100, null=True, blank=False, help_text="Option name")
+
+	def __str__(self):
+		return self.name
+
+	class Meta:
+		verbose_name_plural = "Question Options"
+
+class ClientAnswer(models.Model):
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,\
+			default = None, null=True, related_name='user_answer')
+	question = models.ForeignKey(Question, on_delete=models.CASCADE,\
+							default = None, related_name='question_answer')
+	project_location = models.ForeignKey(location_models.KenyaTown, blank = False, \
+						on_delete=models.SET_NULL, null=True, related_name='client_project_location')
+	answer = models.ManyToManyField(QuestionOptions, blank=True, related_name='option_answer')
+	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+
+	def __str__(self):
+		return self.user.username + ' ' + self.question.title + ' ' + str(self.question.question_type)
+
+class ProAnswer(models.Model):
+	business_profile = models.ForeignKey(BusinessProfile, on_delete=models.SET_NULL,\
+			default = None, null=True, related_name='match_answer')
+	question = models.ForeignKey(Question, on_delete=models.CASCADE,\
+							default = None, related_name='pro_question_answer')
+	service_delivery_areas = models.ManyToManyField(location_models.KenyaTown, blank = False, \
+								related_name='pro_service_delivery_areas')
+	answer = models.ManyToManyField(QuestionOptions, blank=True, related_name='pro_option_answer')
+	timestamp = models.DateTimeField(auto_now_add=False, auto_now=True)
+
+	def __str__(self):
+		return self.business_profile.business_name + ' ' + str(self.question.question_type)
