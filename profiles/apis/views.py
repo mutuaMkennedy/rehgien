@@ -173,15 +173,13 @@ def validate_sent_otp(request):
         pass
 
     if phone_number and otp_code:
-        otp_instance = ''
-        try:
-            otp_instance = models.PhoneOTP.objects.get(phone__iexact=phone_number)
-        except:
-            pass
-        if otp_instance:
-            if otp_instance.logged == False:
-                otp_instance.logged = True
-                otp_instance.save( update_fields=['logged'])
+        otp_instance = models.PhoneOTP.objects.filter(phone__iexact=phone_number, otp=otp_code)
+        if otp_instance.exists():
+            #We found a otp instance matching the phone number and otp provided so log/verify the phone number
+            if otp_instance.first().logged == False:
+                a = otp_instance.first()
+                a.logged = True
+                a.save( update_fields=['logged'])
                 return Response({'status': True, 'detail':'Phone number sucessfully verified.'})
             else:
                 return Response({'status': True, 'detail':'Phone number alredy verified.'})
