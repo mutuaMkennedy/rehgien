@@ -21,7 +21,7 @@ from ckeditor.fields import RichTextField
 from django.contrib.gis.db import models
 from django.db.models import Avg
 from multiselectfield import MultiSelectField
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -36,6 +36,14 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from contact import views as contact_views
 from . import tasks as profile_celery_tasks
+import datetime
+
+
+def current_year():
+	return datetime.date.today().year
+
+def max_value_current_year(value):
+	return MaxValueValidator(current_year())(value)
 
 # extending user model
 class User(AbstractUser):
@@ -364,6 +372,14 @@ class Review(models.Model):
 class PortfolioItemBase(models.Model):
 	name = models.CharField(max_length = 50, blank = False, null = True)
 	description = models.TextField(blank = False, null = True)
+	project_job_type = models.ForeignKey(ProfessionalService, on_delete=models.SET_NULL,\
+				default = None, related_name='project_job_type', null =True, blank=False)
+	project_location = models.ForeignKey(location_models.KenyaTown, blank = False, \
+						on_delete=models.SET_NULL, null=True, related_name='project_location')
+	project_cost = models.DecimalField(max_digits = 19, decimal_places = 4, null=True, blank=False)
+	project_duration = models.PositiveIntegerField(null=True, blank=False, help_text='Project duration_in days')
+	project_year = models.PositiveIntegerField(null=True, blank=False,default=current_year(),
+					validators=[MinValueValidator(1984), max_value_current_year])
 	video = EmbedVideoField(blank = True, null = True)
 	created_at = models.DateTimeField(auto_now = False, auto_now_add = True)
 	created_by = models.ForeignKey(settings.AUTH_USER_MODEL, default = None, on_delete = models.CASCADE,
