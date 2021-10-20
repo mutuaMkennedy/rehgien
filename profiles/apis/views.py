@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth import get_user_model
 from profiles import models
+from location import models as location_models
 from rest_framework import filters
 from rest_framework.generics import (
                                     CreateAPIView,
@@ -33,7 +34,7 @@ from .utils import otp_generator
 from .africas_talking import send_otp_sms,send_password_reset_otp_sms
 import django_filters
 import re
-from django.db.models import Q
+from django.db.models import Q,Count
 from django.shortcuts import get_object_or_404
 
 
@@ -677,14 +678,16 @@ class ServiceSearchHistoryDetailApi(RetrieveAPIView):
 def create_or_update_search_history(request):
     user_id = ''
     service_id = ''
+    project_location_id = ''
     try:
         user_id = str(request.data['user_id'])
         service_id = str(request.data['service_id'])
+        project_location_id = str(request.data['project_location_id'])
     except:
         pass
 
-    if user_id and service_id:
-        search_obj = models.ServiceSearchHistory.objects.filter(user = user_id, professional_service = service_id)
+    if user_id and service_id and project_location_id:
+        search_obj = models.ServiceSearchHistory.objects.filter(user = user_id, professional_service = service_id, project_location= project_location_id)
         response_message = ''
         if search_obj.exists():
             # don't create a new object, update the count only
@@ -694,10 +697,12 @@ def create_or_update_search_history(request):
             instance.save()
 
             n_search = get_object_or_404(models.ServiceSearchHistory, pk=search_obj.first().pk)
+
             a = {
                 "pk":n_search.pk,
                 "user":n_search.user.username,
                 "professional_service":n_search.professional_service.service_name,
+                "project_location":n_search.project_location.town_name,
                 "search_count":n_search.search_count,
                 "search_date":n_search.search_date,
             }
@@ -706,23 +711,28 @@ def create_or_update_search_history(request):
             # create a search object
             user_obj = ''
             service_obj = ''
+            project_location_obj = ''
             try:
                 user_obj = User.objects.get(pk=user_id)
                 service_obj = models.ProfessionalService.objects.get(pk=service_id)
+                project_location_obj = location_models.KenyaTown.objects.get(pk=project_location_id)
             except:
                 pass
 
-            if user_obj and service_obj:
+            if user_obj and service_obj and project_location_obj:
                 n_search = models.ServiceSearchHistory.objects.create(
                     user = user_obj,
                     professional_service = service_obj,
+                    project_location = project_location_obj,
                     search_count = 1
                     )
+
 
                 a = {
                     "pk":n_search.pk,
                     "user":n_search.user.username,
                     "professional_service":n_search.professional_service.service_name,
+                    "project_location":n_search.project_location.town_name,
                     "search_count":n_search.search_count,
                     "search_date":n_search.search_date,
                 }
@@ -733,7 +743,7 @@ def create_or_update_search_history(request):
         return Response(response_message)
 
     else:
-        return Response({'user_id':'This field is required.', 'service_id':'This field is required.'})
+        return Response({'user_id':'This field is required.', 'service_id':'This field is required.','project_location_id':'This field is required.'})
 
 def get_total_searches(service):
     """" Sort get key function for search_history_stats api view"""
@@ -809,3 +819,86 @@ def search_history_stats(request):
     # Get popular searches
     popular_searches = get_popular_searches(services,searches)
     return Response({'recent_searches':recent_searches,'popular_searches':popular_searches})
+
+class MatchMakerListApi(ListAPIView):
+    queryset = models.MatchMaker.objects.all()
+    serializer_class = serializers.MatchMakerSerializer
+
+class MatchMakerRetrieveApi(RetrieveAPIView):
+    lookup_field = "professional_service"
+    queryset = models.MatchMaker.objects.all()
+    serializer_class = serializers.MatchMakerSerializer
+
+import json
+@api_view(['POST'])
+def match_client_with_pros(request):
+    questions = ""
+    user_id = ""
+    project_location_id = ""
+    if request.user.is_authenticated:
+        try:
+            questions = request.data['questions']
+            user_id = str(request.data['user_id'])
+            project_location_id = str(request.data['project_location_id'])
+        except:
+            pass
+
+        if questions and user_id and project_location_id:
+            user_obj = ""
+            location_obj = ""
+            questions_valid = False
+            try:
+                user_obj = User.objects.get(pk=user_id)
+                location_obj = location_models.KenyaTown.objects.get(pk=project_location_id)
+                for q in questions:
+                    question_obj = models.Question.objects.get(pk=q['question_id'])
+                    for ans in q['answer']:
+                        option_obj = models.QuestionOptions.objects.get(pk=ans)
+                questions_valid = True
+            except:
+                pass
+
+            if user_obj and location_obj and questions_valid== True:
+                pro_answers = models.ProAnswer.objects.all()
+
+                # TO DO: Check whether the answers provided are related to the questions
+
+                for q in questions:
+                    # save the clients answer for each 1uestion
+                    question_obj = models.Question.objects.get(pk=q['question_id'])
+                    option_ids_list = q['answer']
+
+                    client_answer_instance = models.ClientAnswer.objects.create(
+                                    user = user_obj,
+                                    question = question_obj,
+                                    project_location = location_obj
+                                )
+
+                    for a in option_ids_list:
+                        option_obj = models.QuestionOptions.objects.get(pk=a)
+                        client_answer_instance.answer.add(option_obj)
+
+                    # Then Find pro answers that match the clients answer for the same question
+                    pro_answers = models.ProAnswer.objects.filter(
+                                    question = question_obj,
+                                    service_delivery_areas__town_name__icontains = location_obj.town_name,
+                                    answer__in = option_ids_list
+                                    ).annotate(num_answer=Count('answer')).filter(num_answer=len(option_ids_list))
+
+                # After filtering the answers above create a list of business profile ids
+                # that we will use to filter the business profiel table for serializing
+                pro_ids =[]
+                for p in pro_answers:
+                    pro_ids.append(p.business_profile.pk)
+
+                # Filter the business profile table
+                pros = models.BusinessProfile.objects.filter(pk__in=pro_ids)
+
+                # Serialize the data returned
+                serializer = serializers.BusinessProfileSerializer(pros,many=True)
+
+                return Response(serializer.data)
+            else:
+                return Response({'status':False, 'detail':'Not found. Provide valid values for required fields.'})
+        else:
+            return Response({'user_id':'This field is required','project_location_id':'This field is required','questions':'This field is required',})
