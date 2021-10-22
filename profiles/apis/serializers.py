@@ -157,7 +157,7 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
     pro_portfolio_items = serializers.SerializerMethodField()
     pro_followers = serializers.SerializerMethodField()
     pro_saves = serializers.SerializerMethodField()
-    _pro_average_rating_ = serializers.SerializerMethodField()
+    rating_stats = serializers.SerializerMethodField()
     _business_profile_percentage_complete_ = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.BusinessProfile
@@ -168,7 +168,7 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
         "about_video","about","service_areas","saves","followers","member_since",
         "featured","verified","pro_business_client","pro_business_hours","pro_business_review",
         "pro_portfolio_items","pro_followers","pro_saves",
-        "_pro_average_rating_","_business_profile_percentage_complete_",
+        "rating_stats","_business_profile_percentage_complete_",
         ]
 
     def get_pro_portfolio_items(self,obj):
@@ -217,12 +217,72 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
 
         return portfolio_item_array
 
-    def get__pro_average_rating_(self,obj):
-        rating = obj.pro_business_review.all().aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
-        if rating:
-            return rating
+    def get_rating_stats(self,obj):
+        pro_reviews = obj.pro_business_review.all()
+
+        rvw_count = pro_reviews.count()
+        if rvw_count == 0:
+            rvw_count = 1
+
+        recommendation_rating_avg = pro_reviews.aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
+        responsive_rating_avg = pro_reviews.aggregate(Avg('responsive_rating')).get('responsive_rating__avg', 0.00)
+        knowledge_rating_avg = pro_reviews.aggregate(Avg('knowledge_rating')).get('knowledge_rating__avg', 0.00)
+        professionalism_rating_avg = pro_reviews.aggregate(Avg('professionalism_rating')).get('professionalism_rating__avg', 0.00)
+        quality_of_service_rating_avg = pro_reviews.aggregate(Avg('quality_of_service_rating')).get('quality_of_service_rating__avg', 0.00)
+
+        five_star_ratings = pro_reviews.filter(recommendation_rating=5).count()
+        four_star_ratings = pro_reviews.filter(recommendation_rating=4).count()
+        three_star_ratings = pro_reviews.filter(recommendation_rating=3).count()
+        two_star_ratings = pro_reviews.filter(recommendation_rating=2).count()
+        one_star_ratings = pro_reviews.filter(recommendation_rating=1).count()
+
+        array = {
+            "five_stars": five_star_ratings/ rvw_count * 100,
+            "four_stars": four_star_ratings / rvw_count * 100,
+            "three_stars": three_star_ratings / rvw_count * 100,
+            "two_stars": two_star_ratings / rvw_count * 100,
+            "one_stars": one_star_ratings / rvw_count * 100,
+            }
+
+        highly_rated_traits = []
+        if responsive_rating_avg and responsive_rating_avg >= 4.5:
+            highly_rated_traits.append('Responsiveness')
+        if knowledge_rating_avg and knowledge_rating_avg >= 4.5:
+            highly_rated_traits.append('Knowledge')
+        if professionalism_rating_avg and professionalism_rating_avg >= 4.5:
+            highly_rated_traits.append('Professionalism')
+        if quality_of_service_rating_avg and quality_of_service_rating_avg >= 4.5:
+            highly_rated_traits.append('Qaulity of service')
+
+        comment = ''
+
+        if recommendation_rating_avg:
+            if recommendation_rating_avg >= 4.5:
+                comment = 'Very Highly rated'
+            elif recommendation_rating_avg >= 3.5 and recommendation_rating_avg < 4.5:
+                comment = 'Highly rated'
+            elif recommendation_rating_avg >= 2.5 and recommendation_rating_avg < 3.5:
+                comment = 'Rated Average'
+            elif recommendation_rating_avg > 0 and recommendation_rating_avg < 1.5:
+                comment = 'Rated Low'
+            else:
+                comment = 'Not Rated'
         else:
-            return 0
+            comment = 'Not Rated'
+
+        array = {
+            "overall_rating": recommendation_rating_avg if recommendation_rating_avg else 0,
+            "recommendation_rating_avg":recommendation_rating_avg if recommendation_rating_avg else 0,
+            "responsive_rating_avg":responsive_rating_avg if recommendation_rating_avg else 0,
+            "knowledge_rating_avg":knowledge_rating_avg if recommendation_rating_avg else 0,
+            "professionalism_rating_avg":professionalism_rating_avg if recommendation_rating_avg else 0,
+            "quality_of_service_rating_avg":quality_of_service_rating_avg if recommendation_rating_avg else 0,
+            "highly_rated_traits":highly_rated_traits,
+            "comment": comment,
+            "stars_percentage_avg": array
+        }
+
+        return array
 
     def get__business_profile_percentage_complete_(self,obj):
         percent = {
@@ -317,6 +377,7 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
             }
             followers_array.append(follower_object)
         return followers_array
+
 
 class SocialBusinessProfileSerializer(WritableNestedModelSerializer):
     class Meta:
