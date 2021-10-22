@@ -63,6 +63,9 @@ class User(AbstractUser):
 	phone_regex = RegexValidator( regex   =r'^\+?1?\d{9,14}$', message ="Phone number must be entered in the format: '+254xxxxxxxxx'. Up to 14 digits allowed.")
 	phone = models.CharField(validators=[phone_regex], max_length=17, unique=True, null=True)
 	account_type = models.CharField(max_length=10, choices=account_type_choices, default='BASIC')
+	# Azure credentials for use in chat service
+	azure_identity = models.TextField(blank=True, null=True)
+	azure_access_token = models.TextField(blank=True, null=True)
 
 	@property
 	def percentage_complete(self):
