@@ -74,7 +74,7 @@ def milestones_complete(user_pk):
 
 #pro Dash board views
 
-@login_required(login_url='account_login')
+@login_required(login_url='app_accounts:user_login')
 def dashboard_home(request):
 	if request.user.user_type == 'PRO':
 		results = milestones_complete(request.user.pk)
@@ -89,6 +89,19 @@ def dashboard_home(request):
 	else:
 		messages.error(request,'Denied. Upgrade to a Pro to continue.')
 		return redirect('rehgien_pro:pro_join_landing')
+
+@login_required(login_url='account_login')
+def dashboard_messages(request):
+	if request.user.user_type == 'PRO':
+		pro_page = profiles_models.BusinessProfile.objects.get(user=request.user)
+		context = {
+		"pro_page":pro_page,
+		}
+		return render(request, 'rehgien_pro/dashboard/messages.html', context)
+	else:
+		messages.error(request,'Denied. Upgrade to a Pro to continue.')
+		return redirect('rehgien_pro:pro_join_landing')
+
 
 @login_required(login_url='account_login')
 def dashboard_insights(request):
