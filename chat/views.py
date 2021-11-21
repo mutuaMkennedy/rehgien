@@ -5,29 +5,28 @@ from profiles.models import BusinessProfile
 from django.conf import settings
 from django.http import JsonResponse,HttpResponse
 from django.core.serializers import serialize
+from . twilio import conversations
 import json
-import stream_chat
 
 # referencing the custom user model
 User = get_user_model()
 
-# TODO: Remove stream chat libraries and code
-STREAM_KEY = settings.STREAM_API_KEY
-STREAM_API_SECRET= settings.STREAM_API_SECRET
+# Twilio chat
+def get_twilio_acess_token(request):
+    if request.user.is_authenticated:
+        identity = request.user.pk
+        token = conversations.get_token(identity)
+        return JsonResponse({'token':token})
 
-def chat_room(request):
-    return render(request,'chat/chat_room.html')
+    else:
+        return JsonResponse({'Unauthorized':'You are not autheticated.'})
 
-def user_token(request):
-    chat_client = stream_chat.StreamChat(api_key=STREAM_KEY, api_secret=STREAM_API_SECRET)
-    token = chat_client.create_token(
-                        request.user.username,
-                        # exp=datetime.datetime.utcnow() + datetime.timedelta(hours=1)  #to be set in production
-                    )
-    # user_image =
-
-    response = {
-        'token': token,
-    }
-
-    return JsonResponse(response)
+def deleteConversation(request):
+    if request.user.is_authenticated:
+        convoSID = request.GET.get('sid','')
+        if convoSID:
+            response = conversations.deleteConversation(convoSID)
+            return JsonResponse({'status':response})
+        else:
+            return JsonResponse({'status':False,'detail':'Conversation sid is required!'})
+    return JsonResponse({'status':False,'detail':'Permission Denied'})
