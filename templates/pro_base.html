@@ -45,7 +45,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+  <script src="https://code.iconify.design/2/2.0.4/iconify.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
   {% block head_title %}{% endblock %}
@@ -117,6 +119,10 @@ s0.parentNode.insertBefore(s1,s0);
 {% compress js %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript">
+  var CSRF_TOKEN = '{{ csrf_token }}';
+  var AUTH_USER_ID = '{{request.user.pk}}';
+</script>
+<script type="text/javascript">
   $(document).ready(function(){
       var message_ele = document.getElementById("message_box");
       if (message_ele != null) {
@@ -127,6 +133,7 @@ s0.parentNode.insertBefore(s1,s0);
   });
 </script>
 <script src="{% static 'JqueryUI/jquery-ui.min.js'%}"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="{% static 'OwlCarousel/owl.carousel.min.js'%}"></script>
   <script src="{% static 'JqueryTimepicker/js/jquery.timepicker.js'%}"></script>
   <script src="{% static 'JqueryDateTimepicker/jquery.datetimepicker.full.js'%}"></script>
@@ -139,6 +146,8 @@ s0.parentNode.insertBefore(s1,s0);
   <script src="{% static 'js/gall.js' %}"></script>
   <script src="{% static 'js/mat.js' %}"></script>
   <script src="{% static 'js/bubbles.js' %}"></script>
+  <script src="{% static 'js/twilioConversations.js' %}"></script>
+  <!-- <script src="{% static 'js/azureChat.js' %}"></script> -->
   <script src="{% static 'intl-tel-input-master/build/js/intlTelInput-jquery.min.js'%}"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> -->
   <!-- <script src="{% static 'js/jquery.autocomplete.js' %}"></script> -->
@@ -149,7 +158,8 @@ s0.parentNode.insertBefore(s1,s0);
   <script src="{% static 'dynamic_formsets_src/jquery.formset.js'%}"></script>
   <script src="{% static 'introJs/intro.js'%}"></script>
   {% endcompress %}
-  <script src="https://media.twiliocdn.com/sdk/js/chat/v3.3/twilio-chat.min.js"></script>
+  <script src="https://media.twiliocdn.com/sdk/js/conversations/v2.0/twilio-conversations.min.js"></script>
+  <!-- <script src="https://media.twiliocdn.com/sdk/js/chat/v3.3/twilio-chat.min.js"></script> -->
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <!-- <script type="text/javascript">
           AOS.init()

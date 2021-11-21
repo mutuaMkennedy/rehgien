@@ -1,13 +1,32 @@
-{% extends 'base1.html'%}
-{% block title %}<title>Contact Rehgien|Find our contact Details|Rehgien</title>{% endblock %}
+{% extends 'base.html'%}
+{%load static%}
+{% load cloudinary %}
+{% block head_title %}<title>Contact Us | Rehgien </title>{% endblock %}
+{% block header %}{% include 'header_section.html' %}{% endblock%}
 {% block content %}
+
+<div class="contactUs-hero">
+   <div class="contactUs-hero-overlay">
+      <div class="container">
+          <div class="row">
+            <div class="col s12 contactUs-hero-bdTxt">
+                <h1>Question or comment?</h1>
+                <p>Talk to us now, we are always happy to hear from you.</p>
+            </div>
+          </div>
+      </div>
+      <div class="_heroBdDvdr">
+        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 194">
+          <polygon points="1280 -49.5 1280 145 3.3 338.5 0 338.5 0 -49.5 1280 -49.5" style="fill:none"/>
+          <polygon points="1280 0.5 1280 194 1.3 194 1280 70.5" style="fill:#fff"/>
+        </svg>
+      </div>
+  </div>
+  <canvas class="HomeHerocanvas" width='32' height="32">
+</div>
 
 <div class="container contactUsBox">
   <div class="row">
-      <div class="contactUs_head">
-        <h2>Contact us</h2>
-        <p>Rehgien helps you connect with any property service or service provider in a safe and efficent way!</p>
-      </div>
       <div class="contactUs_body">
         <form action="{% url 'contact:contact_us'%}" method="post">
           {% csrf_token %}
@@ -48,7 +67,7 @@
           </div>
         </form>
         <div class="contactUs_bodyFooter">
-          <h3>For Support &nbsp +254 79 889 5352 &nbsp support@rehgien.com </h3>
+          <h3>For Support: &nbsp support@rehgien.com </h3>
         </div>
       </div>
   </div>

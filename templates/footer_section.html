@@ -1,39 +1,49 @@
 {% load static %}
-<footer id="hpf">
- <section id="footer" class="section section-follow black-text">
-   <div class="container" style="width:100%;">
-     <div class="row">
-       <div class="f-details center">
-         <a href="http://blog.rehgien.com/"> Blog</a>
-         <a href="#"> Advertise</a>
-         <a href="#"> Mobile App</a>
-         <a href="{% url 'contact_us' %}"> Contact Us</a>
-         <a href="{% url 'about_us'%}"> About Us</a>
-         <a href="#"> FAQ'S</a>
-         <a href="{% url 'privacy_policy'%}"> Privacy Policy</a>
-         <a href="{% url 'terms_of_use'%}"> Terms of use</a>
-       </div>
-       <div id="footer-details" class="col s12 center">
-         <a href="https://www.facebook.com/rehgien" class="black-text">
-           <img src="{% static 'img/facebook.svg'%}" alt="facebook">
-         </a>
-         <a href="https://twitter.com/rehgien" class="black-text">
-           <img src="{% static 'img/twitter.svg'%}" alt="twitter">
-         </a>
-         <a href="https://www.linkedin.com/company/rehgien-inc/" class="black-text">
-           <img src="{% static 'img/linkedin.svg'%}" alt="linkedin">
-         </a>
-         <p>While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy.</p>
-       </div>
-       <p class="flow-text black-text center" id="c-year"></p>
-       <script type="text/javascript">
-         var d = new Date();
-         document.getElementById("c-year").innerHTML= 'Copyright '+ d.getFullYear();
-       </script>
+<footer class="footer">
+ <div class="container">
+   <div class="row">
+     <div class="col s12 f-details-links">
+         <div class="col s12 md4 l4 xl4 ">
+           <div class="f-details companyLogoLink">
+             <img src="{% static 'img/RehgienLogoBlack.png'%}" alt="rehgien">
+           </div>
+         </div>
+         <div class="col s12 md8 l8 xl8">
+           <div class="col s6 md6 l6 xl6 sitePgLnksGrp">
+             <div class="col s6 md6 l6 xl6 f-details sitePgLnks">
+               <h5>Company</h5>
+               <a href=""> Home</a>
+               <a href="http://blog.rehgien.com/"> Blog</a>
+               <a href="{% url 'contact_us' %}"> Contact Us</a>
+               <a href="{% url 'about_us'%}"> About Us</a>
+             </div>
+             <div class="col s6 md6 l6 xl6 f-details sitePgLnks">
+               <h5>Pros</h5>
+               <a href="{% url 'app_accounts:user_login'%}"> Login</a>
+               <a href="{% url 'rehgien_pro:pro_join_landing' %}"> Join as a pro</a>
+               <a href="{% url 'rehgien_pro:dashboard_home'%}"> Pro dashboard</a>
+             </div>
+           </div>
+           <div class="col s6 md6 l6 xl6 sitePgLnksGrp">
+             <div class="col s6 md6 l6 xl6 f-details sitePgLnks">
+               <h5>Social</h5>
+               <a href="#"> Facebook</a>
+               <a href="#"> Twitter</a>
+               <a href="#"> Instagram</a>
+               <a href="#"> Linked In</a>
+             </div>
+             <div class="col s6 md6 l6 xl6 f-details sitePgLnks">
+               <h5>Resources</h5>
+               <a href="#"> FAQs</a>
+               <a href="{% url 'privacy_policy'%}"> Privacy Policy</a>
+               <a href="{% url 'terms_of_use'%}"> Terms of use</a>
+             </div>
+           </div>
+          </div>
+     </div>
+     <div class="col s12 f-details-SiteCopyright">
+       <p id="c-year">&copy {% now 'Y' %}</p>
      </div>
    </div>
- </section>
- <div class="ft-bk-sl">
-   <img src="{% static 'img/nairobi-skyline.png'%}">
  </div>
 </footer>

@@ -28,7 +28,7 @@
           <li>
             <div class="pflNavLink_x_dropdown">
                 <button type="button" name="button" class="dropdown-trigger" data-target='proDashWishListDpdown'>
-                  <span class="material-icons">favorite</span>
+                  <i class="iconify" data-icon="topcoat:like"></i>
                 </button>
                 <div id="proDashWishListDpdown" class="dropdown-content proDashDpdown_elem pdash_dpd_wishl_sc">
                     <div class="pdash_dpdwn_hd">
@@ -61,7 +61,27 @@
           <li>
             <div class="pflNavLink_x_dropdown">
                 <button type="button" name="button" class="dropdown-trigger" data-target='proDashNotfDpdown'>
-                  <span class="material-icons">notifications</span>
+                  <i class="iconify" data-icon="clarity:notification-solid"></i>
+                </button>
+                <div id="proDashNotfDpdown" class="dropdown-content proDashDpdown_elem pdash_dpd_botf_sc">
+                    <div class="pdash_dpdwn_hd">
+                      <h5>Notifications</h5>
+                    </div>
+                    <div class="dpdwn_body">
+                      <div class="ntfempty_">
+                        <i class="material-icons">notifications_none</i>
+                        <p>No Notifications Right Now</p>
+                      </div>
+                    </div>
+                    <div class="dpdwn_footer"><a href="{% url 'profiles:notifications' %}">See All Notifications</a></div>
+                </div>
+            </div>
+          </li>
+          <li>
+            <div class="pflNavLink_x_dropdown">
+                <button type="button" name="button" class="dropdown-trigger" data-target='proDashNotfDpdown'>
+                  <i class="iconify" data-icon="clarity:email-solid"></i>
+                  <div class="unreadMessageCountTopnaV unreadMessageCountUnread ntfIndicatorBadge"></div>
                 </button>
                 <div id="proDashNotfDpdown" class="dropdown-content proDashDpdown_elem pdash_dpd_botf_sc">
                     <div class="pdash_dpdwn_hd">
@@ -181,15 +201,17 @@
              </div>
            </div>
             <ul id="pdashNav_colls_elems" class="collapsible expandable">
-                <li><button type="button" name="button" class="a-wrapper"><a href="{% url 'rehgien_pro:dashboard_home' %}" id="proDash_home_default" class="proDash_sc_switch {% block homeActive%}{% endblock%}"><i class="material-icons">home</i> <p>Home</p></a></button></li>
+                <li><button type="button" name="button" class="a-wrapper"><a href="{% url 'rehgien_pro:dashboard_home' %}" id="proDash_home_default" class="proDash_sc_switch {% block homeActive%}{% endblock%}"><i class="iconify" data-icon="mdi-light:view-dashboard"></i> <p>Dashboard</p></a></button></li>
+                <li><button type="button" name="button" class="a-wrapper"><a href="{% url 'rehgien_pro:dashboard_messages' %}" class="proDash_sc_switch {% block messageActive%}{% endblock%}"><i class="iconify" data-icon="clarity:email-line"></i> <p>Messages</p></a><div class="unreadMessageCountDashNaV unreadMessageCountUnread ntfIndicatorBadge"></div></button></li>
+                <li><button type="button" name="button" class="a-wrapper"><a href="{% url 'rehgien_pro:dashboard_messages' %}" class="proDash_sc_switch {% block profileActive%}{% endblock%}"><i class="iconify" data-icon="la:user-circle"></i> <p>Profile</p></a></button></li>
                 <li class="active">
-                  <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="material-icons">trending_up</i> <p>Grow</p></a></button><span class="material-icons">expand_less</span></div>
+                  <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="iconify" data-icon="ph:trend-up"></i> <p>Grow</p></a></button><span class="material-icons">expand_less</span></div>
                   <div class="collapsible-body">
                       <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:dashboard_insights' %}" class="proDash_sc_switch_clbody proDash_sc_switch {% block insActive%}{% endblock%}"><i class="material-icons">insights</i> <p>Insights</p></a></button>
                   </div>
                 </li>
                 <li class="active">
-                  <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="material-icons">group_work</i> <p>Manage</p></a></button><span class="material-icons">expand_less</span></div>
+                  <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="iconify" data-icon="carbon:task-settings"></i> <p>Manage</p></a></button><span class="material-icons">expand_less</span></div>
                   <div class="collapsible-body">
                       <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:dashboard_properties' %}" class="proDash_sc_switch_clbody proDash_sc_switch {% block propActive%}{% endblock%}"><i class="material-icons">maps_home_work</i> <p>Properties</p></a></button>
                       <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:dashboard_jobs' %}" class="proDash_sc_switch_clbody proDash_sc_switch {% block jobsActive%}{% endblock%}"><i class="material-icons">work</i> <p>Jobs</p></a></button>
@@ -197,12 +219,13 @@
                   </div>
                 </li>
                 <li class="active">
-                  <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="material-icons">local_library</i> <p>Learn</p></a></button><span class="material-icons">expand_less</span></div>
+                  <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="iconify" data-icon="bytesize:book"></i> <p>Learn</p></a></button><span class="material-icons">expand_less</span></div>
                   <div class="collapsible-body">
                       <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=product-updates" class="proDash_sc_switch_clbody proDash_sc_switch" target="_blank"><i class="material-icons">lightbulb</i> <p>Tutorials</p></a></button>
                       <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=tutorials" class="proDash_sc_switch_clbody proDash_sc_switch" target="_blank"><i class="material-icons">system_update_alt</i> <p>Product Updates</p></a></button>
                   </div>
                 </li>
+                <li><button type="button" name="button" class="a-wrapper"><a href="{% url 'rehgien_pro:dashboard_messages' %}" class="proDash_sc_switch {% block settingsActive%}{% endblock%}"><i class="iconify" data-icon="carbon:settings"></i> <p>Settings & Privacy</p></a> <div class='secondaryIconDashNav'><i class="iconify" data-icon="akar-icons:link-out"></i><div></button></li>
             </ul>
          </div>
        </div>
