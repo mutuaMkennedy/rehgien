@@ -506,6 +506,8 @@ class SocialBusinessProfileUpdateApi(RetrieveUpdateAPIView):
 class ReviewListApi(ListAPIView):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields  = ['likes','recommendation_rating','review_date']
 
 class ReviewCreateApi(CreateAPIView):
     queryset = models.Review.objects.all()
