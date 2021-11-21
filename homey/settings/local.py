@@ -15,7 +15,7 @@ if os.name == 'nt':
     os.environ['PATH'] = OSGEO4W + r'\bin;' + os.environ['PATH']
 
 
-GDAL_LIBRARY_PATH = r'C:\OSGeo4W64\bin\gdal202.dll'
+GDAL_LIBRARY_PATH = r'C:\Users\REY\Desktop\pycharm\homey\environments\venv37\Lib\site-packages\osgeo\gdal303.dll'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -57,3 +57,7 @@ africastalking.initialize(
     # username='rehgien',
     # api_key='3e78b952d5fd14a466246eefa2ad8150f866d9adc5afcc14d6ed8d900b41ab63'
 )
+
+
+# Twilio settings
+TWILIO_CONVERSATIONS_SERVICE_SID = 'ISea7dbadbee2b4c80b87b2459211ca4ab'
