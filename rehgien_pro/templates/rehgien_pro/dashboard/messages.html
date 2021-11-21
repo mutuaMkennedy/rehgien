@@ -1,0 +1,49 @@
+{% extends 'rehgien_pro/dashboard/dashboard_base.html'%}
+{% load static %}
+{% block head_title %}<title>Rehgien Pro | Messages</title>{% endblock %}
+{% block messageActive %}active{% endblock %}
+{% block dashboard_section %}
+
+<div id="proDash_messages" class="proDashFeedContainer proDash_msgScTab">
+   <div class="proDash-Tab-section">
+     <div class="proDash-msg-box">
+       <div class="proDash-msg-list">
+         <div class="proDash-msg-list-top-bar">
+           <h2>Inbox</h2>
+           <div class="proDash-msg-list-top-bar-btns">
+               <div class="proDash-top-bar-btns-search">
+                 <button type="button" name="button"><i class="iconify" data-icon="fe:search"></i></button>
+               </div>
+               <div class="proDash-top-bar-btns-filter">
+                 <button type="button" name="button"><i class="iconify" data-icon="mdi:tune-variant"></i></button>
+               </div>
+               <div class="proDash-top-bar-btns-filter">
+                 <button id="creatChatThread" type="button" name="button"><i class="iconify" data-icon="carbon:add-comment"></i></button>
+               </div>
+           </div>
+         </div>
+         <div id="msgItems" class="proDash-msg-list-messages">
+           <div class="msgThreadsLoading">
+              <img src="{% static 'img/Preloader_2.gif'%}" alt="loading">
+              <p>Checking Messages</p>
+           </div>
+         </div>
+       </div>
+       <div class="proDash-msg-thread">
+         <div id="thrdIntContainer" class="thrdIntContainerSct"></div>
+         <div id="clickThMsg" class="proDash-msg-openThread">
+             <div class="eMp-ImgWrp">
+               <img src="{% static 'img/connect.svg'%}" alt="">
+             </div>
+             <div class="eMp-txt">
+               <h2>Connect with your customers</h2>
+               <p>Chat with your clients directly. Respond to queries, send quotes and get hired. To reduce
+               data usage, connect your phone to WI-FI.</p>
+             </div>
+         </div>
+       </div>
+    </div>
+   </div>
+</div>
+
+{% endblock %}
