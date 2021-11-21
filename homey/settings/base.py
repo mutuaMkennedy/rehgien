@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 SECRET_KEY = 'ib)4kavk+9ds#_!v8y5*qoy2@)g1gfa@y2u(4tpvej$feb!!oj'
 
 ALLOWED_HOSTS = ['localhost','165.227.185.180','127.0.0.1','rehgiendev2.remote.moe',
-                '207.154.205.115','rehgien.com', 'www.rehgien.com', '197.156.137.177','3963-41-220-229-42.ngrok.io']
+                '207.154.205.115','rehgien.com', 'www.rehgien.com', '197.156.137.177','8ba2-102-222-145-175.ngrok.io']
 
 ADMINS = [('Mutua', 'do-not-reply@rehgien.com')]
 # Application definition
@@ -55,7 +55,9 @@ INSTALLED_APPS = [
     'search',
     'chat',
     "partnership",
+    "app_accounts",
     # other applications
+    'channels',
     'photologue',
     'sortedm2m',
     'crispy_forms',
@@ -144,6 +146,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 WSGI_APPLICATION = 'homey.wsgi.application'
+ASGI_APPLICATION = "homey.asgi.application"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -181,6 +184,15 @@ CACHES = {
 }
 
 SELECT2_CACHE_BACKEND = "select2"
+
+CHANNEL_LAYERS = {
+    "default":{
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -380,14 +392,10 @@ ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'profiles.forms.profile_form'
 
 
-TWILIO_ACCOUNT_SID = 'AC1db0e8cfbae1e3b9b5834772c0ef8d6c'
-TWILIO_API_KEY = 'SK5c969e58ab96a19249489add62911305'
-TWILIO_API_SECRET = 'qDSWimtxgzelWceywCF2Sbcslr7s1o7P'
-TWILIO_CHAT_SERVICE_SID = 'ISe0ef1fd1e4f444aba9ccc09b28047ab5'
-TWILIO_AUTH_TOKEN = '7f70419841a1632045d657089acd65c1'
-
-STREAM_API_KEY = 'krfpqyntmyk8'
-STREAM_API_SECRET = 'ynfguub9ds3qufavnzkdnvetrzrftqvs9punjq6zu7jwavcncshceyc8byp93kyq'
+TWILIO_ACCOUNT_SID = 'ACf67d31ba29c20feff49cadc08fad69f1'
+TWILIO_AUTH_TOKEN = '6041ece7b205b55d92d0415ccbe424bb'
+TWILIO_API_KEY = 'SKa49ccc790e56921af3eab4a615491c91'
+TWILIO_API_SECRET = 'oML64f6ovDPuTOkOGQ6bP77yqyNPyw33'
 
 # CELERY STUFF
 BROKER_URL =  'redis://localhost:6379'
@@ -412,7 +420,3 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 CLICKY_SITE_ID = '101303494'
 GOOGLE_ANALYTICS_GTAG_PROPERTY_ID = 'G-65Q435FWHZ'
 HOTJAR_SITE_ID = '2365112'
-
-# Azure service
-COMMUNICATION_SERVICES_CONNECTION_STRING = 'endpoint=https://rgn-chat.communication.azure.com/;accesskey=MDQfiZjSgzRYESn8I3Yx0LS1rlRAIh6IbjnmGn2UBXaV07BHEYgthosqXIraFAwSOq3LO7rjhBqzQGgYgzebSQ=='
-COMMUNICATION_SERVICES_ENDPOINT = 'https://rgn-chat.communication.azure.com/'
