@@ -66,6 +66,7 @@ class User(AbstractUser):
 	# Azure credentials for use in chat service
 	azure_identity = models.TextField(blank=True, null=True)
 	azure_access_token = models.TextField(blank=True, null=True)
+	azure_token_expires_on = models.DateTimeField(blank=True, null=True, auto_now = False, auto_now_add = False)
 
 	@property
 	def percentage_complete(self):
