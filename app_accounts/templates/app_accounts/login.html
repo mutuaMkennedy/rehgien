@@ -1,0 +1,86 @@
+{%extends 'base.html'%}
+{%load static%}
+{% block head_title %}<title>Login | Rehgien </title>{% endblock %}
+{%block content%}
+
+<div class="_auth_Bn_xcrs">
+   <div class="_auth_Bn_xcrsoverlay">
+      <div class="_heroBdDvdr">
+        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 194">
+          <polygon points="1280 -49.5 1280 145 3.3 338.5 0 338.5 0 -49.5 1280 -49.5" style="fill:none"/>
+          <polygon points="1280 0.5 1280 194 1.3 194 1280 70.5" style="fill:#fff"/>
+        </svg>
+      </div>
+  </div>
+  <canvas class="HomeHerocanvas" width='32' height="32">
+</div>
+
+<div class="container _authLoginBox">
+  <div class="row">
+      <div class="_authLogin_body">
+        <div class="_authLogin_logo">
+          <a href="{% url 'homepage'%}"><img src="{% static 'img/RehgienLogoBlack.png'%}" alt="rehgien"></a>
+        </div>
+        <h2>Welcome back!</h2>
+        <p>Welcome back please enter your details below to login.</p>
+        <form action="{% url 'app_accounts:user_login'%}" method="post">
+          {% csrf_token %}
+          <div class="_authLoginFormFields">
+              <div class="_authLoginFieldWrp">
+                <div class="_authLoginFieldIn">
+                  <h6>Email or Phone</h6>
+                  <div class="_authLoginFieldInWp">
+                    <input class="{% if invalid_identity or account_not_found %}_auth_input_error{%endif%}" type="text" name="identity"  value="{%if identity %}{{identity}}{%endif%}" placeholder="Enter email address or phone number" required>
+                  </div>
+                  {% if invalid_identity %}
+                    <div class="_authLoginErrors">{{invalid_identity}}</div>
+                  {% elif account_not_found %}
+                    <div class="_authLoginErrors">{{account_not_found}}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="_authLoginFieldWrp ">
+                <div class="_authLoginFieldIn">
+                  <h6>Password <span><a href="#">Forgot your password?</a></span></h6>
+                  <div class="_authLoginFieldInWp">
+                    <input id="_authPassword" class="{% if incorrect_password %}_auth_input_error{%endif%}" type="password" name="password" value="{%if password %}{{password}}{%endif%}" placeholder="Enter your password" required>
+                    <div id="_authTogglePassword" class="_authPasswordReveal"><i class="iconify" data-icon="akar-icons:eye-slashed"></i></div>
+                  </div>
+                  {% if incorrect_password %}
+                    <div class="_authLoginErrors">{{incorrect_password}}</div>
+                  {% endif %}
+                </div>
+              </div>
+              {% if permission_denied %}
+              <div class="_authLoginErrorsNotice">{{permission_denied}}</div>
+              {% endif %}
+              <div class="_authLoginFormSubmit">
+                  <button type="submit" name="button">Login</button>
+              </div>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    const togglePassword = $('#_authTogglePassword');
+    const password = $('#_authPassword');
+
+    togglePassword.on('click', function (e) {
+      // toggle the type attribute
+      if (password.attr('type') === 'password') {
+        password.attr('type', 'text');
+        togglePassword.html('<i class="iconify" data-icon="akar-icons:eye-open"></i>');
+      }else {
+        password.attr('type', 'password');
+        togglePassword.html('<i class="iconify" data-icon="akar-icons:eye-slashed"></i>');
+      };
+
+    });
+
+  })
+
+</script>
+{% endblock %}
