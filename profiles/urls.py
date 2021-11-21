@@ -37,4 +37,5 @@ urlpatterns = [
 		path('my_network/connections/', views.user_connections, name='user_connections'),
 		path('pro/following/', views.user_followers, name='user_followers'),
 		path('notifications/', views.notifications, name='notifications'),
+
 ]
