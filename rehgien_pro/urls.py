@@ -8,6 +8,7 @@ urlpatterns = [
 	path('', views.homepage, name = 'rehgien_pro_homepage'),
 
 	path('home/', views.dashboard_home, name = 'dashboard_home'),
+	path('messages/', views.dashboard_messages, name = 'dashboard_messages'),
 	path('insights/', views.dashboard_insights, name = 'dashboard_insights'),
 	path('myproperties/', views.dashboard_properties, name = 'dashboard_properties'),
 	path('jobs/', views.dashboard_jobs, name = 'dashboard_jobs'),
