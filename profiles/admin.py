@@ -17,6 +17,8 @@ class CustomUserAdmin(UserAdmin):
                     'user_type',
                     'profile_image',
                     'phone',
+                    'azure_identity',
+                    'azure_access_token',
                 ),
             },
         ),
@@ -97,7 +99,7 @@ class ProAnswerInline(admin.StackedInline):
 
 class QuestionAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
-    inlines = [QuestionOptionsInline,ClientAnswerInline,ProAnswerInline]
+    inlines = [QuestionOptionsInline, ClientAnswerInline, ProAnswerInline]
     list_display = ("title","question_type","matchMaker",)
 
 admin.site.register(models.User, CustomUserAdmin)
@@ -112,4 +114,5 @@ admin.site.register(models.ResetPasswordOTP,ResetPasswordOTPAdmin)
 admin.site.register(models.ServiceSearchHistory,ServiceSearchHistoryAdmin)
 admin.site.register(models.MatchMaker,MatchMakerAdmin)
 admin.site.register(models.Question,QuestionAdmin)
+admin.site.register(models.ClientAnswer)
 admin.site.register(models.QuestionOptions)
