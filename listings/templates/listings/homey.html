@@ -1,30 +1,30 @@
 {%extends 'base.html'%}
 {%load static%}
 {% load cloudinary %}
-{% block head_title %}<title>Rehgien|Find property experts & services </title>{% endblock %}
+{% block head_title %}<title>Rehgien | Find local pros for virtually any task! </title>{% endblock %}
 {% block header %}{% include 'header_section.html' %}{% endblock%}
 {%block content%}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    const pro_heros = [
-      "https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep/v1613756822/static/images/Artboard_1_uqdud3.png",
-      "https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep/v1613839188/static/images/Artboard_2_qpdvxs.png",
-      "https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep/v1613898461/static/images/Artboard_3.1_ydu0l8.png",
-    ]
-
-    const node = document.getElementById("main_Hero_background");
-
-    const cycleImages = (images, container, step) => {
-        images.forEach((image, index) => (
-        setTimeout(() => {
-            container.style.backgroundImage = `url(${image})`
-        }, step * (index + 1))
-      ))
-      setTimeout(() => cycleImages(images, container, step), step * images.length)
-    }
-
-    cycleImages(pro_heros, node, 10000);
+    // const pro_heros = [
+    //   "https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep/v1613756822/static/images/Artboard_1_uqdud3.png",
+    //   "https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep/v1613839188/static/images/Artboard_2_qpdvxs.png",
+    //   "https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep/v1613898461/static/images/Artboard_3.1_ydu0l8.png",
+    // ]
+    //
+    // const node = document.getElementById("main_Hero_background");
+    //
+    // const cycleImages = (images, container, step) => {
+    //     images.forEach((image, index) => (
+    //     setTimeout(() => {
+    //         container.style.backgroundImage = `url(${image})`
+    //     }, step * (index + 1))
+    //   ))
+    //   setTimeout(() => cycleImages(images, container, step), step * images.length)
+    // }
+    //
+    // cycleImages(pro_heros, node, 10000);
 
     $(".owl-carousel").owlCarousel({
         loop:true,
@@ -49,139 +49,224 @@ $(document).ready(function(){
 
 });
 </script>
-<div id="main_Hero_background" class="_mainHome_Bn_xcrs" style="background-image:url(https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep/v1613898461/static/images/Artboard_3.1_ydu0l8.png)">
+<!-- <div class="hmPGbACKpATTERN" style="background-image:url({% static 'img/HomepageBackgroundPattern.png'%})">
+</div> -->
+
+<div id="main_Hero_background" class="_mainHome_Bn_xcrs">
    <div class="_mH_Bn_xcrsoverlay">
       <div class="container">
           <div class="row">
-            <div class="col s12 _home_Bnr_tt">
-          <h1>Find property services & service providers <br> in one place</h1>
-          <p>No more doubts, work only with verified and qualified pros on the next home project
-          or service.</p>
-          <div class="_home_Bnr_catwRP">
-            <span>Popular picks:</span> &nbsp &nbsp
-            <div class="_home_Bnr_catBtns">
-              <a href="{% url 'listings:property_homepage' %}"><button type="button" name="button">Find a home</button></a>
-              <a href="{% url 'profiles:business_homepage' %}"><button type="button" name="button">Find professionals</button></a>
+            <div class="col s12 md6 l6 xl6 _home_Bnr_tt">
+                <h1>Find local pros for virtually any task!</h1>
+                <p>Need help with a task? Keep a worry free head. We connect you with the best pros for the job, dowload our app to begin.</p>
+                <div class="_home_Bnr_catwRP">
+                  <div class="_home_Bnr_catBtns">
+                    <a href="#" class="_whtBck"><i class="iconify" data-icon="logos:google-play-icon"></i>Download app</a>
+                    <a href="{% url 'contact_us' %}" class="_noBck">Contact Us <i class="iconify" data-icon="bi:arrow-right"></i></a>
+                  </div>
+                </div>
             </div>
-          </div>
-            </div>
-          </div>
-      </div>
-  </div>
-</div>
-
-<div class="container main_home_cCotainer">
-  <div class="row">
-    <div class="col s12">
-      <h2>Shop by category <a href="{% url 'listings:shop_category'%}"><span>View all</span></a></h2>
-      <div class="owl-carousel">
-        <a href="{% url 'listings:property_homepage'%}">
-            <div class="card">
-              <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/home_fwwsxs.jpg">
-              <div class="DtsWrapper_">
-                <h6>Sale & rental Homes</h6>
+            <div class="col s12 md6 l6 xl6 _home_Bnr_Img">
+              <div class="_home_Bnr_Img_bx">
+                  <img src="{% static 'img/appMockups.png'%}">
               </div>
             </div>
-        </a>
-        <div class="card disabled">
-          <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/furniture_hmz2jm.jpg">
-          <div class="DtsWrapper_">
-            <h6>Furniture</h6>
-            <button><span class="material-icons">handyman</span>Coming soon</button>
           </div>
-        </div>
-        <div class="card disabled">
-          <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/artwork_o1ph9x.jpg">
-          <div class="DtsWrapper_">
-            <h6>Home decor</h6>
-            <button><span class="material-icons">handyman</span>Coming soon</button>
-          </div>
-        </div>
-        <div class="card disabled">
-          <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/architecture_mbkqfl.jpg">
-          <div class="DtsWrapper_">
-            <h6>Architectural Designs</h6>
-            <button><span class="material-icons">handyman</span>Coming soon</button>
-          </div>
-        </div>
-        <div class="card disabled">
-          <img src="https://res.cloudinary.com/rehgien-inc/image/upload/f_auto,fl_progressive:steep,q_70/v1613082347/static/images/home_improvement_tem5nf.jpg">
-          <div class="DtsWrapper_">
-            <h6>Home improvement</h6>
-            <button><span class="material-icons">handyman</span>Coming soon</button>
-          </div>
-        </div>
       </div>
-    </div>
+      <div class="_heroBdDvdr">
+        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 194">
+          <polygon points="1280 -49.5 1280 145 3.3 338.5 0 338.5 0 -49.5 1280 -49.5" style="fill:none"/>
+          <polygon points="1280 0.5 1280 194 1.3 194 1280 70.5" style="fill:#fff"/>
+        </svg>
+      </div>
   </div>
+  <canvas class="HomeHerocanvas" width='32' height="32">
 </div>
 
-<div class="container main_home_cCotainer">
-  <div class="row">
-    <div class="col s12">
-      <h2>Browse local professionals <a href="{% url 'profiles:business_homepage' %}#allPros"><span>View all</span></a></h2>
-      <div class="owl-carousel">
-        {% for group in professional_groups%}
-          <a href="{% url 'profiles:business_list'%}?p_cat={{group.slug}}">
-            <div class="card">
-              {% cloudinary group.group_image ImageTransformation %}
-              <div class="DtsWrapper_">
-                <h6>{{group.group_name|capfirst}}</h6>
-              </div>
-            </div>
-          </a>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-</div>
-
-{% include 'profiles/popular_pro_services.html'%}
-
-{% include 'profiles/recommended_pro_services.html'%}
-
-<br>
-<br>
-<br>
-<br>
 <section>
-  <div class="container">
-    <div class="getApp-card-row row">
-        <div class="getApp-card card col s12 md6 l6">
-            <div class="getappImgWrp">
-                <img src="{% static 'img/6532.png'%}" alt="phone">
-            </div>
-            <h1>Get more flexibility</h1>
-            <p>Do more on the go. Get our features customized for your phone.</p>
-            <div class="appStoreBadges">
-                <a href="#">
-                  <button type="button" name="button">
-                    <img src="{%static 'img/apple-store-badge.png'%}" alt="applestore">
-                  </button>
-                </a>
-                <a href="#">
-                  <button type="button" name="button">
-                    <img src="{%static 'img/google-play-badge.png'%}" alt="googleplay">
-                  </button>
-                </a>
-            </div>
+  <div class="how-it-worksContScHm container">
+    <h2>How it works</h2>
+    <div class="how-it-worksRwScHm row">
+      <div class="col s12 md4 l4 xl4">
+
+        <div class="card">
+          <div class="hwItWrk_cardImg">
+            <img src="{% static 'img/mobileLogin.svg'%}">
+          </div>
+          <div class="hwItWrk_cardBdy">
+            <h3>Create an account</h3>
+            <p>Sign up to our service using your favourite method: phone number, email, facebook or google. </p>
+          </div>
         </div>
-        <div class="getApp-card card col s12 md6 l6">
-            <div class="getappImgWrp">
-                <img src="{% static 'img/call-center.png'%}" alt="call-center">
-            </div>
-            <h1>Reach out to us</h1>
-            <p>We are always happy to hear from you.</p>
-            <div class="appStoreBadges">
-                <a href="#">
-                  <button type="button" name="button">
-                    +254 79 889 5352
-                  </button>
-                </a>
-            </div>
+      </div>
+      <div class="col s12 md4 l4 xl4">
+        <div class="card">
+          <div class="hwItWrk_cardImg">
+            <img src="{% static 'img/ConnectedWorld.svg'%}">
+          </div>
+          <div class="hwItWrk_cardBdy">
+            <h3>Get quality matches</h3>
+            <p>Tell us what you need and our AI will match you with vetted pros who fit your needs, then pick your favourite.</p>
+          </div>
         </div>
+      </div>
+      <div class="col s12 md4 l4 xl4">
+        <div class="card">
+          <div class="hwItWrk_cardImg">
+            <img src="{% static 'img/MessagesCom.svg'%}">
+          </div>
+          <div class="hwItWrk_cardBdy">
+            <h3>Chat right on the app</h3>
+            <p>
+              Keep your contact information private by chatting and screening
+              your favourite pros right on the app.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<section>
+  <div class="aboutUs-ContScHmBack">
+    <div class="aboutUs-ContScHm container">
+      <div class="aboutUs-ContScRwHm row">
+          <div class="col s12 md6 l6 xl6">
+            <div class="abttXt-bdy-sc">
+              <h6>On Demand services</h6>
+              <h2>Safe and easy access to vetted service providers.</h2>
+              <p>
+                Whether looking for someone to fix your Tv, paint your house or
+                design your home finding the right person for the job can be a
+                daunting experience and even outright risky if you don’t know
+                who or what you need.
+                <br>
+                <br>
+                We help you find pros who can get things
+                done the right way whilst keeping cons away so we can save you
+                money and countless headaches.
+              </p>
+              <div class="abttXt-bdyCta-sc">
+                <a href="#" class="sctUcta-btnBack">Try our app</a>
+                <a href="{% url 'about_us'%}" class="sctUcta-btnnoBack">Learn More <i class="iconify" data-icon="bi:arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col s12 md6 l6 xl6">
+            <div class="abtIm-img-sc">
+              <img src="{% static 'img/Message_03.png'%}">
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="whyUs-ContScHmBack">
+    <div class="_whyUsTopBdDvdr">
+      <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 194">
+        <polygon points="1280 -49.5 1280 145 3.3 338.5 0 338.5 0 -49.5 1280 -49.5" style="fill:none"/>
+        <polygon points="1280 0.5 1280 194 1.3 194 1280 70.5" style="fill:#000000"/>
+      </svg>
+    </div>
+    <div class="whyUs-ContScHm container">
+      <div class="whyUs-ContScRwHm row">
+          <div class="col s12">
+            <div class="col s12 whyUs-bdy-sc">
+              <h6>Why rehgien</h6>
+              <h2>Enhancing safety & trust for great service deliverly</h2>
+            </div>
+            <div class="col s12 whyUs-bdyCards-sc">
+              <div class="col s12 md3 l3 xl3 cardItem">
+                <div class="card">
+                  <div class="whyUs_cardImg">
+                    <img src="{% static 'img/userFriendly.svg'%}">
+                  </div>
+                  <div class="whyUs_cardBdy">
+                    <h3>Ease of use</h3>
+                    <p>
+                      Our service and features are designed with the normal user
+                      in mind to faciltate ease of use that enhances productivity.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col s12 md1 l1 xl1 whyUs-bdyCards-sc-cardDvdr"><span></span></div>
+              <div class="col s12 md3 l3 xl3 cardItem">
+                <div class="card">
+                  <div class="whyUs_cardImg">
+                    <img src="{% static 'img/safeToUse.svg'%}">
+                  </div>
+                  <div class="whyUs_cardBdy">
+                    <h3>Trust first approach</h3>
+                    <p>
+                      We vet and screen evey service provider who joins our
+                      platform to ensure our service is safe for all users.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col s12 md1 l1 xl1 whyUs-bdyCards-sc-cardDvdr"><span></span></div>
+              <div class="col s12 md3 l3 xl3 cardItem">
+                <div class="card">
+                  <div class="whyUs_cardImg">
+                    <img src="{% static 'img/intelligentMatching.svg'%}">
+                  </div>
+                  <div class="whyUs_cardBdy">
+                    <h3>Intelligent Matchmaking</h3>
+                    <p>
+                      No more aimless browsing of pro profiles. Our machine
+                      learning models find you the best pro for the job.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col s12 md1 l1 xl1 whyUs-bdyCards-sc-cardDvdr-last"></div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="_whyUsBtmBdDvdr">
+      <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 194">
+        <polygon points="1280 -49.5 1280 145 3.3 338.5 0 338.5 0 -49.5 1280 -49.5" style="fill:none"/>
+        <polygon points="1280 0.5 1280 194 1.3 194 1280 70.5" style="fill:#ffffff"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="getTheApp-ContScHmBack">
+    <div class="getTheApp-ContScHm container">
+      <div class="getTheApp-ContScRwHm row">
+          <div class="col s12 md6 l6 xl6">
+            <div class="getTheApptXt-bdy-sc">
+              <h2>When you need to hire someone - a painter, plumber, anyone - Rehgien finds them for you for free.</h2>
+              <p>
+                Ready to get started? View the best pros, read reviews and chat with them right on our app.
+              </p>
+              <div class="getTheApptXt-bdyCta-sc">
+                <a href="#"><button class="sctUcta-btnBack" type="button" name="button"><img src="{% static 'img/google-play-badge-1.svg'%}"></button></a>
+              </div>
+            </div>
+          </div>
+          <div class="col s12 md6 l6 xl6">
+            <div class="getTheAppIm-img-sc">
+              <img src="{% static 'img/appMockups.png'%}">
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="_whyUsBtmBdDvdr">
+      <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 194">
+        <polygon points="1280 -49.5 1280 145 3.3 338.5 0 338.5 0 -49.5 1280 -49.5" style="fill:none"/>
+        <polygon points="1280 0.5 1280 194 1.3 194 1280 70.5" style="fill:#f5f5f5"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
 {%endblock%}
 {% block footer %}{% include 'footer_section.html' %}{% endblock %}
