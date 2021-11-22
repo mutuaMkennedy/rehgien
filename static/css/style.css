@@ -19042,22 +19042,30 @@ particle {
     color: #fff;
 }
 
-.ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt button{
+.ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt a{
     width: 200px;
+    padding:0 25px;
     height: 55px;
-    background: #FFFFFF;
-    border-radius: 35px;
-    border:none;
-    font-style: normal;
+    border: none;
+    border-radius: 45px;
     font-weight: 600;
-    font-size: 15px;
-    color: #000000;
+    font-size:13px;
+    margin-bottom:10px;
+    margin-right:25px;
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background-color:#fff;
+    color:#000;
+     cursor: pointer;
 }
 
-.ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt button:hover,
-.ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt button:focus{
-    color:#cc0000;
-    cursor:pointer;
+.ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt a:hover,
+.ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt a:focus{
+    border:1px solid #fff;
+    color:#fff;
+    background-color:transparent;
 }
 
 @media only screen and (max-width:768px){
@@ -19068,7 +19076,7 @@ particle {
         align-items:start;
     }
 
-     .ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt button{
+     .ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt a{
         font-size:11px;
         padding:10px 15px;
         height:35px;
