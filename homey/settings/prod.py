@@ -31,6 +31,9 @@ cloudinary.config(
   api_secret = "0ULgyGJ9Mj77dbIO5vrbrfB_NFY"
 )
 
+# Twilio settings
+TWILIO_CONVERSATIONS_SERVICE_SID = 'IS784d626c2f504a57a39d7a8acc076d24'
+
 # Sentry configuration
 sentry_sdk.init(
     dsn="https://a1ebe35872d54deaa1b75ea6b631f3e4@o544386.ingest.sentry.io/5665554",
