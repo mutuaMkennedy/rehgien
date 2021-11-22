@@ -18555,7 +18555,7 @@ particle {
     width:700px;
     height:auto;
     border-radius:15px;
-    margin-left:175px;
+    margin-left:100px;
 }
 
 .joinAsPro-hero .joinAsPro-hero-overlay .joinAsPro-hero-cat {
@@ -18608,7 +18608,8 @@ particle {
     }
 
     .joinAsPro-hero .joinAsPro-hero-overlay .joinAsPro-hero-bdImg img {
-/*         width:400px; */
+        width:540px;
+        margin-left:20px;
     }
 }
 
@@ -18660,7 +18661,7 @@ particle {
 }
 
 .proJoinBnftsContScHm{
-    margin-top:350px;
+    margin-top:250px;
     font-family:Poppins, Open Sans, Arial;
     max-width:1080px;
     width:100%;
@@ -18719,7 +18720,7 @@ particle {
 
 @media only screen and (min-width:1025px) and (max-width:1440px) {
     .proJoinBnftsContScHm{
-        margin-top:275px;
+        margin-top:175px;
     }
 }
 
