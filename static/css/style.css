@@ -100,7 +100,7 @@ main {
 
 #nav-base1 a:hover {
     background-color: transparent;
-    color: #cc0000 !important;
+    color: #ddd !important;
 }
 
 #nav-base1 .dropdown-trigger.active {
@@ -13997,7 +13997,7 @@ particle {
     position:absolute;
     width:550px;
     height:auto;
-    right:0;
+    right:-30px;
 }
 
 @media only screen and (min-width:1025px) and (max-width:1440px){
@@ -14134,10 +14134,7 @@ particle {
 
 ._home_Bnr_catwRP ._home_Bnr_catBtns a._noBck:focus,
 ._home_Bnr_catwRP ._home_Bnr_catBtns a._noBck:hover{
-    border:1px solid #fff;
-    color:#fff;
-    padding:0 25px;
-    justify-content:center;
+    color:#ddd;
 }
 
 ._home_Bnr_catwRP ._home_Bnr_catBtns a._noBck svg{
@@ -14173,11 +14170,12 @@ particle {
     color:#fff;
     border:1px solid #fff;
     text-transform:uppercase;
+    border-radius:35px;
 }
 
 #main_hdr_hmpg_aiuu #nav-base2 li a .join_as_pro:hover{
-    border:1px solid #cc0000;
-    color:#cc0000;
+    border:1px solid #ddd;
+    color:#ddd;
     cursor:pointer;
 }
 
@@ -25731,11 +25729,8 @@ particle {
 }
 
 .aboutUs-ContScHmBack .aboutUs-ContScHm .aboutUs-ContScRwHm .abttXt-bdy-sc .abttXt-bdyCta-sc a.sctUcta-btnnoBack:hover{
-    border:1px solid #cc0000;
-    color:#cc0000;
+    color:#ddd;
     background-color:transparent;
-     padding:0 25px;
-    justify-content:center;
 }
 
 .aboutUs-ContScHmBack .aboutUs-ContScHm .aboutUs-ContScRwHm .abttXt-bdy-sc .abttXt-bdyCta-sc a.sctUcta-btnnoBack svg{
