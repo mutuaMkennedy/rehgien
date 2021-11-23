@@ -14,24 +14,8 @@ from listings import models as listings_models
 from profiles import models as profiles_models
 from django.contrib.sites.models import Site
 from django.urls import reverse
+from . import utils
 
-
-def contact_support(first_name, last_name, email, phone, message):
-	try:
-		subject = 'You have a new Customer Support Request!'
-		plainMessage = "First Name: {fn}. \nLast Name: {ln}. \nEmail: {e}. \nPhone: {p}. \n\nMessage: \n\n{m}".format(fn=first_name, ln=last_name, e=email, p=phone, m=message)
-
-		send_mail(
-			subject,
-			plainMessage,
-			'Rehgien <do-not-reply@mg.rehgien.com>',
-			['support@rehgien.com'],
-			fail_silently=False,
-		)
-		return True
-
-	except BadHeaderError:
-		return False
 
 def contact_us(request):
 	if request.method == 'POST':
@@ -42,7 +26,7 @@ def contact_us(request):
 			email = contact_form.cleaned_data.get('email')
 			phone = contact_form.cleaned_data.get('phone')
 			message = contact_form.cleaned_data.get('message')
-			sucess = contact_support(first_name, last_name, email, phone, message)
+			sucess = utils.contact_support(first_name, last_name, email, phone, message)
 
 			if sucess:
 				messages.success(request,"Message Sucessfully Sent!")
