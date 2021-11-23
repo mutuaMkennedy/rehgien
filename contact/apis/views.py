@@ -10,8 +10,9 @@ from rest_framework.generics import (
 									DestroyAPIView
 									)
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework import permissions
 from django.core.mail import send_mail, BadHeaderError
 from django.template.loader import render_to_string
@@ -29,12 +30,48 @@ try:
 	from django.utils import simplejson as simplejson
 except ImportError:
 	import json
+from contact import utils
+
 
 # referencing the custom user model
 User = get_user_model()
 
 def check_valid(param):
 	return param != '' and param is not None
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def contact_support(request):
+	first_name = ''
+	last_name = ''
+	email = ''
+	phone_number = ''
+	message = ''
+	try:
+		first_name = request.data["first_name"]
+		last_name = request.data["last_name"]
+		phone_number = request.data["phone_number"]
+		message = request.data["message"]
+		email = request.data["email"]
+	except Exception as e:
+		pass
+
+	if first_name and last_name and phone_number and message:
+		response = utils.contact_support(first_name, last_name, email, phone_number, message)
+		if response:
+			message = {'status':True, 'detail':'Issue submitted successfully!'}
+			return Response(message)
+		else:
+			message = {'status':False, 'detail':'Something went wrong. Try again later!'}
+	else:
+		context ={
+		"first_name":"This field is required.",
+		"last_name":"This field is required.",
+		"phone_number":"This field is required.",
+		"message":"This field is required."
+		}
+
+		return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def contact_listing_agent(request):
