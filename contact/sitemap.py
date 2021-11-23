@@ -8,7 +8,17 @@ class ContactStaticViewSitemap(Sitemap):
     changefreq = 'daily'
 
     def items(self):
-        return ['contact:about_us']
+        return ['contact:contact_us']
+
+    def location(self, item):
+        return reverse(item)
+
+class AboutUsStaticViewSitemap(Sitemap):
+    priority = 0.5
+    changefreq = 'daily'
+
+    def items(self):
+        return ['about_us']
 
     def location(self, item):
         return reverse(item)

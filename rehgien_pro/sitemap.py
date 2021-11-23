@@ -8,7 +8,7 @@ class RehgienProStaticViewSitemap(Sitemap):
     changefreq = 'daily'
 
     def items(self):
-        return ['rehgien_pro:rehgien_pro_homepage']
+        return ['rehgien_pro:pro_join_landing']
 
     def location(self, item):
         return reverse(item)
