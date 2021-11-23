@@ -30,20 +30,21 @@ from listings.sitemap import  StaticViewSitemap, PropertyListingsSitemap
 from markets.sitemap import JobPostSitemap
 from profiles.sitemap import StaticBusinessHomepageSitemap, BusinessProfileSitemap
 from resource_center.sitemap import BlogPostSitemap
-from rehgien_pro.sitemap import RehgienProStaticViewSitemap
-from contact.sitemap import ContactStaticViewSitemap
+from rehgien_pro import sitemap as r_pro_sitemap
+from contact import sitemap as contact_sitemap
 #from haystack.forms import FacetedSearchForm
 #from haystack.views import FacetedSearchView
 
 sitemaps = {
-    'property_listings':PropertyListingsSitemap,
-    'job_posts':JobPostSitemap,
-    'static_business_homepage':StaticBusinessHomepageSitemap,
-    'business_profiles':BusinessProfileSitemap,
-    'blog_post':BlogPostSitemap,
-    'static_content':StaticViewSitemap,
-    "RehgienProStaticViewSitemap":RehgienProStaticViewSitemap,
-    "ContactStaticViewSitemap":ContactStaticViewSitemap
+    # 'property_listings':PropertyListingsSitemap,
+    # 'job_posts':JobPostSitemap,
+    # 'static_business_homepage':StaticBusinessHomepageSitemap,
+    # 'business_profiles':BusinessProfileSitemap,
+    # 'blog_post':BlogPostSitemap,
+    # 'static_content':StaticViewSitemap,
+    "RehgienProStaticViewSitemap":r_pro_sitemap.RehgienProStaticViewSitemap,
+    "ContactStaticViewSitemap":contact_sitemap.ContactStaticViewSitemap,
+    "AboutUsStaticViewSitemap":contact_sitemap.AboutUsStaticViewSitemap
 }
 
 urlpatterns = [
