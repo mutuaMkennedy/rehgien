@@ -19009,7 +19009,6 @@ particle {
     background-size:cover !important;
     background-position:center !important;
     background-repeat:no-repeat !important;
-    background-attachment:fixed !important;
 }
 
 .ctaBannerMain-ContScHmBack .ctaBannerMainContScHm{
@@ -19039,7 +19038,7 @@ particle {
     font-weight: 600;
     font-size: 35px;
     line-height: 40px;
-    color: #fff;
+    color: #000;
 }
 
 .ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt a{
@@ -19063,8 +19062,8 @@ particle {
 
 .ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt a:hover,
 .ctaBannerMain-ContScHmBack .ctaBannerMainContScHm .ctaBannerMainContScHmRw .ctaBnrInnerTxt a:focus{
-    border:1px solid #fff;
-    color:#fff;
+    border:1px solid #cc0000;
+    color:#cc0000;
     background-color:transparent;
 }
 
