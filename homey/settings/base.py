@@ -214,8 +214,8 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 
-LOGIN_REDIRECT_URL = ('listings:homepage')
-SIGNUP_REDIRECT_URL = ('listing:homepage')
+LOGIN_REDIRECT_URL = ('homepage')
+SIGNUP_REDIRECT_URL = ('homepage')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
