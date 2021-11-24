@@ -33,4 +33,4 @@ class RehgienPartner(models.Model):
         verbose_name_plural = 'RehgienPartner'
 
     def __str__(self):
-        return self.partner_program + ' ' + self.first_name + ' ' + self.last_name  + ' ' + self.email  + ' ' + self.company_name
+        return self.partner_program.title + ' ' + self.first_name + ' ' + self.last_name  + ' ' + self.email  + ' ' + self.company_name
