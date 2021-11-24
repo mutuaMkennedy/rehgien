@@ -337,7 +337,7 @@ class PropertyVideo(models.Model):
 
 @receiver(pre_delete, sender=PropertyVideo)
 def video_delete(sender, instance, **kwargs):
-	if instance.video.public_id:
+	if instance.video:
 		cloudinary.uploader.destroy(instance.video.public_id)
 
 class PropertyOpenHouse(models.Model):
