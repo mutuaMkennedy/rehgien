@@ -17,7 +17,7 @@
         <div class="left_wrap left">
           <button id="pdash_menu_control" class="menu_control_btn hide-on-med-and-down " type="button" name="button"><i class="material-icons">menu</i></button>
           <a data-target="pdash-mobile-nav" class="sidenav-trigger sdnav_menu_control_btn"><i class="material-icons">menu</i></a>
-          <a href="{% url 'rehgien_pro:rehgien_pro_homepage'%}" class="brand-logo" style="height:60px;" target="_blank">
+          <a href="{% url 'homepage'%}" class="brand-logo" style="height:60px;" target="_blank">
             <div class="proDash-base_lgo">
               <img src="{% static 'img/RehgienProLogo.png'%}" alt="logo">
             </div>
@@ -35,7 +35,7 @@
                       <h5>Your Wish List</h5>
                     </div>
                     <div class="dpdwn_body">
-                      <a href="{% url 'profiles:user_saved_properties'%}">
+                      <a href="#">
                         <div class="dpdwn_wishlist_item">
                           <img src="{% static 'img/property_sky.jpg'%}" alt="properties">
                           <span>
@@ -44,7 +44,7 @@
                           </span>
                         </div>
                       </a>
-                      <a href="{% url 'profiles:saved_pros'%}">
+                      <a href="#">
                         <div class="dpdwn_wishlist_item">
                           <img src="{% static 'img/thumbnails/system_&_appliances.jpg'%}" alt="Professionals">
                           <span>
@@ -54,7 +54,7 @@
                         </div>
                       </a>
                     </div>
-                    <div class="dpdwn_footer"><a href="{% url 'profiles:user_wishlist' %}">View All</a></div>
+                    <div class="dpdwn_footer"><a href="#">View All</a></div>
                 </div>
             </div>
           </li>
@@ -73,7 +73,7 @@
                         <p>No Notifications Right Now</p>
                       </div>
                     </div>
-                    <div class="dpdwn_footer"><a href="{% url 'profiles:notifications' %}">See All Notifications</a></div>
+                    <div class="dpdwn_footer"><a href="#">See All Notifications</a></div>
                 </div>
             </div>
           </li>
@@ -93,7 +93,7 @@
                         <p>No Notifications Right Now</p>
                       </div>
                     </div>
-                    <div class="dpdwn_footer"><a href="{% url 'profiles:notifications' %}">See All Notifications</a></div>
+                    <div class="dpdwn_footer"><a href="#">See All Notifications</a></div>
                 </div>
             </div>
           </li>
@@ -127,9 +127,9 @@
                           </div>
                       </div>
                       <ul>
-                        <li><a href="{% url 'profiles:pro_business_page_edit' pk=request.user.pro_business_profile.pk %}">Edit business page</a></li>
+                        <li><a href="#">Edit business page</a></li>
                         <li><a href="{% url 'rehgien_pro:dashboard_home'%}">Dashboard</a></li>
-                        <li><a href="{% url 'profiles:account_settings'%}">Account Settings</a></li>
+                        <li><a href="#">Account Settings</a></li>
                         <li><a href="{% url 'homepage' %}">Go to Rehgien Home</a></li>
                         <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
                       </ul>
@@ -147,7 +147,7 @@
   <div id="pdash-mobile-nav" class="sidenav pdash_mobile_nav">
     <div class="pdash_mobileNav_header">
       <button class="sidenav-close" type="button"></button>
-        <a class="sidenav-close" href="{% url 'rehgien_pro:rehgien_pro_homepage'%}"><img src="{% static 'img/RehgienProLogo.png'%}" alt="logo"></a>
+        <a class="sidenav-close" href="{% url 'homepage'%}"><img src="{% static 'img/RehgienProLogo.png'%}" alt="logo"></a>
     </div>
     <div class="pdash_mobileNav_collaps">
       <ul class="collapsible expandable">
@@ -169,8 +169,8 @@
           <li class="active">
             <div class="collapsible-header"><a href="#"><button type="button" name="button"><i class="material-icons">local_library</i> <p>Learn</p></button></a><span class="material-icons">expand_less</span></div>
             <div class="collapsible-body">
-                <a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=product-updates" class="" target="_blank"><button type="button" name="button"><p>Tutorials</p></button></a>
-                <a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=tutorials" class="" target="_blank"><button type="button" name="button"><p>Product Updates</p></button></a>
+                <a href="#" class="" target="_blank"><button type="button" name="button"><p>Tutorials</p></button></a>
+                <a href="#" class="" target="_blank"><button type="button" name="button"><p>Product Updates</p></button></a>
             </div>
           </li>
       </ul>
@@ -191,8 +191,8 @@
                     </div>
                      <div class="dpdwn_body">
                        <div class="qcr_link_item">
-                         <a href="{% url 'listings:property_listing_form' %}" target="_blank"><button type="button"><i class="material-icons">bungalow</i>Post a property</button></a>
-                         <a href="{% url 'markets:job_post_home' %}" target="_blank"><button type="button"><i class="material-icons">work</i>Post a job</button></a>
+                         <a href="#" target="_blank"><button type="button"><i class="material-icons">bungalow</i>Post a property</button></a>
+                         <a href="#" target="_blank"><button type="button"><i class="material-icons">work</i>Post a job</button></a>
                          <a href="{% url 'profiles:portfolio_item_create' %}" target="_blank"><button type="button"><i class="material-icons">create_new_folder</i>Post a project</button></a>
                        </div>
                      </div>
@@ -221,8 +221,8 @@
                 <li class="active">
                   <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="iconify" data-icon="bytesize:book"></i> <p>Learn</p></a></button><span class="material-icons">expand_less</span></div>
                   <div class="collapsible-body">
-                      <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=product-updates" class="proDash_sc_switch_clbody proDash_sc_switch" target="_blank"><i class="material-icons">lightbulb</i> <p>Tutorials</p></a></button>
-                      <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:blog_posts'%}?blog_category=tutorials" class="proDash_sc_switch_clbody proDash_sc_switch" target="_blank"><i class="material-icons">system_update_alt</i> <p>Product Updates</p></a></button>
+                      <button type="button" name="button" class="a-clslink"><a href="#" class="proDash_sc_switch_clbody proDash_sc_switch" target="_blank"><i class="material-icons">lightbulb</i> <p>Tutorials</p></a></button>
+                      <button type="button" name="button" class="a-clslink"><a href="#" class="proDash_sc_switch_clbody proDash_sc_switch" target="_blank"><i class="material-icons">system_update_alt</i> <p>Product Updates</p></a></button>
                   </div>
                 </li>
                 <li><button type="button" name="button" class="a-wrapper"><a href="{% url 'rehgien_pro:dashboard_messages' %}" class="proDash_sc_switch {% block settingsActive%}{% endblock%}"><i class="iconify" data-icon="carbon:settings"></i> <p>Settings & Privacy</p></a> <div class='secondaryIconDashNav'><i class="iconify" data-icon="akar-icons:link-out"></i><div></button></li>
