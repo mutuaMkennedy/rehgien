@@ -28,7 +28,12 @@ class ProfessionalCategoryInline(admin.StackedInline):
 	model = models.ProfessionalCategory
 	extra = 1
 
+class ProfessionalServiceInline(admin.StackedInline):
+	model = models.ProfessionalService
+	extra = 1
+
 class ProfessionalCategoryAdmin(admin.ModelAdmin):
+    inlines = [ProfessionalServiceInline]
     prepopulated_fields = {"slug": ("category_name",)}
     list_display = ("category_name","slug",)
 
