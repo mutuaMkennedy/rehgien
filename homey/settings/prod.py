@@ -33,6 +33,8 @@ cloudinary.config(
 
 # Twilio settings
 TWILIO_CONVERSATIONS_SERVICE_SID = 'IS784d626c2f504a57a39d7a8acc076d24'
+TWILIO_MESSAGING_SERVICE_SID = 'ISea7dbadbee2b4c80b87b2459211ca4ab'
+TWILIO_PHONE_NUMBER = '+18456226952'
 
 # Sentry configuration
 sentry_sdk.init(
