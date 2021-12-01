@@ -37,6 +37,7 @@ def createOrupdateUser(identity):
         "user_type":user_obj.user_type,
         "has_profile_image":True if user_obj.profile_image else False,
         "profile_image":user_obj.profile_image.url if user_obj.profile_image else '/static/img/avatar_d2.svg',
+        "business_name":user_obj.pro_business_profile.business_name if user_obj.user_type =='PRO' else '',
         "pro_category": user_obj.pro_business_profile.professional_category.category_name if user_obj.user_type =='PRO' else ''
         }
 
