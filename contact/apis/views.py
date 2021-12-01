@@ -20,7 +20,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
 from twilio.base.exceptions import TwilioRestException
-from contact.services.twilio_service import TwilioService
+from contact.services import twilio_service
 from listings import models as listings_models
 from contact.views import build_message,build_pro_message
 from django.core.exceptions import ObjectDoesNotExist
@@ -138,13 +138,11 @@ def contact_listing_agent(request):
 					message = 'Something went wrong! Could not complete request. Try again later'
 					return Response(message)
 				# sending lead alert via instant sms
-				twilio_service = TwilioService()
-
 				formatted_message = build_message(client_message, client_name, client_phone_number, client_email, property_name, \
 									property_location,link_to_property)
 				try:
 					e_recepient_phone_number = '+254' + recepient_phone_number[-9:]
-					twilio_service.send_message(formatted_message, e_recepient_phone_number)
+					twilio_service.send_SMS(formatted_message, e_recepient_phone_number)
 				except TwilioRestException as e:
 					message = 'SMS not sent. Make sure the phone number supplied is correct!'
 
@@ -206,11 +204,10 @@ def contact_pro(request):
 				return Response(message)
 
 			# sending lead alert via instant sms
-			twilio_service = TwilioService()
 			formatted_message = build_pro_message(client_message, client_name, client_phone_number, client_email)
 			try:
 				e_recepient_phone_number = '+254' + recepient_phone_number[-9:]
-				twilio_service.send_message(formatted_message, e_recepient_phone_number)
+				twilio_service.send_SMS(formatted_message, e_recepient_phone_number)
 			except TwilioRestException as e:
 				message = 'SMS not sent. Make sure the phone number supplied is correct!'
 			message = 'Message sent sucessfully. This pro will contact you soon.'

@@ -31,7 +31,8 @@ from rest_framework.response import Response
 import django_filters
 from rest_framework.decorators import api_view
 from .utils import otp_generator
-from .africas_talking import send_otp_sms,send_password_reset_otp_sms
+from .africas_talking import send_otp_sms,send_password_reset_otp_sms # Remove; Replaced with twilio service
+from contact.services import twilio_service
 import django_filters
 import re
 from django.db.models import Q,Count
@@ -86,7 +87,7 @@ def lookup_user_obj_for_login(request):
 """
 Phone OTP send and validation views start here
 """
-def send_otp(phone_number):
+def send_otp(phone_number,message):
     """
         Helper function for generating and sending otp code to user's phone.
     """
@@ -96,7 +97,8 @@ def send_otp(phone_number):
         phone = str(phone_number)
         try:
             #send code to phone Number
-            sms = send_otp_sms(otp_code)
+            message = f'{message} {otp_code}'
+            sms = twilio_service.send_SMS(message, phone)
             if sms == True:
                 return str(otp_code) # that we will store in the db for later validation when the user sends the code for verification
             else:
@@ -131,7 +133,7 @@ def validate_phone_send_otp(request):
         else:
             otp_count_check_status = check_otp_count(phone_number)
             if otp_count_check_status == True: # if true, meaning check passed, continue with the rest of the program
-                otp_code = send_otp(phone_number)
+                otp_code = send_otp(phone_number, 'You phone number verification code is:')
                 if otp_code != False:
                     """
                     Checking whether otp code object exists before we create a new one.
@@ -272,7 +274,7 @@ def send_otp_to_email_or_phone(request):
 
                 phone_number = str(q)
                 #send code to phone Number
-                sms = send_password_reset_otp_sms(otp_code)
+                sms = send_otp(phone_number, 'You password reset code is:')
                 if sms == True:
                     # Logging the otp code in the db
                     old_otp = ''

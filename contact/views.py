@@ -7,7 +7,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpResponse, HttpResponseRedirect
 from twilio.base.exceptions import TwilioRestException
-from .services.twilio_service import TwilioService
+from .services import twilio_service
 from . import models
 from . import forms
 from listings import models as listings_models
@@ -128,13 +128,12 @@ def contact_listing_agent(request):
 			messages.error(request, 'Something went wrong! Could not complete request. Try again later')
 			return redirect(current_listing_path)
 		# sending lead alert via instant sms
-		twilio_service = TwilioService()
 
 		formatted_message = build_message(sender_message, name, phone_number, from_email,current_listing_name, \
 							current_listing_location,current_listing_path)
 		try:
 			e_recepient_phone_number = '+254' + recepient_phone_number[-9:]
-			twilio_service.send_message(formatted_message, e_recepient_phone_number)
+			twilio_service.send_SMS(formatted_message, e_recepient_phone_number)
 		except TwilioRestException as e:
 			pass
 
@@ -179,12 +178,10 @@ def contact_pro(request):
 			messages.error(request, 'Something went wrong! Could not complete request. Try again later')
 			return redirect(current_path)
 		# sending lead alert via instant sms
-		twilio_service = TwilioService()
-
 		formatted_message = build_pro_message(sender_message, sender_name, sender_phone_number, sender_email)
 		try:
 			e_recepient_phone_number = '+254' + recepient_phone_number[-9:]
-			twilio_service.send_message(formatted_message, e_recepient_phone_number)
+			twilio_service.send_SMS(formatted_message, e_recepient_phone_number)
 		except TwilioRestException as e:
 			pass
 
