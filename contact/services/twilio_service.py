@@ -18,4 +18,5 @@ def send_SMS(message, recepient_phone_number):
              )
         return True
     except Exception as e:
+        print(e)
         return False
