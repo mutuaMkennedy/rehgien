@@ -174,7 +174,8 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
     def get_pro_portfolio_items(self,obj):
         portfolio_object = profiles_models.PortfolioItem.objects.filter(created_by=obj.user.pk)
         portfolio_item_array = []
-        for ptf in portfolio_object:
+        if portfolio_object.exists():
+            for ptf in portfolio_object:
             ptf_object_photos = []
 
             # looping over all the photos related to this portfolio object
