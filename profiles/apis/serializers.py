@@ -176,45 +176,45 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
         portfolio_item_array = []
         if portfolio_object.exists():
             for ptf in portfolio_object:
-            ptf_object_photos = []
+                ptf_object_photos = []
 
-            # looping over all the photos related to this portfolio object
-            for pic in ptf.portfolio_item_photo.all():
-                photo_object = {
-                    'pk':pic.pk,
-                    'portfolio_item':pic.portfolio_item.pk,
-                    'photo':pic.photo.url if pic.photo else '',
-                }
-                ptf_object_photos.append(photo_object)
+                # looping over all the photos related to this portfolio object
+                for pic in ptf.portfolio_item_photo.all():
+                    photo_object = {
+                        'pk':pic.pk,
+                        'portfolio_item':pic.portfolio_item.pk,
+                        'photo':pic.photo.url if pic.photo else '',
+                    }
+                    ptf_object_photos.append(photo_object)
 
-            # creating the user object arrray
-            user_object = {
-                'id':ptf.created_by.pk,
-                'username':ptf.created_by.username,
-                'first_name':ptf.created_by.first_name,
-                'last_name':ptf.created_by.last_name,
-                'email':ptf.created_by.email,
-                'user_type':ptf.created_by.user_type,
-                'profile_image':ptf.created_by.profile_image.url if ptf.created_by.profile_image else '',
-                }
+                # creating the user object arrray
+                user_object = {
+                    'id':ptf.created_by.pk,
+                    'username':ptf.created_by.username,
+                    'first_name':ptf.created_by.first_name,
+                    'last_name':ptf.created_by.last_name,
+                    'email':ptf.created_by.email,
+                    'user_type':ptf.created_by.user_type,
+                    'profile_image':ptf.created_by.profile_image.url if ptf.created_by.profile_image else '',
+                    }
 
-            # and finally creating the portfolio object arrray
-            portfolio_object = {
-                'pk':ptf.pk,
-                'name': ptf.name,
-                'description': ptf.description,
-                "project_job_type":ptf.project_job_type.service_name,
-                "project_location":ptf.project_location.town_name,
-                "project_cost":ptf.project_cost,
-                "project_duration":ptf.project_duration,
-                "project_year":ptf.project_year,
-                'video': ptf.video,
-                'photos':ptf_object_photos,
-                'created_at': ptf.created_at,
-                'created_by': user_object,
-             }
+                # and finally creating the portfolio object arrray
+                portfolio_object = {
+                    'pk':ptf.pk,
+                    'name': ptf.name,
+                    'description': ptf.description,
+                    "project_job_type":ptf.project_job_type.service_name,
+                    "project_location":ptf.project_location.town_name,
+                    "project_cost":ptf.project_cost,
+                    "project_duration":ptf.project_duration,
+                    "project_year":ptf.project_year,
+                    'video': ptf.video,
+                    'photos':ptf_object_photos,
+                    'created_at': ptf.created_at,
+                    'created_by': user_object,
+                 }
 
-            portfolio_item_array.append(portfolio_object)
+                portfolio_item_array.append(portfolio_object)
 
         return portfolio_item_array
 
