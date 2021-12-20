@@ -37,7 +37,11 @@ from phonenumber_field.modelfields import PhoneNumberField
 from contact import views as contact_views
 from . import tasks as profile_celery_tasks
 import datetime
+from django.db.models import Func
 
+class Round(Func):
+    function = 'ROUND'
+    template='%(function)s(%(expressions)s, 1)'
 
 def current_year():
 	return datetime.date.today().year
@@ -284,7 +288,76 @@ class BusinessProfile(models.Model):
 
 	@property
 	def average_rating(self):
-		return self.pro_business_review.all().aggregate(Avg('recommendation_rating')).get('recommendation_rating__avg', 0.00)
+		avg_rating = self.pro_business_review.all().aggregate(rating=Round(Avg('recommendation_rating')))
+		return avg_rating['rating']
+
+	@property
+	def get_rating_stats(self):
+		pro_reviews = self.pro_business_review.all()
+
+		rvw_count = pro_reviews.count()
+		if rvw_count == 0:
+			rvw_count = 1
+
+		recommendation_rating_avg = pro_reviews.aggregate(rating=Round(Avg('recommendation_rating')))['rating']
+		responsive_rating_avg = pro_reviews.aggregate(rating=Round(Avg('responsive_rating')))['rating']
+		knowledge_rating_avg = pro_reviews.aggregate(rating=Round(Avg('knowledge_rating')))['rating']
+		professionalism_rating_avg = pro_reviews.aggregate(rating=Round(Avg('professionalism_rating')))['rating']
+		quality_of_service_rating_avg = pro_reviews.aggregate(rating=Round(Avg('quality_of_service_rating')))['rating']
+
+		five_star_ratings = pro_reviews.filter(recommendation_rating=5).count()
+		four_star_ratings = pro_reviews.filter(recommendation_rating=4).count()
+		three_star_ratings = pro_reviews.filter(recommendation_rating=3).count()
+		two_star_ratings = pro_reviews.filter(recommendation_rating=2).count()
+		one_star_ratings = pro_reviews.filter(recommendation_rating=1).count()
+
+		array = {
+		"five_stars": five_star_ratings/ rvw_count * 100,
+		"four_stars": four_star_ratings / rvw_count * 100,
+		"three_stars": three_star_ratings / rvw_count * 100,
+		"two_stars": two_star_ratings / rvw_count * 100,
+		"one_stars": one_star_ratings / rvw_count * 100,
+		}
+
+		highly_rated_traits = ['Responsiveness', 'Knowledge', 'Professionalism', 'Quality of service']
+		if responsive_rating_avg and responsive_rating_avg >= 4.5:
+			highly_rated_traits.append('Responsiveness')
+		if knowledge_rating_avg and knowledge_rating_avg >= 4.5:
+			highly_rated_traits.append('Knowledge')
+		if professionalism_rating_avg and professionalism_rating_avg >= 4.5:
+			highly_rated_traits.append('Professionalism')
+		if quality_of_service_rating_avg and quality_of_service_rating_avg >= 4.5:
+			highly_rated_traits.append('Quality of service')
+
+		comment = ''
+
+		if recommendation_rating_avg:
+			if recommendation_rating_avg >= 4.5:
+				comment = 'Very Highly rated'
+			elif recommendation_rating_avg >= 3.5 and recommendation_rating_avg < 4.5:
+				comment = 'Highly rated'
+			elif recommendation_rating_avg >= 2.5 and recommendation_rating_avg < 3.5:
+				comment = 'Rated Average'
+			elif recommendation_rating_avg > 0 and recommendation_rating_avg < 1.5:
+				comment = 'Rated Low'
+			else:
+				comment = 'Not Rated'
+		else:
+			comment = 'Not Rated'
+
+		array = {
+		"overall_rating": recommendation_rating_avg if recommendation_rating_avg else 0,
+		"recommendation_rating_avg":recommendation_rating_avg if recommendation_rating_avg else 0,
+		"responsive_rating_avg":responsive_rating_avg if recommendation_rating_avg else 0,
+		"knowledge_rating_avg":knowledge_rating_avg if recommendation_rating_avg else 0,
+		"professionalism_rating_avg":professionalism_rating_avg if recommendation_rating_avg else 0,
+		"quality_of_service_rating_avg":quality_of_service_rating_avg if recommendation_rating_avg else 0,
+		"highly_rated_traits":highly_rated_traits,
+		"comment": comment,
+		"stars_percentage_avg": array
+		}
+
+		return array
 
 @receiver(pre_delete, sender=BusinessProfile)
 def set_user_to_client(sender, instance, **kwargs):
@@ -489,6 +562,7 @@ class Question(models.Model):
 
 	class Meta:
 		verbose_name_plural = "Matchmaking Questions"
+
 
 class QuestionOptions(models.Model):
 	question = models.ForeignKey(Question,on_delete=models.SET_NULL,\
