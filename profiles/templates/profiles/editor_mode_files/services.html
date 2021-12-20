@@ -1,14 +1,466 @@
 {% load static %}
-
+{% load profiles_extra_tags %}
 {% if bs_profile.professional_services %}
   {% for speciality in bs_profile.professional_services.all %}
-    <button type="button" name="button">
-      {{speciality}}
-    </button>
-  {%endfor%}
+  <div class="pEdSvc-sItem">
+    <div class="pEdSvc-sItem-head">
+       <h2>{{speciality.service_name}}</h2>
+       <span>Targeting on</span>
+    </div>
+    <div class="pEdSvc-sItem-body">
+      <div class="pEdSvc-sItem-L">
+        <div class="pEdSvc-sItem-stat">
+              <span>~</span>
+              <p>Views</p>
+        </div>
+        <div class="pEdSvc-sItem-stat">
+              <span>~</span>
+              <p>Leads</p>
+        </div>
+      </div>
+      <div class="pEdSvc-sItem-R">
+          <button class="pEdToggleMainModal" data-targetMdl="MDLtargetinLanding-{{speciality.id}}" data-action='open' type="button" name="button">Edit preferences<i class="iconify" data-icon="akar-icons:chevron-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pEdformContainer">
+      <div id="MDLtargetinLanding-{{speciality.id}}" class="pEdformCard">
+        <div class="pEdformCard-header">
+          <h2>{{speciality.service_name}}</h2>
+          <button class="pEdToggleMainModal" data-targetMdl="MDLtargetinLanding-{{speciality.id}}" data-action='close' type="button" name="button"><i class="iconify" data-icon="eva:close-fill"></i></button>
+        </div>
+        <div class="pEdformCard-body">
+          <div class="pEdformCard-body-formWrapper">
+            <form autocomplete="off" action="#" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="pEd_svcLandingForm-Elms pEd_Form-Elms">
+                <div class="pEdformCard-body-helpText">
+                    <div class="pEdformCard-body-helpText-header">
+                        <h3>Targeting preferences</h3>
+                    </div>
+                    <div class="pEdformCard-body-helpText-body">
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Setting your targeting preferences allows you to define your audience and the type of customers you want.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          We will use this information to display your profile to the right customers that fit your business needs.
+                        </p>
+                      </div>
+                    </div>
+                </div>
+                <div class="pEd_svcLandingFieldsWrp pEd_FormFieldWrp">
+                    <div class="pEd_svcLandingFields pEd_FormFields">
+                          <div class="pEdToggleMainModal pEd_FormField_svcLanding_rdr" data-targetMdl="MDLtargetingJobType-{{speciality.id}}" data-action='open'>
+                            <i class="iconify" data-icon="codicon:settings"></i>
+                            <div class="pEd_FormField_svcLanding_rdr-bdy">
+                              <div class="pEd_FormField_svcLanding_rdr-txt">
+                                  <h5>Job types</h5>
+                                  <p>What jobs do you want?</p>
+                              </div>
+                              <i class="iconify" data-icon="akar-icons:chevron-right"></i>
+                            </div>
+                          </div>
+                          <div class="pEdToggleMainModal pEd_FormField_svcLanding_rdr" data-targetMdl="MDLtargetingSvcArea-{{speciality.id}}" data-action='open'>
+                            <i class="iconify" data-icon="akar-icons:location"></i>
+                            <div class="pEd_FormField_svcLanding_rdr-bdy">
+                              <div class="pEd_FormField_svcLanding_rdr-txt">
+                                  <h5>Work zones</h5>
+                                  <p>Tell us where you want to work.</p>
+                              </div>
+                              <i class="iconify" data-icon="akar-icons:chevron-right"></i>
+                            </div>
+                          </div>
+                          <div class="pEd_FormField_svcLanding_rdr inactive">
+                            <i class="iconify" data-icon="carbon:calendar"></i>
+                            <div class="pEd_FormField_svcLanding_rdr-bdy">
+                              <div class="pEd_FormField_svcLanding_rdr-txt">
+                                  <h5>Working hours</h5>
+                                  <p>Tell us when you want to work.</p>
+                              </div>
+                              <i class="iconify" data-icon="akar-icons:chevron-right"></i>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="pEdformContainer">
+      <div id="MDLtargetingJobType-{{speciality.id}}" class="pEdformCard">
+        <div class="pEdformCard-header">
+          <button class="pEdToggleMainModal" data-targetMdl="MDLtargetinLanding-{{speciality.id}}" data-action='open' type="button" name="button"><i class="iconify" data-icon="ep:back"></i></button>
+          <h2>{{speciality.service_name}}</h2>
+          <button class="pEdToggleMainModal" data-targetMdl="MDLtargetingJobType-{{speciality.id}}" data-action='close' type="button" name="button"><i class="iconify" data-icon="eva:close-fill"></i></button>
+        </div>
+        <div class="pEdformCard-body">
+          <div class="pEdformCard-body-formWrapper">
+            <form id="pEd_svcTgPrf-form-{{speciality.pk}}" autocomplete="off" action="{% url 'profiles:business_profile_update' pk=bs_profile.pk slug='targeting-preferences-job-type'%}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="pEd_svcTgPrfForm-Elms pEd_Form-Elms">
+                <div class="pEdformCard-body-helpText">
+                    <div class="pEdformCard-body-helpText-header">
+                        <h3>Targeting preferences</h3>
+                    </div>
+                    <div class="pEdformCard-body-helpText-body">
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Setting your targeting preferences allows you to define your audience and the type of customers you want.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          We will use this information to display your profile to the right customers that fit your business needs.
+                        </p>
+                      </div>
+                    </div>
+                </div>
+                <div class="pEd_svcTgPrfFieldsWrp pEd_FormFieldWrp">
+                    <div class="pEd_svcTgPrfFields pEd_FormFields">
+                        {% for question in speciality.matchmaking_service.matchmaker_question.all %}
+                            <input type="hidden" name="question" value="{{question.pk}}">
+                            {% if question.pro_question_answer %}
+                              <p>{{question.pro_question}}</p>
+                              <div class="pEd_FormField_sng">
+                                <div class="pEd_svcTgPrfInputFld pEd_FormInputField">
+                                  <div class="pEd_svcTgPrfInputSelectOp">
+                                    {{question.question_answers}}
+                                    {% for q_option in question.question_option.all %}
+                                      <li>
+                                        <label>
+                                          {% question_answers speciality request.user as checked_options %}
+                                          <input type="checkbox" class="filled-in" {% if q_option.pk in checked_options %} checked="checked" {% endif %} name='answer-to-q-{{question.pk}}' value="{{q_option.pk}}"/>
+                                          <span>{{q_option.name}} </span>
+                                        </label>
+                                      </li>
+                                    {% endfor %}
+                                  </div>
+                                </div>
+                              </div>
+                            {% else %}
+                              <p>{{question.pro_question}}</p>
+                              <div class="pEd_FormField_sng">
+                                <div class="pEd_svcTgPrfInputFld pEd_FormInputField">
+                                  <div class="pEd_svcTgPrfInputSelectOp">
+                                    {% for q_option in question.question_option.all %}
+                                      <li>
+                                        <label>
+                                          <input type="checkbox" class="filled-in" name />
+                                          <span>{{q_option.name}}</span>
+                                        </label>
+                                      </li>
+                                    {% endfor %}
+                                  </div>
+                                </div>
+                              </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+              </div>
+              <div class="pEd_form-footer">
+                <div class="pEd_svcTgPrfForm-submit pEd_FormSubmit">
+                  <button id="pEd_svcTgPrfForm-submit-button-{{speciality.id}}" type="submit" name="button">
+                    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="256px" height="64px" viewBox="0 0 128 32" xml:space="preserve">
+                      <circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(16 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1.42;1;1;1;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(64 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1.42;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(112 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1;1;1;1.42;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle>
+                    </svg>
+                    <p>Save</p>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        $(document).ready(function(event){
+          var submitProfileIntroBtn = $('#pEd_svcTgPrfForm-submit-button-{{speciality.id}}');
+          var successMessageBody = $('.rqst_RspSuccessMessage_');
+          var errorMessageBody = $('.rqst_RspErrorMessage_');
+          var loadingIndicator = $('#pEd_svcTgPrfForm-submit-button-{{speciality.id}} svg');
+              loadingIndicator.hide();
+          var submitBtnText = $('#pEd_svcTgPrfForm-submit-button-{{speciality.id}} p');
+
+          $('#pEd_svcTgPrf-form-{{speciality.pk}}').on('submit', function(event){
+               event.preventDefault();
+               // var serializedData = $(this).serialize();
+               var formData = new FormData(this);
+
+               // hide button text
+               submitBtnText.hide();
+               // Show Loading indicator
+               loadingIndicator.show();
+               // Disable button to prevent double submit
+               submitProfileIntroBtn.attr('disabled', 'disabled');
+
+               $.ajax({
+                 type : $(this).attr('method'),
+                 url : $(this).attr('action'),
+                 data :formData,
+                 cache: false,
+                 contentType: false,
+                 processData: false,
+                 // success
+                 success: function(response) {
+
+                   // show success message then hide it after a few seconds
+                    successMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                    successMessageBody.css({
+                      'bottom':'10px',
+                    });
+
+                    setTimeout(function(){
+                       successMessageBody.css({
+                         'bottom':'-100px',
+                       });
+                    }, 6000);
+
+                   // hide loading indicatior in button
+                    loadingIndicator.hide();
+                   // Show button text
+                   submitBtnText.show();
+                   // remove disabled attribute from submit button
+                    submitProfileIntroBtn.removeAttr('disabled');
+
+
+                 },
+                 error: function(rs,e){
+                   // show success message then hide it after a few seconds
+                    errorMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                    errorMessageBody.css({
+                      'bottom':'10px',
+                    });
+
+                    setTimeout(function(){
+                       errorMessageBody.css({
+                         'bottom':'-100px',
+                       });
+                    }, 6000);
+
+                   // hide loading indicatior in button
+                    loadingIndicator.hide();
+                   // Show button text
+                   submitBtnText.show();
+                   // remove disabled attribute from submit button
+                    submitProfileIntroBtn.removeAttr('disabled');
+
+                 },
+               });
+          });
+
+
+
+        });
+      </script>
+
+  </div>
+
+  <div class="pEdformContainer">
+      <div id="MDLtargetingSvcArea-{{speciality.id}}" class="pEdformCard">
+        <div class="pEdformCard-header">
+          <button class="pEdToggleMainModal" data-targetMdl="MDLtargetinLanding-{{speciality.id}}" data-action='open' type="button" name="button"><i class="iconify" data-icon="ep:back"></i></button>
+          <h2>Select service areas</h2>
+          <button class="pEdToggleMainModal" data-targetMdl="MDLtargetingServiceArea-{{speciality.id}}" data-action='close' type="button" name="button"><i class="iconify" data-icon="eva:close-fill"></i></button>
+        </div>
+        <div class="pEdformCard-body">
+          <div class="pEdformCard-body-formWrapper">
+            <form id="pEd_svcAreaTgPrf-form-{{speciality.id}}" autocomplete="off" action="{% url 'profiles:business_profile_update' pk=bs_profile.pk slug='targeting-preferences-service-areas'%}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {% for question in speciality.matchmaking_service.matchmaker_question.all %}
+                  <input type="hidden" name="question" value="{{question.pk}}">
+              {% endfor %}
+              <div class="pEd_svcAreaTgPrfForm-Elms pEd_Form-Elms">
+                <div class="pEdformCard-body-helpText">
+                    <div class="pEdformCard-body-helpText-header">
+                        <h3>About Work Zones</h3>
+                    </div>
+                    <div class="pEdformCard-body-helpText-body">
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Work zones or service areas allow you to specify which regions/towns you want to work in.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Work zone settings help us match you with customers availlable in the areas you select.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Work zone settings should be set for each service you offer!
+                        </p>
+                      </div>
+                    </div>
+                </div>
+                <div class="pEd_svcAreaTgPrfFieldsWrp pEd_FormFieldWrp">
+                    <div class="pEd_svcAreaTgPrfFields pEd_FormFields">
+                          <p>Add towns where you want to work in</p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_svcAreaTgPrfInputFld pEd_FormInputField">
+                                <select id="pEd_svcAreaTgPrfInputFld-{{speciality.id}}" name="service_areas"  multiple="multiple">
+
+                                </select>
+                                <div id="pEd_svcAreaTgPrfInputFld-SelectDropDown-{{speciality.id}}" class="pEd_svcAreaTgPrfInputFld-SelectDropDown">
+
+                                </div>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+              </div>
+              <div class="pEd_form-footer">
+                <div class="pEd_svcAreaTgPrfForm-submit pEd_FormSubmit">
+                  <button id="pEd_svcAreaTgPrfForm-submit-button-{{speciality.id}}" type="submit" name="button">
+                    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="256px" height="64px" viewBox="0 0 128 32" xml:space="preserve">
+                      <circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(16 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1.42;1;1;1;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(64 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1.42;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(112 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1;1;1;1.42;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle>
+                    </svg>
+                    <p>Save</p>
+                  </button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        $(document).ready(function(event){
+          var submitProfileInfoBtn = $('#pEd_svcAreaTgPrfForm-submit-button-{{speciality.id}}');
+          var successMessageBody = $('.rqst_RspSuccessMessage_');
+          var errorMessageBody = $('.rqst_RspErrorMessage_');
+          var loadingIndicator = $('#pEd_svcAreaTgPrfForm-submit-button-{{speciality.id}} svg');
+              loadingIndicator.hide();
+          var submitBtnText = $('#pEd_svcAreaTgPrfForm-submit-button-{{speciality.id}} p');
+
+          $('#pEd_svcAreaTgPrf-form-{{speciality.id}}').on('submit', function(event){
+             event.preventDefault();
+             var serializedData = $(this).serialize();
+
+             // hide button text
+             submitBtnText.hide();
+             // Show Loading indicator
+             loadingIndicator.show();
+             // Disable button to prevent double submit
+             submitProfileInfoBtn.attr('disabled', 'disabled');
+
+             $.ajax({
+               type : $(this).attr('method'),
+               url : $(this).attr('action'),
+               data :serializedData,
+               dataType: 'json',
+               // success
+               success: function(response) {
+
+                 // show success message then hide it after a few seconds
+                  successMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                  successMessageBody.css({
+                    'bottom':'10px',
+                  });
+
+                  setTimeout(function(){
+                     successMessageBody.css({
+                       'bottom':'-100px',
+                     });
+                  }, 6000);
+
+                 // hide loading indicatior in button
+                  loadingIndicator.hide();
+                 // Show button text
+                 submitBtnText.show();
+                 // remove disabled attribute from submit button
+                  submitProfileInfoBtn.removeAttr('disabled');
+
+               },
+               error: function(response,e){
+                 // show success message then hide it after a few seconds
+                  errorMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                  errorMessageBody.css({
+                    'bottom':'10px',
+                  });
+
+                  setTimeout(function(){
+                     errorMessageBody.css({
+                       'bottom':'-100px',
+                     });
+                  }, 6000);
+
+                 // hide loading indicatior in button
+                  loadingIndicator.hide();
+                 // Show button text
+                 submitBtnText.show();
+                 // remove disabled attribute from submit button
+                  submitProfileInfoBtn.removeAttr('disabled');
+
+               },
+             });
+          });
+
+          var data = [
+          {% if speciality.matchmaking_service.matchmaker_question.first.pro_question_answer %}
+            {% question_service_areas speciality request.user as service_areas %}
+            {% for t in service_areas %}
+              {
+                   id: {{t.id}},
+                   text: '{{t.town_name}}',
+                   selected: true,
+               },
+           {%endfor%}
+         {%endif%}
+          ]
+
+          $('#pEd_svcAreaTgPrfInputFld-{{speciality.id}}').select2({
+            placeholder: 'Enter a location',
+            data:data,
+            ajax: {
+              url: "{% url 'rehgien_pro:get_service_areas' %}",
+              dataType: 'json',
+            },
+            dropdownParent: $('#pEd_svcAreaTgPrfInputFld-SelectDropDown-{{speciality.id}}'),
+            minimumInputLength:'3'
+
+          });
+
+
+        });
+      </script>
+
+  </div>
+
+  {% endfor %}
 {% else %}
-  <div class="pflpages-no-results">
-    <img src="{%static 'img/note.svg'%}" alt="empty">
-    <p>Nothing Yet</p>
+  <div class="pEdSvc-no-results">
+    <img src="{% static 'img/list.png'%}" alt="empty">
+    <div class="pEdSvc-no-resultsBd">
+      <h5>No services found</h5>
+      <p>Add services and start getting clients.</p>
+    </div>
   </div>
 {% endif %}

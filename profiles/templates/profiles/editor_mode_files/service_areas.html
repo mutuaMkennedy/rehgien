@@ -2,7 +2,7 @@
 
 {% if bs_profile.service_areas.all %}
   {% for service_area in bs_profile.service_areas.all %}
-    <form class="_ag-svcAreafORM" action="{% url 'profiles:business_list'%}" method="get">
+    <form class="_ag-svcAreafORM" action="#" method="get">
       {%csrf_token%}
         <button type="submit" name="pro_location" value="{{service_area.town_name}}">{{service_area.town_name}}</button>
     </form>
