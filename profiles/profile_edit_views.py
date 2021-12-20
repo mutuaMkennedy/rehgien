@@ -80,7 +80,7 @@ def resizePhoto(photo,x,y,width,height):
 
 @login_required(login_url='account_login')
 def busines_profile_update(request, pk, slug):
-	if request.is_ajax() and request.method == 'POST':
+	if request.method == 'POST':
 		bs_profile = get_object_or_404(models.BusinessProfile, pk=pk )
 		if slug == 'profile-picture':
 			profile_image_form = forms.BusinessProfileImage(request.POST, request.FILES, instance=request.user.pro_business_profile)
@@ -163,18 +163,21 @@ def busines_profile_update(request, pk, slug):
 				html = render_to_string('profiles/editor_mode_files/service_areas.html', context, request=request)
 				return JsonResponse({'page_section':html ,'message':message})
 		elif slug == 'our-services':
-			services_form = forms.BusinessProfileServices(request.POST, instance=request.user.pro_business_profile)
-
-			if services_form.is_valid():
+			# services_form = forms.BusinessProfileServices(request.POST, instance=request.user.pro_business_profile)
+			service_ids = request.POST.getlist('service', None)
+			if service_ids != None:
 				if request.user == bs_profile.user:
-					services_form.save()
+
+					# save the changes
+					bs_profile.professional_services.set(service_ids)
+					bs_profile.save()
 
 					#we request an updated instance of the model
 					bs_profile = get_object_or_404(models.BusinessProfile, pk=pk )
 
 					message = 'Changes saved successfully!'
 					context = {
-					'message':message,'bs_profile':bs_profile,'services_form':services_form
+					'message':message,'bs_profile':bs_profile
 					}
 
 					html = render_to_string('profiles/editor_mode_files/services.html', context, request=request)
@@ -182,16 +185,16 @@ def busines_profile_update(request, pk, slug):
 				else:
 					message = 'Permission denied. Changes not saved'
 					context = {
-					'message':message,'bs_profile':bs_profile,'services_form':services_form
+					'message':message,'bs_profile':bs_profile
 					}
 
 					html = render_to_string('profiles/editor_mode_files/services.html', context, request=request)
 					return JsonResponse({'page_section':html ,'message':message})
 
 			else:
-				message = 'Invalid form submission!'
+				message = 'Select atleast one service.'
 				context = {
-					'message':message,'bs_profile':bs_profile,'services_form':services_form
+					'message':message,'bs_profile':bs_profile,
 					}
 				html = render_to_string('profiles/editor_mode_files/services.html', context, request=request)
 				return JsonResponse({'page_section':html ,'message':message})
@@ -229,23 +232,24 @@ def busines_profile_update(request, pk, slug):
 				return JsonResponse({'page_section':html ,'message':message})
 		elif slug == 'page-info':
 			page_info_form = forms.BusinessProfilePageInfo(request.POST, request.FILES, instance=request.user.pro_business_profile)
-			bs_business_hours_iformset = inlineformset_factory(
-						models.BusinessProfile, models.BusinessHours, forms.BusinessHoursForm,
-						min_num=1,max_num=14, extra=0, can_order=True, can_delete=True
-						)
-			bs_hours_formset = bs_business_hours_iformset(request.POST, request.FILES, instance=bs_profile)
+			# bs_business_hours_iformset = inlineformset_factory(
+			# 			models.BusinessProfile, models.BusinessHours, forms.BusinessHoursForm,
+			# 			min_num=1,max_num=14, extra=0, can_order=True, can_delete=True
+			# 			)
+			# bs_hours_formset = bs_business_hours_iformset(request.POST, request.FILES, instance=bs_profile)
 
-			if page_info_form.is_valid() and bs_hours_formset.is_valid():
+			if page_info_form.is_valid():
 				if request.user == bs_profile.user:
 					page_info_form.save()
-					bs_hours_formset.save()
+					# bs_hours_formset.save()
 
 					#we request an updated instance of the model
 					bs_profile = get_object_or_404(models.BusinessProfile, pk=pk )
+					bs_reviews = bs_profile.pro_business_review.all()
 
 					message = 'Changes saved successfully!'
 					context = {
-					'message':message,'bs_profile':bs_profile,'page_info_form':page_info_form, "bs_hours_formset":bs_hours_formset
+					'message':message,'bs_profile':bs_profile,'bs_reviews':bs_reviews, 'page_info_form':page_info_form
 					}
 
 					html = render_to_string('profiles/editor_mode_files/page_info.html', context, request=request)
@@ -305,9 +309,87 @@ def busines_profile_update(request, pk, slug):
 					}
 				html = render_to_string('profiles/editor_mode_files/top_clients.html', context, request=request)
 				return JsonResponse({'page_info_section':html ,'message':message})
+		elif slug == 'targeting-preferences-job-type':
+			pro_answer_form = request.POST
+			questions = pro_answer_form.getlist('question', None)
+			print(questions)
+			# print(pro_answer_form)
+			if request.user == bs_profile.user:
+				if questions != None:
+					for q in questions:
+						selected_options = pro_answer_form.getlist('answer-to-q-'+q, [])
+
+						pro_answer = models.ProAnswer.objects.filter(business_profile = bs_profile.pk, question = q)
+						question_obj = models.Question.objects.filter(pk=q)
+
+						if pro_answer.exists():
+							instance = pro_answer.first()
+							instance.answer.set(selected_options)
+
+							# print(selected_options)
+						else:
+							if question_obj.exists():
+								instance = models.ProAnswer.objects.create(
+								business_profile = bs_profile,
+								question = question_obj.first()
+								)
+								instance.answer.set(selected_options)
+							else:
+								message = 'Invalid submission. Try again later!'
+								return JsonResponse({'message':message})
+
+					message = 'Targeting preferences updated!'
+					return JsonResponse({'message':message})
+				message = 'Invalid Submission. Try again later!'
+				return JsonResponse({'message':message})
+			else:
+				message = 'Permission denied. Changes not saved'
+				context = {
+				'message':message,'bs_profile':bs_profile,
+				}
+				return JsonResponse({'message':message})
+
+		elif slug == 'targeting-preferences-service-areas':
+			pro_answer_form = request.POST
+			questions = pro_answer_form.getlist('question', None)
+
+			service_areas = pro_answer_form.getlist('service_areas', [])
+			if request.user == bs_profile.user:
+				if questions != None:
+					for q in questions:
+						pro_answer = models.ProAnswer.objects.filter(business_profile = bs_profile.pk, question = q)
+						question_obj = models.Question.objects.filter(pk=q)
+
+						if pro_answer.exists():
+							instance = pro_answer.first()
+							instance.service_delivery_areas.set(service_areas)
+
+						else:
+							if question_obj.exists():
+								instance = models.ProAnswer.objects.create(
+								business_profile = bs_profile,
+								question = question_obj.first()
+								)
+								instance.service_delivery_areas.set(service_areas)
+							else:
+								message = 'Invalid submission. Try again later!'
+								return JsonResponse({'message':message})
+
+					message = 'Targeting preferences updated!'
+					return JsonResponse({'message':message})
+				message = 'Invalid Submission. Try again later!'
+				return JsonResponse({'message':message})
+			else:
+				message = 'Permission denied. Changes not saved'
+				context = {
+				'message':message,'bs_profile':bs_profile,
+				}
+				return JsonResponse({'message':message})
 		else:
+			print('ds')
 			messages.error(request, 'Invalid form requested. Changes no saved')
 			return redirect('homepage')
 	else:
-		messages.error(request, 'Invalid request. Changes no saved')
+		print('dsww')
+		messages.error(request, 'Invalid request. Changes not saved')
 		return redirect('homepage')
