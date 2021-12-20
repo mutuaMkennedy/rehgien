@@ -1,0 +1,236 @@
+{% extends 'rehgien_pro/dashboard/business_profile/profile_base.html'%}
+{% load static %}
+{% load profiles_extra_tags %}
+{% block profileServicesSectionActive%}active{% endblock %}
+
+{% block profile_section %}
+  <div class="pEdSectionHead">
+    <h2>Targeting preferences</h2>
+    <p>Your targeting preferences determine which customers get to see your profile.</p>
+    <div class="pEdSectionHead-quickT">
+      <div class="pEdSectionHead-quickT-head">
+        <h3>Activity this week</h3>
+      </div>
+      <div class="pEdSectionHead-quickT-body">
+        <div class="pEdSectionHead-quickT-body-sItem">
+          <span>~</span>
+          <h6>Views</h6>
+        </div>
+        <div class="pEdSectionHead-quickT-body-sItem">
+          <span>~</span>
+          <h6>Leads</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pEdSectionBody pEdSectionBodySvcs">
+    <h2>Your services</h2>
+    <p>Define your audience through your targeting preferences and get better leads.</p>
+    <div class="pEdSectionBodySvcs-switch">
+      <button class="active" type="button" name="button">All services ({{bs_profile.professional_services.all.count}})</button>
+      <button type="button" name="button">Targeting on ({{bs_profile.professional_services.all.count}})</button>
+      <button type="button" name="button">Targeting off (0)</button>
+
+    </div>
+    <div class="pEdSectionBodySvcs-serviceList-Qadd">
+        Quick action <button class="pEdToggleMainModal" data-targetMdl="MDLTgPrfaddServices" data-action='open' type="button" name="button"><i class="iconify" data-icon="akar-icons:circle-plus"></i> Add a new service</button>
+    </div>
+    <div id="_pEd_services" class="pEdSectionBodySvcs-serviceList">
+      {%include 'profiles/editor_mode_files/services.html'%}
+    </div>
+    <div class="pEdSectionBodySvcs-serviceList-add">
+     <button class="pEdToggleMainModal" data-targetMdl="MDLTgPrfaddServices" data-action='open' type="button" name="button"><i class="iconify" data-icon="akar-icons:circle-plus"></i> Add a new service</button>
+    </div>
+  </div>
+
+<!--  -->
+<!--  -->
+  <div id="pEd_reponse_msg_success" class="rqst_RspMessage_ rqst_RspSuccessMessage_">
+  </div>
+  <div id="pEd_reponse_msg_error" class="rqst_RspMessage_ rqst_RspErrorMessage_">
+  </div>
+
+  <div class="pEdformContainer">
+      <div id="MDLTgPrfaddServices" class="pEdformCard">
+        <div class="pEdformCard-header">
+          <h2>Add services</h2>
+          <button class="pEdToggleMainModal" data-targetMdl="MDLTgPrfaddServices" data-action='close' type="button" name="button"><i class="iconify" data-icon="eva:close-fill"></i></button>
+        </div>
+        <div class="pEdformCard-body">
+          <div class="pEdformCard-body-formWrapper">
+            <form id="pEd_addServicesTgPrf-form" autocomplete="off" action="{% url 'profiles:business_profile_update' pk=bs_profile.pk slug='our-services'%}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="pEd_addServicesTgPrfForm-Elms pEd_Form-Elms">
+                <div class="pEdformCard-body-helpText">
+                    <div class="pEdformCard-body-helpText-header">
+                        <h3>About services</h3>
+                    </div>
+                    <div class="pEdformCard-body-helpText-body">
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Services are the types of work that your business offers.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Only add services that you offer. Adding services you dont offer will lead to a poor reputation.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          When you add a new service make sure you set the targeting preferences for that service.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Make sure this information is always up to date
+                        </p>
+                      </div>
+                    </div>
+                </div>
+                <div class="pEd_addServicesTgPrfFieldsWrp pEd_FormFieldWrp">
+                    <div class="pEd_addServicesTgPrfFields pEd_FormFields">
+                          <p>Select services you currently offer</p>
+                          <h5>Add as many services as you can</h5>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_addServicesTgPrfInputFld pEd_FormInputField">
+                                <div class="pEd_svcTgPrfInputSelectOp">
+                                  {% active_services request.user as selected_services %}
+                                  {% for service in services %}
+                                    <li>
+                                      <label>
+                                        <input type="checkbox" class="filled-in" {% if service.pk in selected_services %} checked="checked" {% endif %} name='service' value="{{service.pk}}"/>
+                                        <span>{{service.service_name|title }} </span>
+                                      </label>
+                                    </li>
+                                  {% endfor %}
+                                  </div>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+              </div>
+              <div class="pEd_form-footer">
+                <div class="pEd_addServicesTgPrfForm-submit pEd_FormSubmit">
+                  <button id="pEd_addServicesTgPrfForm-submit-button" type="submit" name="button">
+                    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="256px" height="64px" viewBox="0 0 128 32" xml:space="preserve">
+                      <circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(16 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1.42;1;1;1;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(64 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1.42;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(112 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1;1;1;1.42;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle>
+                    </svg>
+                    <p>Save</p>
+                  </button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        $(document).ready(function(event){
+          var submitProfileInfoBtn = $('#pEd_addServicesTgPrfForm-submit-button');
+          var successMessageBody = $('.rqst_RspSuccessMessage_');
+          var errorMessageBody = $('.rqst_RspErrorMessage_');
+          var loadingIndicator = $('#pEd_addServicesTgPrfForm-submit-button svg');
+              loadingIndicator.hide();
+          var submitBtnText = $('#pEd_addServicesTgPrfForm-submit-button p');
+
+          $('#pEd_addServicesTgPrf-form').on('submit', function(event){
+             event.preventDefault();
+             var serializedData = $(this).serialize();
+
+             // hide button text
+             submitBtnText.hide();
+             // Show Loading indicator
+             loadingIndicator.show();
+             // Disable button to prevent double submit
+             submitProfileInfoBtn.attr('disabled', 'disabled');
+
+             $.ajax({
+               type : $(this).attr('method'),
+               url : $(this).attr('action'),
+               data :serializedData,
+               dataType: 'json',
+               // success
+               success: function(response) {
+
+                 // Update the services section
+                 $('#_pEd_services').html(response['page_section']);
+
+                 // show success message then hide it after a few seconds
+                  successMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                  successMessageBody.css({
+                    'bottom':'10px',
+                  });
+
+                  setTimeout(function(){
+                     successMessageBody.css({
+                       'bottom':'-100px',
+                     });
+                  }, 6000);
+
+                 // hide loading indicatior in button
+                  loadingIndicator.hide();
+                 // Show button text
+                 submitBtnText.show();
+                 // remove disabled attribute from submit button
+                  submitProfileInfoBtn.removeAttr('disabled');
+
+               },
+               error: function(response,e){
+                 // show success message then hide it after a few seconds
+                  errorMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                  errorMessageBody.css({
+                    'bottom':'10px',
+                  });
+
+                  setTimeout(function(){
+                     errorMessageBody.css({
+                       'bottom':'-100px',
+                     });
+                  }, 6000);
+
+                 // hide loading indicatior in button
+                  loadingIndicator.hide();
+                 // Show button text
+                 submitBtnText.show();
+                 // remove disabled attribute from submit button
+                  submitProfileInfoBtn.removeAttr('disabled');
+
+               },
+             });
+          });
+
+
+        });
+      </script>
+
+  </div>
+
+<script type="text/javascript">
+    $(document).on('click', '.pEdToggleMainModal',  function(){
+      let button = $(this);
+      let targetElement = button.attr('data-targetMdl');
+      let action = button.attr('data-action');
+      if (action == 'open') {
+        // close any open modals
+        $('.pEdformCard').css('margin-right','-1000px');
+        // open our target modal
+        $('#' + targetElement).css('margin-right','0');
+      }else{
+        $('#' + targetElement).css('margin-right','-1000px');
+      };
+
+    })
+</script>
+{% endblock %}

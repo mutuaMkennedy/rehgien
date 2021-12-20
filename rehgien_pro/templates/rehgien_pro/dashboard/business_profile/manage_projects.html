@@ -1,0 +1,95 @@
+{% extends 'rehgien_pro/dashboard/business_profile/profile_base.html'%}
+{% load static %}
+{% load cloudinary %}
+{% block profileProjectsSectionActive%}active{% endblock %}
+
+{% block profile_section %}
+  <div class="pEdSectionHead">
+    <h2>Projects</h2>
+    <p>View and manage reviews you have from customers on Rehgien</p>
+    <div class="pEdSectionHead-quickT">
+      <div class="pEdSectionHead-quickT-head">
+        <h3>Strengthen your portfolio by adding a project today.</h3>
+      </div>
+      <div class="pEdSectionHead-quickT-body pEdSectionHead-quickT-body-rvwsSct">
+        <div class="pEdSectionHead-quickT-body-sItem">
+          <li>Add photos.</li>
+          <li>Give your project a description.</li>
+          <li>Submit for future clients to view.</li>
+          <div class="pEdSectionHead-quickT-body-sItemCTA">
+            <button class="pEdToggleMainModal" data-targetMdl="MDLaddProjects" data-action='open' type="button" name="button">Add project</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pEdSectionBody pEdSectionBodySvcs ">
+    <h2>Your Projects</h2>
+
+    <div class="projSct_projectList">
+      {% if projects %}
+        {% for project in projects %}
+        <div class="projSct_projectIt">
+          <div class="projSct_projectIt-photo">
+            {% for project_photo in project.portfolio_item_photo.all %}
+              {% if forloop.last %}
+                {% cloudinary project_photo.photo ImageTransformation %}
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="projSct_projectIt-body">
+            <div class="projSct_projectIt-dsc">
+              <h3>{{project.name}}</h3>
+              <p>{{project.portfolio_item_photo.all.count}} Photo{{project.portfolio_item_photo.all.count|pluralize}}</p>
+            </div>
+            <div class="projSct_projectIt-actBtn">
+              <button type="button" name="button"><i class="iconify" data-icon="bytesize:edit"></i></button>
+              <button type="button" name="button"><i class="iconify" data-icon="ep:delete"></i></button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="pEdSvc-no-results">
+          <img src="{% static 'img/list.png'%}" alt="empty">
+          <div class="pEdSvc-no-resultsBd">
+            <h5>No projects found</h5>
+            <p>Projects you add will appear here.</p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="pEdSectionBodySvcs-serviceList-add">
+     <button class="pEdToggleMainModal" data-targetMdl="MDLaddProjects" data-action='open' type="button" name="button"><i class="iconify" data-icon="akar-icons:circle-plus"></i> Add a new project</button>
+    </div>
+
+  </div>
+
+<!--  -->
+<!--  -->
+  <div id="pEd_reponse_msg_success" class="rqst_RspMessage_ rqst_RspSuccessMessage_">
+  </div>
+  <div id="pEd_reponse_msg_error" class="rqst_RspMessage_ rqst_RspErrorMessage_">
+  </div>
+<!--  -->
+<!--  -->
+
+  <script type="text/javascript">
+      $(document).on('click', '.pEdToggleMainModal',  function(){
+        let button = $(this);
+        let targetElement = button.attr('data-targetMdl');
+        let action = button.attr('data-action');
+        if (action == 'open') {
+          // close any open modals
+          $('.pEdformCard').css('margin-right','-1000px');
+          // open our target modal
+          $('#' + targetElement).css('margin-right','0');
+        }else{
+          $('#' + targetElement).css('margin-right','-1000px');
+        };
+
+      })
+  </script>
+
+{% endblock %}

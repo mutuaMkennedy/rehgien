@@ -1,0 +1,585 @@
+{% extends 'rehgien_pro/dashboard/business_profile/profile_base.html'%}
+{% load static %}
+{% block profileReviewsSectionActive%}active{% endblock %}
+
+{% block profile_section %}
+  <div class="pEdSectionHead">
+    <h2>Reviews</h2>
+    <p>View and manage reviews you have from customers on Rehgien</p>
+    <div class="pEdSectionHead-quickT">
+      <div class="pEdSectionHead-quickT-head">
+        <h3>Get reviews from past customers. It's okay if they are not on Rehgien.</h3>
+      </div>
+      <div class="pEdSectionHead-quickT-body pEdSectionHead-quickT-body-rvwsSct">
+        <div class="pEdSectionHead-quickT-body-sItem">
+          <li>Share Link or Send email request.</li>
+          <li>Customer leaves a review.</li>
+          <li>Review gets added to your profile.</li>
+          <div class="pEdSectionHead-quickT-body-sItemCTA">
+            <button type="button" name="button">Share link</button>
+            <button class="pEdToggleMainModal" data-targetMdl="MDLrequestRvws" data-action='open' type="button" name="button">Send Email</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pEdSectionBody pEdSectionBodySvcs ">
+    <h2>Your Reviews</h2>
+    {% if pro_bs_profile.get_rating_stats.highly_rated_traits %}
+      <p>Past customers rated you highly for
+        {% for trait in pro_bs_profile.get_rating_stats.highly_rated_traits %}
+          {% if forloop.counter > 1 %}
+            {% if forloop.last %}
+              and <b>{{trait}}</b>
+            {% else %}
+              <b>{{trait}},</b>
+            {% endif %}
+          {% else %}
+            <b>{{trait}},</b>
+          {% endif %}
+        {% endfor %}
+      </p>
+    {% else %}
+      <p>You are <b>{{pro_bs_profile.get_rating_stats.comment}}</b> by your customers.</p>
+    {% endif%}
+    <div class="rvwsSct_rvStatsBar">
+      <div class="rvwsSct_rvStatsSmry">
+        {% if pro_bs_profile.get_rating_stats.overall_rating  > 4.5  and pro_bs_profile.get_rating_stats.overall_rating <= 5 %}
+          <h6>{{pro_bs_profile.get_rating_stats.comment}} <span>{{pro_bs_profile.get_rating_stats.overall_rating|floatformat:"1"}}</span></h6>
+        {% elif pro_bs_profile.get_rating_stats.overall_rating > 3.5 and pro_bs_profile.get_rating_stats.overall_rating <= 4.5 %}
+          <h6>{{pro_bs_profile.get_rating_stats.comment}} <span>{{pro_bs_profile.get_rating_stats.overall_rating|floatformat:"1"}}</span></h6>
+        {% elif pro_bs_profile.get_rating_stats.overall_rating > 2.5 and pro_bs_profile.get_rating_stats.overall_rating <= 3.5 %}
+          <h6>{{pro_bs_profile.get_rating_stats.comment}} <span>{{pro_bs_profile.get_rating_stats.overall_rating|floatformat:"1"}}</span></h6>
+        {% elif pro_bs_profile.get_rating_stats.overall_rating > 1.5 and pro_bs_profile.get_rating_stats.overall_rating <= 2.5 %}
+          <h6>{{pro_bs_profile.get_rating_stats.comment}} <span>{{pro_bs_profile.get_rating_stats.overall_rating|floatformat:"1"}}</span></h6>
+        {% elif pro_bs_profile.get_rating_stats.overall_rating > 0 and pro_bs_profile.get_rating_stats.overall_rating <= 1.5 %}
+          <h6>{{pro_bs_profile.get_rating_stats.comment}} <span>{{pro_bs_profile.get_rating_stats.overall_rating|floatformat:"1"}}</span></h6>
+        {% else %}
+          <h6>{{pro_bs_profile.get_rating_stats.comment}} <span>{{pro_bs_profile.get_rating_stats.overall_rating}}</span></h6>
+        {% endif %}
+        <ul>
+          {% if pro_bs_profile.get_rating_stats.overall_rating %}
+
+              {% if pro_bs_profile.get_rating_stats.overall_rating > 4.5 %}
+              <li>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+              </li>
+              {% elif pro_bs_profile.get_rating_stats.overall_rating == 4.5 %}
+              <li>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:half-star-solid"></i>
+              </li>
+              {% elif pro_bs_profile.get_rating_stats.overall_rating > 3.5 and pro_bs_profile.get_rating_stats.overall_rating <= 4.4 %}
+              <li>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+              </li>
+              {% elif pro_bs_profile.get_rating_stats.overall_rating == 3.5 %}
+              <li>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:half-star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+              </li>
+              {% elif pro_bs_profile.get_rating_stats.overall_rating >= 2.5 and pro_bs_profile.get_rating_stats.overall_rating <= 3.4 %}
+              <li>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+              </li>
+              {% elif pro_bs_profile.get_rating_stats.overall_rating == 2.5 %}
+              <li>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:half-star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+              </li>
+              {% elif pro_bs_profile.get_rating_stats.overall_rating > 1.5 and pro_bs_profile.get_rating_stats.overall_rating <= 2.4 %}
+              <li>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+              </li>
+              {% elif pro_bs_profile.get_rating_stats.overall_rating == 1.5 %}
+              <li>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:half-star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+              </li>
+              {% elif pro_bs_profile.get_rating_stats.overall_rating > 0.5 and pro_bs_profile.get_rating_stats.overall_rating >= 1.4 %}
+              <li>
+                <i class="iconify" data-icon="clarity:star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+              </li>
+              {% elif pro_bs_profile.get_rating_stats.overall_rating == 0.5 %}
+              <li>
+                <i class="iconify" data-icon="clarity:half-star-solid"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+              </li>
+              {% else%}
+              <li>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+              </li>
+             {% endif %}
+          {% else %}
+              <li>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+                <i class="iconify" data-icon="clarity:star-line"></i>
+              </li>
+          {% endif %}
+        </ul>
+        <p>{{reviews.count}} review{{reviews.count|pluralize}}</p>
+
+      </div>
+      <div class="rvwsSct_rvStats_dvdr"></div>
+      <div class="rvwsSct_rvStatsBarIts">
+        <div class="rvwsSct_rtngProgress">
+          <div class="rvwsSct_rtngProgressStar">
+            5 <i class="iconify" data-icon="clarity:star-line"></i>
+          </div>
+          <div class="rvwsSct_rtngProgressBar">
+            <div class="rvwsSct_rtngProgressFill" style="width:{{pro_bs_profile.get_rating_stats.stars_percentage_avg.five_stars|floatformat:'0'}}%"></div>
+          </div>
+          <div class="rvwsSct_rtngProgressPct">
+            {{pro_bs_profile.get_rating_stats.stars_percentage_avg.five_stars|floatformat:"0"}}%
+          </div>
+        </div>
+        <div class="rvwsSct_rtngProgress">
+          <div class="rvwsSct_rtngProgressStar">
+            4 <i class="iconify" data-icon="clarity:star-line"></i>
+          </div>
+          <div class="rvwsSct_rtngProgressBar">
+            <div class="rvwsSct_rtngProgressFill" style="width:{{pro_bs_profile.get_rating_stats.stars_percentage_avg.four_stars|floatformat:'0'}}%"></div>
+          </div>
+          <div class="rvwsSct_rtngProgressPct">
+            {{pro_bs_profile.get_rating_stats.stars_percentage_avg.four_stars|floatformat:"0"}}%
+          </div>
+        </div>
+        <div class="rvwsSct_rtngProgress">
+          <div class="rvwsSct_rtngProgressStar">
+            3 <i class="iconify" data-icon="clarity:star-line"></i>
+          </div>
+          <div class="rvwsSct_rtngProgressBar">
+            <div class="rvwsSct_rtngProgressFill" style="width:{{pro_bs_profile.get_rating_stats.stars_percentage_avg.three_stars|floatformat:'0'}}%"></div>
+          </div>
+          <div class="rvwsSct_rtngProgressPct">
+            {{pro_bs_profile.get_rating_stats.stars_percentage_avg.three_stars|floatformat:"0"}}%
+          </div>
+        </div>
+        <div class="rvwsSct_rtngProgress">
+          <div class="rvwsSct_rtngProgressStar">
+            2 <i class="iconify" data-icon="clarity:star-line"></i>
+          </div>
+          <div class="rvwsSct_rtngProgressBar">
+            <div class="rvwsSct_rtngProgressFill" style="width:{{pro_bs_profile.get_rating_stats.stars_percentage_avg.two_stars|floatformat:'0'}}%"></div>
+          </div>
+          <div class="rvwsSct_rtngProgressPct">
+            {{pro_bs_profile.get_rating_stats.stars_percentage_avg.two_stars|floatformat:"0"}}%
+          </div>
+        </div>
+        <div class="rvwsSct_rtngProgress">
+          <div class="rvwsSct_rtngProgressStar">
+            1 <i class="iconify" data-icon="clarity:star-line"></i>
+          </div>
+          <div class="rvwsSct_rtngProgressBar">
+            <div class="rvwsSct_rtngProgressFill" style="width:{{pro_bs_profile.get_rating_stats.stars_percentage_avg.one_stars|floatformat:'0'}}%"></div>
+          </div>
+          <div class="rvwsSct_rtngProgressPct">
+            {{pro_bs_profile.get_rating_stats.stars_percentage_avg.one_stars|floatformat:"0"}}%
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rvwsSct_reviewsList">
+      {% if reviews %}
+        {% for review in reviews %}
+        <div class="pEdRvw-sItem">
+          <div class="pEdRvw-sItem-body">
+            <div class="pEdRvw-sItem-L">
+              <div class="pEdRvw-sItem-photo">
+                    <img src="{% if review.reviewer.profile_image %} {{review.reviewer.profile_image.url}} {% else %}{% static 'img/avatar.png'%}{% endif %}" alt="">
+              </div>
+            </div>
+            <div class="pEdSvc-sItem-R">
+              <div class="pEdRvw-sItem-bd-head">
+                 <h3>{{review.reviewer.username|truncatechars:"20"}}</h3>
+                 <div class="pEdRvw-sItem-bd-head-rtngs">
+                   <ul>
+
+                         {% if review.recommendation_rating > 4.5 %}
+                         <li>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                         </li>
+                         {% elif review.recommendation_rating == 4.5 %}
+                         <li>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:half-star-solid"></i>
+                         </li>
+                         {% elif review.recommendation_rating > 3.5 and review.recommendation_rating <= 4.4 %}
+                         <li>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                         </li>
+                         {% elif review.recommendation_rating == 3.5 %}
+                         <li>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:half-star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                         </li>
+                         {% elif review.recommendation_rating >= 2.5 and review.recommendation_rating <= 3.4 %}
+                         <li>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                         </li>
+                         {% elif review.recommendation_rating == 2.5 %}
+                         <li>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:half-star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                         </li>
+                         {% elif review.recommendation_rating > 1.5 and review.recommendation_rating <= 2.4 %}
+                         <li>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                         </li>
+                         {% elif review.recommendation_rating == 1.5 %}
+                         <li>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:half-star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                         </li>
+                         {% elif review.recommendation_rating > 0.5 and review.recommendation_rating >= 1.4 %}
+                         <li>
+                           <i class="iconify" data-icon="clarity:star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                         </li>
+                         {% elif review.recommendation_rating == 0.5 %}
+                         <li>
+                           <i class="iconify" data-icon="clarity:half-star-solid"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                         </li>
+                         {% else%}
+                         <li>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                           <i class="iconify" data-icon="clarity:star-line"></i>
+                         </li>
+                        {% endif %}
+                   </ul>
+                   {{review.review_date.date}}
+                 </div>
+              </div>
+              <div class="pEdRvw-sItem-bd-body">
+                <p>{{review.comment|capfirst}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="pEdSvc-no-results">
+          <img src="{% static 'img/list.png'%}" alt="empty">
+          <div class="pEdSvc-no-resultsBd">
+            <h5>No reviews found</h5>
+            <p>Ask past customers to give you a review.</p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+<!--  -->
+<!--  -->
+  <div id="pEd_reponse_msg_success" class="rqst_RspMessage_ rqst_RspSuccessMessage_">
+  </div>
+  <div id="pEd_reponse_msg_error" class="rqst_RspMessage_ rqst_RspErrorMessage_">
+  </div>
+<!--  -->
+<!--  -->
+  <div class="pEdformContainer">
+      <div id="MDLrequestRvws" class="pEdformCard">
+        <div class="pEdformCard-header">
+          <h2>Send review request</h2>
+          <button class="pEdToggleMainModal" data-targetMdl="MDLrequestRvws" data-action='close' type="button" name="button"><i class="iconify" data-icon="eva:close-fill"></i></button>
+        </div>
+        <div class="pEdformCard-body">
+          <div class="pEdformCard-body-formWrapper">
+            <form id="pEd_requestRvws-form" autocomplete="off" action="" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="pEd_requestRvwsForm-Elms pEd_Form-Elms">
+                <div class="pEdformCard-body-helpText">
+                    <div class="pEdformCard-body-helpText-header">
+                        <h3>About reviews</h3>
+                    </div>
+                    <div class="pEdformCard-body-helpText-body">
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Client reviews tell other clients that you can be trusted and your work is credible.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Ask your clients to describe your contribution to their projet/service.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Pros with atleast 3 reviews are 70% more likely to get hired on Rehgien.
+                        </p>
+                      </div>
+                    </div>
+                </div>
+                <div class="pEd_requestRvwsFieldsWrp pEd_FormFieldWrp">
+                    <div class="pEd_requestRvwsFields pEd_FormFields">
+                          <p>Email address</p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_requestRvwsInputFld pEd_FormInputField">
+                                <input id="pEd_requestRvws-emails-in" type="text" name="email_list" value="">
+                            </div>
+                          </div>
+                          <p>Your message</p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_requestRvwsInputFld pEd_FormInputField">
+                                <textarea name="message" rows="8" cols="80">{{review_rq_message}}</textarea>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+              </div>
+              <div class="pEd_form-footer">
+                <div class="pEd_requestRvwsForm-submit pEd_FormSubmit">
+                  <button id="pEd_requestRvwsForm-submit-button" type="submit" name="button">
+                    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="256px" height="64px" viewBox="0 0 128 32" xml:space="preserve">
+                      <circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(16 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1.42;1;1;1;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(64 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1.42;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(112 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1;1;1;1.42;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle>
+                    </svg>
+                    <p>Send</p>
+                  </button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        $(document).ready(function(event){
+          var submitReviewRequestBtn = $('#pEd_requestRvwsForm-submit-button');
+          var successMessageBody = $('.rqst_RspSuccessMessage_');
+          var errorMessageBody = $('.rqst_RspErrorMessage_');
+          var loadingIndicator = $('#pEd_requestRvwsForm-submit-button svg');
+              loadingIndicator.hide();
+          var submitBtnText = $('#pEd_requestRvwsForm-submit-button p');
+
+          $('#pEd_requestRvws-form').on('submit', function(event){
+             event.preventDefault();
+             // var serializedData = $(this).serialize();
+             var formData = new FormData(this);
+
+             // hide button text
+             submitBtnText.hide();
+             // Show Loading indicator
+             loadingIndicator.show();
+             // Disable button to prevent double submit
+             submitReviewRequestBtn.attr('disabled', 'disabled');
+
+             $.ajax({
+               type : $(this).attr('method'),
+               url : $(this).attr('action'),
+               data :formData,
+               cache: false,
+               contentType: false,
+               processData: false,
+               // success
+               success: function(response) {
+
+                 // show success message then hide it after a few seconds
+                  successMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                  successMessageBody.css({
+                    'bottom':'10px',
+                  });
+
+                  setTimeout(function(){
+                     successMessageBody.css({
+                       'bottom':'-100px',
+                     });
+                  }, 6000);
+
+                 // hide loading indicatior in button
+                  loadingIndicator.hide();
+                 // Show button text
+                 submitBtnText.show();
+                 // remove disabled attribute from submit button
+                  submitReviewRequestBtn.removeAttr('disabled');
+
+               },
+               error: function(response,e){
+                 // show success message then hide it after a few seconds
+                  errorMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                  errorMessageBody.css({
+                    'bottom':'10px',
+                  });
+
+                  setTimeout(function(){
+                     errorMessageBody.css({
+                       'bottom':'-100px',
+                     });
+                  }, 6000);
+
+                 // hide loading indicatior in button
+                  loadingIndicator.hide();
+                 // Show button text
+                 submitBtnText.show();
+                 // remove disabled attribute from submit button
+                  submitReviewRequestBtn.removeAttr('disabled');
+
+               },
+             });
+          });
+
+          $('#pEd_requestRvws-emails-in').tagsInput({
+              // min/max number of characters
+              minChars: 2,
+              maxChars:null,
+              // max number of tags
+              limit:null,
+              // RegExp
+              validationPattern:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              // duplicate validation
+              unique:true,
+              // // allows new tags
+              interactive: true,
+              // // custom placeholder
+              placeholder: 'Enter emails separated by a comma',
+              // // width/height
+              width: 'auto',
+              height: 'auto',
+              // // hides the regular input field
+              hide: true,
+              // // custom delimiter
+              delimiter: ',',
+              // // removes tags with backspace
+              removeWithBackspace: true,
+              // // an array of whitelisted values
+              whitelist: null,
+              onAddTag: (inp, tg)=>{
+                let tags = $('.pEd_requestRvwsInputFld').find('.tag-text');
+                let tagsArray = [];
+                $.each(tags, function( index, tag ) {
+                  tagsArray.push(tag.innerHTML);
+                });
+                $('#pEd_requestRvws-emails-in').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+              },
+              onRemoveTag: (inp, tg)=>{
+                let tags = $('.pEd_requestRvwsInputFld').find('.tag-text');
+                let tagsArray = [];
+                $.each(tags, function( index, tag ) {
+                  tagsArray.push(tag.innerHTML);
+                });
+                $('#pEd_requestRvws-emails-in').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+             },
+              onChange: ()=>{
+                let tags = $('.pEd_requestRvwsInputFld').find('.tag-text');
+                let tagsArray = [];
+                $.each(tags, function( index, tag ) {
+                  tagsArray.push(tag.innerHTML);
+                });
+                $('#pEd_requestRvws-emails-in').attr('value', tagsArray.toString().replace(/[\[\]']+/g,'')).change();
+              }
+        });
+
+        });
+      </script>
+
+  </div>
+
+  <script type="text/javascript">
+      $(document).on('click', '.pEdToggleMainModal',  function(){
+        let button = $(this);
+        let targetElement = button.attr('data-targetMdl');
+        let action = button.attr('data-action');
+        if (action == 'open') {
+          // close any open modals
+          $('.pEdformCard').css('margin-right','-1000px');
+          // open our target modal
+          $('#' + targetElement).css('margin-right','0');
+        }else{
+          $('#' + targetElement).css('margin-right','-1000px');
+        };
+
+      })
+  </script>
+
+{% endblock %}

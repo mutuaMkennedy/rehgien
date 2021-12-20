@@ -1,0 +1,23 @@
+{% extends 'rehgien_pro/dashboard/dashboard_base.html'%}
+{% block head_title %}<title>Rehgien Pro | Profile</title>{% endblock %}
+{% load static %}
+{% block profileActive %}active{% endblock %}
+
+{% block dashboard_section %}
+<div class="proDash-pEdit-scNavBar">
+    <a href="{% url 'rehgien_pro:dashboard_profile_yourProfile'%}" class="{% block profileSectionActive%}{% endblock%}">Your profile</a>
+    <a href="{% url 'rehgien_pro:dashboard_profile_services'%}" class="{% block profileServicesSectionActive%}{% endblock%}">Services</a>
+    <a href="{% url 'rehgien_pro:dashboard_manage_reviews'%}" class="{% block profileReviewsSectionActive%}{% endblock%}">Reviews</a>
+    <a href="{% url 'rehgien_pro:dashboard_manage_projects'%}" class="{% block profileProjectsSectionActive%}{% endblock%}">Projects</a>
+</div>
+<div id="proDash_proProfileInfo" class="proDashFeedContainer proDash_proProfile">
+  <div class="proDash-Tab-section">
+      <div class="proDash-profileEdit-box">
+        <div class="proDash-profileSectionEl">
+          {% block profile_section %}
+          {% endblock %}
+        </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

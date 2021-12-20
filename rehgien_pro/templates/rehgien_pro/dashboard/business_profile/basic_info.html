@@ -1,0 +1,731 @@
+{% extends 'rehgien_pro/dashboard/business_profile/profile_base.html'%}
+{% load static %}
+{% block profileSectionActive%}active{% endblock %}
+
+{% block profile_section %}
+  <div class="pEdSectionCard">
+    <div class="pEdSectionCard-head">
+       <h2>Profile</h2>
+       <button class="pEdToggleMainModal" data-targetMdl="MDLprofilePic" data-action='open' type="button" name="button"><i class="iconify" data-icon="bytesize:edit"></i></button>
+    </div>
+    <div class="pEdSectionCard-body">
+      <div class="pEdSectionCard-body-L">
+        <div id="__pro-BsPf-img" class="proBsPf-pic">
+              {% include 'profiles/editor_mode_files/page_profile_image.html'%}
+        </div>
+        <div id="__pro-BsPf-nmRtng" class="proBsPf-basicInfo">
+          {% include 'profiles/editor_mode_files/business_dtls.html'%}
+        </div>
+      </div>
+      <div class="pEdSectionCard-body-R">
+          <div class="proBsPf-basicInfo-social">
+            <div class="proBsPf-basicInfo-social-item">
+              <h5>Saves</h5>
+              <span>{{bs_profile.saves.count}}</span>
+            </div>
+            <div class="proBsPf-basicInfo-social-item">
+              <h5>Followers</h5>
+              <span>{{bs_profile.followers.count}}</span>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="pEdSectionCard">
+    <div class="pEdSectionCard-head">
+       <h2>Introduction</h2>
+       <button class="pEdToggleMainModal" data-targetMdl="MDLprofileIntro" data-action='open' type="button" name="button"><i class="iconify" data-icon="bytesize:edit"></i></button>
+    </div>
+    <div class="pEdSectionCard-body">
+      <div class="pEdSectionCard-body-L">
+        <div id="__pro-BsPf-about" class="proBsPf-bio">
+          {%include 'profiles/editor_mode_files/about.html'%}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pEdSectionCard">
+    <div class="pEdSectionCard-head">
+       <h2>Business Info</h2>
+       <button class="pEdToggleMainModal" data-targetMdl="MDLprofileInfo" data-action='open' type="button" name="button"><i class="iconify" data-icon="bytesize:edit"></i></button>
+    </div>
+    <div class="pEdSectionCard-body">
+      <div class="pEdSectionCard-body-L" style="width:100%">
+        <div id="__pro-BsPf-info" class="proBsPf-info">
+            {%include 'profiles/editor_mode_files/page_info.html'%}
+        </div>
+      </div>
+    </div>
+  </div>
+<!--  -->
+<!--  -->
+  <div id="pEd_reponse_msg_success" class="rqst_RspMessage_ rqst_RspSuccessMessage_">
+  </div>
+  <div id="pEd_reponse_msg_error" class="rqst_RspMessage_ rqst_RspErrorMessage_">
+  </div>
+  <div class="pEdformContainer">
+      <div id="MDLprofilePic" class="pEdformCard">
+        <div class="pEdformCard-header">
+          <h2>Update your profile picture</h2>
+          <button class="pEdToggleMainModal" data-targetMdl="MDLprofilePic" data-action='close' type="button" name="button"><i class="iconify" data-icon="eva:close-fill"></i></button>
+        </div>
+        <div class="pEdformCard-body">
+          <div class="pEdformCard-body-formWrapper">
+            <form id="pEd_profilePic-form" autocomplete="off" action="{% url 'profiles:business_profile_update' pk=bs_profile.pk slug='profile-picture'%}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="pEd_profilePicForm-Elms pEd_Form-Elms">
+                {{profile_image_form.media}}
+                <div class="pEdformCard-body-helpText">
+                    <div class="pEdformCard-body-helpText-header">
+                        <h3>Things to remember!</h3>
+                    </div>
+                    <div class="pEdformCard-body-helpText-body">
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Your profile photo is the first thing customers will see before
+                          interacting with your profile. Make sure it gives a good impression.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Always upload quality and well lit photos.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          A profile photo can be a personal photo or company logo.
+                          Just make sure it respresents your business properly.
+                        </p>
+                      </div>
+                    </div>
+                </div>
+                <div class="pEd_profilePicFieldsWrp pEd_FormFieldWrp">
+                    <div class="pEd_profilePicFields pEd_FormFields">
+                          <p>Profile Photo <span>*</span></p>
+                          <div class="pEd-profilePic pEd_FormField_sng">
+
+                            <img id="pEd_currentProfilePic" class="pEd_currentProfilePic"
+                              src="
+                              {% if profile_image_form.instance.business_profile_image%}
+                                {{profile_image_form.instance.business_profile_image.url}}
+                              {% else %}
+                                {% static 'img/avatar.png' %}
+                              {% endif %}
+                              "
+                              alt="Photo">
+
+                            <div id="pEd_profilePicInputFld_wrap" class="pEd_profilePicInputFld pEd_FormInputField">
+                                {{profile_image_form.business_profile_image}}
+                                <button type="button" name="button"><i class="iconify" data-icon="bi:camera"></i>Upload photo</button>
+                            </div>
+                              {{profile_image_form.x}}
+                              {{profile_image_form.y}}
+                              {{profile_image_form.width}}
+                              {{profile_image_form.height}}
+                          </div>
+                    </div>
+                </div>
+              </div>
+              <div class="pEd_form-footer">
+                <div id="pEd_selectedPicWrp" class="pEd_selectedMediaWrp">
+                  <p></p>
+                  <div class="pEd_selectedMedia pEd_selectedProfilePic">
+                    <img id="pEd_selectedPic" src="{% static 'img/avatar.png' %}" alt="New Photo">
+                  </div>
+                </div>
+                <div class="pEd_profilePicForm-submit pEd_FormSubmit">
+                  <button id="pEd_profilePicForm-submit-button" type="submit" name="button">
+                    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="256px" height="64px" viewBox="0 0 128 32" xml:space="preserve">
+                      <circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(16 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1.42;1;1;1;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(64 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1.42;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(112 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1;1;1;1.42;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle>
+                    </svg>
+                    <p>Save</p>
+                  </button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        $(document).ready(function(event){
+              var profiePicInput = $('#pEd_profilePicInputFld_wrap input');
+              var submitProfilePhotoBtn = $('#pEd_profilePicForm-submit-button');
+              var successMessageBody = $('#pEd_reponse_msg_success');
+              var errorMessageBody = $('#pEd_reponse_msg_error');
+              var loadingIndicator = $('#pEd_profilePicForm-submit-button svg');
+                  loadingIndicator.hide();
+              var submitBtnText = $('#pEd_profilePicForm-submit-button p');
+
+              $('#pEd_profilePic-form').on('submit', function(event){
+                 event.preventDefault();
+                 var formData = new FormData(this);
+
+                 // hide button text
+                 submitBtnText.hide();
+                 // Show Loading indicator
+                 loadingIndicator.show();
+                 // Disable button to prevent double submit
+                 submitProfilePhotoBtn.attr('disabled', 'disabled');
+
+                 $.ajax({
+                   type : $(this).attr('method'),
+                   url : $(this).attr('action'),
+                   data :formData,
+                   cache: false,
+                   contentType: false,
+                   processData: false,
+                   // success
+                   success: function(response) {
+                     // Reload profile image section
+                      var profileImageSection = $('#__pro-BsPf-img')
+                          profileImageSection.html(response['page_section']);
+
+                     // hide the selected photo container
+                     $('#pEd_selectedPicWrp')
+                       .css('display','none');
+
+                    // Update the current photo displayed in form
+                     $('#pEd_currentProfilePic')
+                       .attr('src', profileImageSection.find("img").attr('src'))
+
+                    // show success message then hide it after a few seconds
+                     successMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                     successMessageBody.css({
+                       'bottom':'10px',
+                     });
+                     setTimeout(function(){
+                        successMessageBody.css({
+                          'bottom':'-100px',
+                        });
+                     }, 6000);
+
+                    // hide loading indicatior in button
+                     loadingIndicator.hide();
+                    // Show button text
+                    submitBtnText.show();
+                    // remove disabled attribute from submit button
+                     submitProfilePhotoBtn.removeAttr('disabled');
+
+                   },
+                   error: function(response,e){
+                     // show success message then hide it after a few seconds
+                     errorMessageBody.html("<i class='iconify' data-icon='bx:bxs-error-circle'></i>" + response['message']);
+                     errorMessageBody.css({
+                       'bottom':'10px',
+                     });
+                     setTimeout(function(){
+                       errorMessageBody.css({
+                         'bottom':'-100px',
+                       });
+                     }, 6000);
+
+                     // hide loading indicatior in button
+                     loadingIndicator.hide();
+                     // Show button text
+                     submitBtnText.show();
+                     // remove disabled attribute from submit button
+                     submitProfilePhotoBtn.removeAttr('disabled');
+
+                   },
+                 });
+              });
+
+            // Open image selector when our custome button is clicked
+            $('#pEd_profilePicInputFld_wrap button').on('click', function(){
+              profiePicInput.click();
+            });
+
+            profiePicInput.change(function () {
+                if (this.files && this.files[0]) {
+                  var files = this.files;
+                  var reader = new FileReader();
+                  reader.onload = function (e) {
+                    $('#pEd_selectedPic')
+                      .attr('src', e.target.result)
+                    var selectedPhoto = $('#pEd_selectedPicWrp');
+                    selectedPhoto.css('display','block');
+                    selectedPhoto.find('p').html('Selected | '+ files.length +' Photo' +  (files.length >  1 ? 's' : '') );
+
+                    $("#pEd-profilePic-crop-tg-photo").attr("src", e.target.result);
+                    $("#pEd-cropEditorModal").removeClass("closed").trigger('modalOpen');
+                  }
+                  reader.readAsDataURL(this.files[0]);
+                }
+              });
+
+              $('#pEd-profilePic-photoEditDone').on('click', function(e){
+                e.preventDefault()
+                $('#pEd-cropEditorModal').addClass("closed").trigger('modalClosed');
+              })
+
+              var cropBoxData ;
+              var canvasData ;
+              let crpImg = $('#pEd-profilePic-crop-tg-photo');
+              $('#pEd-cropEditorModal').on('modalOpen', function(){
+                crpImg.cropper({
+                    viewMode: 1,
+                    dragMode:'move',
+                    aspectRatio: 1/1,
+                    cropBoxResizable:false,
+                    cropBoxMovable: true,
+                    toggleDragModeOnDblclick:false,
+                    minCropBoxWidth: 200,
+                    minCropBoxHeight: 200,
+                    data:{
+                      width: 200,
+                      height: 200,
+                    },
+                    ready: function () {
+                      crpImg.cropper("setCanvasData", canvasData);
+                      crpImg.cropper("setCropBoxData", cropBoxData);
+                    },
+                  });
+
+              }).on("modalClosed", function () {
+                  cropBoxData = crpImg.cropper("getCropBoxData");
+                  canvasData = crpImg.cropper("getCanvasData");
+                  canvas = crpImg.cropper("getCroppedCanvas", {
+                                      width: 200,
+                                      height: 200,
+                                      imageSmoothingEnabled:true,
+                                      });
+                  var cropData = crpImg.cropper("getData");
+                  crpImg.cropper("destroy");
+                  $("#pEd_selectedPicWrp .pEd_selectedMedia").html(canvas);
+
+                  $("#id_x").val(cropData["x"]);
+                  $("#id_y").val(cropData["y"]);
+                  $("#id_height").val(cropData["height"]);
+                  $("#id_width").val(cropData["width"]);
+                });
+
+        });
+      </script>
+
+  </div>
+
+  <div class="pEdformContainer">
+      <div id="MDLprofileIntro" class="pEdformCard">
+        <div class="pEdformCard-header">
+          <h2>Update introduction</h2>
+          <button class="pEdToggleMainModal" data-targetMdl="MDLprofileIntro" data-action='close' type="button" name="button"><i class="iconify" data-icon="eva:close-fill"></i></button>
+        </div>
+        <div class="pEdformCard-body">
+          <div class="pEdformCard-body-formWrapper">
+            <form id="pEd_profileIntro-form" autocomplete="off" action="{% url 'profiles:business_profile_update' pk=bs_profile.pk slug='about-us'%}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="pEd_introForm-Elms pEd_Form-Elms">
+                {{about_form.media}}
+                <div class="pEdformCard-body-helpText">
+                    <div class="pEdformCard-body-helpText-header">
+                        <h3>Things to remember!</h3>
+                    </div>
+                    <div class="pEdformCard-body-helpText-body">
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Giving your profile an introduction is a good way to
+                          tell customers why you are the right fit for their project.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Make sure your message feel personal and less
+                          generic or salesy.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Always keep your intro text short and brief.
+                          Keep to the important things.
+                        </p>
+                      </div>
+                    </div>
+                </div>
+                <div class="pEd_introFieldsWrp pEd_FormFieldWrp">
+                    <div class="pEd_introFields pEd_FormFields">
+                          <p>Profile video Youtube link</p>
+                          <div class="pEd_FormField_sng">
+                            <div id="pEd_introVidLinkInputFld_wrap" class="pEd_introInputFld pEd_FormInputField">
+                                {{about_form.about_video}}
+                            </div>
+                          </div>
+                          <p>Introduction text <span>*</span></p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_introInputFld pEd_FormInputField">
+                                {{about_form.about}}
+                            </div>
+                          </div>
+                    </div>
+                </div>
+              </div>
+              <div class="pEd_form-footer">
+                <div id="pEd_uploadedYoutubeLinkWrp" class="pEd_selectedMediaWrp">
+                  <p>Uploaded | Profile youtube video</p>
+                  <div class="pEd_selectedMedia pEd_uploadedYoutubeVid">
+                    <iframe id="pEd_uploadedLink" src="" width="" height=""></iframe>
+                  </div>
+                </div>
+                <div class="pEd_profileIntroForm-submit pEd_FormSubmit">
+                  <button id="pEd_profileIntroForm-submit-button" type="submit" name="button">
+                    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="256px" height="64px" viewBox="0 0 128 32" xml:space="preserve">
+                      <circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(16 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1.42;1;1;1;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(64 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1.42;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(112 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1;1;1;1.42;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle>
+                    </svg>
+                    <p>Save</p>
+                  </button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        $(document).ready(function(event){
+          var submitProfileIntroBtn = $('#pEd_profileIntroForm-submit-button');
+          var successMessageBody = $('.rqst_RspSuccessMessage_');
+          var errorMessageBody = $('.rqst_RspErrorMessage_');
+          var loadingIndicator = $('#pEd_profileIntroForm-submit-button svg');
+              loadingIndicator.hide();
+          var submitBtnText = $('#pEd_profileIntroForm-submit-button p');
+
+          $('#pEd_profileIntro-form').on('submit', function(event){
+               event.preventDefault();
+               var serializedData = $(this).serialize();
+
+               // hide button text
+               submitBtnText.hide();
+               // Show Loading indicator
+               loadingIndicator.show();
+               // Disable button to prevent double submit
+               submitProfileIntroBtn.attr('disabled', 'disabled');
+
+               $.ajax({
+                 type : $(this).attr('method'),
+                 url : $(this).attr('action'),
+                 data :serializedData,
+                 dataType: 'json',
+                 // success
+                 success: function(response) {
+                   $('#__pro-BsPf-about').html(response['page_section']);
+
+                   // show success message then hide it after a few seconds
+                    successMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                    successMessageBody.css({
+                      'bottom':'10px',
+                    });
+
+                    setTimeout(function(){
+                       successMessageBody.css({
+                         'bottom':'-100px',
+                       });
+                    }, 6000);
+
+                   // hide loading indicatior in button
+                    loadingIndicator.hide();
+                   // Show button text
+                   submitBtnText.show();
+                   // remove disabled attribute from submit button
+                    submitProfileIntroBtn.removeAttr('disabled');
+
+
+                 },
+                 error: function(rs,e){
+                   // show success message then hide it after a few seconds
+                    errorMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                    errorMessageBody.css({
+                      'bottom':'10px',
+                    });
+
+                    setTimeout(function(){
+                       errorMessageBody.css({
+                         'bottom':'-100px',
+                       });
+                    }, 6000);
+
+                   // hide loading indicatior in button
+                    loadingIndicator.hide();
+                   // Show button text
+                   submitBtnText.show();
+                   // remove disabled attribute from submit button
+                    submitProfileIntroBtn.removeAttr('disabled');
+
+                 },
+               });
+          });
+
+          $(document).on('change', '#pEd_introVidLinkInputFld_wrap input', function () {
+
+              var inputField = $(this);
+              if (inputField.val()){
+
+                // Display the uploaded link preview section
+                var uploadedLink = $('#pEd_uploadedYoutubeLinkWrp');
+                uploadedLink.css('display','block');
+
+                // Get the iframe we will append the src link
+                var uploadedLinkIframe = $('#pEd_uploadedLink');
+
+                // added link in input to iframe
+                uploadedLinkIframe.attr("src", inputField.val());
+              };
+
+          });
+
+        });
+      </script>
+
+  </div>
+
+  <div class="pEdformContainer">
+      <div id="MDLprofileInfo" class="pEdformCard">
+        <div class="pEdformCard-header">
+          <h2>Update business info</h2>
+          <button class="pEdToggleMainModal" data-targetMdl="MDLprofileInfo" data-action='close' type="button" name="button"><i class="iconify" data-icon="eva:close-fill"></i></button>
+        </div>
+        <div class="pEdformCard-body">
+          <div class="pEdformCard-body-formWrapper">
+            <form id="pEd_profileInfo-form" autocomplete="off" action="{% url 'profiles:business_profile_update' pk=bs_profile.pk slug='page-info'%}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="pEd_infoForm-Elms pEd_Form-Elms">
+                {{page_info_form.media}}
+                <div class="pEdformCard-body-helpText">
+                    <div class="pEdformCard-body-helpText-header">
+                        <h3>Things to remember!</h3>
+                    </div>
+                    <div class="pEdformCard-body-helpText-body">
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Make sure the information here is true and always up
+                          to date.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Providing false information may lead to the termination
+                          of your account without notice.
+                        </p>
+                      </div>
+                    </div>
+                </div>
+                <div class="pEd_infoFieldsWrp pEd_FormFieldWrp">
+                    <div class="pEd_infoFields pEd_FormFields">
+                          <h6>Basic Info</h6>
+                          <p>Business name <span>*</span></p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_introInputFld pEd_FormInputField">
+                                {{page_info_form.business_name}}
+                            </div>
+                          </div>
+                          <p>Address <span>*</span></p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_introInputFld pEd_FormInputField">
+                                {{page_info_form.address}}
+                            </div>
+                          </div>
+                          <p>Phone <span>*</span></p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_introInputFld pEd_FormInputField">
+                                {{page_info_form.phone}}
+                            </div>
+                          </div>
+                          <p>Email <span>*</span></p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_introInputFld pEd_FormInputField">
+                                {{page_info_form.business_email}}
+                            </div>
+                          </div>
+                          <p>Website</p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_introInputFld pEd_FormInputField">
+                                {{page_info_form.website_link}}
+                            </div>
+                          </div>
+                          <h6>Social Media</h6>
+                          <p>Facebook page</p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_introInputFld pEd_FormInputField">
+                                {{page_info_form.facebook_page_link}}
+                            </div>
+                          </div>
+                          <p>Instagram page</p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_introInputFld pEd_FormInputField">
+                                {{page_info_form.instagram_page_link}}
+                            </div>
+                          </div>
+                          <p>Twitter page</p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_introInputFld pEd_FormInputField">
+                                {{page_info_form.twitter_page_link}}
+                            </div>
+                          </div>
+                          <p>LinkedIn page</p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_introInputFld pEd_FormInputField">
+                                {{page_info_form.linkedin_page_link}}
+                            </div>
+                          </div>
+                    </div>
+                </div>
+              </div>
+              <div class="pEd_form-footer">
+                <div class="pEd_profileInfoForm-submit pEd_FormSubmit">
+                  <button id="pEd_profileInfoForm-submit-button" type="submit" name="button">
+                    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="256px" height="64px" viewBox="0 0 128 32" xml:space="preserve">
+                      <circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(16 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1.42;1;1;1;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(64 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1.42;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(112 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1;1;1;1.42;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle>
+                    </svg>
+                    <p>Save</p>
+                  </button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        $(document).ready(function(event){
+          var submitProfileInfoBtn = $('#pEd_profileInfoForm-submit-button');
+          var successMessageBody = $('.rqst_RspSuccessMessage_');
+          var errorMessageBody = $('.rqst_RspErrorMessage_');
+          var loadingIndicator = $('#pEd_profileInfoForm-submit-button svg');
+              loadingIndicator.hide();
+          var submitBtnText = $('#pEd_profileInfoForm-submit-button p');
+
+          $('#pEd_profileInfo-form').on('submit', function(event){
+             event.preventDefault();
+             var serializedData = $(this).serialize();
+
+             // hide button text
+             submitBtnText.hide();
+             // Show Loading indicator
+             loadingIndicator.show();
+             // Disable button to prevent double submit
+             submitProfileInfoBtn.attr('disabled', 'disabled');
+
+             $.ajax({
+               type : $(this).attr('method'),
+               url : $(this).attr('action'),
+               data :serializedData,
+               dataType: 'json',
+               // success
+               success: function(response) {
+                 // Update the business info section
+                 $('#__pro-BsPf-info').html(response['page_section']);
+
+                 //Update the business name and rating section
+                 $('#__pro-BsPf-nmRtng').html(response['business_dtls_html']);
+
+                 // show success message then hide it after a few seconds
+                  successMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                  successMessageBody.css({
+                    'bottom':'10px',
+                  });
+
+                  setTimeout(function(){
+                     successMessageBody.css({
+                       'bottom':'-100px',
+                     });
+                  }, 6000);
+
+                 // hide loading indicatior in button
+                  loadingIndicator.hide();
+                 // Show button text
+                 submitBtnText.show();
+                 // remove disabled attribute from submit button
+                  submitProfileInfoBtn.removeAttr('disabled');
+
+               },
+               error: function(response,e){
+                 // show success message then hide it after a few seconds
+                  errorMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+                  errorMessageBody.css({
+                    'bottom':'10px',
+                  });
+
+                  setTimeout(function(){
+                     errorMessageBody.css({
+                       'bottom':'-100px',
+                     });
+                  }, 6000);
+
+                 // hide loading indicatior in button
+                  loadingIndicator.hide();
+                 // Show button text
+                 submitBtnText.show();
+                 // remove disabled attribute from submit button
+                  submitProfileInfoBtn.removeAttr('disabled');
+
+               },
+             });
+          });
+
+
+        });
+      </script>
+
+  </div>
+
+  <div id="pEd-cropEditorModal" class="pEd-profilePic-cropModal closed">
+    <div class="pEd-profilePic-modalContent">
+        <div class="pEd-profilePic-cropEditHead">
+            <h2>Crop to fit your picture <br><span>( Scroll to zoom )</span></h2>
+        </div>
+        <div class="pEd-profilePic-cropEditBody">
+            <img id="pEd-profilePic-crop-tg-photo" src="" style="max-width: 100%;">
+        </div>
+        <div class="pEd-profilePic-cropEditFooter">
+          <button id="pEd-profilePic-photoEditDone" type="button" name="button">Done</button>
+        </div>
+    </div>
+
+  </div>
+
+
+<script type="text/javascript">
+    $(document).on('click', '.pEdToggleMainModal',  function(){
+      let button = $(this);
+      let targetElement = button.attr('data-targetMdl');
+      let action = button.attr('data-action');
+      if (action == 'open') {
+        // close any open modals
+        $('.pEdformCard').css('margin-right','-1000px');
+        // open our target modal
+        $('#' + targetElement).css('margin-right','0');
+      }else{
+        $('#' + targetElement).css('margin-right','-1000px');
+      };
+
+    })
+</script>
+{% endblock %}
