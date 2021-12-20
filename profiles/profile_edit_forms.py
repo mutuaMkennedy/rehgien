@@ -82,3 +82,12 @@ class BusinessHoursForm(forms.ModelForm):
 		model = models.BusinessHours
 		exclude=['profile']
 		fields = '__all__'
+
+class ProMatchmakingAnswerForm(forms.ModelForm):
+	question = forms.CharField(required=False, disabled=True)
+	answer = forms.ModelMultipleChoiceField(required=False, queryset=models.QuestionOptions.objects)
+	class Meta:
+		model = models.ProAnswer
+		fields = [
+		'question','answer'
+		]
