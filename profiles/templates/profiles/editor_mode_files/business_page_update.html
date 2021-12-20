@@ -34,15 +34,15 @@
 <div class="pro_profile_navbar">
   <ul>
       <li><a href="{% url 'profiles:pro_business_page_edit' pk=request.user.pro_business_profile.pk %}">Your Profile</a></li>
-      <li><a href="{% url 'profiles:user_wishlist'%}">Wish List</a></li>
-      <li><a href="{% url 'profiles:projects'%}">Projects</a></li>
-      <li><a href="{% url 'profiles:pro_reviews_list'%}">Reviews</a></li>
-      <li><a href="{% url 'profiles:my_jobs'%}">Jobs</a></li>
-      <li><a href="{% url 'profiles:user_followers'%}">Followers</a></li>
-      <li><a href="{% url 'profiles:user_connections'%}">Connections</a></li>
-      <li><a href="{% url 'profiles:account_settings'%}">Account Settings</a></li>
+      <li><a href="#">Wish List</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Reviews</a></li>
+      <li><a href="#">Jobs</a></li>
+      <li><a href="#">Followers</a></li>
+      <li><a href="#">Connections</a></li>
+      <li><a href="#">Account Settings</a></li>
   </ul>
-  <a href="{{request.user.pro_business_profile.get_absolute_url}}"><button type="button" name="button">View page as visitor</button></a>
+  <!-- <a href="#"><button type="button" name="button">View page as visitor</button></a> -->
 </div>
 
 <div id="_proile_editor_view" class="ag-dtl-wrapper">
@@ -137,7 +137,7 @@
                 <div class="_ag-connections card">
                   <div class="_ag-connectionsHeader">
                     <h1>Connections <span>{{pro_teammates.count}}</span></h1>
-                    <a href="{% url 'profiles:user_connections'%}">Manage</a>
+                    <a href="#">Manage</a>
                   </div>
                   <div class="_ag-cns-content">
                     {% if pro_teammates %}
@@ -158,7 +158,7 @@
                                 <h6>{{connection.receiver.user_type}}</h6>
                             </div>
                             <div class="_ag-cns-Cta">
-                              <a href="{{connection.receiver.pro_business_profile.get_absolute_url}}">
+                              <a href="#">
                               <span class="material-icons" style="border:1px solid #ddd">chevron_right</span>
                             </a>
                             </div>
@@ -179,7 +179,7 @@
                                 <h6>{{connection.requestor.user_type}}</h6>
                             </div>
                             <div class="_ag-cns-Cta">
-                              <a href="{{connection.requestor.pro_business_profile.get_absolute_url}}">
+                              <a href="#">
                               <span class="material-icons" style="border:1px solid #ddd">chevron_right</span>
                             </a>
                             </div>
