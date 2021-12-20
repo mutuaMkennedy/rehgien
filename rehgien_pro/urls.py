@@ -12,6 +12,11 @@ urlpatterns = [
 	path('insights/', views.dashboard_insights, name = 'dashboard_insights'),
 	path('myproperties/', views.dashboard_properties, name = 'dashboard_properties'),
 	path('jobs/', views.dashboard_jobs, name = 'dashboard_jobs'),
+	path('profile/your_profile/', views.dashboard_profile_info, name = 'dashboard_profile_yourProfile'),
+	path('profile/services/', views.dashboard_profile_services, name = 'dashboard_profile_services'),
+	path('search/service_areas/', views.get_service_areas, name = 'get_service_areas'),
+	path('profile/reviews/', views.dashboard_manage_reviews, name = 'dashboard_manage_reviews'),
+	path('profile/projects/', views.dashboard_manage_projects, name = 'dashboard_manage_projects'),
 	#
 	path('join/', views.pro_join_landing, name = 'pro_join_landing'),
 	# path('onboarding/', views.ProSetupWizardView.as_view(views.FORMS), name='ProSetupWizardView'),
