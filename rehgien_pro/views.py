@@ -16,6 +16,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.http import urlencode
 from . import forms
+from django.forms import inlineformset_factory
 from markets import models as market_models
 from location import models as location_models
 from profiles import models as profiles_models
@@ -29,6 +30,7 @@ try:
 except ImportError:
 	import json
 from profiles import pro_profile_setup_forms as pro_setup_forms
+from profiles import profile_edit_forms as pro_profile_edit_forms
 from formtools.wizard.views import SessionWizardView
 from django.utils.functional import cached_property
 from django.contrib.sites.models import Site
@@ -72,6 +74,25 @@ def milestones_complete(user_pk):
 	}
 	return results
 
+def send_review_request_email(email_dict, message, pk, business_name):
+	domain = 'https://' + Site.objects.get_current().domain
+	review_page_url = 'rehgien.com'#reverse( 'profiles:business_review')
+	subject = 'Can you please review me?'
+	datalist = []
+	extended_message = message + '\n\n' + 'Click this link: ' + domain + review_page_url + '?bsr=' + str(pk) + ' to write your review.' + \
+						'\n\n\n' + \
+						'Thanks in advance and let me know if you have any questions.' + \
+						'\n\n' + \
+						'{b_name}'.format(b_name=business_name)
+	for email in email_dict:
+		datalist.append((subject, extended_message, '{name} <do-not-reply@rehgien.com>'.format(name=business_name), [email]) )
+
+	try:
+		send_mass_mail(tuple(datalist))
+	except BadHeaderError:
+		return False
+	return True
+
 #pro Dash board views
 
 @login_required(login_url='app_accounts:user_login')
@@ -90,7 +111,7 @@ def dashboard_home(request):
 		messages.error(request,'Denied. Upgrade to a Pro to continue.')
 		return redirect('rehgien_pro:pro_join_landing')
 
-@login_required(login_url='account_login')
+@login_required(login_url='app_accounts:user_login')
 def dashboard_messages(request):
 	if request.user.user_type == 'PRO':
 		pro_page = profiles_models.BusinessProfile.objects.get(user=request.user)
@@ -102,8 +123,122 @@ def dashboard_messages(request):
 		messages.error(request,'Denied. Upgrade to a Pro to continue.')
 		return redirect('rehgien_pro:pro_join_landing')
 
+@login_required(login_url='app_accounts:user_login')
+def dashboard_profile_info(request):
+	if request.user.user_type == 'PRO':
+		pro_bs_profile = get_object_or_404( profiles_models.BusinessProfile, pk=request.user.pro_business_profile.pk )
 
-@login_required(login_url='account_login')
+		if request.user == pro_bs_profile.user:
+			profile_image_form= pro_profile_edit_forms.BusinessProfileImage(instance=request.user.pro_business_profile)
+			page_info_form= pro_profile_edit_forms.BusinessProfilePageInfo(instance=request.user.pro_business_profile)
+			about_form = pro_profile_edit_forms.BusinessProfileAbout(instance=request.user.pro_business_profile)
+			bs_reviews = pro_bs_profile.pro_business_review.all()
+
+			context = {
+			"bs_profile":pro_bs_profile,
+			"bs_reviews":bs_reviews,
+			"profile_image_form":profile_image_form,
+			"page_info_form":page_info_form,"about_form":about_form,
+			'about_form':about_form
+			}
+
+			return render(request, 'rehgien_pro/dashboard/business_profile/basic_info.html', context)
+		else:
+			messages.error(request, 'Permission denied!')
+			return redirect('homepage')
+	else:
+		messages.error(request,'Denied. Upgrade to a Pro to continue.')
+		return redirect('rehgien_pro:pro_join_landing')
+
+@login_required(login_url='app_accounts:user_login')
+def dashboard_profile_services(request):
+	if request.user.user_type == 'PRO':
+		pro_bs_profile = get_object_or_404( profiles_models.BusinessProfile, pk=request.user.pro_business_profile.pk )
+		services = profiles_models.ProfessionalService.objects.filter(professional_category__pk = pro_bs_profile.professional_category.pk )
+
+		if request.user == pro_bs_profile.user:
+			services_form = pro_profile_edit_forms.BusinessProfileServices(instance=pro_bs_profile)
+
+			context = {
+			"bs_profile":pro_bs_profile,
+			"services_form":services_form,
+			"services":services
+			}
+
+			return render(request, 'rehgien_pro/dashboard/business_profile/targeting_preferences.html', context)
+		else:
+			messages.error(request, 'Permission denied!')
+			return redirect('homepage')
+	else:
+		messages.error(request,'Denied. Upgrade to a Pro to continue.')
+		return redirect('rehgien_pro:pro_join_landing')
+
+def get_service_areas(request):
+	q = str(request.GET.get('term', ''))
+	towns = location_models.KenyaTown.objects.filter(town_name__icontains = q)
+	results = []
+	for town in towns:
+		data = {
+		      "id": town.id,
+		      "text": town.town_name.capitalize(),
+		    },
+
+		results.extend(data)
+	# print(results)
+	formated_results = {
+		"results":results
+	}
+	data = json.dumps(formated_results)
+
+	mimetype = 'application/json'
+	return HttpResponse(data, mimetype)
+
+@login_required(login_url='app_accounts:user_login')
+def dashboard_manage_reviews(request):
+	pro_bs_profile = get_object_or_404( profiles_models.BusinessProfile, pk=request.user.pro_business_profile.pk )
+	if request.method == 'GET':
+		reviews = profiles_models.Review.objects.filter(profile = request.user.pro_business_profile.pk).order_by('-review_date')
+		pro_group = pro_bs_profile.professional_category.professional_group.group_name
+		review_rq_message = f"As a {pro_group} professional my business heavily depends on recommendations from clients. Therefore, I would appreciate it if you would write a brief review of me on Rehgien.com, an influential directory of home service professionals."
+
+		context = {
+		"pro_bs_profile":pro_bs_profile,
+		"reviews":reviews,
+		"review_rq_message":review_rq_message
+		}
+
+		return render(request, 'rehgien_pro/dashboard/business_profile/manage_reviews.html', context)
+	elif request.method == 'POST':
+		email_list = request.POST.get('email_list').split(',')
+		message = request.POST.get('message','')
+
+		status = send_review_request_email(email_list,message, pro_bs_profile.pk, pro_bs_profile.business_name)
+		if status:
+			return JsonResponse({'message':'Review request sent'})
+		else:
+			return JsonResponse({'message':'Review request could not be sent. Try again later.'})
+	else:
+		return JsonResponse({'message':'Method not allowed.'})
+
+@login_required(login_url='app_accounts:user_login')
+def dashboard_manage_projects(request):
+	ImageTransformation = dict(
+	format = "jpeg",
+	transformation = [
+		dict(height=200, width=310, crop="fill",quality="auto", gravity="center",
+		format="auto", dpr="auto"),
+		]
+	)
+
+	projects = profiles_models.PortfolioItem.objects.filter(created_by = request.user.pk).order_by('-created_at')
+	context = {
+	"projects":projects,
+	"ImageTransformation":ImageTransformation
+	}
+
+	return render(request, 'rehgien_pro/dashboard/business_profile/manage_projects.html', context)
+
+@login_required(login_url='app_accounts:user_login')
 def dashboard_insights(request):
 	if request.user.user_type == 'PRO':
 		pro_page = profiles_models.BusinessProfile.objects.get(user=request.user)
@@ -119,7 +254,7 @@ def dashboard_insights(request):
 		messages.error(request,'Denied. Upgrade to a Pro to continue.')
 		return redirect('rehgien_pro:pro_join_landing')
 
-@login_required(login_url='account_login')
+@login_required(login_url='app_accounts:user_login')
 def dashboard_properties(request):
 	if request.user.user_type == 'PRO':
 		location_name_in = str(request.POST.get('location_name_in', '')).lower()
@@ -179,7 +314,7 @@ def dashboard_properties(request):
 		messages.error(request,'Denied. Upgrade to a Pro to continue.')
 		return redirect('rehgien_pro:pro_join_landing')
 
-@login_required(login_url='account_login')
+@login_required(login_url='app_accounts:user_login')
 def dashboard_jobs(request):
 	if request.user.user_type == 'PRO':
 		pro_page = profiles_models.BusinessProfile.objects.get(user=request.user)
@@ -207,23 +342,6 @@ def homepage(request):
 def pro_join_landing(request):
 	return render(request,'rehgien_pro/pro_onboarding/landing_page.html',{})
 
-def send_review_request_email(email_dict, message, pk, business_name):
-	domain = 'https://' + Site.objects.get_current().domain
-	review_page_url = reverse( 'profiles:business_review')
-	subject = 'Can you please review me?'
-	datalist = []
-	extended_message = message + '\n\n' + 'Click this link: ' + domain + review_page_url + '?bsr=' + str(pk) + ' to write your review.' + \
-						'\n\n\n' + \
-						'Thanks in advance and let me know if you have any questions.' + \
-						'\n\n' + \
-						'{b_name}'.format(b_name=business_name)
-	for email in email_dict:
-		datalist.append( (subject, extended_message, '{name} <do-not-reply@rehgien.com>'.format(name=business_name), [email]) )
-	try:
-		send_mass_mail(tuple(datalist))
-	except BadHeaderError:
-		return 'Error'
-	return 'succcess'
 
 #pro onboarding wizard
 FORMS = [
@@ -242,7 +360,7 @@ TEMPLATES = {
 			"ProReviewers": "rehgien_pro/pro_onboarding/pro_reviewers.html"
 			}
 
-@method_decorator(login_required(login_url='account_login'), name='dispatch')
+@method_decorator(login_required(login_url='app_accounts:user_login'), name='dispatch')
 class ProSetupWizardView(SessionWizardView):
 	file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_profile_photos'))
 
@@ -331,7 +449,7 @@ class ProSetupWizardView(SessionWizardView):
 
 		return render(self.request, 'rehgien_pro/pro_onboarding/done.html',{'obj_instance':obj_instance})
 
-@login_required(login_url='account_login')
+@login_required(login_url='app_accounts:user_login')
 def jobs_list(request):
 	if request.user.user_type == 'PRO':
 		location_target = str(request.GET.get("location_target",''))
@@ -385,7 +503,7 @@ def jobs_list(request):
 		messages.error(request,'Denied. This feature is availlable to pros only!')
 		return redirect('rehgien_pro:rehgien_pro_homepage')
 
-@login_required(login_url='account_login')
+@login_required(login_url='app_accounts:user_login')
 def job_detail(request, pk):
 	if request.user.user_type == 'PRO':
 		job = get_object_or_404(market_models.JobPost, id=pk)
