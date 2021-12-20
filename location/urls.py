@@ -6,6 +6,7 @@ from . import views
 app_name = 'location'
 
 urlpatterns = [
+	path('towns/list/', views.get_towns, name='get_towns'),
 	path('districts_dataset/', views.districts_dataset, name='districts_data'),
 	path('divisions_dataset/', views.divisions_dataset, name='divisions_data'),
 	path('polytechnics_dataset/', views.polytechnics_dataset, name='polytechnics_data'),
