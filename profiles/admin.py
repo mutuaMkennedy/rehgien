@@ -104,7 +104,7 @@ class ProAnswerInline(admin.StackedInline):
 
 class QuestionAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
-    inlines = [QuestionOptionsInline, ClientAnswerInline, ProAnswerInline]
+    inlines = [QuestionOptionsInline, ProAnswerInline]
     list_display = ("title","question_type","matchMaker",)
 
 admin.site.register(models.User, CustomUserAdmin)
