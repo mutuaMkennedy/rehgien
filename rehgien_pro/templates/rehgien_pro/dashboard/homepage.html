@@ -13,7 +13,7 @@
            Quick Access:
            <div class="quickActionItems-links">
                <a href="#" target="_blank"><button type="button" name="button"> <i class="material-icons">ondemand_video</i>Take a page tour</button></a>
-               <a href="{% url 'profiles:pro_business_page_edit' pk=pro_page.pk%}" target="_blank"><button type="button" name="button"><i class="material-icons">drive_file_rename_outline</i>Profile Page Edit</button></a>
+               <a href="{% url 'rehgien_pro:dashboard_profile_yourProfile' %}" target="_blank"><button type="button" name="button"><i class="material-icons">drive_file_rename_outline</i>Profile Page Edit</button></a>
            </div>
          </div>
        </div>
@@ -110,7 +110,7 @@
                      <span>Last 365 days</span>
                  </div>
                  <div class="csh_card_body">
-                     <span><small>235</small></span>
+                     <span><small>~</small></span>
                      <h6>Reach</h6>
                  </div>
                </div>
@@ -120,7 +120,7 @@
                      <span>Last 365 days</span>
                  </div>
                  <div class="csh_card_body">
-                     <span><small>76</small></span>
+                     <span><small>~</small></span>
                      <h6>Leads</h6>
                  </div>
                </div>
@@ -136,149 +136,7 @@
                </div>
            </div>
        </div>
-       <div class="call_to_action_box">
-           <div class="_home_cta_cards">
-               <div class="row">
-                 <div class="col s12 md6 l6 xl6">
-                   <div class="card _one">
-                     <a href="#" target="_blank">
-                       <div class="card_action_item">
-                           <div class="cta_card_head">
-                             <h5>Find Customers<i class="material-icons">chevron_right</i></h5>
-                             <span>View jobs in your area</span>
-                           </div>
-                         <div class="cta_card_body">
-                             <span>0</span>
-                             <h6>No jobs listed yet</h6>
-                         </div>
-                       </div>
-                     </a>
-                     <a href="#" target="_blank">
-                       <div class="card_action_item">
-                         <div class="cta_card_head">
-                           <h5>Find Professionals<i class="material-icons">chevron_right</i></h5>
-                           <span>Find and work with other pros</span>
-                         </div>
-                         <div class="cta_card_body">
-                             <i class="material-icons">engineering</i>
-                         </div>
-                       </div>
-                     </a>
-                     <a href="#" target="_blank">
-                       <div class="card_action_item">
-                         <div class="cta_card_head">
-                           <h5>Shop for products<i class="material-icons">chevron_right</i></h5>
-                           <span>Shop homes, design tools, building materials and more</span>
-                         </div>
-                         <div class="cta_card_body">
-                             <i class="material-icons">store</i>
-                         </div>
-                       </div>
-                     </a>
-                   </div>
-                 </div>
-                 <div class="col s12 md6 l6 xl6">
-                   <div class="ad_slider_car_wrp">
-                     <div class="owl-carousel advert_slider_car pdash_home_carou">
-                       <a href="#" target="_blank">
-                         <div class="card _two" style="background-image:url({% static 'img/web_design_rehgienAgency.jpg'%})">
-                           <div class="cta_card_body">
-                               <h5>Web Design Services</h5>
-                               <span>Put your business out there for the world to see and start getting more customers than before by getting your website designed by us.</span>
-                               <button>Visit Rehgien Agency<i class="material-icons">east</i></button>
-                           </div>
-                         </div>
-                       </a>
-                       <a href="#" target="_blank">
-                         <div class="card _two" style="background-image:url({% static 'img/brand_design_rehgienAgency.jpg'%})">
-                           <div class="cta_card_body">
-                               <h5>Business Branding Services</h5>
-                               <span>Stand out from your competition and put a professional face to your customers through professional business branding</span>
-                               <button>Visit Rehgien Agency<i class="material-icons">east</i></button>
-                           </div>
-                         </div>
-                       </a>
-                       <a href="#" target="_blank">
-                         <div class="card _two" style="background-image:url({% static 'img/photography_rehgienAgency.jpg'%})">
-                           <div class="cta_card_body">
-                               <h5>Professional Photography Services</h5>
-                               <span>Let your photos and videos speak for themselves and never compromise on quality again. Get clean and crisp shots every time.</span>
-                               <button>Visit Rehgien Agency<i class="material-icons">east</i></button>
-                           </div>
-                         </div>
-                       </a>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-           </div>
-       </div>
-       <br>
-       <div class="HomeDash_articlesFeed">
-         <h3 class="proDash-sectionTitle">News Feed and Pro Resources</h3>
-         <div class="row">
-             <div class="col s12 md8 l8 xl8">
-               <div class="article_stream">
-                 {% comment %}
-                 <div class="no_results">
-                   <p>We could not find any articles. New articles will appear here</p>
-                 </div>
-                 {% endcomment %}
-                 {% for post in blog_posts %}
-
-                   <div class="card dashArticle">
-                     <div class="dashArticleHead">
-                       <h5>{{post.blog_category.category_name}}</h5>
-                       <a href="#" target="_blank"><span>More {{post.blog_category.category_name}} Articles <i class="material-icons">chevron_right</i></span></a>
-                     </div>
-                     <a href="#" target="_blank">
-                     <div class="dashArticleBody">
-                       <div class="dashArticleImg_wrapper">
-                         <img src="{% if post.thumbnail %}{{post.thumbnail.url}} {% else %} {% static 'img/partnership.jpg'%} {%endif%}" alt="Photo">
-                       </div>
-                       <div class="dashArticleDetails">
-                         <h3>{{post.title}}</h3>
-                         <h6>{{post.publishdate.date}}</h6>
-                       </div>
-                     </div>
-                     </a>
-                   </div>
-
-                 {% endfor %}
-               </div>
-             </div>
-             <div class="col s12 md4 l4 xl4">
-               <div class="dashHm_resource_accessLinks">
-                 <div class="card">
-                   <div class="dashRsosHead">
-                     <h5>Pro Resources</h5>
-                   </div>
-                   <div class="hsos_acLink">
-                     <div class="dashRsosBody">
-                       <i class="material-icons">contact_support</i>
-                       <span>
-                         <h6>Need Help</h6>
-                         <p>Have a question? Talk to an agent live by clicking the chat bubble on your screen</p>
-                       </span>
-                     </div>
-                   </div>
-                   <div class="hsos_acLink">
-                     <a href="#">
-                       <div class="dashRsosBody">
-                         <i class="material-icons">auto_stories</i>
-                         <span>
-                           <h6>Rehgien Pro Learn</h6>
-                           <p>Get the latest updates, news and tutorials from Rehgien Pro</p>
-                         </span>
-                       </div>
-                     </a>
-                   </div>
-                 </div>
-               </div>
-
-             </div>
-         </div>
-       </div>
+       
    </div>
 </div>
 
