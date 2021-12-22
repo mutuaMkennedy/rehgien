@@ -20276,6 +20276,7 @@ particle {
    .prodash_page_sections .proDash-pEdit-scNavBar{
        top: 0;
        padding:10px 10px;
+       padding-top:20px;
    }
 
 }
@@ -20545,8 +20546,8 @@ particle {
 
  @media only screen and (max-width:768px){
     .proDash-profileEdit-box  .pEdformContainer{
-        height:calc(100vh - 64px);
-        top:64px;
+        height:calc(100vh - 56px);
+        top:56px;
         z-index:1;
     }
 
