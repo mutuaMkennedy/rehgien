@@ -20861,9 +20861,14 @@ particle {
 
 .pEd_svcAreaTgPrfInputFld span.select2-search input.select2-search__field{
    border:none !important;
-   margin:0 !important;
+   margin:5px 0 !important;
    padding:0 10px !important;
    box-sizing:border-box !important;
+   width:100% !important;
+}
+
+.pEd_svcAreaTgPrfInputFld span.select2-search input.select2-search__field:focus{
+   background-color:#f2f2f7 !important;
 }
 
 .pEd_svcAreaTgPrfInputFld-SelectDropDown{
