@@ -25,7 +25,7 @@
         </div>
 
         <ul id="proDash-action-navUlist"  class="right pro-action-navLinks">
-          <li>
+          <!-- <li>
             <div class="pflNavLink_x_dropdown">
                 <button type="button" name="button" class="dropdown-trigger" data-target='proDashWishListDpdown'>
                   <i class="iconify" data-icon="topcoat:like"></i>
@@ -35,15 +35,6 @@
                       <h5>Your Wish List</h5>
                     </div>
                     <div class="dpdwn_body">
-                      <a href="#">
-                        <div class="dpdwn_wishlist_item">
-                          <img src="{% static 'img/property_sky.jpg'%}" alt="properties">
-                          <span>
-                              <h5>Properties</h5>
-                              <p>{{request.user.listings_home_saves_related.all.count}} Item{{ request.user.listings_home_saves_related.all.count|pluralize }}</p>
-                          </span>
-                        </div>
-                      </a>
                       <a href="#">
                         <div class="dpdwn_wishlist_item">
                           <img src="{% static 'img/thumbnails/system_&_appliances.jpg'%}" alt="Professionals">
@@ -57,7 +48,7 @@
                     <div class="dpdwn_footer"><a href="#">View All</a></div>
                 </div>
             </div>
-          </li>
+          </li> -->
           <li>
             <div class="pflNavLink_x_dropdown">
                 <button type="button" name="button" class="dropdown-trigger" data-target='proDashNotfDpdown'>
@@ -151,26 +142,30 @@
     </div>
     <div class="pdash_mobileNav_collaps">
       <ul class="collapsible expandable">
-          <li><a href="{% url 'rehgien_pro:dashboard_home' %}" class=""><button type="button" name="button"><i class="material-icons">home</i> <p>Home</p></button></a></li>
+          <li><a href="{% url 'rehgien_pro:dashboard_home' %}" class=""><button type="button" name="button"><i class="iconify" data-icon="mdi-light:view-dashboard"></i> <p>Dashboard</p></button></a></li>
+          <li><a href="{% url 'rehgien_pro:dashboard_messages' %}" class=""><button type="button" name="button"><i class="iconify" data-icon="clarity:email-line"></i> <p>Messages</p><div class="unreadMessageCountDashNaV unreadMessageCountUnread ntfIndicatorBadge"></div></button></a></li>
+          <li><a href="{% url 'rehgien_pro:dashboard_profile_yourProfile' %}" class=""><button type="button" name="button"><i class="iconify" data-icon="la:user-circle"></i> <p>Profile</p></button></a></li>
+
           <li class="active">
-            <div class="collapsible-header"><a href="#"><button type="button" name="button"><i class="material-icons">trending_up</i> <p>Grow</p></button></a><span class="material-icons">expand_less</span></div>
+            <div class="collapsible-header"><a href="#"><button type="button" name="button"><i class="iconify" data-icon="ph:trend-up"></i> <p>Grow</p></button></a><span class="material-icons">expand_less</span></div>
             <div class="collapsible-body">
                 <a href="{% url 'rehgien_pro:dashboard_insights' %}" class=""><button type="button" name="button"><p>Insights</p></button></a>
             </div>
           </li>
           <li class="active">
-            <div class="collapsible-header"><a href="#"><button type="button" name="button"><i class="material-icons">group_work</i> <p>Manage</p></button></a><span class="material-icons">expand_less</span></div>
+            <div class="collapsible-header"><a href="#"><button type="button" name="button"><i class="iconify" data-icon="carbon:task-settings"></i> <p>Manage</p></button></a><span class="material-icons">expand_less</span></div>
             <div class="collapsible-body">
-                <a href="#" class=""><button type="button" name="button"><p>Leads</p></button></a>
+                <a href="#" class="inactive"><button type="button" name="button"><p>Leads</p></button></a>
             </div>
           </li>
           <li class="active">
-            <div class="collapsible-header"><a href="#"><button type="button" name="button"><i class="material-icons">local_library</i> <p>Learn</p></button></a><span class="material-icons">expand_less</span></div>
+            <div class="collapsible-header"><a href="#"><button type="button" name="button"><i class="iconify" data-icon="bytesize:book"></i> <p>Learn</p></button></a><span class="material-icons">expand_less</span></div>
             <div class="collapsible-body">
-                <a href="#" class="" target="_blank"><button type="button" name="button"><p>Tutorials</p></button></a>
-                <a href="#" class="" target="_blank"><button type="button" name="button"><p>Product Updates</p></button></a>
+                <a href="#" class="inactive" target="_blank"><button type="button" name="button"><p>Tutorials</p></button></a>
+                <a href="#" class="inactive" target="_blank"><button type="button" name="button"><p>Product Updates</p></button></a>
             </div>
           </li>
+          <li><a href="{% url 'rehgien_pro:dashboard_messages' %}"><button type="button" name="button"><i class="iconify" data-icon="carbon:settings"></i> <p>Settings & Privacy</p><div class='secondaryIconDashNav'><i class="iconify" data-icon="akar-icons:link-out"></i><div></button></a></li>
       </ul>
     </div>
   </div>
