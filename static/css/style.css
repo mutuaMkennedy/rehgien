@@ -74,6 +74,12 @@ main {
     background-color: transparent;
 }
 
+@media only screen and (max-width:768px){
+    .navbar-fixed nav{
+        height:56px;
+    }
+}
+
 .nav-wrapper {
     background-color: #ffffff;
     box-shadow: 0 0px 5px 0px #eee;
@@ -18375,12 +18381,12 @@ particle {
     display:inline-flex;
     position:relative;
     align-items:center;
+    height:100%;
 }
 
 #pro-dash-hdr .pro-action-navLinks li button.pro-dash-usrAct{
     display:flex;
     align-items:center;
-    height:64px;
     margin-left:5px;
 }
 
@@ -18423,6 +18429,12 @@ particle {
     height:auto !important;
     box-shadow:0 0 5px 2px #eee;
     overflow-y:unset !important;
+}
+
+@media only screen and (max-width:768px){
+    .proDashDpdown_elem{
+        top:56px !important;
+    }
 }
 
 .proDashDpdown_elem::before{
@@ -18718,23 +18730,48 @@ particle {
     background-color:#fff;
     border:none;
     padding:0;
+    position:relative;
 }
 
 .pdash_mobile_nav .pdash_mobileNav_collaps ul li button p{
     margin:0;
     font-weight:500;
+    font-size:14px;
 }
 
+.pdash_mobile_nav .pdash_mobileNav_collaps ul li button .unreadMessageCountDashNaV{
+    color:#ffffff;
+    position:absolute;
+    right:15px;
+    font-size:11px;
+    padding:5px;
+    background-color:#cc0000;
+    border-radius:25px;
+}
+
+.pdash_mobile_nav .pdash_mobileNav_collaps ul li button .secondaryIconDashNav{
+    position:absolute;
+    right:15px;
+}
+
+.pdash_mobile_nav .pdash_mobileNav_collaps ul li button .secondaryIconDashNav svg{
+    margin:0;
+    font-size:15px;
+}
+
+.pdash_mobile_nav .pdash_mobileNav_collaps ul li a.inactive button p{
+    color:#c4c4c4;
+}
 .pdash_mobile_nav .pdash_mobileNav_collaps ul li.active .collapsible-header p{
     color:#1100ff;
 }
 
-.pdash_mobile_nav .pdash_mobileNav_collaps ul li button i{
-    width:30px;
-    height:30px;
-    display:flex;
-    line-height:30px;
-    margin-right:15px;
+.pdash_mobile_nav .pdash_mobileNav_collaps ul li button svg{
+    font-size: 20px;
+    color: #000;
+    display: flex;
+    line-height: 30px;
+    margin-right: 15px;
 }
 
 .pdash_mobile_nav .pdash_mobileNav_collaps ul li .collapsible-header{
@@ -18761,7 +18798,7 @@ particle {
 
 .pdash_mobile_nav .pdash_mobileNav_collaps ul li .collapsible-body{
     box-shadow:none !important;
-    padding-left:45px;
+    padding-left:36px;
     background-color:#fff !important;
 }
 
@@ -20235,6 +20272,14 @@ particle {
     top: 0px;
 }
 
+@media only screen and (max-width:768px){
+   .prodash_page_sections .proDash-pEdit-scNavBar{
+       top: 0;
+       padding:10px 10px;
+   }
+
+}
+
 .prodash_page_sections .proDash-pEdit-scNavBar a {
     font-style: normal;
     font-weight: 600;
@@ -20385,6 +20430,19 @@ particle {
     font-size:12px;
 }
 
+@media only screen and (max-width:768px){
+    .proDash-profileEdit-box .proDash-profileSectionEl .pEdSectionCard .pEdSectionCard-body .pEdSectionCard-body-R .proBsPf-basicInfo-social .proBsPf-basicInfo-social-item{
+        margin-left:5px;
+    }
+    .proDash-profileEdit-box .proDash-profileSectionEl .pEdSectionCard .pEdSectionCard-body .pEdSectionCard-body-R .proBsPf-basicInfo-social h5{
+        font-size:10px;
+    }
+    .proDash-profileEdit-box .proDash-profileSectionEl .pEdSectionCard .pEdSectionCard-body .pEdSectionCard-body-R .proBsPf-basicInfo-social span{
+        padding:2px 10px;
+        font-size:10px;
+    }
+}
+
 .proDash-profileEdit-box .proDash-profileSectionEl .pEdSectionCard .pEdSectionCard-body .proBsPf-bio p{
     width:100%;
     font-size: 13px;
@@ -20474,6 +20532,18 @@ particle {
      pointer-events:all;
      transition:margin-right 0.5s ease;
  }
+
+ @media only screen and (max-width:768px){
+    .proDash-profileEdit-box  .pEdformContainer{
+        height:calc(100vh - 64px);
+        top:64px;
+        z-index:1;
+    }
+
+    .proDash-profileEdit-box  .pEdformContainer .pEdformCard{
+        max-width:100%;
+    }
+}
 
 .proDash-profileEdit-box  .pEdformContainer .pEdformCard .pEdformCard-header{
     display:flex;
@@ -21119,13 +21189,17 @@ particle {
     flex-direction:column;
     justify-content:space-between;
     width:100%;
+    overflow:hidden;
 }
 
 .proDash-profileSectionEl .projSct_projectList .projSct_projectIt .projSct_projectIt-dsc h3{
     margin:0;
     font-size:15px;
     font-weight:600;
+    overflow:hidden;
+    white-space:nowrap;
     text-transform:capitalize;
+    text-overflow:ellipsis;
 }
 
 .proDash-profileSectionEl .projSct_projectList .projSct_projectIt .projSct_projectIt-dsc p{
@@ -21360,7 +21434,8 @@ particle {
 .proDash-profileSectionEl .pEdSectionBodySvcs .pEdSectionBodySvcs-switch{
     margin-top:15px;
     display:flex;
-    flex-wrap:wrap;
+    flex-wrap:nowrap;
+    overflow-x:auto;
 }
 
 .proDash-profileSectionEl .pEdSectionBodySvcs .pEdSectionBodySvcs-switch button{
