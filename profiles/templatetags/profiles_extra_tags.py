@@ -27,12 +27,13 @@ def question_service_areas(service, user):
     results = []
     question = service.matchmaking_service.matchmaker_question.all().first()
     answer = question.pro_question_answer.filter(business_profile = user.pro_business_profile.pk )
-    for service_area in answer.first().service_delivery_areas.all():
-        data = {
-            'id':service_area.pk,
-            'town_name':service_area.town_name
-        }
-        results.append(data)
+    if answer.exists():
+        for service_area in answer.first().service_delivery_areas.all():
+            data = {
+                'id':service_area.pk,
+                'town_name':service_area.town_name
+            }
+            results.append(data)
     return results
 
 @register.simple_tag
