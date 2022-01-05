@@ -1,5 +1,6 @@
 {% extends 'rehgien_pro/dashboard/business_profile/profile_base.html'%}
 {% load static %}
+{% load social_share %}
 {% block profileReviewsSectionActive%}active{% endblock %}
 
 {% block profile_section %}
@@ -16,7 +17,7 @@
           <li>Customer leaves a review.</li>
           <li>Review gets added to your profile.</li>
           <div class="pEdSectionHead-quickT-body-sItemCTA">
-            <button type="button" name="button">Share link</button>
+            <button class="pEdToggleMainModal" data-targetMdl="MDLshareRvwLink" data-action='open' type="button" name="button">Share link</button>
             <button class="pEdToggleMainModal" data-targetMdl="MDLrequestRvws" data-action='open' type="button" name="button">Send Email</button>
           </div>
         </div>
@@ -563,6 +564,81 @@
         });
       </script>
 
+  </div>
+
+  <div class="pEdformContainer">
+      <div id="MDLshareRvwLink" class="pEdformCard">
+        <div class="pEdformCard-header">
+          <h2>Share review link</h2>
+          <button class="pEdToggleMainModal" data-targetMdl="MDLshareRvwLink" data-action='close' type="button" name="button"><i class="iconify" data-icon="eva:close-fill"></i></button>
+        </div>
+        <div class="pEdformCard-body">
+          <div class="pEdformCard-body-formWrapper">
+            <form id="pEd_shareRvwLink-form" autocomplete="off" action="#" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="pEd_shareRvwLinkForm-Elms pEd_Form-Elms">
+                <!-- <div class="pEdformCard-body-helpText">
+                    <div class="pEdformCard-body-helpText-header">
+                        <h3>About reviews</h3>
+                    </div>
+                    <div class="pEdformCard-body-helpText-body">
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Client reviews tell other clients that you can be trusted and your work is credible.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Ask your clients to describe your contribution to their projet/service.
+                        </p>
+                      </div>
+                      <div class="pEdformCard-body-helpText-body-item">
+                        <div class="liDisc"></div>
+                        <p>
+                          Pros with atleast 3 reviews are 70% more likely to get hired on Rehgien.
+                        </p>
+                      </div>
+                    </div>
+                </div> -->
+                <div class="pEd_shareRvwLinkFieldsWrp pEd_FormFieldWrp">
+                    <div class="pEd_shareRvwLinkFields pEd_FormFields">
+                          <p>Share link on:</p>
+                          <div class="pEd_FormField_sng">
+                            <div class="pEd_shareRvwLinkInputFld pEd_FormInputField">
+                                <div class="pEd_shareRvwLinkBtns">
+                                  <a href="{% post_to_facebook listing.get_absolute_url%}" target="_blank"><i class="iconify" data-icon="akar-icons:facebook-fill" style="color:#3b5998"></i> <span></span> Facebook</a>
+                                  <a href="{% post_to_twitter 'Check this home out:' listing.get_absolute_url %}" target="_blank"><i class="iconify" data-icon="akar-icons:twitter-fill" style="color:#00acee"></i> <span></span> Twitter</a>
+                                  <a href="{% post_to_whatsapp listing.get_absolute_url 'Please give me a review' %}" target="_blank"><i class="iconify" data-icon="akar-icons:whatsapp-fill" style="color:#4FCE5D"></i> <span></span> Whatsapp</a>
+                                  <a href="{% post_to_telegram 'Check this home out:' listing.get_absolute_url %}" target="_blank"><i class="iconify" data-icon="akar-icons:telegram-fill" style="color:#0088cc"></i> <span></span> Telegram</a>
+                                </div>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+              </div>
+              <!-- <div class="pEd_form-footer">
+                <div class="pEd_requestRvwsForm-submit pEd_FormSubmit">
+                  <button id="pEd_requestRvwsForm-submit-button" type="submit" name="button">
+                    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="256px" height="64px" viewBox="0 0 128 32" xml:space="preserve">
+                      <circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(16 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1.42;1;1;1;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(64 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1.42;1;1;1;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle><circle fill="#ffffff" cx="0" cy="0" r="11" transform="translate(112 16)">
+                        <animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1;1;1;1;1;1.42;1;1" dur="1350ms" repeatCount="indefinite"></animateTransform>
+                      </circle>
+                    </svg>
+                    <p>Send</p>
+                  </button>
+                </div>
+              </div> -->
+
+            </form>
+          </div>
+        </div>
+      </div>
   </div>
 
   <script type="text/javascript">
