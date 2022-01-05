@@ -580,7 +580,7 @@ def business_review(request):
 				reviews_count = pro_reviews.count()
 			else:
 				messages.error(request,'Business does not exist!')
-				return redirect('profiles:business_list')
+				return redirect('homepage')
 		else:
 			return redirect('profiles:business_list')
 	else:
