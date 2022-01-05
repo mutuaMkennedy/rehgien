@@ -5,17 +5,7 @@
 <script src="{% static 'js/jquery.min.js' %}"></script>
 
 <section>
-  <div class="container">
-    <nav class="breadc-nav">
-      <div class="nav-wrapper-bread">
-        <div class="col s12">
-          <a href="{% url 'listings:homepage'%}" class="breadcrumb">Home</a>
-          <a href="{% url 'homepage'%}" class="breadcrumb">Find Professionals</a>
-          <a href="{{pro.get_absolute_url}}" class="breadcrumb">{{pro.business_name}}</a>
-          <a href="#!" class="breadcrumb">Review</a>
-        </div>
-      </div>
-    </nav>
+  <div class="bs_reviewCt container">
 
     <div class="row">
       <div class="col s12 md4 l4 xl4">
@@ -29,12 +19,11 @@
               {% else %}
                 {%static 'img/avatar.png'%}
               {% endif %}
-            " alt="{{pro.business_name}}" style="width:70px; height:70px; border-radius:50%;object-fit:cover;">
+            " alt="{{pro.business_name}}">
           </div>
           <div class="rvw-p-dtls-box">
-            <li><b>{{pro.business_name}}</b></li>
-            <li><span class="material-icons">star_rate</span>{{recommendation_rating_avg}}/5 <a href="#" style='color:#cc0000;'>&nbsp ({{reviews_count}}) reviews</a></li>
-            <li><a href="{{pro.get_absolute_url}}"><span style="font-weight:100; color:#cc0000;">View Profile</span></a></li>
+            <li><h2>{{pro.business_name}}</h2></li>
+            <li><i class="iconify" data-icon="clarity:star-solid"></i>{{pro.average_rating}}/5 <a href="#" style='color:#cc0000;'>({{reviews_count}})</a></li>
           </div>
         </div>
       </div>
@@ -50,19 +39,19 @@
             <div class='rating-stars text-center r_starsSelection'>
               <ul id='gb-stars'>
                 <li class='star rating-1' title='Never' data-value='1' data-inputClass='rt-in1' value='1'>
-                  <span class="material-icons">star_rate</span>
+                  <i class="iconify" data-icon="clarity:star-solid"></i>
                 </li>
                 <li class='star rating-2' title='Not likely' data-value='2' data-inputClass='rt-in1' value="2">
-                  <span class="material-icons">star_rate</span>
+                  <i class="iconify" data-icon="clarity:star-solid"></i>
                 </li>
                 <li class='star rating-3' title='Mybe' data-value='3' data-inputClass='rt-in1' value="3">
-                  <span class="material-icons">star_rate</span>
+                  <i class="iconify" data-icon="clarity:star-solid"></i>
                 </li>
                 <li class='star rating-4' title='Likely' data-value='4' data-inputClass='rt-in1' value="4">
-                  <span class="material-icons">star_rate</span>
+                  <i class="iconify" data-icon="clarity:star-solid"></i>
                 </li>
                 <li class='star rating-5' title='Highly likely' data-value='5' data-inputClass='rt-in1' value="5">
-                  <span class="material-icons">star_rate</span>
+                  <i class="iconify" data-icon="clarity:star-solid"></i>
                 </li>
               </ul>
               <input class="rt-in1" type="text" hidden name="rating-1" value="" errortext='Please select a rating by clicking 1-5 stars.'>
@@ -76,19 +65,19 @@
                 <div class='rating-stars text-center'>
                   <ul id='ot-stars-1'>
                     <li class='star' title='Very Poor' data-value='1' data-inputClass='rt-in2'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Poor' data-value='2' data-inputClass='rt-in2'>
-                    <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Average' data-value='3' data-inputClass='rt-in2'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Good' data-value='4' data-inputClass='rt-in2'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Very Good' data-value='5' data-inputClass='rt-in2'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                   </ul>
                   <input class="rt-in2" type="text" hidden name="rating-2" value="" errortext='Please select a rating by clicking 1-5 stars.'>
@@ -102,19 +91,19 @@
                 <div class='rating-stars text-center'>
                   <ul id='ot-stars-2'>
                     <li class='star' title='Very Poor' data-value='1' data-inputClass='rt-in3'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Poor' data-value='2' data-inputClass='rt-in3'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Average' data-value='3' data-inputClass='rt-in3'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Good' data-value='4' data-inputClass='rt-in3'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Very Good' data-value='5' data-inputClass='rt-in3'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                   </ul>
                   <input class="rt-in3" type="text" hidden name="rating-3" value="" errortext='Please select a rating by clicking 1-5 stars.'>
@@ -127,19 +116,19 @@
                 <div class='rating-stars text-center'>
                   <ul id='ot-stars-3'>
                     <li class='star' title='Very Poor' data-value='1' data-inputClass='rt-in4'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Poor' data-value='2' data-inputClass='rt-in4'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Average' data-value='3' data-inputClass='rt-in4'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Good' data-value='4' data-inputClass='rt-in4'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Very Good' data-value='5' data-inputClass='rt-in4'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                   </ul>
                   <input class="rt-in4" type="text" hidden name="rating-4" value="" errortext='Please select a rating by clicking 1-5 stars.'>
@@ -152,19 +141,19 @@
                 <div class='rating-stars text-center'>
                   <ul id='ot-stars-4'>
                     <li class='star' title='Very Poor' data-value='1' data-inputClass='rt-in5'>
-                    <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Poor' data-value='2' data-inputClass='rt-in5'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Average' data-value='3' data-inputClass='rt-in5'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Good' data-value='4' data-inputClass='rt-in5'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                     <li class='star' title='Very Good' data-value='5' data-inputClass='rt-in5'>
-                      <span class="material-icons">star_rate</span>
+                      <i class="iconify" data-icon="clarity:star-solid"></i>
                     </li>
                   </ul>
                   <input class="rt-in5" type="text" hidden name="rating-5" value="" errortext='Please select a rating by clicking 1-5 stars.'>
@@ -172,6 +161,10 @@
               </div>
             </div>
             <div class="comment-box">
+              <h4>Describe in detail your experience with {{pro.business_name}}.</h4>
+              <textarea name="comment" rows="80" cols="50"></textarea>
+            </div>
+            <div class="personalInfo-box">
               <h4>Describe in detail your experience with {{pro.business_name}}.</h4>
               <textarea name="comment" rows="80" cols="50"></textarea>
             </div>
