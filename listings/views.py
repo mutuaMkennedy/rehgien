@@ -54,26 +54,26 @@ def shop_category_homepage(request):
 	return render(request, 'listings/shop_categories.html', {})
 
 def homepage(request):
-	if request.user.is_authenticated:
-		return redirect('profiles:user_is_signed_in_homepage')
-	else:
-		ImageTransformation = dict(
-		format = "jpg",
-		transformation = [
-			dict(crop="fill",height = 408, width = 250,quality="auto", gravity="center", loading="lazy",
-			 format="auto", dpr="auto", fl="progressive:steep"),
-				]
-			)
-		professional_groups = profiles_models.ProfessionalGroup.objects.all()
-		popular_services = profiles_models.ProfessionalService.objects.all()[:10]
-		recommended_services = profiles_models.ProfessionalService.objects.all()[:10]
-		context ={
-			"professional_groups":professional_groups,
-			"popular_services":popular_services,
-			"recommended_services":recommended_services,
-			'ImageTransformation':ImageTransformation
-		}
-		return render(request, 'listings/homey.html', context)
+	# if request.user.is_authenticated:
+	# 	return redirect('profiles:user_is_signed_in_homepage')
+	# else:
+	ImageTransformation = dict(
+	format = "jpg",
+	transformation = [
+		dict(crop="fill",height = 408, width = 250,quality="auto", gravity="center", loading="lazy",
+		 format="auto", dpr="auto", fl="progressive:steep"),
+			]
+		)
+	professional_groups = profiles_models.ProfessionalGroup.objects.all()
+	popular_services = profiles_models.ProfessionalService.objects.all()[:10]
+	recommended_services = profiles_models.ProfessionalService.objects.all()[:10]
+	context ={
+		"professional_groups":professional_groups,
+		"popular_services":popular_services,
+		"recommended_services":recommended_services,
+		'ImageTransformation':ImageTransformation
+	}
+	return render(request, 'listings/homey.html', context)
 
 def property_homepage(request):
 	onsale_recent = models.Home.objects.filter(listing_type__iexact = 'for_sale').order_by('publishdate')[:6]
