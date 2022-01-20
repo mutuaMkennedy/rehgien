@@ -51,11 +51,10 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    listings_home_owner_related = serializers.PrimaryKeyRelatedField(many=True, queryset= listings_models.Home.objects.all())
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email','user_type',
-        'profile_image','listings_home_owner_related',
+        'profile_image'
         ]
 
 class ProfessionalGroupSerializer(serializers.ModelSerializer):
@@ -203,8 +202,8 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
                     'pk':ptf.pk,
                     'name': ptf.name,
                     'description': ptf.description,
-                    "project_job_type":ptf.project_job_type.service_name,
-                    "project_location":ptf.project_location.town_name,
+                    "project_job_type":ptf.project_job_type.service_name if ptf.project_job_type else "",
+                    "project_location":ptf.project_location.town_name if ptf.project_job_type else "",
                     "project_cost":ptf.project_cost,
                     "project_duration":ptf.project_duration,
                     "project_year":ptf.project_year,
