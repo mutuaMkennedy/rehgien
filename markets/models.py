@@ -5,6 +5,8 @@ from django.urls import reverse
 from multiselectfield import MultiSelectField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.safestring import mark_safe
+from profiles import models as profile_models
+from location import models as location_models
 
 # Request are published as leads
 class JobPost(models.Model):
@@ -63,3 +65,68 @@ class JobPostProposal(models.Model):
 
     class Meta:
         verbose_name_plural = 'JobPostProposals'
+
+"""
+A project is a job that is submitted by a client to a specific service
+provider who then gets to respond with a project quote or reject the job.
+"""
+class Project(models.Model):
+    RESPONSE_STATE = (
+    ('ACCEPTED', 'accepted'),
+    ('PENDING', 'pending'),
+    ('REJECTED','rejected')
+    )
+    PROJECT_STATE = (
+    ('ACTIVE', 'active'),
+    ('COMPLETED', 'completed'),
+    ('CANCELLED','cancelled')
+    )
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='project_owner', on_delete=models.CASCADE, default=None, null=True)
+    client_message = models.TextField()
+    requested_service = models.ForeignKey(profile_models.ProfessionalService, on_delete=models.SET_NULL,\
+                default = None, related_name='project_service', null =True, blank=True)
+    project_status = models.CharField(choices=PROJECT_STATE, default='ACTIVE', null=True, max_length=20)
+    # Check should be made to ensure on users who are pros can respond
+    pro_contacted =  models.ForeignKey(settings.AUTH_USER_MODEL, related_name='project_contacted_pro', on_delete=models.CASCADE, default=None, null=True)
+    pro_response_state = models.CharField(choices=RESPONSE_STATE, default='PENDING', null=True, max_length=20)
+    publishdate = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    def __str__(self):
+        return (self.requested_service.service_name if self.requested_service.service_name else "") + self.pro_response_state
+
+    class Meta:
+        verbose_name_plural = 'Project'
+
+# Project details allow the client to state the specifics of the type of job they have
+class ProjectDetails(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_details', null=True, blank=True)
+    question = models.ForeignKey(profile_models.Question, on_delete=models.CASCADE,\
+                default = None, related_name='project_question_answer')
+    location = models.ForeignKey(location_models.KenyaTown, blank = False, \
+                on_delete=models.SET_NULL, null=True, related_name='location_of_project')
+    answer = models.ManyToManyField(profile_models.QuestionOptions, blank=True, related_name='project_qestion_option_answer')
+
+    def __str__(self):
+        return self.project.requested_service.service_name + ' ' + self.question.title + ' ' + str(self.question.question_type)
+
+    class Meta:
+        verbose_name_plural = 'Project Details'
+
+# The contacted service provider is the one who gets to respond to the job by sending a quote
+class ProjectQuote(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_quote', null=True, blank=True)
+    message = models.TextField()
+    price = models.PositiveIntegerField(default=0)
+    negotiable = models.BooleanField(default=False, null=True, blank=True)
+    quote_sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='project_quote_sender', on_delete=models.SET_NULL, default=None, null=True)
+    quote_send_date = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Project Quote'
+
+    def __str__(self):
+        return self.project.requested_service.service_name
+
+"""
+Project models end here
+"""
