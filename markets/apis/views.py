@@ -51,3 +51,29 @@ class JobPostProposalCreateApi(CreateAPIView):
     permission_classes = [IsAuthenticated]
     def perform_create(self,serializer):
         serializer.save(proposal_sender=self.request.user)
+
+class ProjectListApi(ListAPIView):
+    queryset = models.Project.objects.all()
+    serializer_class = serializers.ProjectSerializer
+    def get_queryset(self):
+        """
+        This view should return a list of all the Projects for the currently authenticated user.
+        """
+        user = self.request.user
+        return models.Project.objects.filter(owner=user)
+
+class ProjectDetailApi(RetrieveAPIView):
+    queryset = models.Project.objects.all()
+    serializer_class = serializers.ProjectSerializer
+
+class ProjectUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.Project.objects.all()
+    serializer_class = serializers.ProjectSerializer
+    permission_classes = [IsAuthenticated]
+
+class ProjectCreateApi(CreateAPIView):
+    queryset = models.Project.objects.all()
+    serializer_class = serializers.ProjectSerializer
+    permission_classes = [IsAuthenticated]
+    def perform_create(self,serializer):
+        serializer.save(owner=self.request.user)
