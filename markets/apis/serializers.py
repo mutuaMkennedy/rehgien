@@ -1,7 +1,9 @@
 from rest_framework import serializers
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 from django.contrib.auth import get_user_model
 from markets import models
 from django.db.models import Avg
+from profiles.apis import serializers as profile_serilizers
 
 # referencing the custom user model
 User = get_user_model()
@@ -86,3 +88,38 @@ class JobPostViewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.JobPost
         fields = ['job_viewers']
+
+class ProjectDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProjectDetails
+        fields = [
+        "pk","project","question","location","answer",
+        ]
+
+class ProjectQuoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProjectQuote
+        fields = [
+        "pk","project","message","price","quote_sender","quote_send_date",
+        ]
+
+class ProjectSerializer(WritableNestedModelSerializer):
+    project_details = ProjectDetailsSerializer(many=True, required=False)
+    project_quote = ProjectQuoteSerializer(many=True, required=False)
+    owner = serializers.SerializerMethodField()
+    pro_contacted = serializers.SerializerMethodField()
+    class Meta:
+        model = models.Project
+        fields = [
+        "RESPONSE_STATE","PROJECT_STATE","pk","owner","client_message","requested_service","project_status",
+        "pro_contacted","pro_response_state","publishdate",
+        "project_details", "project_quote",
+        ]
+
+    def get_owner(self, object):
+        user = object.owner
+        return profile_serilizers.UserSerializer(user).data
+
+    def get_pro_contacted(self, object):
+        pro = object.pro_contacted.pro_business_profile
+        return profile_serilizers.BusinessProfileSerializer(pro).data
