@@ -7,6 +7,13 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.safestring import mark_safe
 from profiles import models as profile_models
 from location import models as location_models
+from django.db.models.signals import post_save
+from django.contrib.auth import get_user_model
+from notifications.signals import notify
+from app_notifications import push_notifications, models as app_ntf_models
+
+User = get_user_model()
+
 
 # Request are published as leads
 class JobPost(models.Model):
@@ -92,7 +99,7 @@ class Project(models.Model):
     publishdate = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
-        return (self.requested_service.service_name if self.requested_service.service_name else "") + self.pro_response_state
+        return (self.requested_service.service_name if self.requested_service.service_name else "") + " " + self.pro_response_state
 
     class Meta:
         verbose_name_plural = 'Project'
@@ -100,17 +107,25 @@ class Project(models.Model):
 # Project details allow the client to state the specifics of the type of job they have
 class ProjectDetails(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_details', null=True, blank=True)
-    question = models.ForeignKey(profile_models.Question, on_delete=models.CASCADE,\
-                default = None, related_name='project_question_answer')
     location = models.ForeignKey(location_models.KenyaTown, blank = False, \
                 on_delete=models.SET_NULL, null=True, related_name='location_of_project')
-    answer = models.ManyToManyField(profile_models.QuestionOptions, blank=True, related_name='project_qestion_option_answer')
 
     def __str__(self):
-        return self.project.requested_service.service_name + ' ' + self.question.title + ' ' + str(self.question.question_type)
+        return self.project.requested_service.service_name
 
     class Meta:
         verbose_name_plural = 'Project Details'
+
+class ProjectQuestion(models.Model):
+    project_details = models.ForeignKey(ProjectDetails, on_delete=models.CASCADE, \
+                related_name='project_questions', null=True, blank=True)
+    question = models.ForeignKey(profile_models.Question, on_delete=models.CASCADE,\
+                default = None, related_name='project_question')
+    answer = models.ManyToManyField(profile_models.QuestionOptions, blank=True, \
+                related_name='project_question_answer')
+
+    class Meta:
+        verbose_name_plural = 'Project Questions'
 
 # The contacted service provider is the one who gets to respond to the job by sending a quote
 class ProjectQuote(models.Model):
@@ -126,6 +141,39 @@ class ProjectQuote(models.Model):
 
     def __str__(self):
         return self.project.requested_service.service_name
+
+def project_quote_sent_notification(sender, instance, created, **kwargs):
+    user = User.objects.get(pk=instance.project.owner.pk)
+    quote_sender = instance.quote_sender.pro_business_profile.business_name if instance.quote_sender.pro_business_profile else instance.quote_sender.username
+    service_name = instance.project.requested_service.service_name
+    sent = False
+    try:
+        notify.send(instance, recipient=user,
+                    verb=f'{quote_sender} sent you a quote',
+                    target = instance.project,
+                    type = 'Project'
+                    )
+        sent = True
+    except:
+        pass
+    if sent:
+        try:
+            devices = user.user_device.all()
+
+            # Using expo push notification SDK
+            if devices:
+                for dvc in devices:
+                    if dvc.expo_token:
+                        push_notifications.send_push_message(
+                                    token = dvc.expo_token,
+                                    title = f'{quote_sender} sent you a quote',
+                                    message = instance.message,
+                                    extra = {'type':'Project','target':instance.project.pk},
+                                    )
+        except:
+            print('Something went wrong!')
+
+post_save.connect(project_quote_sent_notification, sender=ProjectQuote)
 
 """
 Project models end here
