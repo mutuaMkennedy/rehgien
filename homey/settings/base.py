@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 SECRET_KEY = 'ib)4kavk+9ds#_!v8y5*qoy2@)g1gfa@y2u(4tpvej$feb!!oj'
 
 ALLOWED_HOSTS = ['localhost','165.227.185.180','127.0.0.1','rehgiendev2.remote.moe',
-                '207.154.205.115','rehgien.com', 'www.rehgien.com', '197.156.137.177','9dc0-41-80-112-112.ngrok.io']
+                '207.154.205.115','rehgien.com', 'www.rehgien.com', '197.156.137.177','678b-41-80-112-47.ngrok.io']
 
 ADMINS = [('Mutua', 'do-not-reply@rehgien.com')]
 # Application definition
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'chat',
     "partnership",
     "app_accounts",
+    "app_notifications",
     # other applications
     'channels',
     'photologue',
@@ -86,6 +87,7 @@ INSTALLED_APPS = [
     "django_celery_beat",
     #'haystack',
     # 'tastypie',
+    'notifications',
 ]
 
 
@@ -415,6 +417,8 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 #         'schedule': crontab()
 #       }
 # }
+
+DJANGO_NOTIFICATIONS_CONFIG = { 'USE_JSONFIELD': True}
 
 # Analytic services
 CLICKY_SITE_ID = '101303494'
