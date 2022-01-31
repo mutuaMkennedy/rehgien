@@ -32,6 +32,7 @@ from profiles.sitemap import StaticBusinessHomepageSitemap, BusinessProfileSitem
 from resource_center.sitemap import BlogPostSitemap
 from rehgien_pro import sitemap as r_pro_sitemap
 from contact import sitemap as contact_sitemap
+import notifications.urls
 #from haystack.forms import FacetedSearchForm
 #from haystack.views import FacetedSearchView
 
@@ -60,6 +61,7 @@ urlpatterns = [
     path('resources/', include('resource_center.urls')),
     path('partnerships/', include('partnership.urls')),
     path('ac/', include('app_accounts.urls')),
+    path('my_notifications/', include('app_notifications.urls')),
     path('chat/', include('chat.urls')),
     path('apis/', include('chat.apis.urls')),
     path('apis/', include('listings.apis.urls')),
@@ -67,6 +69,7 @@ urlpatterns = [
     path('apis/', include('profiles.apis.urls')),
     path('apis/', include('markets.apis.urls')),
     path('apis/', include('contact.apis.urls')),
+    path('apis/', include('app_notifications.apis.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^photologue/', include('photologue.urls', namespace='photologue')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
@@ -79,6 +82,7 @@ urlpatterns = [
     path('privacy_policy/', TemplateView.as_view(template_name = 'privacy_policy.html'), name='privacy_policy'),
     path('contact_us/', contact_views.contact_us, name="contact_us"),
     path('about_us/', contact_views.about_us, name="about_us"),
+    url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
     # path('msg/', TemplateView.as_view(template_name = 'index.html')),
     #url(r'^search/', include('haystack.urls')),
 ]
