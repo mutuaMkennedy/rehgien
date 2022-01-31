@@ -11,10 +11,9 @@ class JobPostAdmin(admin.ModelAdmin):
         "verified","active",
     )
 
-class ProjectDetailsInline(admin.StackedInline):
-    model = models.ProjectDetails
+class ProjectQuestionInline(admin.StackedInline):
+    model = models.ProjectQuestion
     extra=1
-    max_num =1
 
 class ProjectQuoteInline(admin.StackedInline):
     model = models.ProjectQuote
@@ -22,9 +21,14 @@ class ProjectQuoteInline(admin.StackedInline):
     max_num =1
 
 class ProjectAdmin(admin.ModelAdmin):
-    inlines = [ProjectDetailsInline,ProjectQuoteInline]
+    inlines = [ProjectQuoteInline]
     list_display = ("requested_service","project_status","pro_contacted","pro_response_state","publishdate")
+
+class ProjectDetailsAdmin(admin.ModelAdmin):
+    inlines = [ProjectQuestionInline]
+    list_display = ("project","location")
 
 
 admin.site.register(models.JobPost, JobPostAdmin)
 admin.site.register(models.Project, ProjectAdmin)
+admin.site.register(models.ProjectDetails, ProjectDetailsAdmin)
