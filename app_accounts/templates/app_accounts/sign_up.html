@@ -1,0 +1,26 @@
+{%extends 'base.html'%}
+{%load static%}
+{% block head_title %}<title>Sign Up | Rehgien </title>{% endblock %}
+{% block content %}
+
+<div class="container _authSignUpBox">
+  <div class="row">
+      <div class="_authSignUp_body">
+        <div class="_authSignUp_logo">
+          <a href="{% url 'homepage'%}"><img src="{% static 'img/RehgienLogoBlack.png'%}" alt="rehgien"></a>
+        </div>
+        <h2>Sign up to Rehgien!</h2>
+        <p>We won't share your contact info with pros.</p>
+
+        <div class="_authSignUp_method">
+          <a href="{% url 'app_accounts:UserAccountSetupWizard'%}"><i class="iconify" data-icon="clarity:mobile-phone-line"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Phone</a>
+          <a href="#"><i class="iconify" data-icon="akar-icons:facebook-fill" style="color:#3b5998"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Facebook</a>
+          <a href="#"><i class="iconify" data-icon="flat-color-icons:google"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Google</a>
+          <a href="#"><i class="iconify" data-icon="clarity:email-line"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Email</a>
+        </div>
+
+      </div>
+  </div>
+</div>
+
+{% endblock %}

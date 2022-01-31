@@ -1,0 +1,49 @@
+{%extends 'base.html'%}
+{%load static%}
+{% block head_title %}<title>Enter Phone Number | Rehgien </title>{% endblock %}
+{% load i18n %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+{{ form.media.css }}
+{{ wizard.form.media }}
+
+<div class="UserAccountSetupWizard">
+  <div class="container _authSignUpBox">
+    <div class="row">
+        <div class="_authSignUp_body">
+          <div class="_authSignUp_logo">
+            <a href="{% url 'homepage'%}"><img src="{% static 'img/RehgienLogoBlack.png'%}" alt="rehgien"></a>
+          </div>
+          <h2>Confirm your Number?</h2>
+          <form method="post">
+            {% csrf_token %}
+            <div class="_authSignUpFormFields">
+                <div class="_authSignUpFieldWrp">
+                  <div class="_authSignUpFieldIn">
+                    <h6>Enter code we sent over SMS to {{wizard.initial.phone}}</h6>
+                    <div class="_authSignUpFieldInWp">
+                      {{wizard.form.code}}
+                    </div>
+                    <p>Didn't get a code?<a href="#">Yes, please resend.</a></p>
+                  </div>
+                </div>
+
+                {% if form.errors %}
+                <div class="_authSignUpErrorsNotice">
+                  {{form.errors}}
+                </div>
+                {% endif %}
+                <div class="_authSignUpFormSubmit">
+                    <button class="nextStepOnbd" type="submit">{% trans "Continue" %}</button>
+                </div>
+                {{ wizard.management_form }}
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+
+</div>
+
+
+{% endblock %}

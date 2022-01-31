@@ -1,0 +1,122 @@
+{%extends 'base.html'%}
+{%load static%}
+{% block head_title %}<title>Enter Phone Number | Rehgien </title>{% endblock %}
+{% load i18n %}
+{% block content %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+{{ form.media.css }}
+{{ wizard.form.media }}
+
+<div class="UserAccountSetupWizard">
+  <div class="container _authSignUpBox">
+    <div class="row">
+        <div class="_authSignUp_body">
+          <div class="_authSignUp_logo">
+            <a href="{% url 'homepage'%}"><img src="{% static 'img/RehgienLogoBlack.png'%}" alt="rehgien"></a>
+          </div>
+          <h2>What's your Number?</h2>
+          <form id="_authSignUp-phone-form" method="post">
+            {% csrf_token %}
+            <div class="_authSignUpFormFields">
+                <div class="_authSignUpFieldWrp">
+                  <div class="_authSignUpFieldIn">
+                    <h6>Phone Number</h6>
+                    <div class="_authSignUpFieldInWp">
+                      {{wizard.form.phone}}
+                    </div>
+                    <p>We’ll text you to confirm your phone number. Standard message and data rates apply.<a href="{% url 'privacy_policy' %}">Privacy policy</a></p>
+                  </div>
+                </div>
+
+                {% if form.errors %}
+                <div class="_authSignUpErrorsNotice">
+                  {{form.errors}}
+                </div>
+                {% endif %}
+                <div class="_authSignUpFormSubmit">
+                    <button class="nextStepOnbd" type="submit">{% trans "Continue" %}</button>
+                </div>
+                {{ wizard.management_form }}
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="{% static 'intl-tel-input-master/build/js/intlTelInput-jquery.min.js'%}"></script>
+<script type="text/javascript">
+  $("#id_UserPhoneNumber-phone").intlTelInput({
+    autoPlaceholder:'aggressive',
+    initialCountry:'KE'
+  });
+
+  $(document).ready(function(){
+    $.ajax({
+      type :'post',
+      url : "{% url 'app_accounts:validate_phone'%}",
+      data :{
+        'phone':$("#id_UserPhoneNumber-phone").val()
+      },
+      cache: false,
+      contentType: false,
+      processData: false,
+      // success
+      success: function(response) {
+        // Reload profile image section
+         var profileImageSection = $('#__pro-BsPf-img')
+             profileImageSection.html(response['page_section']);
+
+        // hide the selected photo container
+        $('#pEd_selectedPicWrp')
+          .css('display','none');
+
+       // Update the current photo displayed in form
+        $('#pEd_currentProfilePic')
+          .attr('src', profileImageSection.find("img").attr('src'))
+
+       // show success message then hide it after a few seconds
+        successMessageBody.html("<i class='iconify' data-icon='akar-icons:circle-check-fill'></i>" + response['message'])
+        successMessageBody.css({
+          'bottom':'10px',
+        });
+        setTimeout(function(){
+           successMessageBody.css({
+             'bottom':'-100px',
+           });
+        }, 6000);
+
+       // hide loading indicatior in button
+        loadingIndicator.hide();
+       // Show button text
+       submitBtnText.show();
+       // remove disabled attribute from submit button
+        submitProfilePhotoBtn.removeAttr('disabled');
+
+      },
+      error: function(response,e){
+        // show success message then hide it after a few seconds
+        errorMessageBody.html("<i class='iconify' data-icon='bx:bxs-error-circle'></i>" + response['message']);
+        errorMessageBody.css({
+          'bottom':'10px',
+        });
+        setTimeout(function(){
+          errorMessageBody.css({
+            'bottom':'-100px',
+          });
+        }, 6000);
+
+        // hide loading indicatior in button
+        loadingIndicator.hide();
+        // Show button text
+        submitBtnText.show();
+        // remove disabled attribute from submit button
+        submitProfilePhotoBtn.removeAttr('disabled');
+
+      },
+    });
+  });
+</script>
+
+{% endblock %}
