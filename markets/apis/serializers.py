@@ -2,8 +2,10 @@ from rest_framework import serializers
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 from django.contrib.auth import get_user_model
 from markets import models
+from profiles import models as profile_models
 from django.db.models import Avg
-from profiles.apis import serializers as profile_serilizers
+from profiles.apis import serializers as profile_serializers
+from location.api import serializers as location_serializers
 
 # referencing the custom user model
 User = get_user_model()
@@ -89,12 +91,35 @@ class JobPostViewsSerializer(serializers.ModelSerializer):
         model = models.JobPost
         fields = ['job_viewers']
 
-class ProjectDetailsSerializer(serializers.ModelSerializer):
+class ProjectQuestionSerializer(WritableNestedModelSerializer):
+    question_object = serializers.SerializerMethodField()
+    answer_object = serializers.SerializerMethodField()
+    class Meta:
+        model = models.ProjectQuestion
+        fields = [
+        "pk","project_details","question","answer","question_object","answer_object"
+        ]
+
+    def get_question_object(self, object):
+        question = object.question
+        return profile_serializers.QuestionSerializer(question).data
+
+    def get_answer_object(self, object):
+        answer = object.answer
+        return profile_serializers.QuestionOptionsSerializer(answer, many=True).data
+
+class ProjectDetailsSerializer(WritableNestedModelSerializer):
+    project_questions = ProjectQuestionSerializer(many=True)
+    location_object = serializers.SerializerMethodField()
     class Meta:
         model = models.ProjectDetails
         fields = [
-        "pk","project","question","location","answer",
+        "pk","project","location","location_object","project_questions"
         ]
+
+    def get_location_object(self, object):
+        location = object.location
+        return location_serializers.KenyaTownSerializer(location).data
 
 class ProjectQuoteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -107,19 +132,24 @@ class ProjectSerializer(WritableNestedModelSerializer):
     project_details = ProjectDetailsSerializer(many=True, required=False)
     project_quote = ProjectQuoteSerializer(many=True, required=False)
     owner = serializers.SerializerMethodField()
-    pro_contacted = serializers.SerializerMethodField()
+    pro_contacted_object = serializers.SerializerMethodField()
+    requested_service_object = serializers.SerializerMethodField()
     class Meta:
         model = models.Project
         fields = [
-        "RESPONSE_STATE","PROJECT_STATE","pk","owner","client_message","requested_service","project_status",
-        "pro_contacted","pro_response_state","publishdate",
+        "RESPONSE_STATE","PROJECT_STATE","pk","owner","client_message","requested_service","requested_service_object", "project_status",
+        "pro_contacted","pro_contacted_object", "pro_response_state","publishdate",
         "project_details", "project_quote",
         ]
 
     def get_owner(self, object):
         user = object.owner
-        return profile_serilizers.UserSerializer(user).data
+        return profile_serializers.UserSerializer(user).data
 
-    def get_pro_contacted(self, object):
+    def get_pro_contacted_object(self, object):
         pro = object.pro_contacted.pro_business_profile
-        return profile_serilizers.BusinessProfileSerializer(pro).data
+        return profile_serializers.BusinessProfileSerializer(pro).data
+
+    def get_requested_service_object(self, object):
+        service = object.requested_service
+        return profile_serializers.ProfessionalServiceSerializer(service).data
