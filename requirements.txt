@@ -65,7 +65,7 @@ elasticsearch==6.4.0
 elasticsearch-dsl==6.4.0
 ExifRead==2.1.2
 exponent-server-sdk==2.0.0
-GDAL @ file:///C:/Users/REY/Desktop/pycharm/homey/dev/GDAL-3.3.3-cp37-cp37m-win_amd64.whl
+# GDAL @ file:///C:/Users/REY/Desktop/pycharm/homey/dev/GDAL-3.3.3-cp37-cp37m-win_amd64.whl
 gunicorn==20.0.4
 h2==2.6.2
 hiredis==2.0.0
