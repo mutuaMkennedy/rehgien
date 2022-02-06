@@ -26089,3 +26089,107 @@ particle {
         padding: 50px 15px;
     }
 }
+
+.reviewSucess{
+    padding:10px;
+    max-width:1080px;
+    height:calc(100vh - 64px); 
+    display:flex;
+    align-items:center;
+}
+
+.reviewSucess .rvwSucess-wrapper{
+    border:1px solid hsl(0 0% 0% / 0.25);
+    max-width:400px;
+    margin-left:auto;
+    margin-right:auto;
+    padding:15px;
+}
+
+.reviewSucess .card{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding-top:10px;
+    padding-bottom:25px;
+    border:none;
+    border-radius:0;
+    box-shadow:none;
+    width:100%;
+    border-bottom:1px solid hsl(0 0% 0% / 0.25);
+    height:auto;
+    margin:0;
+}
+
+.reviewSucess .card .rvw-p-img-box img{
+    width:75px;
+    height:75px;
+    border-radius:5px;
+}
+
+.reviewSucess .card .rvw-p-dtls-box li{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    margin-bottom: 5px;
+    font-size: 13px; 
+    text-align:center;
+    list-style-type:circle;
+}
+
+.reviewSucess .card .rvw-p-dtls-box li h2{
+    font-size:15px;
+    font-weight:500;
+    margin:0;
+    text-alignt:center;
+}
+
+.reviewSucess .card .rvw-p-dtls-box li svg{
+    color: #cc0000;
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.reviewSucess .card .rvw-p-dtls-box li a{
+    margin-left:5px;
+}
+
+.reviewSucess .rvw-bdyTxt{
+    padding:25px 0px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.reviewSucess .rvw-bdyTxt h2{
+    font-size:15px;
+    font-weight:600;
+    margin:0;
+    margin-bottom:10px;
+}
+
+.reviewSucess .rvw-bdyTxt p{
+    font-size:13px;
+    line-height:16px;
+    margin:0;
+    
+}
+
+.reviewSucess .rvw-bdyTxt .download-app h5{
+    font-size:13px;
+    margin:0;
+    font-weight:500;
+    margin-bottom:25px;
+}
+
+.reviewSucess .rvw-bdyTxt .download-app img{
+    width:150px;
+}
+
+.reviewSucess .rvw-bdyTxt .dvdr-rwvsc{
+    margin:25px 0;
+    width:50px;
+    border-bottom:1px solid hsl(0 0% 0% / 0.25);
+}
