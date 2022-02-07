@@ -1,6 +1,8 @@
 {%extends 'base.html'%}
 {%load static%}
 {% block head_title %}<title>Sign Up | Rehgien </title>{% endblock %}
+{% load socialaccount %}
+{% providers_media_js %}
 {% block content %}
 
 <div class="container _authSignUpBox">
@@ -11,12 +13,11 @@
         </div>
         <h2>Sign up to Rehgien!</h2>
         <p>We won't share your contact info with pros.</p>
-
         <div class="_authSignUp_method">
-          <a href="{% url 'app_accounts:UserAccountSetupWizard'%}"><i class="iconify" data-icon="clarity:mobile-phone-line"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Phone</a>
-          <a href="#"><i class="iconify" data-icon="akar-icons:facebook-fill" style="color:#3b5998"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Facebook</a>
-          <a href="#"><i class="iconify" data-icon="flat-color-icons:google"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Google</a>
-          <a href="#"><i class="iconify" data-icon="clarity:email-line"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Email</a>
+          <!-- <a href="#"><i class="iconify" data-icon="clarity:mobile-phone-line"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Phone</a> -->
+          <a href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="iconify" data-icon="akar-icons:facebook-fill" style="color:#3b5998"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Facebook</a>
+          <a href="{% provider_login_url 'google' method='oauth2' %}"><i class="iconify" data-icon="flat-color-icons:google"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Google</a>
+          <!-- <a href="#"><i class="iconify" data-icon="clarity:email-line"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Email</a> -->
         </div>
 
       </div>
