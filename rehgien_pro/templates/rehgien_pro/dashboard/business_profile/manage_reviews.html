@@ -608,10 +608,10 @@
                           <div class="pEd_FormField_sng">
                             <div class="pEd_shareRvwLinkInputFld pEd_FormInputField">
                                 <div class="pEd_shareRvwLinkBtns">
-                                  <a href="{% post_to_facebook listing.get_absolute_url%}" target="_blank"><i class="iconify" data-icon="akar-icons:facebook-fill" style="color:#3b5998"></i> <span></span> Facebook</a>
-                                  <a href="{% post_to_twitter 'Check this home out:' listing.get_absolute_url %}" target="_blank"><i class="iconify" data-icon="akar-icons:twitter-fill" style="color:#00acee"></i> <span></span> Twitter</a>
-                                  <a href="{% post_to_whatsapp listing.get_absolute_url 'Please give me a review' %}" target="_blank"><i class="iconify" data-icon="akar-icons:whatsapp-fill" style="color:#4FCE5D"></i> <span></span> Whatsapp</a>
-                                  <a href="{% post_to_telegram 'Check this home out:' listing.get_absolute_url %}" target="_blank"><i class="iconify" data-icon="akar-icons:telegram-fill" style="color:#0088cc"></i> <span></span> Telegram</a>
+                                  <a href="{% post_to_facebook pro_bs_profile.get_review_url %}" target="_blank"><i class="iconify" data-icon="akar-icons:facebook-fill" style="color:#3b5998"></i> <span></span> Facebook</a>
+                                  <a href="{% post_to_twitter 'Please give me a review' pro_bs_profile.get_review_url %}" target="_blank"><i class="iconify" data-icon="akar-icons:twitter-fill" style="color:#00acee"></i> <span></span> Twitter</a>
+                                  <a href="{% post_to_whatsapp pro_bs_profile.get_review_url 'Please give me a review' %}" target="_blank"><i class="iconify" data-icon="akar-icons:whatsapp-fill" style="color:#4FCE5D"></i> <span></span> Whatsapp</a>
+                                  <a href="{% post_to_telegram 'Please give me a review:' pro_bs_profile.get_review_url %}" target="_blank"><i class="iconify" data-icon="akar-icons:telegram-fill" style="color:#0088cc"></i> <span></span> Telegram</a>
                                 </div>
                             </div>
                           </div>
