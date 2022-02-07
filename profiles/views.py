@@ -289,7 +289,7 @@ def projects(request):
 		messages.error(request,'Access restricted')
 		return redirect('homepage')
 
-@login_required(login_url='account_login')
+@login_required(login_url='user_signup')
 def reviews(request):
 	if request.user.user_type =='PRO':
 		data = {
@@ -523,10 +523,10 @@ def business_detail(request, pk):
 			}
 	return render(request, 'profiles/business_detail.html', context)
 
-@login_required(login_url='account_login')
-def business_review(request):
+@login_required(login_url='app_accounts:user_signup')
+def business_review(request,pk):
 	if request.method=='POST':
-		subject_pro = request.POST.get('pro_id')
+		subject_pro = pk
 		recommendation_rating = request.POST.get('rating-1')
 		responsive_rating = request.POST.get('rating-2')
 		knowledge_rating = request.POST.get('rating-5')
@@ -559,19 +559,19 @@ def business_review(request):
 					review.save()
 
 					messages.success(request, 'Review posted. Thank you!')
-					return redirect(pro_profile.get_absolute_url())
+					return redirect("profiles:review_successfull", pk=int(subject_pro))
 				else:
 					messages.error(request, 'Value entry does not exist!')
-					return redirect('profiles:business_list')
+					return redirect('profiles:business_review')
 			else:
 				messages.error(request,'The pro you requested does not exist!')
-				return redirect('profiles:business_list')
+				return redirect('homepage')
 		else:
 			messages.error(request, 'Invalid entry! Make sure you dont have empty fields.')
 			return redirect('profiles:business_review')
 
 	elif request.method == 'GET':
-		subject_pro = request.GET.get('bsr')
+		subject_pro = pk
 		if check_q_valid(subject_pro):
 			if models.BusinessProfile.objects.filter(pk=int(subject_pro)).exists():
 				pro = models.BusinessProfile.objects.get(pk=int(subject_pro))
@@ -582,10 +582,22 @@ def business_review(request):
 				messages.error(request,'Business does not exist!')
 				return redirect('homepage')
 		else:
-			return redirect('profiles:business_list')
+			messages.error(request,'Business does not exist!')
+			return redirect('homepage')
 	else:
-		return redirect('profiles:business_list')
+		messages.error(request,'Invalid method!')
+		return redirect('homepage')
 	return render(request, 'profiles/business_review.html',{'pro':pro, 'recommendation_rating_avg':recommendation_rating_avg, 'reviews_count':reviews_count})
+
+# This is a temporary view. Serves a user a call to action page after they submit a review.
+@login_required(login_url='app_accounts:user_signup')
+def review_successfull(request,pk):
+	pro = models.BusinessProfile.objects.filter(pk=pk)
+	context = {
+		"pro":pro
+	}
+	return render(request, 'profiles/review_success.html', context)
+
 
 @login_required(login_url='account_login')
 def like_review(request):
