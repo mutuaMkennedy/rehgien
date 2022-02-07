@@ -104,9 +104,15 @@ def user_login(request):
             return redirect('homepage')
 
 def user_signup(request):
-    context={}
-    return render(request, 'app_accounts/sign_up.html',context)
-
+    if not request.user.is_authenticated:
+        context={}
+        return render(request, 'app_accounts/sign_up.html',context)
+    else:
+        if request.user.user_type == 'PRO':
+            return redirect('rehgien_pro:dashboard_home')
+        else:
+            return redirect('homepage')
+            
 """
 Custom sign up wizard to handle the various sign up steps
 """
