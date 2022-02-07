@@ -1,0 +1,42 @@
+{% extends 'base1.html'%}
+{% load static%}
+{% block title %} <title>Review sucessfull | Rehgien</title>{% endblock %}
+{% block content %}
+<section>
+  <div class="reviewSucess container">
+
+    <div class="row">
+        <div class="rvwSucess-wrapper">
+            <div class="card">
+                <div class="rvw-p-img-box">
+                <img src="
+                    {% if pro.first.business_profile_image %}
+                    {{pro.first.business_profile_image.url}}
+                    {% else %}
+                    {%static 'img/avatar.png'%}
+                    {% endif %}
+                " alt="{{pro.first.business_name}}">
+                </div>
+                <div class="rvw-p-dtls-box">
+                <li><h2>{{pro.first.business_name}}</h2></li>
+                <li><i class="iconify" data-icon="clarity:star-solid"></i>{{pro.first.average_rating}}/5 <a href="#" style='color:#cc0000;'>({{pro.first.pro_business_review.all.count}})</a></li>
+                </div>
+            </div>
+            <div class="rvw-bdyTxt">
+                <h2>Thanks! for giving {{pro.first.business_name}} a review!</h2>
+                <p>Reviews help other customers make a decision on whether to hire this service provider!</p>
+                <div class="dvdr-rwvsc"></div>
+                <div class="download-app">
+                    <h5>Download our app to find and hire this and other service providers for virtually any task, job, or project you have.</h5>
+                    <a href="https://play.google.com/store/apps/details?id=com.crunchgarage.rehgien" target="_blank"><img src="{% static 'img/google-play-badge-1.svg'%}"></a>
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+        
+  </div>
+</section>
+
+{% endblock %}
