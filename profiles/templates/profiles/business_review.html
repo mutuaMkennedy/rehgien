@@ -32,10 +32,10 @@
           <div class="w-review-header">
             <h1>Write your review</h1>
           </div>
-          <form class="ag-review-form" action="{% url 'profiles:business_review'%}" method="post">
+          <form class="ag-review-form" action="{% url 'profiles:business_review' pk=pro.pk%}" method="post">
             {% csrf_token %}
             <h3>How Likely are you to recomend <b>{% if pro.business_name %}{{pro.business_name}}{% else %}pro{% endif %}</b>.</h3>
-            <input type="text" name="pro_id" hidden value="{{pro.pk}}">
+    
             <div class='rating-stars text-center r_starsSelection'>
               <ul id='gb-stars'>
                 <li class='star rating-1' title='Never' data-value='1' data-inputClass='rt-in1' value='1'>
@@ -161,10 +161,6 @@
               </div>
             </div>
             <div class="comment-box">
-              <h4>Describe in detail your experience with {{pro.business_name}}.</h4>
-              <textarea name="comment" rows="80" cols="50"></textarea>
-            </div>
-            <div class="personalInfo-box">
               <h4>Describe in detail your experience with {{pro.business_name}}.</h4>
               <textarea name="comment" rows="80" cols="50"></textarea>
             </div>
