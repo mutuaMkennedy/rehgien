@@ -272,6 +272,9 @@ class BusinessProfile(models.Model):
 	def get_absolute_url(self):
 		return reverse( 'profiles:business_detail', kwargs={'pk':self.pk})
 
+	def get_review_url(self):
+		return reverse( 'profiles:business_review', kwargs={'pk':self.pk})
+
 	class Meta:
 		verbose_name_plural = 'BusinessProfile'
 
