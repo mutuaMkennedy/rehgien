@@ -1012,328 +1012,181 @@ main {
     margin-right: 10px;
 }
 
-.SignUpPgElWrapper {
-    background-color: #d0f3e969;
-    height: 100vh;
+.allauth_cont{
+    font-family:Poppins, Open Sans, Arial;
+    max-width:1366px;
+    display:flex;
+    justify-content:center;
+    padding:100px 0;
+    /* height:100vh; */
 }
 
-.SignUpImageWrapper {
-    float: left;
-    width: 60%;
-    height: 100vh;
-}
-
-.SignUpFormBox {
-    float: right;
-    width: 38%;
-    height: 96vh;
-    overflow-y: scroll;
-    background-color: #fff;
+.allauth_cont .loginpage{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    padding: 50px 25px;
+    background: #FFFFFF;
+    border: 0.3px solid rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    width:425px;
+    z-index:25;
+}
+
+@media only screen and (max-width:767px){
+    .allauth_cont .loginpage{
+        width:95%;
+        padding: 50px 15px;
+    }
+}
+
+.allauth_cont .loginpage ._authLogin_logo{
+    margin-bottom: 25px;
+}
+
+.allauth_cont .loginpage ._authLogin_logo img{
+    height: 45px;
+}
+
+.allauth_cont .loginpage h2{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 40px;
+    color: #000000;
+    margin: 0;
+    margin-bottom: 15px;
+}
+
+.allauth_cont .loginpage p{
+    margin: 0;
+    margin-bottom: 15px;
+    font-size: 12px;
+    line-height:16px;
+}
+
+.allauth_cont .loginpage p.auth-notice{
+    color:#1100ff;
+    padding:5px 10px;
+    background:hsl(244 100% 50% / 0.1);
+}
+
+.allauth_cont form.login .loginInput-wrp{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    color: #000000;
+    padding-bottom:10px;
+}
+
+.allauth_cont form.login .loginInput-wrp .loginIn-labl{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.allauth_cont form.login .loginInput-wrp label{
+    margin-bottom:5px;
+    font-style: normal;
+    font-weight: 600;
+    color: #000000;
+}
+
+.allauth_cont form.login input{
+    display: flex;
     align-items: center;
-    margin: 10px;
-    border-radius: 10px;
+    justify-content:space-between;
+    padding: 0 10px;
+    border: 1px solid #c4c4c4;
+    border-radius: 3px;
+    width:100%;
+    height:55px;
+    box-sizing:border-box;
+    font-size:14px;
+}
+
+.allauth_cont form.login button[type="submit"]{
+    margin-top:50px;
     padding: 10px;
+    position: static;
+    width: 100%;
+    background: #039be5;
+    border-radius: 35px;
+    border:none;
+    height:55px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 22px;
+    color: #FFFFFF;
+    cursor:pointer;
 }
 
-@media screen and (max-width: 768px) {
-    .SignUpImageWrapper {
-        float:none;
-        display: none;
-        height: 100vh;
-    }
-
-    .SignUpFormBox {
-        float: none;
-        width: 100%;
-        margin: 0;
-        height: 100vh;
-    }
+.allauth_cont form.login button[type="submit"]:hover{
+    background-color:#2ba2ca;
+    border-radius:35px;
 }
 
-.SignUpFormBox::-webkit-scrollbar {
-    width: 4px;
+.allauth_cont .auth-login-or{
+    margin:25px 0;
+    display:flex;
+    justify-content:center;
+    position:relative;
 }
 
-.SignUpFormBox::-webkit-scrollbar-thumb {
-    background-color: #ddd;
-    border-radius: 10px;
+.allauth_cont .auth-login-or span{
+    background:#fff;
+    z-index:2;
+    width:50px;
+    text-align:center;
 }
 
-.signup-banner {
-    height: 100vh;
-    background-position: bottom;
-    background-repeat: no-repeat;
-    background-size: cover;
+.allauth_cont .auth-login-or .strike{
+    width:100%;
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    border-bottom:1px solid #c4c4c4;
+    z-index:-0;
+}
+
+.allauth_cont ._authLogIn_method{
     display: flex;
-    justify-content: center;
     flex-direction: column;
 }
 
-.signup0 {
-    height: 100%;
-    padding: 20px;
-    margin-top: 50px;
-    margin-bottom: 100px;
-    border-radius: 5px;
-}
-
-.signup0 h1 {
-    font-size: 25px;
-    font-weight: 300;
-    text-align: center;
-}
-
-.signup0 p {
-    color: #757575;
-    font-weight: 100;
-    font-size: 13px;
-    font-family: Roboto,Arial;
-    text-align: center;
-}
-
-@media screen and (max-width: 768px) {
-    .signup0 h1 {
-        font-size:25px;
-    }
-
-    .signup0 p {
-        font-size: 12px;
-    }
-}
-
-.signup0 label {
-    color: #757575;
-    font-weight: normal;
-    font-family: Roboto,Arial;
-}
-
-.signup input[type=text] {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 0 5px;
-    /*   font-family:Roboto,Arial; */
-    font-weight: 200;
-    font-size: 15px;
-    border-radius: 5px;
-}
-
-.signup input[type=email] {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 0 5px;
-    /*   font-family:Roboto,Arial; */
-    font-weight: 200;
-    font-size: 15px;
-    border-radius: 5px;
-}
-
-.signup input[type=password] {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 0 5px;
-    /*   font-family:Roboto,Arial; */
-    font-weight: 200;
-    font-size: 15px;
-    border-radius: 5px;
-}
-
-.signup button {
-    margin: 25px 0;
+.allauth_cont ._authLogIn_method a{
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border: 1px solid rgb(0 0 0 / 0.25);
+    border-radius: 3px;
     width: 100%;
-    background-color: #1100ff;
-    padding: 10px;
-    border-radius: 35px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    color: #fff;
-    font-family: Noto Sans Jp,Arial;
+    height: 55px;
+    font-weight: 500;
+    color: #000;
 }
 
-.signup button:hover {
-    color: #fff;
-    cursor: pointer;
-    background-color: #7c8cff;
+.allauth_cont ._authLogIn_method a svg{
+    font-size: 32px;
+}
+
+.allauth_cont ._authLogIn_method a ._authSignUp_method-a-dvdr{
+    height: 15px;
+    width: 1px;
+    background-color: rgb(0 0 0 / 0.25);
+    margin: 0 10px;
 }
 
 .errorlist {
     color: red;
+    font-size:14px;
 }
 
-.LoginPgElWrapper {
-    background-color: #d0f3e969;
-    height: 100vh;
-}
-
-.LoginImageWrapper {
-    float: left;
-    width: 60%;
-    height: 100vh;
-}
-
-@media screen and (max-width: 768px) {
-    .LoginImageWrapper {
-        float:none;
-        display: none;
-    }
-}
-
-.LoginFormBox {
-    float: right;
-    width: 38%;
-    height: 96vh;
-    overflow-y: scroll;
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
-    border-radius: 10px;
-    padding: 10px;
-}
-
-.LoginFormBox::-webkit-scrollbar {
-    width: 4px;
-}
-
-.LoginFormBox::-webkit-scrollbar-thumb {
-    background-color: #ddd;
-    border-radius: 10px;
-    display: none;
-}
-
-.loginLogo {
-    height: 50px;
-    width: 100px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 25px;
-}
-
-@media only screen and (max-width: 768px) {
-    .LoginFormBox {
-        float:none;
-        width: 100%;
-        margin: 0;
-        height: 100vh;
-    }
-
-    .loginLogo {
-        height: 55px;
-        width: 100px;
-    }
-}
-
-.login-svg {
-    height: 100vh;
-    background-position: bottom;
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.auth-BIfWrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.auth-BIfWrapper h1 {
-    font-family: MuseoModerno, Libre Baskerville, Arial;
-    color: #fff;
-    text-align: center;
-    font-size: 50px;
-}
-
-.auth-BIfWrapper p {
-    font-family: MuseoModerno, Libre Baskerville, Arial;
-    color: #fff;
-    text-align: center;
-    font-size: 14px;
-    width: 80%;
-}
-
-.loginpage {
-    height: 100%;
-    padding: 20px;
-    margin-top: 50px;
-    margin-bottom: 100px;
-    border-radius: 5px;
-}
-
-.loginpage h1 {
-    font-size: 25px;
-    font-weight: 300;
-    text-align: center;
-}
-
-.loginpage p {
-    color: #757575;
-    font-weight: 100;
-    font-size: 13px;
-    font-family: Roboto,Arial;
-    text-align: center;
-}
-
-.loginpage label {
-    color: #757575;
-    font-weight: normal;
-    font-family: Roboto,Arial;
-}
-
-.loginpage input[type=text] {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 0 5px;
-    /*   font-family:Roboto,Arial; */
-    font-weight: 200;
-    font-size: 15px;
-    border-radius: 5px;
-}
-
-.loginpage input[type=password] {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 0 5px;
-    /*   font-family:Roboto,Arial; */
-    font-weight: 200;
-    font-size: 15px;
-    border-radius: 5px;
-}
-
-@media only screen and (max-width: 768px) {
-    .loginpage h1 {
-        font-size:25px;
-    }
-
-    .loginpage p {
-        font-size: 12px;
-    }
-}
-
-.locallogin button {
-    margin-top: 50px;
-    width: 100%;
-    background-color: #1100ff;
-    padding: 10px;
-    border-radius: 35px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    color: white;
-    font-family: Noto Sans Jp,Arial;
-}
-
-.locallogin button:hover {
-    color: #fff;
-    cursor: pointer;
-    background-color: #7c8cff;
-}
-
-.errorlist.nonfield {
+.errorlist.nonfield li{
     color: red;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .resetPageWrapper {
@@ -26192,4 +26045,137 @@ particle {
     margin:25px 0;
     width:50px;
     border-bottom:1px solid hsl(0 0% 0% / 0.25);
+}
+
+.connections-cont{
+    font-family:Poppins, Open Sans, Arial;
+    max-width:1366px;
+    display:flex;
+    justify-content:center;
+    padding:50px 0; 
+}
+
+.connections-cont h1, .connections-cont h2{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 40px;
+    color: #000000;
+    margin: 0;
+    margin-bottom: 15px;
+}
+
+.connections-cont p{
+    margin: 0;
+    margin-bottom: 15px;
+    font-size: 12px;
+    line-height:16px;
+}
+
+.connections-cont .connections-page{
+    display: flex;
+    flex-direction: column;
+    padding: 50px 25px;
+    background: #FFFFFF;
+    border: 0.3px solid rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    z-index: 25;
+    width: 425px;
+    z-index: 25;
+}
+
+@media only screen and (max-width:767px){
+     .connections-cont .connections-page{
+        width:100%;
+        padding: 50px 15px;
+    }
+}
+
+.connections-cont form fieldset{
+    border:none;
+    padding:0px;
+    width:100%;
+}
+
+
+.connections-cont form fieldset .cn_base_accounts{
+    margin-bottom:10px;
+    border-top:1px solid #c4c4c4;
+    border-bottom:1px solid #c4c4c4;
+    padding:2px 10px;
+    width:100%;
+    height:55px;
+    display:flex;
+    box-sizing:border-box;
+    position:relative;
+}
+
+.connections-cont form fieldset .cn_base_accounts:hover{
+    background:rgb(0 0 0 / 0.15);
+}
+
+
+.connections-cont form fieldset .socialaccount_provider-card{
+    padding:0 10px;
+    font-size:12px;
+    color:#747474;
+    width:calc(100% - 25px);
+    margin-left:25px;
+}
+
+.connections-cont form fieldset label span{
+    position:absolute !important;
+    width:100%;
+    height:100% !important;
+}
+
+.connections-cont form fieldset .socialaccount_provider-card .socialaccount_provider-card-brand{
+    font-weight:600;
+    color:#000;
+    font-size:14px;
+}
+
+.connections-cont form fieldset .cn_submit button{
+    margin-top:50px;
+    padding: 10px;
+    position: static;
+    width: 100%;
+    background: #fff;
+    border:1px solid #ff1000;
+    height:55px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 22px;
+    color: #cc0000;
+    cursor:pointer;
+}
+
+.connections-cont form fieldset .cn_submit button:hover{
+    background-color:#cc0000;
+    border-radius:35px;   
+}
+
+.connections-cont ._authLogIn_method a{
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border: 1px solid rgb(0 0 0 / 0.25);
+    border-radius: 3px;
+    width: 100%;
+    height: 55px;
+    font-weight: 500;
+    color: #000;   
+}
+
+.connections-cont ._authLogIn_method a svg{
+    font-size: 32px;
+}
+
+.connections-cont ._authLogIn_method a ._authSignUp_method-a-dvdr{
+    height: 15px;
+    width: 1px;
+    background-color: rgb(0 0 0 / 0.25);
+    margin: 0 10px;
 }
