@@ -89,6 +89,34 @@ class User(AbstractUser):
 			total += percent.get('profile_image', 0)
 		return "%s"%(total)
 
+# @receiver(pre_save, sender=User)
+# def generate_custom_username(sender, instance, **kwargs):
+# 	# check user has not provided a username
+# 	if not instance.username:
+# 		if instance.email:
+# 			""" Use email to generate username if user has provided an email address"""
+# 			user_email = instance.email
+# 			# ensure characters dont exceed the max length of usernames in django
+# 			username = user_email[:30]
+# 			n = 1
+# 			while User.objects.exclude(pk=instance.pk).filter(username=username).exists():
+# 				""" If there are existing usernames add a number at the end"""
+# 				n += 1
+# 				username = user_email[:(29 - len(str(n)))] + '-' + str(n)
+# 			instance.username = username
+# 		elif instance.phone:
+# 			""" Use phone to generate username if user has not provided an email adress"""
+# 			user_phone = instance.phone
+# 			# ensure characters dont exceed the max length of usernames in django
+# 			username = user_phone[:30]
+# 			n = 1
+# 			while User.objects.exclude(pk=instance.pk).filter(username=user_phone).exists():
+# 				""" If there are existing usernames add a number at the end"""
+# 				n += 1
+# 				username = user_phone[:(29 - len(str(n)))] + '-' + str(n)
+# 			instance.username = username		
+
+
 class PhoneOTP(models.Model):
 	phone_regex = RegexValidator( regex = r'^\+?1?\d{9,14}$', message ="Phone number must be entered in the format: '+254xxxxxxxxx'. Up to 14 digits allowed.")
 	phone = models.CharField(validators=[phone_regex], max_length=17, unique=True)
