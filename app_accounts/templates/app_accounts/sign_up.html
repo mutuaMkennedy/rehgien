@@ -15,8 +15,8 @@
         <p>We won't share your contact info with pros.</p>
         <div class="_authSignUp_method">
           <!-- <a href="#"><i class="iconify" data-icon="clarity:mobile-phone-line"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Phone</a> -->
-          <a href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="iconify" data-icon="akar-icons:facebook-fill" style="color:#3b5998"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Facebook</a>
-          <a href="{% provider_login_url 'google' method='oauth2' %}"><i class="iconify" data-icon="flat-color-icons:google"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Google</a>
+          <a href="{% provider_login_url 'facebook' method='oauth2' process='connect' %}"><i class="iconify" data-icon="akar-icons:facebook-fill" style="color:#3b5998"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Facebook</a>
+          <a href="{% provider_login_url 'google' method='oauth2' process='connect' %}"><i class="iconify" data-icon="flat-color-icons:google"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Google</a>
           <!-- <a href="#"><i class="iconify" data-icon="clarity:email-line"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Email</a> -->
         </div>
 
