@@ -5,61 +5,59 @@
 {% block head_title %}<title>{% trans "Login" %}|Rehgien</title>{% endblock %}
 {% block content %}
 
-<div class="LoginPgElWrapper">
-  <div class="LoginImageWrapper">
-    <div class="login-svg" style="background-image:linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),url({%static 'img/loginCover.jpg'%});">
-      <div class="auth-BIfWrapper">
-          <h1>Glad to have you back.</h1>
+<div class="container allauth_cont">
+  <div class="row">
+    <div class="loginpage">
+      <div class="_authLogin_logo">
+        <a href="{% url 'homepage'%}"><img src="{% static 'img/RehgienLogoBlack.png'%}" alt="rehgien"></a>
       </div>
-    </div>
-  </div>
-
-  <div class="LoginFormBox">
-  <div class="loginpage">
-    <a href="{%url 'listings:homepage'%}">
-      <div class="loginLogo" style="background-image:url({%static 'img/rhg_logo1.png' %});">
-      </div>
-    </a>
-    <h1>{% trans "Sign In" %}</h1>
-
-    {% get_providers as socialaccount_providers %}
-
-    {% if socialaccount_providers %}
-    <p>{% blocktrans with site.name as site_name %}Please sign in with one
-    of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-    for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
-
-  <div class="socialaccount_ballot">
-
-    <ul class="socialaccount_providers">
-      {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-    </ul>
-
-    <div class="login-or">{% trans 'or' %}</div>
-
-  </div>
-
-  {% include "socialaccount/snippets/login_extra.html" %}
-
-  {% else %}
-
-    <div class="locallogin">
-      <p>{% blocktrans %}If you have not created an account yet, then please
-      <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+      <h2>Welcome back!</h2>
+      {% if redirect_field_value %}
+        {% if redirect_field_value == "/accounts/social/connections/" %}
+          <p class="auth-notice">
+            You are trying to use an email address that is associated with another account. Connect the two by login into the other account.
+           </p>
+        {% endif %}
+      {% else %}
+        <p>Welcome back please enter your details below to login.</p>
       {% endif %}
 
-      <form class="login" method="POST" action="{% url 'account_login' %}">
-        {% csrf_token %}
-        {{ form }}
-        {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-        {% endif %}
-        <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-        <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
-      </form>
-    </div>
+        <form class="login" method="POST" action="{% url 'account_login' %}">
+          {% csrf_token %}
+          <div class="loginInput-wrp">
+            <div class="loginIn-labl"><label for="id_login">Email or username</label></div>
+            {{ form.login }}
+          </div>
+          <div class="loginInput-wrp">
+            <div class="loginIn-labl"><label for="id_login">Password</label> <a href="{% url 'account_reset_password' %}">Forgot your password?</a></div>
+            
+            {{ form.password }}
+          </div>
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+        </form>
 
-  </div>
+        {% get_providers as socialaccount_providers %}
+
+        {% if socialaccount_providers %}
+          <div class="auth-login-or">
+            <span>or</span> <div class="strike"></div>
+          </div>
+          <div class="_authLogIn_method">
+            <a href="{% provider_login_url 'facebook' method='oauth2' process='connect' %}"><i class="iconify" data-icon="akar-icons:facebook-fill" style="color:#3b5998"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Facebook</a>
+            <a href="{% provider_login_url 'google' method='oauth2' process='connect' %}"><i class="iconify" data-icon="flat-color-icons:google"></i><div class="_authSignUp_method-a-dvdr"></div>Continue with Google</a>
+          </div>
+          {% include "socialaccount/snippets/login_extra.html" %}
+        {% endif %}
+          <div class="locallogin">
+            <p><a href="{% url 'app_accounts:user_signup' %}">No account? Please sign up here</a></p>
+          </div>
+
+      </div>
+
+    </div>
   </div>
 </div>
 
