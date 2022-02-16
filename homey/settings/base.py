@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 SECRET_KEY = 'ib)4kavk+9ds#_!v8y5*qoy2@)g1gfa@y2u(4tpvej$feb!!oj'
 
 ALLOWED_HOSTS = ['localhost','165.227.185.180','127.0.0.1','rehgiendev2.remote.moe',
-                '207.154.205.115','rehgien.com', 'www.rehgien.com', '197.156.137.177','678b-41-80-112-47.ngrok.io']
+                '207.154.205.115','rehgien.com', 'www.rehgien.com', '197.156.137.177','607f-41-80-112-21.ngrok.io']
 
 ADMINS = [('Mutua', 'do-not-reply@rehgien.com')]
 # Application definition
@@ -389,8 +389,8 @@ CORS_ORIGIN_WHITELIST = [
 # CORS_ORIGIN_ALLOW_ALL = True
 
 # allauth further Configs
-ACCOUNT_AUTHENTICATION_METHOD = "username"
-ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_SIGNUP_FORM_CLASS = 'profiles.forms.profile_form'
 
 
@@ -438,7 +438,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'short_name'
         ],
         'EXCHANGE_TOKEN': True,
-        'LOCALE_FUNC': 'path.to.callable',
+        # 'LOCALE_FUNC': 'path.to.callable',
         'VERIFIED_EMAIL': False,
         'VERSION': 'v7.0',
     },
