@@ -47,7 +47,7 @@ $(document).ready(function(){
                 " <span class='material-icons'>check_circle_outline</span>" +
                 " <p> Save Sucessfull! <span> " +
                 "   <a href='" + "{% url 'profiles:portfolio_item_create'%}" +"'><button type='button' name='button'>Add another</button></a>" +
-                "   <a href='" + "{% url 'profiles:projects'%}" + "'><button type='button' name='button'>Back to account</button></a>" +
+                "   <a href='" + "{% url 'rehgien_pro:dashboard_manage_projects'%}" + "'><button type='button' name='button'>Back to account</button></a>" +
                 "  </span></p>"
                 );
 
@@ -71,7 +71,7 @@ $(document).ready(function(){
     <div class="row">
       <div class="_portfolio_form_Elm">
           <div class="_portfolio_form_header">
-            <a href="{% url 'profiles:projects'%}">
+            <a href="{% url 'rehgien_pro:dashboard_manage_projects'%}">
               <button type="button" class="modal-close">
                 <span class="material-icons">west</span> &nbsp
                 Back to Projects
@@ -197,7 +197,7 @@ $(document).ready(function(){
     // This function deals with validation of the form fields
     var x, y, i, valid = true;
     x = document.getElementsByClassName("_pf-list-step");
-    y = x[currentTab].getElementsByTagName("input");
+    y = x[currentTab].querySelectorAll("input[type=text]");
     // A loop that checks every input field in the current tab:
     for (i = 0; i < y.length; i++) {
       // If a field is empty...
