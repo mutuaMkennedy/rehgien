@@ -18681,7 +18681,7 @@ particle {
 @media all and (max-width:768px){
     .pro-dash-container{
         padding:0;
-        min-height:100vh;
+        min-height:calc(100vh - 56px);
         height:auto;
     }
 }
@@ -18697,6 +18697,20 @@ particle {
     padding-left:20px;
     transition:width 0.5s;
     border-right:1px solid rgb(0 0 0 / 0.25);
+}
+
+@media only screen and (min-width:1025px) and (max-width:1360px){
+
+    .proDashItems-row .proDashScNavbar{
+         width:25%;   
+    }
+
+}
+
+@media all and (max-width:1024px){
+    .proDashItems-row .proDashScNavbar{
+        width:35%;
+    }
 }
 
 .proDashItems-row .proDashScNavbar::-webkit-scrollbar{
@@ -18937,9 +18951,18 @@ particle {
     position:relative;
 }
 
-@media all and (max-width:768px){
+@media only screen and (min-width:1025px) and (max-width:1360px){
+
+    .prodash_section_elements{
+        width:75%;
+    }
+
+}
+
+@media all and (max-width:1024px){
     .prodash_section_elements{
         width:100%;
+        height:calc(100vh - 56px);
     }
 }
 
@@ -19063,7 +19086,14 @@ particle {
 
 .proDash-Tab-section .proDash-msg-box{
     display:flex;
+    position:relative;
     flex-wrap:nowrap;
+}
+
+@media all and (max-width:768px){
+    .proDash_msgScTab,.proDash-Tab-section .proDash-msg-box{
+        height:calc(100vh - 56px) !important;
+    }
 }
 
 .proDash-Tab-section .proDash-msg-list{
@@ -19082,6 +19112,32 @@ particle {
     display:flex;
 }
 
+@media only screen and (min-width:1025px) and (max-width:1360px){
+    .proDash-msg-box .proDash-msg-thread{
+        width:55%;
+    }
+    .proDash-Tab-section .proDash-msg-list{
+        width: 45%;
+    }
+
+}
+
+@media all and (max-width: 1024px){
+    .proDash-Tab-section .proDash-msg-list{
+        width:100%;
+        height:100%;
+        height:calc(100vh - 56px) !important;
+    }
+    .proDash-msg-box .proDash-msg-thread{
+        display:none;
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:calc(100vh - 56px);
+        background:#fff;
+    }
+}
 .proDash-msg-box .proDash-msg-thread .thrdIntContainerSct{
     position:relative;
     width:100%;
@@ -19101,6 +19157,25 @@ particle {
 .proDash-msg-box .proDash-msg-thread .thrdIntContainerSct .proDash-msg-threadBox .proDash-msg-threadBox-thrdInfo{
     display:none;
     border-left: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+@media only screen and (min-width:1025px) and (max-width:1360px){
+    .proDash-msg-box .proDash-msg-thread .thrdIntContainerSct .proDash-msg-threadBox .proDash-msg-threadBox-thrdInfo{
+        position:absolute;
+        width:100% !important;
+        height:calc(100vh - 56px);
+        background:#fff;
+    }
+
+}
+
+@media all and (max-width:1024px){
+    .proDash-msg-box .proDash-msg-thread .thrdIntContainerSct .proDash-msg-threadBox .proDash-msg-threadBox-thrdInfo{
+        position:absolute;
+        width:100% !important;
+        height:calc(100vh - 56px);
+        background:#fff;
+    }
 }
 
 .proDash-msg-box .proDash-msg-thread .openThreadInfoSct .openThreadInfoSct-hdr{
@@ -19323,7 +19398,7 @@ particle {
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:15px;
+    padding:15px 10px;
     border-bottom:1px solid rgba(0, 0, 0, 0.25);
     background-color:#fff;
     width:100%;
@@ -19336,6 +19411,30 @@ particle {
 .proDash-msg-box .proDash-msg-thread .proDash-msg-thread-top-bar .proDash-msg-thread-top-bar-item{
     display:flex;
     align-items:center;
+}
+
+.proDash-msg-box .proDash-msg-thread .proDash-msg-thread-top-bar .proDash-msg-thread-top-bar-item .closeThrdXVC{
+    background:transparent;
+    border:none;
+    display:none;
+    align-items:center;
+    cursor:pointer;
+    padding:0;
+    margin-right:10px;
+}
+
+@media all and (max-width: 1024px){
+    .proDash-msg-box .proDash-msg-thread .proDash-msg-thread-top-bar .proDash-msg-thread-top-bar-item .closeThrdXVC{
+        display:flex;
+    }    
+}
+
+.proDash-msg-box .proDash-msg-thread .proDash-msg-thread-top-bar .proDash-msg-thread-top-bar-item .closeThrdXVC svg{
+    font-size:24px;
+}
+
+.proDash-msg-box .proDash-msg-thread .proDash-msg-thread-top-bar .proDash-msg-thread-top-bar-item .closeThrdXVC:hover > svg{
+    color:#2ba2ca;
 }
 
 .proDash-msg-box .proDash-msg-thread .proDash-msg-thread-top-bar .proDash-msg-thread-top-bar-item .tUsr-item-avatar,
@@ -19903,6 +20002,12 @@ particle {
     height: calc(100vh - 64px - 64px);
     overflow-y: auto;
     position:relative;
+}
+
+@media all and (max-width:768px){
+    .proDash-msg-list .proDash-msg-list-messages{
+        height: calc(100vh - 64px - 56px);
+    }
 }
 
 .proDash-msg-list .proDash-msg-list-messages .cnoConversationsYet{
