@@ -261,6 +261,7 @@ $(document).ready(function() {
     let thread = (
       "<div id='trdhAcnTop-bar' class='proDash-msg-thread-top-bar'>" +
         "<div id='trdhAcctUsr-bar' class='proDash-msg-thread-top-bar-item'>" +
+          "<button class='closeThrdXVC closeThreadCt' data-sid='"+convID+"' type='button' name='button'><i class='iconify' data-icon='akar-icons:arrow-left'></i></button>" +
           "<div class='tUsr-item-avatar'>" +
             "<img src='" + (userAtrributes.attributes.profile_image != undefined ? userAtrributes.attributes.profile_image : '') + "' alt=''>" +
           "</div>" +
@@ -1022,5 +1023,30 @@ $(document).ready(function() {
       triggerBtn.find('svg').css('color','#000')
     };
   };
+
+
+
+  // 
+  // This code helps will prevent chat UI from breaking on small screens
+  // 
+
+    $(document).on('click', '.azMsgThread', function(){
+      // display thread msg box wrapper
+      $('.proDash-msg-thread').css('display','flex')
+    });
+    $(document).on('click', '.closeThrdXVC', function(){
+      // hide thread msg box wrapper
+      $('.proDash-msg-thread').css('display','none');
+
+      // hide the all open thread message boxes & mark them as inactive
+      // important so that incoming messages will be marked as unread
+      $('.proDash-msg-threadBox').css('display','none').attr('data-active',false);
+
+      // remove active className that controls styling of threads in thread list
+      $('.azMsgThread').removeClass('thread_active');
+
+    });
+
+  
 
 })
