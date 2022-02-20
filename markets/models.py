@@ -104,6 +104,40 @@ class Project(models.Model):
     class Meta:
         verbose_name_plural = 'Project'
 
+# A new project is treated as a lead that professionals can engage with
+def new_lead_notification(sender, instance, created, **kwargs):
+    recipient = instance.pro_contacted
+    recipient_name = recipient.pro_business_profile.business_name if recipient.pro_business_profile else 'there'
+    service_name = instance.requested_service.service_name
+    sent = False
+    try:
+        notify.send(instance, recipient=recipient,
+                    verb=f'Hi {recipient_name}, you have a new lead',
+                    target = instance,
+                    type = 'Project lead'
+                    )
+        sent = True
+    except:
+        pass
+    if sent:
+        try:
+            devices = recipient.user_device.all()
+
+            # Using expo push notification SDK
+            if devices:
+                for dvc in devices:
+                    if dvc.expo_token:
+                        push_notifications.send_push_message(
+                                    token = dvc.expo_token,
+                                    title = f'Hi {recipient_name}, you have a new lead',
+                                    message = instance.service_name,
+                                    extra = {'type':'Project lead','target':instance.pk},
+                                    )
+        except:
+            print('Something went wrong!')
+
+post_save.connect(new_lead_notification, sender=Project)
+
 # Project details allow the client to state the specifics of the type of job they have
 class ProjectDetails(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_details', null=True, blank=True)
