@@ -1,11 +1,61 @@
 {% extends 'pro_base.html' %}
 {% load static %}
-
+{% load rehgien_pro_extra_tags %}
+{% load notifications_tags %}
 {% block content %}
+{% notifications_unread as unread_count %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript">
   window.onload = function() {
     document.querySelector(".dash_loader_wrapper").style.display = "none";
+  };
+
+  function getProject(pk){
+    var project = $.parseJSON($.ajax({
+                    type: 'get',
+                    url:"{% url 'markets:ajax_get_project' %}",
+                    data:{
+                        "pk":pk
+                    },
+                    dataType: "json", 
+                    async: false
+                }).responseText); 
+
+      return project
+  };
+
+  function custom_fill_notification_list(data){
+    var listWrap = document.getElementsByClassName('u-notification-list');
+    var msgs = data.unread_list.map(function(item){
+      var projectData = getProject(item.actor_object_id);
+      var card = (
+            "<div class='notification-list-card'>" +
+              "<div class='notification-list-card-avatar'>" +
+                "<img src='"+(projectData.project.service_avatar ? projectData.project.service_avatar : '')+"' alt=''>" +
+                "<div class='notification-list-card-avatar-icon'><i class='iconify' data-icon='fluent:clipboard-task-list-rtl-24-regular'></i></div>"+
+              "</div>" +
+              "<div class='notification-list-bdWrp'>"+
+                "<div class='notification-list-unread-badge'></div>"+
+                "<div class='notification-list-body'>" +
+                  "<div class='notification-list-body-top'>" +
+                    "<span class='notification-list-body-title'>You have a new lead</span>" +
+                  "</div>" +
+                  "<div class='notification-list-body-mid'>" +
+                    "<p class='notification-list-body-verb'>"+ projectData.project.message +"</p>" +
+                  "</div>" +
+                  "<div class='notification-list-body-btm'>" +
+                    "<span>"+projectData.project.service+"</span>" +
+                    "<div class='dvdr'></div>"+
+                    "<span>"+projectData.project.publishdate+" ago</span>" +
+                  "</div>" +
+                "</div>" +
+              "</div>" +
+            "</div>"
+          );
+        return card
+    }).join("");
+    listWrap[0].innerHTML = msgs;
+    document.querySelector(".notification_loader_wrapper").style.display="none";
   };
 </script>
 
@@ -53,18 +103,20 @@
             <div class="pflNavLink_x_dropdown">
                 <button type="button" name="button" class="dropdown-trigger" data-target='proDashNotfDpdown'>
                   <i class="iconify" data-icon="clarity:notification-solid"></i>
+                  <div class="u-notification-badge">{% live_notify_badge %}</div>
                 </button>
                 <div id="proDashNotfDpdown" class="dropdown-content proDashDpdown_elem pdash_dpd_botf_sc">
                     <div class="pdash_dpdwn_hd">
                       <h5>Notifications</h5>
+                      <button><i class="iconify" data-icon="charm:tick-double"></i>Mark all as read</button>
                     </div>
                     <div class="dpdwn_body">
-                      <div class="ntfempty_">
-                        <i class="material-icons">notifications_none</i>
-                        <p>No Notifications Right Now</p>
+                      <div class="notification_loader_wrapper">
+                        <img src="{% static 'img/Preloader_2_cropped.gif'%}" alt="loading">
                       </div>
+                      {% live_notify_list list_class="live_notify_list u-notification-list" %}
                     </div>
-                    <div class="dpdwn_footer"><a href="#">See All Notifications</a></div>
+                    <div class="dpdwn_footer"><a href="{% url 'rehgien_pro:notifications'%}">See All Notifications</a></div>
                 </div>
             </div>
           </li>
