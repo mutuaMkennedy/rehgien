@@ -1,0 +1,42 @@
+{% extends 'rehgien_pro/dashboard/dashboard_base.html'%}
+{% load static %}
+{% load cloudinary %}
+{% block head_title %}<title>Rehgien Pro | Notifications</title>{% endblock %}
+{% load rehgien_pro_extra_tags %}
+{% load notifications_tags %}
+{% block dashboard_section %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script>
+    $(document).on('click','#markAllRead',function(){
+        $('.notification_loader_wrapper').css('display','flex');
+        $.ajax({
+        type: 'get',
+        url:"{% url 'app_notifications:mark_notifications_read' %}",
+        data:{},
+        success: function(response) {
+            // Update the services section
+            $('#all-notification-list').html(response['page_section']);
+            $('.notification_loader_wrapper').css('display','none');
+            },
+        });
+    });
+</script>
+  <div class="pEdSectionBody pEdSectionBodySvcs ">
+    <div class="all-notications">
+        <div class="all-notications-hd">
+          <h5>Notifications</h5>
+          <button id="markAllRead"><i class="iconify" data-icon="charm:tick-double"></i>Mark all as read</button>
+        </div>
+        <div class="all-notications-body">
+            <div class="notification_loader_wrapper" style="display:none;">
+                <img src="{% static 'img/Preloader_2_cropped.gif'%}" alt="loading">
+            </div>
+            <ul id="all-notification-list" class="all-notification-list">
+                {% include 'app_notifications/notifications_section.html' with notifications=notifications %}
+            </ul>
+        </div>
+    </div>
+
+  </div>
+
+{% endblock %}
