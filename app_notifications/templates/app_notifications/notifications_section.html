@@ -1,6 +1,6 @@
 {% load static %}
 {% load rehgien_pro_extra_tags %}
-{% if notificationss %}
+{% if notifications %}
     {% for notification in notifications %}
         {% project_lead notification.actor_object_id as project %}
             <div class='notification-list-card'>
