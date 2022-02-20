@@ -19,7 +19,7 @@ try:
 	from django.utils import simplejson as simplejson
 except ImportError:
 	import json
-
+from django.utils.timesince import timesince
 from django.core.exceptions import ObjectDoesNotExist
 
 # referencing the custom user model
@@ -203,3 +203,18 @@ def submit_proposal(request, pk):
                     'success':success})
     else:
         return redirect ('rehgien_pro:job_detail', pk=id)
+
+def ajax_get_project(request):
+    pk = request.GET.get('pk','')
+    project = models.Project.objects.filter(pk=int(pk))
+    if project.exists():
+        data = {
+            "pk":project[0].pk,
+            "service":project[0].requested_service.service_name,
+            "service_avatar":project[0].requested_service.service_image.url,
+            "message": project[0].client_message[:50],
+            "publishdate":timesince(project[0].publishdate)
+        }
+        return JsonResponse({"project":data})
+    else:
+        return JsonResponse({"project":''})
