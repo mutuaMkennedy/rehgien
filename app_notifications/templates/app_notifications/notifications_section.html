@@ -1,31 +1,38 @@
 {% load static %}
 {% load rehgien_pro_extra_tags %}
-{% for notification in notifications %}
-                {% project_lead notification.actor_object_id as project %}
-                    <div class='notification-list-card'>
-                        <div class='notification-list-card-avatar'>
-                            <img src='{{project.service_avatar}}' alt=''>
-                            <div class='notification-list-card-avatar-icon'>
-                                <i class='iconify' data-icon='fluent:clipboard-task-list-rtl-24-regular'></i>
-                            </div>
+{% if notificationss %}
+    {% for notification in notifications %}
+        {% project_lead notification.actor_object_id as project %}
+            <div class='notification-list-card'>
+                <div class='notification-list-card-avatar'>
+                    <img src='{{project.service_avatar}}' alt=''>
+                    <div class='notification-list-card-avatar-icon'>
+                        <i class='iconify' data-icon='fluent:clipboard-task-list-rtl-24-regular'></i>
+                    </div>
+                </div>
+                <div class='notification-list-bdWrp'>
+                    {% if notification.unread %}
+                    <div class='notification-list-unread-badge'></div>
+                    {% endif %}
+                    <div class='notification-list-body'>
+                        <div class='notification-list-body-top'>
+                            <span class='notification-list-body-title'>You have a new lead</span>
                         </div>
-                        <div class='notification-list-bdWrp'>
-                            {% if notification.unread %}
-                            <div class='notification-list-unread-badge'></div>
-                            {% endif %}
-                            <div class='notification-list-body'>
-                                <div class='notification-list-body-top'>
-                                    <span class='notification-list-body-title'>You have a new lead</span>
-                                </div>
-                                <div class='notification-list-body-mid'>
-                                    <p class='notification-list-body-verb'>{{project.message}}</p>
-                                </div>
-                                <div class='notification-list-body-btm'>
-                                    <span>{{project.service}}</span>
-                                    <div class='dvdr'></div>
-                                    <span>{{project.publishdate}} ago</span>
-                                </div>
-                            </div>
+                        <div class='notification-list-body-mid'>
+                            <p class='notification-list-body-verb'>{{project.message}}</p>
+                        </div>
+                        <div class='notification-list-body-btm'>
+                            <span>{{project.service}}</span>
+                            <div class='dvdr'></div>
+                            <span>{{project.publishdate}} ago</span>
                         </div>
                     </div>
-                {% endfor %}
+                </div>
+            </div>
+    {% endfor %}
+{% else %}
+    <div class='ntfempty_'>
+        <i class='material-icons'>notifications_none</i>
+        <p>No notifications yet</p>
+    </div>
+{% endif %}
