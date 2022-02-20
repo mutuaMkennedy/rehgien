@@ -13,5 +13,6 @@ urlpatterns = [
     # path('job_post/search_service/', views.ajax_search_service, name = 'ajax_search_service'),
     # path('job_post/<int:pk>/', views.job_post_detail, name = 'job_post_detail'),
     # path('find_customers/jobs/submit_proposal/<int:pk>/', views.submit_proposal, name = 'submit_proposal'),
+    path('project/ajax/', views.ajax_get_project, name = 'ajax_get_project'),    
 
 ]
