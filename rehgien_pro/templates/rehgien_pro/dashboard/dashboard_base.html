@@ -26,35 +26,43 @@
 
   function custom_fill_notification_list(data){
     var listWrap = document.getElementsByClassName('u-notification-list');
-    var msgs = data.unread_list.map(function(item){
-      var projectData = getProject(item.actor_object_id);
-      var card = (
-            "<div class='notification-list-card'>" +
-              "<div class='notification-list-card-avatar'>" +
-                "<img src='"+(projectData.project.service_avatar ? projectData.project.service_avatar : '')+"' alt=''>" +
-                "<div class='notification-list-card-avatar-icon'><i class='iconify' data-icon='fluent:clipboard-task-list-rtl-24-regular'></i></div>"+
-              "</div>" +
-              "<div class='notification-list-bdWrp'>"+
-                "<div class='notification-list-unread-badge'></div>"+
-                "<div class='notification-list-body'>" +
-                  "<div class='notification-list-body-top'>" +
-                    "<span class='notification-list-body-title'>You have a new lead</span>" +
-                  "</div>" +
-                  "<div class='notification-list-body-mid'>" +
-                    "<p class='notification-list-body-verb'>"+ projectData.project.message +"</p>" +
-                  "</div>" +
-                  "<div class='notification-list-body-btm'>" +
-                    "<span>"+projectData.project.service+"</span>" +
-                    "<div class='dvdr'></div>"+
-                    "<span>"+projectData.project.publishdate+" ago</span>" +
+    if (data.unread_count != 0){
+        var msgs = data.unread_list.map(function(item){
+        var projectData = getProject(item.actor_object_id);
+        var card = (
+              "<div class='notification-list-card'>" +
+                "<div class='notification-list-card-avatar'>" +
+                  "<img src='"+(projectData.project.service_avatar ? projectData.project.service_avatar : '')+"' alt=''>" +
+                  "<div class='notification-list-card-avatar-icon'><i class='iconify' data-icon='fluent:clipboard-task-list-rtl-24-regular'></i></div>"+
+                "</div>" +
+                "<div class='notification-list-bdWrp'>"+
+                  "<div class='notification-list-unread-badge'></div>"+
+                  "<div class='notification-list-body'>" +
+                    "<div class='notification-list-body-top'>" +
+                      "<span class='notification-list-body-title'>You have a new lead</span>" +
+                    "</div>" +
+                    "<div class='notification-list-body-mid'>" +
+                      "<p class='notification-list-body-verb'>"+ projectData.project.message +"</p>" +
+                    "</div>" +
+                    "<div class='notification-list-body-btm'>" +
+                      "<span>"+projectData.project.service+"</span>" +
+                      "<div class='dvdr'></div>"+
+                      "<span>"+projectData.project.publishdate+" ago</span>" +
+                    "</div>" +
                   "</div>" +
                 "</div>" +
-              "</div>" +
-            "</div>"
-          );
-        return card
-    }).join("");
-    listWrap[0].innerHTML = msgs;
+              "</div>"
+            );
+          return card
+      }).join("");
+        listWrap[0].innerHTML = msgs;
+    };
+    listWrap[0].innerHTML = (
+      "<div class='ntfempty_'>" +
+        "<i class='material-icons'>notifications_none</i>" +
+        "<p>No unread notifications</p>" +
+      "</div>"
+    );
     document.querySelector(".notification_loader_wrapper").style.display="none";
   };
 </script>
