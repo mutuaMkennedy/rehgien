@@ -34,6 +34,7 @@ from profiles import profile_edit_forms as pro_profile_edit_forms
 from formtools.wizard.views import SessionWizardView
 from django.utils.functional import cached_property
 from django.contrib.sites.models import Site
+from notifications.models import Notification
 
 
 User = get_user_model()
@@ -559,3 +560,11 @@ def r_agency_home(request):
 		'contactForm':contact_form
 	}
 	return render(request,'rehgien_pro/rehgien_agency/homepage.html', context)
+
+def notifications(request):
+	user = User.objects.get(pk=request.user.pk)
+	notifications = user.notifications.all()
+	context = {
+		"notifications":notifications
+	}
+	return render(request,'rehgien_pro/dashboard/business_profile/notifications.html', context)
