@@ -18613,7 +18613,8 @@ particle {
     line-height:16px;
 }
 
-.pdash_dpd_botf_sc .dpdwn_body .ntfempty_{
+.pdash_dpd_botf_sc .dpdwn_body .ntfempty_,
+.all-notification-list .ntfempty_{
     padding:15px;
     height:100%;
     display:flex;
@@ -18622,7 +18623,8 @@ particle {
     justify-content:center;
 }
 
-.pdash_dpd_botf_sc .dpdwn_body .ntfempty_ i{
+.pdash_dpd_botf_sc .dpdwn_body .ntfempty_ i,
+.all-notification-list .ntfempty_ i{
     font-size:30px;
     color:#1100ff;
     width:40px;
@@ -18634,7 +18636,8 @@ particle {
     background-color:#d0f3e9;
 }
 
-.pdash_dpd_botf_sc .dpdwn_body .ntfempty_ p{
+.pdash_dpd_botf_sc .dpdwn_body .ntfempty_ p,
+.all-notification-list .ntfempty_ p{
     font-size:13px;
     color:rgb(0 0 0 / 0.7);
     text-align:center;
