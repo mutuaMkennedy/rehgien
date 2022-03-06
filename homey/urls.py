@@ -69,6 +69,7 @@ urlpatterns = [
     path('apis/', include('profiles.apis.urls')),
     path('apis/', include('markets.apis.urls')),
     path('apis/', include('contact.apis.urls')),
+    path('apis/', include('rehgien_pro.apis.urls')),
     path('apis/', include('app_notifications.apis.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^photologue/', include('photologue.urls', namespace='photologue')),
