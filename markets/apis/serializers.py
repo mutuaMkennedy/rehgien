@@ -125,7 +125,7 @@ class ProjectQuoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProjectQuote
         fields = [
-        "pk","project","message","price","quote_sender","quote_send_date",
+        "pk","project","message","price","negotiable","quote_sender","quote_send_date",
         ]
 
 class ProjectSerializer(WritableNestedModelSerializer):
