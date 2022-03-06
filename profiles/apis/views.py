@@ -62,6 +62,7 @@ def lookup_user_obj_for_login(request):
             'user':{
                 'pk':user_obj.first().pk,
                 'username':user_obj.first().username,
+                'user_type':user_obj.first().user_type
                 }
             }
         else:
@@ -76,6 +77,7 @@ def lookup_user_obj_for_login(request):
             'user':{
                 'pk':user_obj.first().pk,
                 'username':user_obj.first().username,
+                'user_type':user_obj.first().user_type
                 }
             }
         else:
@@ -211,6 +213,7 @@ def check_if_account_exists(q):
             'user':{
                 'pk':user_obj.first().pk,
                 'username':user_obj.first().username,
+                'user_type':user_obj.first().user_type
                 }
             }
         else:
@@ -225,6 +228,7 @@ def check_if_account_exists(q):
             'user':{
                 'pk':user_obj.first().pk,
                 'username':user_obj.first().username,
+                'user_type':user_obj.first().user_type
                 }
             }
         else:
