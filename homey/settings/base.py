@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "partnership",
     "app_accounts",
     "app_notifications",
+    "payments",
     # other applications
     'channels',
     'photologue',
