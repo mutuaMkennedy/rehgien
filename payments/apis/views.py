@@ -86,3 +86,25 @@ def settle_mpesa_payment(request):
             'amount': ['This field is required']
             }
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def pay_with_mpesa_response(request):
+    """
+        When user innitiates the pay with mpesa stk push api Mpesa
+        will send a response to our callback url with the status of the payment
+    """
+    mpesa_body =request.body.decode('utf-8')
+    mpesa_payment = json.loads(mpesa_body)
+    status_code = int(mpesa_payment['Body']['stkCallback']['ResultCode'])
+    if status_code == 0:
+        # 0 means paymen was processed successfully
+        # TO DO: record transaction in db
+        pass
+    else:
+        # Something went wrong or paymetn was cancelled by the user
+        message = {
+        "status": False,
+        "message": "Payment not processed",
+        "details": [mpesa_payment['Body']['stkCallback']]
+        }
+        Response(message)
