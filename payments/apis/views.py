@@ -20,11 +20,9 @@ def pay_with_mpesa(request):
             if re.fullmatch(phone_regex,phone_number):
                 response = mpesa.pay_with_mpesa(phone_number,amount)
                 if status.is_success(response.status_code):
-                    # TO DO: Record this transaction in db
-                    # TO DO: Update project details to include payment details
                     message = {
                         'status': True,
-                        'message':["Payment sent sucessfully"],
+                        'message':["Payment request sent sucessfully"],
                         'details':[response.json()]
                         }
                     return Response(message, status=status.HTTP_200_OK)
