@@ -500,7 +500,7 @@ class PortfolioItemBase(models.Model):
 		abstract = True
 
 	def __str__(self):
-		return self.created_by.username + '-' + self.name
+		return str(self.created_by.username) + '-' + str(self.name)
 
 class PortfolioItem(PortfolioItemBase):
 	# we will reserve this for the future just incase conditions change
