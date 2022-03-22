@@ -77,10 +77,10 @@ def milestones_complete(user_pk):
 
 def send_review_request_email(email_dict, message, pk, business_name):
 	domain = 'https://' + Site.objects.get_current().domain
-	review_page_url = 'rehgien.com'#reverse( 'profiles:business_review')
+	review_page_url = reverse( 'profiles:business_review', kwargs={"pk":pk})
 	subject = 'Can you please review me?'
 	datalist = []
-	extended_message = message + '\n\n' + 'Click this link: ' + domain + review_page_url + '?bsr=' + str(pk) + ' to write your review.' + \
+	extended_message = message + '\n\n' + 'Click this link: ' + domain + review_page_url + ' to write your review.' + \
 						'\n\n\n' + \
 						'Thanks in advance and let me know if you have any questions.' + \
 						'\n\n' + \
@@ -268,6 +268,18 @@ def dashboard_jobs(request):
 		"user_jobs_replied":user_jobs_replied,
 		}
 		return render(request, 'rehgien_pro/dashboard/jobs.html', context)
+	else:
+		messages.error(request,'Denied. Upgrade to a Pro to continue.')
+		return redirect('rehgien_pro:pro_join_landing')
+
+@login_required(login_url='app_accounts:user_login')
+def dashboard_leads(request):
+	if request.user.user_type == 'PRO':
+		leads = market_models.Project.objects.filter(pro_contacted=request.user)
+		context = {
+		"leads":leads,
+		}
+		return render(request, 'rehgien_pro/dashboard/leads.html', context)
 	else:
 		messages.error(request,'Denied. Upgrade to a Pro to continue.')
 		return redirect('rehgien_pro:pro_join_landing')
