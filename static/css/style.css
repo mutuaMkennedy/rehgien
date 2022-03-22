@@ -19182,6 +19182,24 @@ particle {
     scroll-behavior: smooth;
 }
 
+.pro-page-section{
+    padding:25px 30px;; 
+}
+
+.pro-page-section .pro-page-section-head{
+    margin-bottom:30px;
+}
+
+.prodash_page_sections .pro-page-section-head h2{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    color: #000000;
+    text-transform: capitalize;
+    margin: 0;
+    margin-bottom: 15px;
+}
+
 .prodash_section_elements .prodash_page_sections::-webkit-scrollbar{
     width:5px;
 }
@@ -19286,6 +19304,66 @@ particle {
 .quickActions_sc .quickActionItems .quickActionItems-links button i{
     font-size:23px;
     margin-right:10px;
+}
+
+.pro-lead-section-body .pro-lead-section-body-cards-wrp{
+    display:flex;
+    width:100%;
+    overflow:auto;
+}
+
+.pro-lead-section-body .pro-lead-section-body-cards-wrp .pro-lead-section-body-card h3{
+    font-size:13px;
+    font-weight:600;
+    margin:0;
+}
+
+.pro-lead-section-body .pro-lead-section-body-cards-wrp .pro-lead-section-body-card .proLSBC-card{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:350px;
+    height:120px;
+    border: 1px solid hsl(0deg 0% 0% / 5%);
+    padding: 15px;
+    margin-top:5px;
+    margin-right:10px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px 1px #f5f5f5;
+}
+
+.pro-lead-section-body-card .proLSBC-card .proLSBC-card-dvdr{
+    margin:0 25px;
+    background:rgb(0 0 0 / 0.05);
+    width:2px;
+    height:100%;
+    border-radius:10px;
+}
+
+.pro-lead-section-body-card .proLSBC-card .proLSBC-card-section h5{
+    margin:0;
+    font-size:13px;
+    font-weight:600;
+}
+
+.pro-lead-section-body-card .proLSBC-card .proLSBC-card-section span{
+    font-size:25px;
+    font-weight:600;
+    display:flex;
+    margin:10px 0;
+}
+
+.pro-lead-section-body-card .proLSBC-card .proLSBC-card-section .proLSBC-card-section-trend{
+    font-size:13px;
+    font-weight:500;
+}
+
+.pro-lead-section-body-card .proLSBC-card .proLSBC-card-section .proLSBC-card-section-trend.upTrend{
+    color:#00AD56;
+}
+
+.pro-lead-section-body-card .proLSBC-card .proLSBC-card-section .proLSBC-card-section-trend.downTrend{
+    color:#ff1000;
 }
 
 .proDash_msgScTab{
