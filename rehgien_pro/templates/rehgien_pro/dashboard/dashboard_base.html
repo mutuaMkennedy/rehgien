@@ -264,7 +264,7 @@
                 <li class="active">
                   <div class="collapsible-header"><button type="button" name="button" class="a-wrapper"><a href="#"><i class="iconify" data-icon="carbon:task-settings"></i> <p>Manage</p></a></button><span class="material-icons">expand_less</span></div>
                   <div class="collapsible-body">
-                      <button type="button" name="button" class="a-clslink"><a href="#" class="proDash_sc_switch_clbody proDash_sc_switch inactive"><i class="material-icons">contacts</i> <p>Leads</p></a></button>
+                      <button type="button" name="button" class="a-clslink"><a href="{% url 'rehgien_pro:dashboard_leads' %}" class="proDash_sc_switch_clbody proDash_sc_switch {% block leadsActive%}{% endblock%}"><i class="material-icons">contacts</i> <p>Leads</p></a></button>
                   </div>
                 </li>
                 <li class="active">
