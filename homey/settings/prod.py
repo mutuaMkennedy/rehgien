@@ -50,3 +50,11 @@ sentry_sdk.init(
     # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True
 )
+
+# M-pesa daraja settings
+CONSUMER_KEY = "EiXmkNt4ha8TEFbGvmMuC7cm6mGRhR8p"
+CONSUMER_SECRET = 'zaxeviE8GB7GFTUc'
+ACCESS_TOKEN_API_ENDPOINT = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+REGISTER_URL_API_ENDPOINT = 'https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl'
+MPESA_EXPRESS_API_ENDPOINT = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
+MPESA_B2C_API_ENDPOINT = 'https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest'
