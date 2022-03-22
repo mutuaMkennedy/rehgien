@@ -17,6 +17,7 @@ urlpatterns = [
 	path('profile/reviews/', views.dashboard_manage_reviews, name = 'dashboard_manage_reviews'),
 	path('profile/projects/', views.dashboard_manage_projects, name = 'dashboard_manage_projects'),
 	path('notifications/', views.notifications, name = 'notifications'),
+	path('leads/', views.dashboard_leads, name = 'dashboard_leads'),
 	#
 	path('join/', views.pro_join_landing, name = 'pro_join_landing'),
 	# path('onboarding/', views.ProSetupWizardView.as_view(views.FORMS), name='ProSetupWizardView'),
