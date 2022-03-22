@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     # Leads
     path('payments/mpesa/stkpush/pay/', views.pay_with_mpesa, name='pay_with_mpesa'),
-    path('payments/mpesa/stkpush/payment_response/', views.pay_with_mpesa_response, name='pay_with_mpesa_response'),
+    path('payments/mpesa/stkpush/pay/<int:sender_pk>/<int:recepient_pk>/<int:project_pk>/payment_response/', views.pay_with_mpesa_response, name='pay_with_mpesa_response'),
     # Leads
     path('payments/mpesa/b2c/settle_payment/', views.settle_mpesa_payment, name='lipa_na_mpesa'),
 
