@@ -16,7 +16,7 @@ MPESA_EXPRESS_API_ENDPOINT = settings.MPESA_EXPRESS_API_ENDPOINT
 MPESA_B2C_API_ENDPOINT = settings.MPESA_B2C_API_ENDPOINT
 
 phone_regex = r'^\+?1?\d{9,14}$'
-base_url = 'https://679d-41-80-112-236.ngrok.io'
+base_url = 'd4ee-41-80-112-95.ngrok.io'
 
 def get_access_token():
     endpoint = ACCESS_TOKEN_API_ENDPOINT
@@ -38,8 +38,8 @@ def register_url():
     'Authorization': 'Bearer '+ access_token
     }
     payload = {
-        "ValidationURL":base_url+"/payments/daraja/c2b/validation/",
-        "ConfirmationURL":base_url+"/payments/daraja/c2b/confirm/",
+        "ValidationURL":"https://" + base_url +"/apis/payments/mpesa/b2c/validate/",
+        "ConfirmationURL":"https://" + base_url +"/apis/payments/mpesa/b2c/confirm/",
         "ResponseType":'Completed',
         "ShortCode":600998,
     }
@@ -56,7 +56,7 @@ def confirm(request):
 def validate(request):
     pass
 
-def pay_with_mpesa(phone_number,amount):
+def pay_with_mpesa(phone_number,amount,sender, recepient, project):
     """
     Function that handles sending of money from customers phone number to
     our paybill which we use as an escrow account
@@ -79,7 +79,7 @@ def pay_with_mpesa(phone_number,amount):
             "PartyA": sender_phone_number,
             "PartyB": 174379,
             "PhoneNumber": sender_phone_number,
-            "CallBackURL": "https://mydomain.com/path",
+            "CallBackURL": f"https://{base_url}/apis/payments/mpesa/stkpush/pay/{sender}/{recepient}/{project}/payment_response/",
             "AccountReference": "CompanyXLTD",
             "TransactionDesc": "Payment of X" 
         }
