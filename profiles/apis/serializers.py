@@ -146,30 +146,155 @@ class BusinessHoursSerializer(serializers.ModelSerializer):
         "WEEKDAYS","pk","business_profile","weekday","from_hour","to_hour",
         ]
 
+class QuestionOptionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = profiles_models.QuestionOptions
+        fields = [
+            "pk","question","name",
+        ]
+
+class QuestionSerializer(serializers.ModelSerializer):
+    question_option = QuestionOptionsSerializer(many=True)
+    class Meta:
+        model = profiles_models.Question
+        fields = [
+            "pk","matchMaker","step","title","slug","client_question","pro_question","question_type","question_option"
+        ]
+
+class MatchMakerSerializer(serializers.ModelSerializer):
+    professional_service = ProfessionalServiceSerializer()
+    matchmaker_question = serializers.SerializerMethodField()
+    class Meta:
+        model = profiles_models.MatchMaker
+        fields = [
+            "pk","professional_service","description","matchmaker_question"
+        ]
+
+    def get_matchmaker_question(self, object):
+        questions = object.matchmaker_question.order_by('step')
+        return QuestionSerializer(questions,many=True).data
+
+class ProAnswerSerializer(serializers.ModelSerializer):
+    question = QuestionSerializer()
+    answer = QuestionOptionsSerializer(many=True)
+    service_delivery_areas = location_serializers.KenyaTownSerializer(many=True)
+    professional_service = serializers.SerializerMethodField()
+    class Meta:
+        model = profiles_models.ProAnswer
+        fields = [
+            "pk","business_profile","professional_service", "question","service_delivery_areas", 
+            "answer", "timestamp"
+        ]
+
+    def get_professional_service(self,obj):
+        return obj.question.matchMaker.professional_service.pk
+
 class BusinessProfileSerializer(WritableNestedModelSerializer):
     professional_category = ProfessionalCategorySerializer(many=False)
     professional_services = ProfessionalServiceSerializer(many=True)
     pro_business_client = ClientSerializer(many=True)
     pro_business_hours = BusinessHoursSerializer(many=True)
     pro_business_review = ReviewSerializer(many=True)
+    match_answer = ProAnswerSerializer(many=True)
     service_areas = location_serializers.KenyaTownSerializer(many=True)
     pro_portfolio_items = serializers.SerializerMethodField()
     pro_followers = serializers.SerializerMethodField()
     pro_saves = serializers.SerializerMethodField()
     rating_stats = serializers.SerializerMethodField()
     _business_profile_percentage_complete_ = serializers.SerializerMethodField()
+    business_account_setup_milestones = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.BusinessProfile
         fields = [
-        "pk","user","professional_category","professional_services","business_profile_image",
+        "pk","user","professional_category","professional_services","match_answer","business_profile_image",
         "business_name","phone","business_email","address","location","website_link",
         "facebook_page_link","twitter_page_link","linkedin_page_link","instagram_page_link",
         "about_video","about","service_areas","saves","followers","member_since",
         "featured","verified","pro_business_client","pro_business_hours","pro_business_review",
         "pro_portfolio_items","pro_followers","pro_saves",
-        "rating_stats","_business_profile_percentage_complete_",
+        "rating_stats","_business_profile_percentage_complete_","business_account_setup_milestones"
         ]
 
+    def get_business_account_setup_milestones(self,obj):
+        percent_complete = {
+        "setup_business_account": 10,
+        "add_services_you_offer": 20,
+        "upload_work_projects": 20,
+        "upload_profile_photo": 20,
+        "add_business_description": 10,
+        "get_external_reviews": 20,
+        }
+        total = 0
+        milestones = [
+            {
+                "status":False,
+                "name":"Setup your business account",
+                "order":0,
+                "slug":"setup-business-account",
+                "details":"As a service provider, your business page is what helps us connect you with the right customers for your business."
+            },
+            {
+                "name":"Add services you offer",
+                "order":1,
+                "status":False,
+                "slug":"add-services-you-offer",
+                "details":"It is critical to include the services you provide in order for customers to find you. You should also establish targeting preferences for each service you provide. These preferences are what we use to match you with customers who are a good fit."        
+            },
+            {
+                "name":"Upload 3 work projects",
+                "order":2,
+                "status":False,
+                "slug":"upload-work-projects",
+                "details":"Showcase your previous work to boost the credibility of your profile. Adding projects allows you to demonstrate to potential clients what it's like to work with you."
+            },
+            {
+                "name":"Upload your profile photo",
+                "order":3,
+                "status":False,
+                "slug":"upload-profile-photo",
+                "details":"Adding a profile picture to your company's website helps to personalize it. Profile photos can be anything you want: mugshots, logos, etc., but they must accurately represent your company and brand. Uploading blurry photos is not recommended."
+            },
+            {
+                "name":"Add your business description",
+                "order":4,
+                "status":False,
+                "slug":"add-business-description",
+                "details":"Reviews are key to getting you hired. Getting reviews from past clients helps future clients decide whether to hire you. You can ask for reviews via email or share a link to customers outside of Rehgien."
+            },
+            {
+                "name":"Get 3 external reviews",
+                "order":5,
+                "status":False,
+                "slug":"get-external-reviews",
+                "details":"Reviews are key to getting you hired. Getting reviews from past clients helps future clients decide whether to hire you. You can ask for reviews via email or share a link to customers outside of Rehgien."
+            },
+        ]
+
+        if obj:
+            milestones[0]["status"] = True
+            total += percent_complete.get("setup_business_account", 0)
+        if obj.professional_services:
+            milestones[1]["status"] = True
+            total += percent_complete.get("add_services_you_offer", 0)
+        if obj.user.profiles_portfolioitem_createdby_related:
+            milestones[2]["status"] = True
+            total += percent_complete.get("upload_work_projects", 0)
+        if obj.business_profile_image:
+            milestones[3]["status"] = True
+            total += percent_complete.get("upload_profile_photo", 0)
+        if obj.about:
+            milestones[4]["status"] = True
+            total += percent_complete.get("add_business_description", 0)
+        if obj.pro_business_review.all().count() >= 3:
+            milestones[5]["status"] = True
+            total += percent_complete.get("get_external_reviews", 0)
+
+        context = {
+            "percent_complete":total,
+            "milestones":milestones
+        }
+        return context
+ 
     def get_pro_portfolio_items(self,obj):
         portfolio_object = profiles_models.PortfolioItem.objects.filter(created_by=obj.user.pk)
         portfolio_item_array = []
@@ -203,7 +328,16 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
                     'name': ptf.name,
                     'description': ptf.description,
                     "project_job_type":ptf.project_job_type.service_name if ptf.project_job_type else "",
-                    "project_location":ptf.project_location.town_name if ptf.project_job_type else "",
+                    "project_job_type_object":{
+                        "pk":ptf.project_job_type.pk if ptf.project_job_type else "",
+                        "service_name":ptf.project_job_type.service_name if ptf.project_job_type else "",
+                        "slug":ptf.project_job_type.slug if ptf.project_job_type else "",
+                    },
+                    "project_location":ptf.project_location.town_name if ptf.project_location else "",
+                    "project_location_object":{
+                        "id":ptf.project_location.pk if ptf.project_job_type else "",
+                        "town_name":ptf.project_location.town_name if ptf.project_location else ""
+                    },
                     "project_cost":ptf.project_cost,
                     "project_duration":ptf.project_duration,
                     "project_year":ptf.project_year,
@@ -394,15 +528,32 @@ class PortfolioItemSerializer(WritableNestedModelSerializer):
     class Meta:
         model = profiles_models.PortfolioItem
         fields = [
-        "pk","name","description","video","portfolio_item_photo","created_at","created_by",
+        "pk","name","description","project_job_type","project_location",
+        "project_cost","project_duration","project_year","video",
+        "portfolio_item_photo","created_at","created_by"
         ]
 
 class PortfolioItemSerializer2(WritableNestedModelSerializer):
+    # project_job_type = ProfessionalServiceSerializer()
+    # project_location = location_serializers.KenyaTownSerializer()
+    project_job_type_obj = serializers.SerializerMethodField()
+    project_location_obj = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.PortfolioItem
         fields = [
-        "pk","name","description","video","created_at","created_by",
+        "pk","name","description","project_job_type","project_location",
+        "project_job_type_obj","project_location_obj",
+        "project_cost","project_duration","project_year","video",
+        "created_at","created_by",
         ]
+    
+    def get_project_job_type_obj(self,obj):
+        job_type = obj.project_job_type
+        return ProfessionalServiceSerializer(job_type).data
+
+    def get_project_location_obj(self,obj):
+        service = obj.project_location
+        return location_serializers.KenyaTownSerializer(service).data
 
 class TeammateConnectionSerializer(serializers.ModelSerializer):
     requestor_user_object = serializers.SerializerMethodField()
@@ -584,31 +735,3 @@ class PhoneOtpSerializer(serializers.ModelSerializer):
     class Meta:
         model = profiles_models.PhoneOTP
         fields = '__all__'
-
-class QuestionOptionsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = profiles_models.QuestionOptions
-        fields = [
-            "pk","question","name",
-        ]
-
-class QuestionSerializer(serializers.ModelSerializer):
-    question_option = QuestionOptionsSerializer(many=True)
-    class Meta:
-        model = profiles_models.Question
-        fields = [
-            "pk","matchMaker","step","title","slug","client_question","pro_question","question_type","question_option"
-        ]
-
-class MatchMakerSerializer(serializers.ModelSerializer):
-    professional_service = ProfessionalServiceSerializer()
-    matchmaker_question = serializers.SerializerMethodField()
-    class Meta:
-        model = profiles_models.MatchMaker
-        fields = [
-            "pk","professional_service","description","matchmaker_question"
-        ]
-
-    def get_matchmaker_question(self, object):
-        questions = object.matchmaker_question.order_by('step')
-        return QuestionSerializer(questions,many=True).data
