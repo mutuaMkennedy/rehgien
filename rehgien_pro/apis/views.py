@@ -112,7 +112,7 @@ def update_pro_answers_service_areas(user,questions,service_areas):
                     if question_obj.exists():
                         """Ignore questions that don't exist"""
                         instance = profiles_models.ProAnswer.objects.create(
-                        business_profile = bs_profile,
+                        business_profile = bs_profile.first(),
                         question = question_obj.first()
                         )
                         instance.service_delivery_areas.set(service_areas)
