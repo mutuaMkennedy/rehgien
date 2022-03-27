@@ -130,11 +130,13 @@ def new_lead_notification(sender, instance, created, **kwargs):
                         push_notifications.send_push_message(
                                     token = dvc.expo_token,
                                     title = f'Hi {recipient_name}, you have a new lead',
-                                    message = instance.service_name,
+                                    message = service_name,
                                     extra = {'type':'Project lead','target':instance.pk},
                                     )
-        except:
-            print('Something went wrong!')
+            else:
+                print("No device found")
+        except Exception as e:
+            print(f'Something went wrong! Notification not sent {e}')
 
 post_save.connect(new_lead_notification, sender=Project)
 
