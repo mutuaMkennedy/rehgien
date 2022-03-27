@@ -64,7 +64,7 @@ def update_pro_answers(user, questions):
                     if question_obj.exists():
                         """Ignore questions that don't exist"""
                         instance = profiles_models.ProAnswer.objects.create(
-                        business_profile = bs_profile,
+                        business_profile = bs_profile.first(),
                         question = question_obj.first()
                         )
                         instance.answer.set(selected_options)
