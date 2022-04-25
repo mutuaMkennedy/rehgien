@@ -98,45 +98,138 @@ class Project(models.Model):
     pro_response_state = models.CharField(choices=RESPONSE_STATE, default='PENDING', null=True, max_length=20)
     publishdate = models.DateTimeField(auto_now=False, auto_now_add=True)
 
+    __original_pro_reponse = None
+    __original_project_status = None
+
     def __str__(self):
         return (self.requested_service.service_name if self.requested_service.service_name else "") + " " + self.pro_response_state
 
     class Meta:
         verbose_name_plural = 'Project'
 
+    def __init__(self, *args, **kwargs):
+        super(Project, self).__init__(*args, **kwargs)
+        self.__original_pro_reponse = self.pro_response_state
+        self.__original_project_status = self.project_status
+
+   
 # A new project is treated as a lead that professionals can engage with
+# TO DO: decouple code using helper function
 def new_lead_notification(sender, instance, created, **kwargs):
     recipient = instance.pro_contacted
     recipient_name = recipient.pro_business_profile.business_name if recipient.pro_business_profile else 'there'
     service_name = instance.requested_service.service_name
-    sent = False
-    try:
-        notify.send(instance, recipient=recipient,
-                    verb=f'Hi {recipient_name}, you have a new lead',
-                    target = instance,
-                    type = 'Project lead'
-                    )
-        sent = True
-    except:
-        pass
-    if sent:
-        try:
-            devices = recipient.user_device.all()
+    user = User.objects.get(pk=instance.owner.pk)
+    # check if pro response state field has been updated
+    if instance._Project__original_pro_reponse != instance.pro_response_state:
+        """
+        Field has been updated, so, now check if status has been 
+        updated to rejected and send a notification to the sender.
+        """            
+        notification_created = False
+        if instance.pro_response_state == "REJECTED":
+            try:
+                # save the notification to the notification model
+                notify.send(instance, recipient=user,
+                            verb=f'{recipient_name} is currently unavailable to take on your project. Please look for a different service provider.',
+                            target = instance,
+                            type = 'Project'
+                            )
+                notification_created = True
+            except Exception as e:
+                print(f'Something went wrong! Notification not sent {e}')
 
-            # Using expo push notification SDK
-            if devices:
-                for dvc in devices:
-                    if dvc.expo_token:
-                        push_notifications.send_push_message(
-                                    token = dvc.expo_token,
-                                    title = f'Hi {recipient_name}, you have a new lead',
-                                    message = service_name,
-                                    extra = {'type':'Project lead','target':instance.pk},
-                                    )
-            else:
-                print("No device found")
-        except Exception as e:
-            print(f'Something went wrong! Notification not sent {e}')
+        if notification_created:
+            # send push notification to user's device
+            try:
+                devices = user.user_device.all()
+
+                # Using expo push notification SDK
+                if devices:
+                    for dvc in devices:
+                        if dvc.expo_token:
+                            push_notifications.send_push_message(
+                                        token = dvc.expo_token,
+                                        title = f'{service_name} project update.',
+                                        message = f'{recipient_name} is currently unavailable to take on your project. Please look for a different service provider.',
+                                        extra = {'type':'Project','target':instance.pk},
+                                        )
+            except:
+                print('Something went wrong!')
+
+    # check if project status has been updated
+    if instance._Project__original_project_status != instance.project_status:
+        """
+        An update has occured so check what type of update this is and send the
+        right notification message
+        """
+        notification_title = ''
+        if instance.project_status == 'ACTIVE':
+            notification_title = f'Hi {recipient_name}, you have a new lead.'
+            notification_body = f'You\'ve got a new job for your {service_name} service.'
+        if instance.project_status == 'COMPLETED':
+            notification_title = f'{service_name} project update.'
+            notification_body = 'This project has been marked as complete by the owner.'
+        if instance.project_status == 'CANCELLED':
+            notification_title = f'{service_name} project update.'
+            notification_body = 'This project has been cancelled by the owner.'
+
+        sent = False
+        try:
+            notify.send(instance, recipient=recipient,
+                        verb=notification_title,
+                        target = instance,
+                        type = 'Project lead'
+                        )
+            sent = True
+        except:
+            pass
+        if sent:
+            try:
+                devices = recipient.user_device.all()
+                # Using expo push notification SDK
+                if devices:
+                    for dvc in devices:
+                        if dvc.expo_token:
+                            push_notifications.send_push_message(
+                                        token = dvc.expo_token,
+                                        title = notification_title,
+                                        message = notification_body,
+                                        extra = {'type':'Project lead','target':instance.pk},
+                                        )
+                else:
+                    print("No device found")
+            except Exception as e:
+                print(f'Something went wrong! Notification not sent {e}')
+    else:
+        """It's a new projec so send new lead notification by default"""
+        sent = False
+        try:
+            notify.send(instance, recipient=recipient,
+                        verb=f'Hi {recipient_name}, you have a new lead.',
+                        target = instance,
+                        type = 'Project lead'
+                        )
+            sent = True
+        except:
+            pass
+        if sent:
+            try:
+                devices = recipient.user_device.all()
+                # Using expo push notification SDK
+                if devices:
+                    for dvc in devices:
+                        if dvc.expo_token:
+                            push_notifications.send_push_message(
+                                        token = dvc.expo_token,
+                                        title = f'Hi {recipient_name}, you have a new lead.',
+                                        message = f'You\'ve got a new job for your {service_name} service.',
+                                        extra = {'type':'Project lead','target':instance.pk},
+                                        )
+                else:
+                    print("No device found")
+            except Exception as e:
+                print(f'Something went wrong! Notification not sent {e}')
 
 post_save.connect(new_lead_notification, sender=Project)
 
