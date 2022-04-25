@@ -15,7 +15,7 @@ if os.name == 'nt':
     os.environ['PATH'] = OSGEO4W + r'\bin;' + os.environ['PATH']
 
 
-GDAL_LIBRARY_PATH = r'C:\Users\REY\Desktop\pycharm\homey\environments\venv37\Lib\site-packages\osgeo\gdal303.dll'
+# GDAL_LIBRARY_PATH = r'C:\Users\REY\Desktop\pycharm\homey\environments\venv37\Lib\site-packages\osgeo\gdal303.dll'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -26,11 +26,11 @@ DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'rehgienDB',
-        'USER': 'postgres',
+        'NAME': 'rehgiendb',
+        'USER': 'mutua',
         'PASSWORD': 'admin$$',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '',
     }
 }
 
