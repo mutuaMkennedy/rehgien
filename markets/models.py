@@ -156,9 +156,8 @@ def new_lead_notification(sender, instance, created, **kwargs):
                                         )
             except:
                 print('Something went wrong!')
-
     # check if project status has been updated
-    if instance._Project__original_project_status != instance.project_status:
+    elif instance._Project__original_project_status != instance.project_status:
         """
         An update has occured so check what type of update this is and send the
         right notification message
@@ -201,6 +200,7 @@ def new_lead_notification(sender, instance, created, **kwargs):
                     print("No device found")
             except Exception as e:
                 print(f'Something went wrong! Notification not sent {e}')
+    # Not an update
     else:
         """It's a new projec so send new lead notification by default"""
         sent = False
