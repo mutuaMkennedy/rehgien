@@ -37,3 +37,8 @@ class DeviceInformationSerializer(WritableNestedModelSerializer):
     class Meta:
         model = models.DeviceInformation
         fields = "__all__"
+
+class SupportedAppVersionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SupportedAppVersion
+        fields = '__all__'
