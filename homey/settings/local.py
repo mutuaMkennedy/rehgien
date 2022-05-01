@@ -26,7 +26,7 @@ DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'rehgiendb',
+        'NAME': 'localdb',
         'USER': 'mutua',
         'PASSWORD': 'admin$$',
         'HOST': 'localhost',
