@@ -276,7 +276,7 @@ class BusinessProfileSerializer(WritableNestedModelSerializer):
         if obj.professional_services:
             milestones[1]["status"] = True
             total += percent_complete.get("add_services_you_offer", 0)
-        if obj.user.profiles_portfolioitem_createdby_related:
+        if obj.user.profiles_portfolioitem_createdby_related.all().count() >= 3:
             milestones[2]["status"] = True
             total += percent_complete.get("upload_work_projects", 0)
         if obj.business_profile_image:
