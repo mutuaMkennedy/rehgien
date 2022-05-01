@@ -16,3 +16,22 @@ def contact_support(first_name, last_name, email, phone, message):
 
 	except BadHeaderError:
 		return False
+
+def send_lead_support(pro, service, client, email, phone, message):
+	try:
+		subject = 'NEW LEAD ALERT'
+		plainMessage = (
+		f"Pro Contacted:{pro}. \nRequested Service:{service}. \nClient: {client}. \nClient Email: {email}. \nClient Phone: {phone}. \nClient Message: {message}"
+		)
+ 
+		send_mail(
+			subject,
+			plainMessage,
+			'Rehgien <do-not-reply@mg.rehgien.com>',
+			['support@rehgien.com'],
+			fail_silently=False,
+		)
+		return True
+
+	except BadHeaderError:
+		return False
