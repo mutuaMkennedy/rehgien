@@ -11,6 +11,8 @@ from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
 from notifications.signals import notify
 from app_notifications import push_notifications, models as app_ntf_models
+from django.core.validators import RegexValidator
+from . import tasks as markets_celery_tasks
 
 User = get_user_model()
 
@@ -90,6 +92,8 @@ class Project(models.Model):
     )
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='project_owner', on_delete=models.CASCADE, default=None, null=True)
     client_message = models.TextField()
+    phone_regex = RegexValidator( regex   =r'^\+?1?\d{9,14}$', message ="Phone number must be entered in the format: '+254xxxxxxxxx'. Up to 14 digits allowed.")
+    client_phone = models.CharField(validators=[phone_regex], max_length=17, null=True)
     requested_service = models.ForeignKey(profile_models.ProfessionalService, on_delete=models.SET_NULL,\
                 default = None, related_name='project_service', null =True, blank=True)
     project_status = models.CharField(choices=PROJECT_STATE, default='ACTIVE', null=True, max_length=20)
@@ -230,6 +234,8 @@ def new_lead_notification(sender, instance, created, **kwargs):
                     print("No device found")
             except Exception as e:
                 print(f'Something went wrong! Notification not sent {e}')
+        
+        markets_celery_tasks.send_lead_notification.delay(recipient_name, service_name, user.username, user.email, instance.client_phone, instance.client_message)
 
 post_save.connect(new_lead_notification, sender=Project)
 
