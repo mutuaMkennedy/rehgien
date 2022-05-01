@@ -44,3 +44,7 @@ class DeviceInformationUpdateApi(RetrieveUpdateAPIView):
     queryset = models.DeviceInformation.objects.all()
     serializer_class = serializers.DeviceInformationSerializer
     permission_classes = [permissions.IsUser]
+
+class SupportedAppVersionListApi(ListAPIView):
+    serializer_class = serializers.SupportedAppVersionSerializer
+    queryset = models.SupportedAppVersion.objects.all()
