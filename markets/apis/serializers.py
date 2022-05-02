@@ -137,7 +137,7 @@ class ProjectSerializer(WritableNestedModelSerializer):
     class Meta:
         model = models.Project
         fields = [
-        "RESPONSE_STATE","PROJECT_STATE","pk","owner","client_message","requested_service","requested_service_object", "project_status",
+        "RESPONSE_STATE","PROJECT_STATE","pk","owner","client_message","client_phone","requested_service","requested_service_object", "project_status",
         "pro_contacted","pro_contacted_object", "pro_response_state","publishdate",
         "project_details", "project_quote",
         ]
