@@ -31,7 +31,7 @@ from rest_framework.response import Response
 import django_filters
 from rest_framework.decorators import api_view
 from .utils import otp_generator
-from .africas_talking import send_otp_sms,send_password_reset_otp_sms # Remove; Replaced with twilio service
+# from .africas_talking import send_otp_sms,send_password_reset_otp_sms # Remove; Replaced with twilio service
 from contact.services import twilio_service
 import django_filters
 import re

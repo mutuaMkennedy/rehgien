@@ -51,12 +51,12 @@ cloudinary.config(
 
 #Initializing Africa's Talking sms Api
 
-africastalking.initialize(
-    username='sandbox',
-    api_key='1c7c4f43702a67c5100409e323f1aabc98d087a5a590b08239827d988006ab72'
-    # username='rehgien',
-    # api_key='3e78b952d5fd14a466246eefa2ad8150f866d9adc5afcc14d6ed8d900b41ab63'
-)
+# africastalking.initialize(
+#     username='sandbox',
+#     api_key='1c7c4f43702a67c5100409e323f1aabc98d087a5a590b08239827d988006ab72'
+#     # username='rehgien',
+#     # api_key='3e78b952d5fd14a466246eefa2ad8150f866d9adc5afcc14d6ed8d900b41ab63'
+# )
 
 
 # Twilio settings
