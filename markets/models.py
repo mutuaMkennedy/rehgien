@@ -264,9 +264,15 @@ class ProjectQuestion(models.Model):
 
 # The contacted service provider is the one who gets to respond to the job by sending a quote
 class ProjectQuote(models.Model):
+    BILLING_MODEL = (
+        ('FLAT','flat'),
+        ('HOURLY','hourly'),
+        ('RECURRING','recurring'),
+    )
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_quote', null=True, blank=True)
     message = models.TextField()
     price = models.PositiveIntegerField(default=0)
+    billing_model = models.CharField(choices=BILLING_MODEL, default='FLAT', null=True, max_length=20)
     negotiable = models.BooleanField(default=False, null=True, blank=True)
     quote_sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='project_quote_sender', on_delete=models.SET_NULL, default=None, null=True)
     quote_send_date = models.DateTimeField(auto_now=False, auto_now_add=True)
@@ -309,6 +315,18 @@ def project_quote_sent_notification(sender, instance, created, **kwargs):
             print('Something went wrong!')
 
 post_save.connect(project_quote_sent_notification, sender=ProjectQuote)
+
+class ProjectQuoteItem(models.Model):
+    quote = models.ForeignKey(ProjectQuote, related_name='project_quote_item', on_delete=models.CASCADE, default=None, null=True)
+    item_name = models.CharField(max_length=250, null=True)
+    item_quantity = models.PositiveIntegerField(blank = True, default = 1.0)
+    item_price = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name_plural = "Project Quote Item"
+
+    def __str__(self):
+        return f"{self.item_name} - {self.item_quantity} - {self.item_price}"
 
 """
 Project models end here
