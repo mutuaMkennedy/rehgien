@@ -121,11 +121,20 @@ class ProjectDetailsSerializer(WritableNestedModelSerializer):
         location = object.location
         return location_serializers.KenyaTownSerializer(location).data
 
-class ProjectQuoteSerializer(serializers.ModelSerializer):
+class ProjectQuoteItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProjectQuoteItem
+        fields = [
+            "pk", "quote","item_name","item_quantity","item_price"
+        ]
+
+class ProjectQuoteSerializer(WritableNestedModelSerializer):
+    project_quote_item = ProjectQuoteItemSerializer(many=True)
     class Meta:
         model = models.ProjectQuote
         fields = [
-        "pk","project","message","price","negotiable","quote_sender","quote_send_date",
+        "BILLING_MODEL", "pk","project","message","price","billing_model","negotiable","quote_sender","quote_send_date",
+        "project_quote_item"
         ]
 
 class ProjectSerializer(WritableNestedModelSerializer):
