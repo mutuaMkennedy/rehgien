@@ -32,3 +32,4 @@ class ProjectDetailsAdmin(admin.ModelAdmin):
 admin.site.register(models.JobPost, JobPostAdmin)
 admin.site.register(models.Project, ProjectAdmin)
 admin.site.register(models.ProjectDetails, ProjectDetailsAdmin)
+admin.site.register(models.ProjectQuoteItem)
