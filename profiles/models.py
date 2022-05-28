@@ -212,7 +212,7 @@ class ServiceSearchHistory(models.Model):
 	search_date = models.DateTimeField(auto_now = True, auto_now_add = False, null=True, blank=True)
 
 	def __str__(self):
-		return self.user.username + ' ' + self.professional_service.service_name + ' ' + str(self.search_count)
+		return self.user.username if self.user else '' + ' ' + self.professional_service.service_name + ' ' + str(self.search_count)
 
 	class Meta:
 		verbose_name_plural = 'Service Search History'
