@@ -798,19 +798,20 @@ def get_recent_searches(services, searches):
     if recent_searches_items:
         for svc in recent_searches_items:
             service_image_url = svc.professional_service.service_image.url if svc.professional_service.service_image else ''
-            service_obj = {
-                'user':svc.user.username,
-                'professional_service':{
-                        'pk':svc.professional_service.pk,
-                        'service_name':svc.professional_service.service_name,
-                        'service_image': service_image_url,
-                        'slug':svc.professional_service.slug,
-                    },
-                'search_count':svc.search_count,
-                'search_date':svc.search_date,
-            }
+            if svc.user:
+                service_obj = {
+                    'user':svc.user.username,
+                    'professional_service':{
+                            'pk':svc.professional_service.pk,
+                            'service_name':svc.professional_service.service_name,
+                            'service_image': service_image_url,
+                            'slug':svc.professional_service.slug,
+                        },
+                    'search_count':svc.search_count,
+                    'search_date':svc.search_date,
+                }
 
-            recent_searches.append(service_obj)
+                recent_searches.append(service_obj)
     return recent_searches
 
 @api_view(['GET'])
