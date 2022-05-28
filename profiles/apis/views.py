@@ -769,26 +769,27 @@ def get_popular_searches(services, searches):
                 service_image_url = search_items.first().professional_service.service_image.url if search_items.first().professional_service.service_image else ''
                 pro_group_image_url = search_items.first().professional_service.professional_category.professional_group.group_image.url if search_items.first().professional_service.professional_category.professional_group.group_image else ''
 
-                service_obj = {
-                    'user':search_items.first().user.username,
-                    'professional_service':{
-                            'pk':search_items.first().professional_service.pk,
-                            'service_name':search_items.first().professional_service.service_name,
-                            'service_image': service_image_url,
-                            'slug':search_items.first().professional_service.slug,
-                        },
-                    'professional_group':{
-                            "pk":search_items.first().professional_service.professional_category.professional_group.pk,
-                            "group_name":search_items.first().professional_service.professional_category.professional_group.group_name,
-                            "group_image":pro_group_image_url,
-                            "slug":search_items.first().professional_service.professional_category.professional_group.slug,
-                        },
-                    'unique_search_count':search_items.count(),
-                    'global_search_count':total_search_count,
-                    'total_searches':search_items.count() + total_search_count
-                }
+                if search_items.first().user:
+                    service_obj = {
+                        'user':search_items.first().user.username,
+                        'professional_service':{
+                                'pk':search_items.first().professional_service.pk,
+                                'service_name':search_items.first().professional_service.service_name,
+                                'service_image': service_image_url,
+                                'slug':search_items.first().professional_service.slug,
+                            },
+                        'professional_group':{
+                                "pk":search_items.first().professional_service.professional_category.professional_group.pk,
+                                "group_name":search_items.first().professional_service.professional_category.professional_group.group_name,
+                                "group_image":pro_group_image_url,
+                                "slug":search_items.first().professional_service.professional_category.professional_group.slug,
+                            },
+                        'unique_search_count':search_items.count(),
+                        'global_search_count':total_search_count,
+                        'total_searches':search_items.count() + total_search_count
+                    }
 
-                services_array.append(service_obj)
+                    services_array.append(service_obj)
     popular_searcvices = sorted(services_array, key=get_total_searches, reverse=True)[0:10]
     return popular_searcvices
 
