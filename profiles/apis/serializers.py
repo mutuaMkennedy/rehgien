@@ -4,6 +4,7 @@ from drf_writable_nested.serializers import WritableNestedModelSerializer
 from django.contrib.auth import get_user_model
 from profiles import models as profiles_models
 from listings import models as listings_models
+from referral.apis import serializers as referral_serializers
 from listings.apis import serializers as listings_serializers
 from location.api import serializers as location_serializers
 from django.db.models import Avg
@@ -625,6 +626,7 @@ class UserAccountSerializer(WritableNestedModelSerializer):
     connection_request_receiver = TeammateConnectionSerializer(many=True)
     user_service_search_history = serializers.SerializerMethodField()
     listings_home_owner_related = listings_serializers.HomeSerializer(many=True)
+    recruiter = referral_serializers.RecruiterSerializer(many=True)
     _user_account_percentage_complete_ = serializers.SerializerMethodField()
     business_pages_following = serializers.SerializerMethodField()
     business_pages_saved = serializers.SerializerMethodField()
@@ -638,7 +640,7 @@ class UserAccountSerializer(WritableNestedModelSerializer):
         'last_name', 'email', 'user_type','account_type', 'profile_image', 'business_pages_following', 'business_pages_saved',
         "pro_business_profile", "profiles_portfolioitem_createdby_related", "connection_requestor",
         "connection_request_receiver", "listings_home_owner_related",'_user_account_percentage_complete_', 'has_interest_group',
-        "groups_interested_in", 'user_service_search_history','recommended_services'
+        "groups_interested_in", 'user_service_search_history','recommended_services', 'recruiter'
         ]
 
     def get_has_interest_group(self, obj):
