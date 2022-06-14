@@ -49,21 +49,29 @@ def validate_referral_code(request):
         # check code is valid
         recruiter = models.Recruiter.objects.filter(referral_code=str(code))
         if recruiter.exists():
-            # Add user to recruiters list of referrals
-            i = recruiter.first()
-            i.referrals.add(request.user)
-            # add payout item
-            models.ReferralPayouts.objects.create(
-                recruiter = recruiter.first(),
-                amount = recruiter.first().referral_system.reward_price
-            )
+            if recruiter.first().recruiter != request.user:
+                # Add user to recruiters list of referrals
+                i = recruiter.first()
+                i.referrals.add(request.user)
+                # add payout item
+                models.ReferralPayouts.objects.create(
+                    recruiter = recruiter.first(),
+                    amount = recruiter.first().referral_system.reward_price
+                )
 
-            message = {
-                        'status': True,
-                        'message':[f"Referral Code: {code} validated successfully"],
+                message = {
+                            'status': True,
+                            'message':[f"Referral Code: {code} validated successfully"],
+                            }
+
+                return Response(message, status=status.HTTP_200_OK)
+            else:
+                message = {
+                        'status': False,
+                        'message':[f"Invalid request.You cannot use your own referral code!"],
                         }
 
-            return Response(message, status=status.HTTP_200_OK)
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
         else:
             message = {
                         'status': False,
