@@ -17,14 +17,15 @@ class RecruiterSerializer(serializers.ModelSerializer):
     payouts = serializers.SerializerMethodField()
     class Meta:
         model = models.Recruiter
-        fields = ['pk', "referral_system", "recruiter", "referral_code", "referrals",
+        fields = ['pk', "referral_system", "recruiter", "referral_code", "phone_number", "referrals",
         "payouts"
         ]
 
     def get_payouts(self, object):
         payouts = object.recruiter_payout.all()
         return ReferralPayoutsSerializer(payouts,many=True).data
-    
+
+
 class ReferralPayoutsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ReferralPayouts
