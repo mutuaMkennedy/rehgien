@@ -1,3 +1,4 @@
+from operator import rshift
 from . import serializers
 from .. import models
 from django.contrib.auth import get_user_model
@@ -19,7 +20,9 @@ from rest_framework.decorators import api_view
 from django.db.models import Q,Count
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-
+import uuid
+import base64
+from . import permissions as c_permissions
 
 class ReferralSystemListApi(ListAPIView):
     queryset = models.ReferralSystem.objects.all()
@@ -84,3 +87,48 @@ def validate_referral_code(request):
         'referral_code': ['This field is required'],
         }
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+# def generate_verification_code():
+#     return base64.urlsafe_b64encode(uuid.uuid1().bytes.encode("base64").rstrip())[:25]
+
+# class RecruiterCreateApi(CreateAPIView):
+#     queryset = models.Recruiter.objects.all()
+#     serializer_class = serializers.RecruiterSerializer
+#     permission_classes = [IsAuthenticated]
+#     def perform_create(self,serializer):
+#         referral_code = f"RGN{self.request.user.pk}" #generate_verification_code()
+#         serializer.save(
+#             recruiter=self.request.user,
+#             referral_code = referral_code
+#         )
+
+@api_view(["POST"])
+def create_recruiter_profile(request):
+    if request.user.is_authenticated:
+        rs = models.ReferralSystem.objects.filter(tier_name = 'TIER_TWO')
+        recruiter =  models.Recruiter.objects.filter(recruiter=request.user)
+        if not recruiter.exists() and rs.exists():
+            referral_code = f"RGN{request.user.pk}"
+            recruiter = models.Recruiter.objects.create(
+                referral_system=rs.first(),
+                recruiter=request.user,
+                referral_code = referral_code
+            )
+            message = {
+                        'status': True,
+                        'message':[f"User created successfully"],
+                        }
+            
+            return Response(serializers.RecruiterSerializer(recruiter).data, status=status.HTTP_201_CREATED)
+
+        else:
+            message = {
+            'status': False,
+            'message': ['Recruiter already exists'],
+            }
+            return Response(message, status=status.HTTP_409_CONFLICT)
+
+class RecruiterUpdateApi(RetrieveUpdateAPIView):
+    queryset = models.Recruiter.objects.all()
+    serializer_class = serializers.RecruiterSerializer
+    permission_classes = [c_permissions.IsRecruiterOrReadOnly]
