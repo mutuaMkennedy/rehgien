@@ -10,6 +10,7 @@
 """
 #Speciality field represents field of expertise for the pro
 
+from tabnanny import verbose
 from django.db import models
 from location import models as location_models
 from django.contrib.auth.models import User
@@ -116,6 +117,21 @@ class User(AbstractUser):
 # 				username = user_phone[:(29 - len(str(n)))] + '-' + str(n)
 # 			instance.username = username		
 
+
+class UserAddress(models.Model):
+	user = models.ForeignKey(User, related_name="user_address", blank = False, \
+						on_delete=models.CASCADE, null=True)
+	town = models.ForeignKey(location_models.KenyaTown, blank = False, \
+						on_delete=models.SET_NULL, null=True, related_name='user_town')
+	estate_name = models.CharField(max_length = 25, blank = False, null= True)
+	house_name = models.CharField(max_length = 25, blank = False, null= True)
+
+	class Meta:
+		verbose_name_plural = "User Address"
+	
+	def __str__(self):
+		return f"{self.user.username} - {self.house_name},{self.estate_name},{self.town.town_name}."
+	
 
 class PhoneOTP(models.Model):
 	phone_regex = RegexValidator( regex = r'^\+?1?\d{9,14}$', message ="Phone number must be entered in the format: '+254xxxxxxxxx'. Up to 14 digits allowed.")
