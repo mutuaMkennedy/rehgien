@@ -35,9 +35,11 @@ from .utils import otp_generator
 from contact.services import twilio_service
 import django_filters
 import re
-from django.db.models import Q,Count
+from django.db.models import Q,Count,Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from functools import reduce
+from operator import or_
 
 # referencing the custom user model
 User = get_user_model()
@@ -543,9 +545,20 @@ class PortfolioItemCreateApi(CreateAPIView):
     def perform_create(self,serializer):
         serializer.save(created_by=self.request.user)
 
+# Filter food items based on their title/name
+class PortfolioFilter(django_filters.FilterSet):
+    town_name = django_filters.rest_framework.CharFilter(field_name="name", lookup_expr='icontains')
+    class Meta:
+        model = models.PortfolioItem
+        fields = {
+            'name'
+        }
+
 class PortfolioItemListApi(ListAPIView):
     queryset = models.PortfolioItem.objects.all()
     serializer_class = serializers.PortfolioItemSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_class = PortfolioFilter
 
 class PortfolioItemDetailApi(RetrieveAPIView):
     queryset = models.PortfolioItem.objects.all()
@@ -844,71 +857,152 @@ def match_client_with_pros(request):
     questions = ""
     user_id = ""
     project_location_id = ""
+    matchmaking_method = ""
+    food_name = ""
     if request.user.is_authenticated:
         try:
-            questions = request.data['questions']
+            # We wil use this to define how we match the client and service provider
+            # plus how to structure the results returned
+            matchmaking_method = str(request.data['matchmaking_method'])
+        except:
+            pass
+        
+        try:
+            # General fields common to all types of mathmaking methods
             user_id = str(request.data['user_id'])
             project_location_id = str(request.data['project_location_id'])
         except:
             pass
+        
+        if user_id and project_location_id:
+            if matchmaking_method == "professionals":
+                # special field(s) reuired for finding and returning professionals
+                # in this matchmaking method
+                try:
+                    questions = request.data['questions']
+                except:
+                    pass
+                
+                # Find professionals
+                if questions:
+                    user_obj = ""
+                    location_obj = ""
+                    questions_valid = False
+                    try:
+                        user_obj = User.objects.get(pk=user_id)
+                        location_obj = location_models.KenyaTown.objects.get(pk=project_location_id)
+                        for q in questions:
+                            question_obj = models.Question.objects.get(pk=q['question_id'])
+                            for ans in q['answer']:
+                                option_obj = models.QuestionOptions.objects.get(pk=ans)
+                        questions_valid = True
+                    except:
+                        pass
 
-        if questions and user_id and project_location_id:
-            user_obj = ""
-            location_obj = ""
-            questions_valid = False
-            try:
-                user_obj = User.objects.get(pk=user_id)
-                location_obj = location_models.KenyaTown.objects.get(pk=project_location_id)
-                for q in questions:
-                    question_obj = models.Question.objects.get(pk=q['question_id'])
-                    for ans in q['answer']:
-                        option_obj = models.QuestionOptions.objects.get(pk=ans)
-                questions_valid = True
-            except:
-                pass
+                    if user_obj and location_obj and questions_valid== True:
+                        pro_answers = models.ProAnswer.objects.all()
 
-            if user_obj and location_obj and questions_valid== True:
-                pro_answers = models.ProAnswer.objects.all()
+                        # TO DO: Check whether the answers provided are related to the questions
 
-                # TO DO: Check whether the answers provided are related to the questions
+                        for q in questions:
+                            # save the clients answer for each 1uestion
+                            question_obj = models.Question.objects.get(pk=q['question_id'])
+                            option_ids_list = q['answer']
 
-                for q in questions:
-                    # save the clients answer for each 1uestion
-                    question_obj = models.Question.objects.get(pk=q['question_id'])
-                    option_ids_list = q['answer']
+                            client_answer_instance = models.ClientAnswer.objects.create(
+                                            user = user_obj,
+                                            question = question_obj,
+                                            project_location = location_obj
+                                        )
 
-                    client_answer_instance = models.ClientAnswer.objects.create(
-                                    user = user_obj,
-                                    question = question_obj,
-                                    project_location = location_obj
-                                )
+                            for a in option_ids_list:
+                                option_obj = models.QuestionOptions.objects.get(pk=a)
+                                client_answer_instance.answer.add(option_obj)
 
-                    for a in option_ids_list:
-                        option_obj = models.QuestionOptions.objects.get(pk=a)
-                        client_answer_instance.answer.add(option_obj)
+                            # Then Find pro answers that match the clients answer for the same question
+                            pro_answers = models.ProAnswer.objects.filter(
+                                            question = question_obj,
+                                            service_delivery_areas__town_name__icontains = location_obj.town_name,
+                                            answer__in = option_ids_list
+                                            ).annotate(num_answer=Count('answer')).filter(num_answer=len(option_ids_list))
 
-                    # Then Find pro answers that match the clients answer for the same question
-                    pro_answers = models.ProAnswer.objects.filter(
-                                    question = question_obj,
-                                    service_delivery_areas__town_name__icontains = location_obj.town_name,
-                                    answer__in = option_ids_list
-                                    ).annotate(num_answer=Count('answer')).filter(num_answer=len(option_ids_list))
+                        # After filtering the answers above create a list of business profile ids
+                        # that we will use to filter the business profiel table for serializing
+                        pro_ids =[]
+                        for p in pro_answers:
+                            pro_ids.append(p.business_profile.pk)
 
-                # After filtering the answers above create a list of business profile ids
-                # that we will use to filter the business profiel table for serializing
-                pro_ids =[]
-                for p in pro_answers:
-                    pro_ids.append(p.business_profile.pk)
+                        # Filter the business profile table
+                        pros = models.BusinessProfile.objects.filter(pk__in=pro_ids)
 
-                # Filter the business profile table
-                pros = models.BusinessProfile.objects.filter(pk__in=pro_ids)
+                        # Serialize the data returned
+                        serializer = serializers.BusinessProfileSerializer(pros,many=True)
 
-                # Serialize the data returned
-                serializer = serializers.BusinessProfileSerializer(pros,many=True)
+                        return Response(serializer.data)
+                    else:
+                        return Response({'status':False, 'detail':'Not found. Provide valid values for required fields.'})
+                else:
+                    return Response({'questions':'This field is required',})
+            elif matchmaking_method == "food":
+                # special field(s) for finding and returning professionals
+                # in this matchmaking method
+                try:
+                    food_name = str(request.data['food_name'])
+                except:
+                    pass
+                
+                # Find restaurants and return their menus related to the searched
+                # food item
+                if food_name:
+                    user_obj = ""
+                    location_obj = ""
+                    try:
+                        user_obj = User.objects.get(pk=user_id)
+                        location_obj = location_models.KenyaTown.objects.get(pk=project_location_id)
+                    except:
+                        pass
 
-                return Response(serializer.data)
+                    if user_obj and location_obj:
+                        # Filter the business profile table
+                        menu = models.PortfolioItem.objects.filter(name__icontains= food_name)
+                        restaurants = models.BusinessProfile.objects.filter(user=menu.created_by)
+                        # Serialize the data returned
+                        serializer = serializers.BusinessProfileSerializer(restaurants,many=True)
+
+                        return Response(serializer.data)
+                    else:
+                        return Response({'status':False, 'detail':'Not found. Provide valid values for required fields.'})
+                else:
+                    return Response({'food_name':'This field is required'})
             else:
-                return Response({'status':False, 'detail':'Not found. Provide valid values for required fields.'})
+                return Response({'matchmaking_method':'Provide a valid matchmaking method. Valid methods are:- food or professionals.'})
         else:
-            return Response({'user_id':'This field is required','project_location_id':'This field is required','questions':'This field is required',})
+            return Response({'user_id':'This field is required','project_location_id':'This field is required'})
 
+@api_view(['GET'])
+def search_food_item(request):
+    key = ""
+    try:
+        key = str(request.data['food_name'])
+    except:
+        pass
+    
+    if key:
+        results = []
+        proj_obj = models.PortfolioItem.objects
+        projects = proj_obj.filter(name__icontains= key)
+        for p in projects:
+            name = p.name
+            if name not in results:
+                similar_items = proj_obj.filter(name__icontains= name).aggregate(cost=Avg('project_cost'))
+                project = {
+                    "name":name,
+                    "avatar": p.project_job_type.service_image.url if p.project_job_type.service_image else '',
+                    "average_price": similar_items["cost"]
+                }
+                results.append(project)
+
+        return Response({'results':results}, status=status.HTTP_200_OK)
+        
+    else:
+         return Response({'status':False, 'food_name':"This field is required"}, status=status.HTTP_400_BAD_REQUEST)
