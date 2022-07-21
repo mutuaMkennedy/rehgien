@@ -58,6 +58,17 @@ class UserSerializer(serializers.ModelSerializer):
         'profile_image'
         ]
 
+class UserAddressSerializer(WritableNestedModelSerializer):
+    town_object = serializers.SerializerMethodField()
+    class Meta:
+        model = profiles_models.UserAddress
+        fields = ['id', "user", "town", "town_object", "estate_name", "house_name"
+        ]
+    
+    def get_town_object(self, object):
+        location = object.town
+        return location_serializers.KenyaTownSerializer(location).data
+
 class ProfessionalGroupSerializer(serializers.ModelSerializer):
     total_services = serializers.SerializerMethodField()
     class Meta:
@@ -633,6 +644,7 @@ class UserAccountSerializer(WritableNestedModelSerializer):
     has_interest_group = serializers.SerializerMethodField()
     groups_interested_in = serializers.SerializerMethodField()
     recommended_services = serializers.SerializerMethodField()
+    user_address = UserAddressSerializer(many=True)
     class Meta:
         model = profiles_models.User
         fields = [
@@ -640,7 +652,7 @@ class UserAccountSerializer(WritableNestedModelSerializer):
         'last_name', 'email', 'user_type','account_type', 'profile_image', 'business_pages_following', 'business_pages_saved',
         "pro_business_profile", "profiles_portfolioitem_createdby_related", "connection_requestor",
         "connection_request_receiver", "listings_home_owner_related",'_user_account_percentage_complete_', 'has_interest_group',
-        "groups_interested_in", 'user_service_search_history','recommended_services', 'recruiter'
+        "groups_interested_in", 'user_service_search_history','recommended_services', 'recruiter',"user_address"
         ]
 
     def get_has_interest_group(self, obj):
