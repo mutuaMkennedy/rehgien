@@ -1,3 +1,4 @@
+from secrets import choice
 from django.db import models
 from django.contrib.gis.db import models
 from django.conf import settings
@@ -79,7 +80,24 @@ class JobPostProposal(models.Model):
 A project is a job that is submitted by a client to a specific service
 provider who then gets to respond with a project quote or reject the job.
 """
-class Project(models.Model):
+
+class OrderCheckout(models.Model):
+    PAYMENT_METHODS = (
+        ("CASH", "Cash on delivery"),
+        ("REHGIEN_PAY", "Rehgien pay")
+    )
+    order_item = models.ForeignKey(profile_models.ProfessionalService, on_delete=models.SET_NULL,\
+                default = None, related_name='order_item', null =True, blank=True)
+    delivery_address = models.ForeignKey(profile_models.UserAddress, related_name='order_delivery_address', on_delete=models.SET_NULL, default=None, null=True)
+    item_quantity = models.PositiveIntegerField(null=True, blank=False,default=1)
+    message = models.TextField(null=True)
+    payment_method = models.CharField(max_length=25, blank=False, null=True, choices=PAYMENT_METHODS, default="CASH")
+
+    class Meta:
+        abstract = True
+
+# TO DO: Resolve API errors and remove duplicate fields which are already in Base class.
+class Project(OrderCheckout):
     RESPONSE_STATE = (
     ('ACCEPTED', 'accepted'),
     ('PENDING', 'pending'),
@@ -283,6 +301,7 @@ class ProjectQuote(models.Model):
     def __str__(self):
         return self.project.requested_service.service_name
 
+	# this is a unique field to
 def project_quote_sent_notification(sender, instance, created, **kwargs):
     user = User.objects.get(pk=instance.project.owner.pk)
     quote_sender = instance.quote_sender.pro_business_profile.business_name if instance.quote_sender.pro_business_profile else instance.quote_sender.username
@@ -331,3 +350,4 @@ class ProjectQuoteItem(models.Model):
 """
 Project models end here
 """
+
