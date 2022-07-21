@@ -77,4 +77,7 @@ urlpatterns = [
     path('search/matchmaking/questions/list/', api_views.MatchMakerListApi.as_view(), name = 'match_maker_list'),
     path('search/matchmaking/questions/<int:professional_service>/retrieve/', api_views.MatchMakerRetrieveApi.as_view(), name = 'match_maker_retrieve'),
     path('search/matchmaking/pros/find_match/', api_views.match_client_with_pros, name = 'match_client_with_pros'),
+    
+    # Search Food Items
+    path('search/food/', api_views.search_food_item, name = 'search_food_item'),
     ]
