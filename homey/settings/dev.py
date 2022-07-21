@@ -35,6 +35,11 @@ cloudinary.config(
   api_secret = "BAsPMg7zobSDbjzPs0yrwnCf-S0"
 )
 
+# Twilio settings
+TWILIO_CONVERSATIONS_SERVICE_SID = 'ISea7dbadbee2b4c80b87b2459211ca4ab'
+TWILIO_MESSAGING_SERVICE_SID = ''
+TWILIO_PHONE_NUMBER = ''
+
 # M-pesa daraja settings
 CONSUMER_KEY = "EiXmkNt4ha8TEFbGvmMuC7cm6mGRhR8p"
 CONSUMER_SECRET = 'zaxeviE8GB7GFTUc'
