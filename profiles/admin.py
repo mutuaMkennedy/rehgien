@@ -108,6 +108,7 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ("title","question_type","matchMaker",)
 
 admin.site.register(models.User, CustomUserAdmin)
+admin.site.register(models.UserAddress)
 admin.site.register(models.ProfessionalGroup,ProfessionalGroupAdmin)
 admin.site.register(models.ProfessionalCategory,ProfessionalCategoryAdmin)
 admin.site.register(models.ProfessionalService,ProfessionalServiceAdmin)
