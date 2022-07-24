@@ -965,7 +965,11 @@ def match_client_with_pros(request):
                     if user_obj and location_obj:
                         # Filter the business profile table
                         menu = models.PortfolioItem.objects.filter(name__icontains= food_name)
-                        restaurants = models.BusinessProfile.objects.filter(user=menu.created_by)
+                        # users who have the menu item searched for
+                        users = []
+                        for f in menu:
+                            users.append(int(f.created_by.pk))
+                        restaurants = models.BusinessProfile.objects.filter(user__pk__in=users)
                         # Serialize the data returned
                         serializer = serializers.BusinessProfileSerializer(restaurants,many=True)
 
