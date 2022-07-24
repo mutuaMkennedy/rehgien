@@ -176,12 +176,17 @@ class ResetPasswordOTP(models.Model):
 
 #Professional model tables from here
 class ProfessionalGroup(models.Model):
+	GROUP_CATEGORY = (
+		("PROFESSIONALS", "Professionals"),
+		("ORDER_AND_DELIVERY", "Order and delivery")
+	)
 	group_name = models.CharField(max_length=100, blank=False)
 	group_image = CloudinaryField('image', blank=True, null=True, overwrite=True, resource_type='image',
 							folder='professional_group_cover_photos')
 	slug = models.SlugField(max_length=250, blank=True)
 	interests = models.ManyToManyField(settings.AUTH_USER_MODEL, blank = True, \
 			related_name='group_interests')
+	group_category = models.CharField(max_length=50, choices=GROUP_CATEGORY, default="PROFESSIONALS", blank=True, null=True)
 
 	class Meta:
 		verbose_name_plural = "ProfessionalGroups"
