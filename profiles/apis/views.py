@@ -983,7 +983,7 @@ def match_client_with_pros(request):
 def search_food_item(request):
     key = ""
     try:
-        key = str(request.data['food_name'])
+        key = str(request.GET.get('food_name', ''))
     except:
         pass
     
