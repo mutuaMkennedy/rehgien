@@ -73,7 +73,8 @@ class ProfessionalGroupSerializer(serializers.ModelSerializer):
     total_services = serializers.SerializerMethodField()
     class Meta:
         model = profiles_models.ProfessionalGroup
-        fields = ['pk',"group_image","slug","interests","total_services"]
+        fields = ["GROUP_CATEGORY", 'pk',"group_image","slug","interests","total_services",
+                "group_category"]
 
     def get_total_services(self,obj):
         categories = profiles_models.ProfessionalCategory.objects.filter(professional_group = obj.pk)
