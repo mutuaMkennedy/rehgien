@@ -996,7 +996,9 @@ def search_food_item(request):
             if name not in results:
                 similar_items = proj_obj.filter(name__icontains= name).aggregate(cost=Avg('project_cost'))
                 project = {
+                    "pk":p.pk,
                     "name":name,
+                    "service_name": p.project_job_type.service_name,
                     "avatar": p.project_job_type.service_image.url if p.project_job_type.service_image else '',
                     "average_price": similar_items["cost"]
                 }
