@@ -86,7 +86,7 @@ class OrderCheckout(models.Model):
         ("CASH", "Cash on delivery"),
         ("REHGIEN_PAY", "Rehgien pay")
     )
-    order_item = models.ForeignKey(profile_models.ProfessionalService, on_delete=models.SET_NULL,\
+    order_item = models.ForeignKey(profile_models.PortfolioItem, on_delete=models.SET_NULL,\
                 default = None, related_name='order_item', null =True, blank=True)
     delivery_address = models.ForeignKey(profile_models.UserAddress, related_name='order_delivery_address', on_delete=models.SET_NULL, default=None, null=True)
     item_quantity = models.PositiveIntegerField(null=True, blank=False,default=1)
