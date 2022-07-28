@@ -143,12 +143,13 @@ class ProjectSerializer(WritableNestedModelSerializer):
     owner = serializers.SerializerMethodField()
     pro_contacted_object = serializers.SerializerMethodField()
     requested_service_object = serializers.SerializerMethodField()
+    order_item_object = serializers.SerializerMethodField()
     class Meta:
         model = models.Project
         fields = [
         "RESPONSE_STATE","PROJECT_STATE","pk","owner","client_message","client_phone","requested_service","requested_service_object", "project_status",
         "pro_contacted","pro_contacted_object", "pro_response_state","publishdate",
-        "project_details", "project_quote","PAYMENT_METHODS", "payment_method", "order_item", "delivery_address", "item_quantity", "message"
+        "project_details", "project_quote","PAYMENT_METHODS", "payment_method", "order_item", "order_item_object","delivery_address", "item_quantity", "message"
         ]
 
     def get_owner(self, object):
@@ -162,3 +163,7 @@ class ProjectSerializer(WritableNestedModelSerializer):
     def get_requested_service_object(self, object):
         service = object.requested_service
         return profile_serializers.ProfessionalServiceSerializer(service).data
+
+    def get_order_item_object(self, object):
+        item = object.order_item
+        return profile_serializers.PortfolioItemSerializer(item).data
