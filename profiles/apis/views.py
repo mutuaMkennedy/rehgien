@@ -994,7 +994,7 @@ def search_food_item(request):
     if key:
         results = []
         proj_obj = models.PortfolioItem.objects
-        projects = proj_obj.filter(name__icontains= key)
+        projects = proj_obj.filter(name__icontains= key, created_by__pro_business_profile__professional_category__professional_group__group_category="ORDER_AND_DELIVERY")
         for p in projects:
             name = p.name
             if name not in results:
