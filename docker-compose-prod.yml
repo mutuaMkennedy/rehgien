@@ -13,7 +13,7 @@ services:
     # CONTD: then you can run docker compose -f docker-compose-prod.yml push or pull
 
     # image name and a tag name
-    image: app:app
+    image: 759451633485.dkr.ecr.us-east-1.amazonaws.com/rehgien:app
     # Any name that can further help ID this container
     container_name: django_container
     build: .
@@ -41,7 +41,7 @@ services:
     # CONTD: then you can run docker compose -f docker-compose-prod.yml push or pull
 
     # image name and a tag name
-    image: nginx:nginx
+    image: 759451633485.dkr.ecr.us-east-1.amazonaws.com/rehgien:nginx
     # Any name that can further help ID this container
     container_name: nginx_container
     build: ./docker-services/nginx/
@@ -68,7 +68,7 @@ services:
     # CONTD: then you can run docker compose -f docker-compose-prod.yml push or pull
 
     # image name and a tag name
-    image: postgres:postgres
+    image: 759451633485.dkr.ecr.us-east-1.amazonaws.com/rehgien:postgres
     # Any name that can further help ID this container
     container_name: postgres_container
     build: ./docker-services/postgres/
@@ -96,9 +96,9 @@ services:
     # CONTD: then you can run docker compose -f docker-compose-prod.yml push or pull
 
     # image name and a tag name
-    image: redis:redis
+    image: 759451633485.dkr.ecr.us-east-1.amazonaws.com/rehgien:redis
     build: ./docker-services/redis/
-    container_name: homey_redis_container
+    container_name: redis_container
     ports:
       - "6379:6379"
     volumes:

@@ -7,7 +7,7 @@ services:
   app:
     # image name and a tag name
     image: app_dev:homey
-    container_name: homey_dev_django_container
+    container_name: rehgien_dev_django_container
     build: .
     ports:
       - "8080:8080"
@@ -33,7 +33,7 @@ services:
     restart: always
     # image name and a tag name
     image: homey_dev:postgres
-    container_name: homey_dev_postgres_container
+    container_name: rehgien_dev_postgres_container
     build: ./docker-services/postgres/
     ports:
       - "5432:5432"
@@ -49,7 +49,7 @@ services:
     # image name and a tag name
     image: homey_dev:redis
     build: ./docker-services/redis/
-    container_name: homey_dev_redis_container
+    container_name: rehgien_dev_redis_container
     ports:
       - "6379:6379"
     volumes:
