@@ -1,32 +1,65 @@
 from homey.settings.base import *
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from glob import glob
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+GDAL_LIBRARY_PATH=glob('/usr/lib/libgdal.so.*')[0]
+GEOS_LIBRARY_PATH=glob('/usr/lib/libgeos_c.so.*')[0]
+
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'rehgienTestDb',
-        'USER': 'rehgienAdmin ',
-        'PASSWORD': 'admin20$$',
-        'HOST': 'localhost',
-        'PORT': '5412',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 
-STATICFILES_STORAGE = 'homey.storage.ForgivingManifestStaticFilesStorage'
+EMAIL_USE_TLS = config('EMAIL_USE_TLS',cast=bool)
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 #claudinary settings
 cloudinary.config(
-  cloud_name = "rehgien",
-  api_key = "113141524396467",
-  api_secret = "BAsPMg7zobSDbjzPs0yrwnCf-S0"
+  cloud_name = config('CLOUD_NAME'),
+  api_key = config('API_KEY'),
+  api_secret = config('API_SECRET')
 )
 
+# Twilio settings
+TWILIO_CONVERSATIONS_SERVICE_SID = config("TWILIO_CONVERSATIONS_SERVICE_SID")
+TWILIO_MESSAGING_SERVICE_SID = config("TWILIO_MESSAGING_SERVICE_SID")
+TWILIO_PHONE_NUMBER = config("TWILIO_PHONE_NUMBER")
+
 # M-pesa daraja settings
-CONSUMER_KEY = "EiXmkNt4ha8TEFbGvmMuC7cm6mGRhR8p"
-CONSUMER_SECRET = 'zaxeviE8GB7GFTUc'
-ACCESS_TOKEN_API_ENDPOINT = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
-REGISTER_URL_API_ENDPOINT = 'https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl'
-MPESA_EXPRESS_API_ENDPOINT = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
-MPESA_B2C_API_ENDPOINT = 'https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest'
+CONSUMER_KEY = config("CONSUMER_KEY")
+CONSUMER_SECRET = config("CONSUMER_SECRET")
+ACCESS_TOKEN_API_ENDPOINT = config("ACCESS_TOKEN_API_ENDPOINT")
+REGISTER_URL_API_ENDPOINT = config("REGISTER_URL_API_ENDPOINT")
+MPESA_EXPRESS_API_ENDPOINT = config("MPESA_EXPRESS_API_ENDPOINT")
+MPESA_B2C_API_ENDPOINT = config("MPESA_B2C_API_ENDPOINT")
+
+# Sentry configuration
+sentry_sdk.init(
+    dsn=config("SENTRY_DSN"),
+    integrations=[DjangoIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production,
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)

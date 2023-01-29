@@ -5,6 +5,7 @@ import cloudinary.api
 from datetime import timedelta
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from decouple import config
 # import africastalking
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -15,10 +16,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ib)4kavk+9ds#_!v8y5*qoy2@)g1gfa@y2u(4tpvej$feb!!oj'
+SECRET_KEY = config('SECRET_KEY', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['localhost','165.227.185.180','127.0.0.1','rehgiendev2.remote.moe',
-                '207.154.205.115','rehgien.com', 'www.rehgien.com', '5242-41-80-113-18.in.ngrok.io']
+ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.environ.get('ALLOWED_HOSTS', '').split(','),
+    )
+)
 
 ADMINS = [('Mutua', 'do-not-reply@rehgien.com')]
 # Application definition
@@ -173,7 +180,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://redis:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -193,7 +200,7 @@ CHANNEL_LAYERS = {
     "default":{
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [('redis', 6379)],
         },
     },
 }
@@ -226,8 +233,8 @@ STATICFILES_DIRS = (
     # os.path.join(BASE_DIR, 'chat-frontend/build/static'),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'assets_new')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, '/vol/web/static')
+MEDIA_ROOT = os.path.join(BASE_DIR, '/vol/web/media')
 
 # COMPRESS_ENABLED = True
 
@@ -456,6 +463,6 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # Analytic services
-CLICKY_SITE_ID = '101303494'
-GOOGLE_ANALYTICS_GTAG_PROPERTY_ID = 'G-65Q435FWHZ'
-HOTJAR_SITE_ID = '2365112'
+CLICKY_SITE_ID = config('CLICKY_SITE_ID')
+GOOGLE_ANALYTICS_GTAG_PROPERTY_ID = config('GOOGLE_ANALYTICS_GTAG_PROPERTY_ID')
+HOTJAR_SITE_ID = config('HOTJAR_SITE_ID')
