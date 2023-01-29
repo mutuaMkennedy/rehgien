@@ -23,7 +23,8 @@ RUN set -ex && \
     /py/bin/pip install --upgrade pip && \
     apk add --update --no-cache postgresql-client && \
     apk add --update --no-cache --virtual .tmp-deps \
-        build-base postgresql-dev musl-dev linux-headers && \
+        build-base postgresql-dev gcc libc-dev musl-dev linux-headers && \
+    apk add libffi-dev && \
     apk add jpeg-dev zlib-dev freetype-dev lcms2-dev openjpeg-dev tiff-dev tk-dev tcl-dev && \
     apk add --no-cache \
             --upgrade \
@@ -32,6 +33,7 @@ RUN set -ex && \
                 proj \
                 gdal \
                 binutils && \
+    apk add openblas-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     apk del .tmp-deps && \
     adduser --disabled-password --no-create-home app && \
