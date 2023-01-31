@@ -189,7 +189,7 @@ CACHES = {
     },
     "select2": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/2",
+        "LOCATION": "redis://redis:6379/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -411,8 +411,8 @@ TWILIO_API_KEY = 'SKa49ccc790e56921af3eab4a615491c91'
 TWILIO_API_SECRET = 'oML64f6ovDPuTOkOGQ6bP77yqyNPyw33'
 
 # CELERY STUFF
-BROKER_URL =  'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+BROKER_URL =  'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
