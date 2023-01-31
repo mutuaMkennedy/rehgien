@@ -1,7 +1,4 @@
 import os
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
 from datetime import timedelta
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
