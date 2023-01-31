@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     #'haystack',
     # 'tastypie',
     'notifications',
+    "smuggler"
 ]
 
 
