@@ -10,4 +10,4 @@ whoami
 
 python manage.py migrate
 python manage.py collectstatic --noinput
-gunicorn homey.wsgi:application --bind 0.0.0.0:9000 --timeout 200  --workers 3 
+gunicorn homey.wsgi:application --bind 0.0.0.0:9000 --timeout 1800  --workers 3 
