@@ -8,6 +8,7 @@ db.sqlite3
 media
 assets_new
 .env.dev
+.env.prod
 # Backup files #
 *.bak
 
