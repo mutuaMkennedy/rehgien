@@ -218,3 +218,65 @@ class UserLoginViewTests(TestCase):
 
         # Check our user gets a incorrect password message
         self.assertIn("incorrect_password", response.context)
+
+class UserSignUpTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        # Create two users
+        client_user = User.objects.create_user(
+            username='test_client', 
+            password='1X<ISRUkw+tuK', 
+            email="testclient@email.com",
+            phone="+254123456789",
+            user_type="CLIENT")
+        professional_user = User.objects.create_user(
+            username='test_pro', 
+            password='2HJ1vRV0Z&3iD', 
+            email="testpro@email.com",
+            phone="+254123456788",
+            user_type="PRO")
+
+        client_user.save()
+        professional_user.save()  
+
+        # Create the required business profile for professional user to avoid any errors
+        business_profile = models.BusinessProfile.objects.create(user=professional_user)
+
+    def test_view_url_is_accessible(self):
+        """ Test view url is accessible and returns a status code 200 """
+
+        # Get the url
+        url = reverse('app_accounts:user_signup')
+
+        # Issue a get request
+        response = self.client.get(url)
+
+        # Test reachability
+        self.assertEqual(response.status_code, 200)
+
+    def test_unauthenticated_users_are_served_the_correct_template(self):
+        #  Issue GET request
+        response = self.client.get(reverse('app_accounts:user_signup'))
+
+        # Check that correct template is used
+        self.assertTemplateUsed(response, 'app_accounts/sign_up.html')
+
+    def test_authenticated_client_user_is_redirected_to_the_correct_url(self):
+        #  Login user
+        self.client.login(username="test_client", password="1X<ISRUkw+tuK")
+        
+        #  Issue GET request
+        response = self.client.get(reverse('app_accounts:user_signup'))
+
+        # Check our user gets redirected to the correct url
+        self.assertRedirects(response, reverse('homepage'))
+
+    def test_authenticated_pro_user_is_redirected_to_the_correct_url(self):
+        #  Login user
+        self.client.login(username="test_pro", password="2HJ1vRV0Z&3iD")
+        
+        #  Issue GET request
+        response = self.client.get(reverse('app_accounts:user_signup'))
+
+        # Check our user gets redirected to the correct url
+        self.assertRedirects(response, reverse('rehgien_pro:dashboard_home'))
