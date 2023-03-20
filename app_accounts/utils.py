@@ -3,6 +3,9 @@ from contact.services import twilio_service
 from django.contrib.auth import get_user_model
 from profiles import models
 
+# referencing the custom user model
+User = get_user_model()
+
 email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 phone_regex = r'^\+?1?\d{9,14}$'
 
