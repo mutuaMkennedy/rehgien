@@ -128,7 +128,11 @@ def validate_phone_send_otp(request):
     else:
         return JsonResponse({'status':False, 'detail':'Please enter a phone number!'})
 
-#pro onboarding wizard
+"""
+This view functionality and templates are incomplete. Upon completion
+it is supposed to replace the existing signup view and templates.
+Corresponding tests have been ignored until completion
+"""
 FORMS = [
             ("UserPhoneNumber", forms.UserPhoneNumber),
             # ("UserEmail", forms.UserEmail),
@@ -193,4 +197,4 @@ class UserAccountSetupWizardView(SessionWizardView):
         context ={
 
         }
-        return render(self.request, 'rehgien_pro/pro_onboarding/done.html',context)
+        return render(self.request, 'app_accounts/sign_up/done.html',context)
