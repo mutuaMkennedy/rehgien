@@ -1,6 +1,8 @@
 from django.test import TestCase, Client
 from django.urls import reverse, resolve
 from django.contrib.auth import get_user_model
+from django.utils.encoding import force_text
+from unittest import mock
 from .. import views 
 from profiles import models
 
@@ -280,3 +282,57 @@ class UserSignUpTests(TestCase):
 
         # Check our user gets redirected to the correct url
         self.assertRedirects(response, reverse('rehgien_pro:dashboard_home'))
+
+class ValidatePhoneSendOtpTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+        # Create user
+        User.objects.create_user(
+            username='test_client', 
+            password='1X<ISRUkw+tuK', 
+            email="testclient@email.com",
+            phone="+254123456789",
+            user_type="CLIENT")
+
+    def test_view_url_is_accessible(self):
+        """ Test view url is accessible and returns a status code 200 """
+
+        # Get the url
+        url = reverse('app_accounts:validate_phone')
+
+        # Issue a get request
+        response = self.client.get(url)
+
+        # Test reachability
+        self.assertEqual(response.status_code, 200)
+
+    def test_correct_response_when_phone_field_empty(self):  
+        #  Issue POST request
+        response = self.client.post(reverse('app_accounts:validate_phone'), {"phone":""})
+
+        # Check correct json response is returned
+        self.assertJSONEqual(force_text(response.content), {'status':False, 'detail':'Please enter a phone number!'})
+    
+    @mock.patch('app_accounts.views.utils.validate_phone_send_otp')
+    def test_correct_response_returned_when_process_is_successful(self, mock_validate_phone_send_otp):
+        # Configure the mock validate_phone_send_otp function to return a successful response
+        mock_validate_phone_send_otp.return_value = {'status': True}
+
+        # Issue POST request with a phone number that is not associated with an account
+        response = self.client.post(reverse('app_accounts:validate_phone'), {"phone":"+254123476789"})
+
+        # Check true value exist in the json response. Meaning validation request was successful
+        self.assertIn('status', response.json())
+        self.assertEqual(response.json()['status'], True)
+
+        # Check that the validate_phone_send_otp function was called with the correct arguments
+        mock_validate_phone_send_otp.assert_called_once_with('+254123476789')
+
+    def test_correct_response_returned_when_process_is_unsuccessful(self):
+        #  Issue POST request with to generate an unsuccessful validation i.e issue a phone number associated with an account
+        response = self.client.post(reverse('app_accounts:validate_phone'), {"phone":"+254123456789"})
+
+        # Check false value exist in the json response. Meaning validation request was unsuccessful
+        self.assertIn('status', response.json())
+        self.assertEqual(response.json()['status'], False)  # or False
