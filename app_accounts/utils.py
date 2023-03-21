@@ -2,6 +2,7 @@ import re
 from contact.services import twilio_service
 from django.contrib.auth import get_user_model
 from profiles import models
+from profiles.apis import utils
 
 # referencing the custom user model
 User = get_user_model()
@@ -25,7 +26,7 @@ def send_otp(phone_number,message):
     """
 
     if phone_number:
-        otp_code = otp_generator()
+        otp_code = utils.otp_generator()
         phone = str(phone_number)
         try:
             #send code to phone Number
