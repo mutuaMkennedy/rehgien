@@ -336,3 +336,96 @@ class ValidatePhoneSendOtpTests(TestCase):
         # Check false value exist in the json response. Meaning validation request was unsuccessful
         self.assertIn('status', response.json())
         self.assertEqual(response.json()['status'], False)  # or False
+
+"""
+The corresponding view is incomplete and functionality is likely to fail.
+These tests will be ignored until setup wizard is complete
+"""
+"""
+class UserAccountSetupWizardViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+         # Create user
+        User.objects.create_user(
+            username='test_client', 
+            password='1X<ISRUkw+tuK', 
+            email="testclient@email.com",
+            phone="+254123456789",
+            user_type="CLIENT")        
+
+    def test_user_account_setup_wizard_view(self):
+        # Issue a get request to the wizard view
+        url = reverse('app_accounts:UserAccountSetupWizard')
+        response = self.client.get(url)
+
+        # Test reachability and form template used
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "app_accounts/sign_up/phone_number.html")
+        
+        # Issue a post request to the wizard view with invalid phone number
+        data = {'0-phone': 'invalid'}
+        response = self.client.post(url, data)
+
+        # Test that the form displays errors and stays on the same page
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "app_accounts/sign_up/phone_number.html")
+        self.assertFormError(response, 'form0', 'phone', 'Enter a valid phone number.')
+        
+        # Issue a post request to the wizard view with valid phone number
+        data = {'0-phone': '+254712345678'}
+        response = self.client.post(url, data)
+
+        # Test that the phone verification code template is used in the next step
+        self.assertEqual(response.status_code, 302)  # 302 indicates redirect
+        response = self.client.get(response.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "app_accounts/sign_up/phone_verification.html")
+        
+        # Issue a post request to the wizard view with invalid verification code
+        data = {'1-verification_code': 'invalid'}
+        response = self.client.post(url, data)
+
+        # Test that the form displays errors and stays on the same page
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "app_accounts/sign_up/phone_verification.html")
+        self.assertFormError(response, 'form1', 'verification_code', 'Enter a valid verification code.')
+        
+        # Issue a post request to the wizard view with valid verification code
+        verification_code = '123456'
+        data = {'1-verification_code': verification_code}
+        response = self.client.post(url, data)
+
+        # Test that the password template is used in the next step
+        self.assertEqual(response.status_code, 302)  # 302 indicates redirect
+        response = self.client.get(response.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "app_accounts/sign_up/password.html")
+        
+        # Issue a post request to the wizard view with invalid password
+        data = {'2-password': 'short'}
+        response = self.client.post(url, data)
+
+        # Test that the form displays errors and stays on the same page
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "app_accounts/sign_up/password.html")
+        self.assertFormError(response, 'form2', 'password', 'Ensure this value has at least 8 characters (it has 5).')
+        
+        # Issue a post request to the wizard view with valid password
+        password = 'mypassword123'
+        data = {'2-password': password}
+        response = self.client.post(url, data)
+        self.assertTemplateUsed(response, "app_accounts/sign_up/password.html")
+
+         # Test that the user has been created successfully
+        self.assertEqual(response.status_code, 302)  # 302 indicates redirect
+        response = self.client.get(response.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(User.objects.count(), 1)
+        user = User.objects.first()
+        self.assertEqual(user.username, 'test_client')
+        self.assertEqual(user.email, 'testclient@email.com')
+        self.assertEqual(user.phone, '+254712345678')
+        self.assertEqual(user.user_type, 'CLIENT')
+        self.assertTemplateUsed(response, "app_accounts/sign_up/done.html")
+
+"""
