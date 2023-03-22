@@ -24,5 +24,28 @@ class UserPhoneNumberFormTest(SimpleTestCase):
         data = {"phone":formatted_phone}
  
         form = forms.UserPhoneNumber(data=data)
+
+        self.assertTrue(form.is_valid())
+
+class UserEmailFormTest(SimpleTestCase):
+    def test_invalid_data(self):
+        empty_data = {"email":""}
+        invalid_data = {"email":"test_email"}
+
+        form_1 = forms.UserEmail(data=empty_data)
+        form_2 = forms.UserEmail(data=invalid_data)
+
+        self.assertEqual(form_1.errors, {
+            "email":["This field is required."]
+        })
+
+        self.assertEqual(form_2.errors, {
+            "email":["Enter a valid email address."]
+        })
+
+    def test_valid_data(self):
+        data = {"email":"test_email@email.com"}
+ 
+        form = forms.UserEmail(data=data)
         
         self.assertTrue(form.is_valid())
