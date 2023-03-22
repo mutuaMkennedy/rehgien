@@ -49,3 +49,43 @@ class UserEmailFormTest(SimpleTestCase):
         form = forms.UserEmail(data=data)
         
         self.assertTrue(form.is_valid())
+
+class PhoneVerificationCodeTest(SimpleTestCase):
+    def test_invalid_data(self):
+        empty_data = {"code":""}
+        invalid_data = {"code":"code"}
+
+        form_1 = forms.PhoneVerificationCode(data=empty_data)
+        form_2 = forms.PhoneVerificationCode(data=invalid_data)
+
+        self.assertEqual(form_1.errors, {
+            "code":["This field is required."]
+        })
+
+        self.assertEqual(form_2.errors, {
+            "code":["Enter a whole number."]
+        })
+
+    def test_valid_data(self):
+        data = {"code":1234}
+ 
+        form = forms.PhoneVerificationCode(data=data)
+        
+        self.assertTrue(form.is_valid())
+
+class PasswordTest(SimpleTestCase):
+    def test_invalid_data(self):
+        data = {"password":""}
+
+        form_1 = forms.Password(data=data)
+
+        self.assertEqual(form_1.errors, {
+            "password":["This field is required."]
+        })
+
+    def test_valid_data(self):
+        data = {"password":"password123*"}
+ 
+        form = forms.Password(data=data)
+        
+        self.assertTrue(form.is_valid())
