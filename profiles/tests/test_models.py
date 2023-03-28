@@ -1,7 +1,11 @@
 import unittest
+from unittest.mock import patch
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.core.files import File
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 
 User = get_user_model()
 
@@ -234,6 +238,54 @@ class UserModelTests(TestCase):
                 phone='123'
             )
 
-            
+
+    @patch('cloudinary.uploader.upload')
+    def test_cloudinary_field(self, mock_upload):
+        # Set the return value of the mock upload method
+        mock_upload.return_value = {
+            'public_id': 'test_image',
+            'version': 1,
+            'signature': 'signature',
+            'width': 100,
+            'height': 100,
+            'format': 'jpg',
+            'resource_type': 'image',
+            'created_at': '2022-01-01T00:00:00Z',
+            'tags': ['user_profile_photos'],
+            'bytes': 1000,
+            'type': 'upload',  # add the 'type' key
+            'url': 'https://res.cloudinary.com/rehgien/image/upload/v1/test_image.jpg',
+            'secure_url': 'https://res.cloudinary.com/rehgien/image/upload/v1/test_image.jpg'
+        }
+
+        # Create a user with a profile image
+        user = User.objects.create(
+            username='testuser3',
+            password='testpassword',
+            first_name='Test',
+            last_name='User',
+            email='testuser3@example.com'
+        )
+        
+        image_data = b'fake image data'
+        content_type='image/jpeg'
+        image_file = SimpleUploadedFile(name='test_image.jpg', content=image_data, content_type=str(content_type))
+        user.profile_image = image_file
+        user.save()
+
+        # Check that the mock upload method was called with the image file
+        mock_upload.assert_called_with(
+            image_file,
+            folder='user_profile_photos',
+            overwrite=True, 
+            resource_type='image', 
+            type='upload'
+        )
+
+        # Check that the user's profile image URL was set correctly
+        expected_url = 'http://res.cloudinary.com/rehgien/image/upload/v1/test_image.jpg'
+        self.assertEqual(user.profile_image.url, expected_url)
+
+
 if __name__ == "__main__":
     unittest.main()
