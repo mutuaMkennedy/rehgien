@@ -43,14 +43,16 @@ services:
     # image name and a tag name
     image: 759451633485.dkr.ecr.us-east-1.amazonaws.com/rehgien:nginx
     # Any name that can further help ID this container
-    container_name: nginx_container
-    build: ./docker-services/nginx/
+    container_name: nginx-prod
+    build: ./services/nginx/
     ports:
       - "80:8000"
       - 443:443
     volumes:
       - static_volume:/vol/static
       - media_volume:/vol/media
+      # switch between dev (no ssl) and production (with ssl) nginx configs files
+      - ./services/nginx/production:/etc/nginx/conf.d
       - /var/www/html:/var/www/html
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/lib/letsencrypt:/var/lib/letsencrypt
@@ -70,8 +72,8 @@ services:
     # image name and a tag name
     image: 759451633485.dkr.ecr.us-east-1.amazonaws.com/rehgien:postgres
     # Any name that can further help ID this container
-    container_name: postgres_container
-    build: ./docker-services/postgres/
+    container_name: postgres-prod
+    build: ./services/postgres/
     ports:
       - "5432:5432"
     volumes:
@@ -97,8 +99,8 @@ services:
 
     # image name and a tag name
     image: 759451633485.dkr.ecr.us-east-1.amazonaws.com/rehgien:redis
-    build: ./docker-services/redis/
-    container_name: redis_container
+    build: ./services/redis/
+    container_name: redis-prod
     ports:
       - "6379:6379"
     volumes:
