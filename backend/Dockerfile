@@ -16,7 +16,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 COPY requirements.txt /tmp/requirements.txt
-COPY ./docker-services/scripts /docker-services/scripts
+COPY ./bin /bin
 
 RUN set -ex && \
     python -m venv /py && \
@@ -45,10 +45,10 @@ RUN set -ex && \
     mkdir -p /vol/web/media && \
     chown -R app:app /vol && \
     chmod -R 755 /vol && \
-    chmod -R +x /docker-services/scripts
+    chmod -R +x /bin
 
 COPY . .
-ENV PATH="/docker-services/scripts:/py/bin:$PATH"
+ENV PATH="/bin:/py/bin:$PATH"
 USER root
 
 CMD [ "run.sh"]

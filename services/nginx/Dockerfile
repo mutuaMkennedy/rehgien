@@ -1,8 +1,6 @@
 FROM nginxinc/nginx-unprivileged:1-alpine
 LABEL maintainer="www.kennedymutua.crunchgarage.com"
 
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d
 COPY ./run.sh /run.sh
 
 USER root
