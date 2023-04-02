@@ -6,11 +6,11 @@ version: '3.9'
 services:
   app:
     # image name and a tag name
-    image: app_dev:homey
-    container_name: rehgien_dev_django_container
-    build: .
+    image: dev:app
+    container_name: rehgien-django-dev
+    build: ./backend
     ports:
-      - "8080:8080"
+      - "8000:8000"
     links:
       - postgres:postgres
       - redis:redis
@@ -18,13 +18,13 @@ services:
       # NOTE: Usefull in dev mode only.
       # CONTD: Will allow us to make code changes and have them reflect in or container
       # CONTD: Not required in prod as we won't be making changes to code there
-      - .:/app 
+      - ./backend:/app 
     env_file:
       # env. file containing variables to use within this service
       - .env
     command: >
       sh -c " python manage.py migrate &&
-              python manage.py runserver 0.0.0.0:8080
+              python manage.py runserver 0.0.0.0:8000
             "
     depends_on:
       - postgres
@@ -32,9 +32,9 @@ services:
   postgres:
     restart: always
     # image name and a tag name
-    image: homey_dev:postgres
-    container_name: rehgien_dev_postgres_container
-    build: ./docker-services/postgres/
+    image: dev:postgres
+    container_name: rehgien-postgres-dev
+    build: ./services/postgres/
     ports:
       - "5432:5432"
     volumes:
@@ -47,13 +47,29 @@ services:
 
   redis:
     # image name and a tag name
-    image: homey_dev:redis
-    build: ./docker-services/redis/
-    container_name: rehgien_dev_redis_container
+    image: dev:redis
+    build: ./services/redis/
+    container_name: rehgien-redis-dev
     ports:
       - "6379:6379"
     volumes:
       - redisdata:/data
+
+  jenkins:
+    image: dev:jenkins
+    user: root
+    build: ./jenkins/
+    ports:
+      - "8080:8080"
+    volumes:
+      - /jenkins/data:/var/jenkins_home
+      - /jenkins/artifacts:/var/jenkins_artifacts
+      - /var/run/docker.sock:/var/run/docker.sock 
+    networks:
+      - jenkins_net
+
+networks:
+  jenkins_net:
 
 volumes:
   pgdata:
