@@ -55,22 +55,6 @@ services:
     volumes:
       - redisdata:/data
 
-  jenkins:
-    image: dev:jenkins
-    user: root
-    build: ./jenkins/
-    ports:
-      - "8080:8080"
-    volumes:
-      - /jenkins/data:/var/jenkins_home
-      - /jenkins/artifacts:/var/jenkins_artifacts
-      - /var/run/docker.sock:/var/run/docker.sock 
-    networks:
-      - jenkins_net
-
-networks:
-  jenkins_net:
-
 volumes:
   pgdata:
   redisdata:
