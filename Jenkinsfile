@@ -11,9 +11,6 @@ pipeline {
      environment {
         AWS_DEFAULT_REGION = 'us-east-1'
         AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
-        ECR_REPOSITORY = 'rehgien'
-        AWS_ACCESS_KEY_ID = credentials('aws-account-credentials').AWS_ACCESS_KEY_ID
-        AWS_SECRET_ACCESS_KEY = credentials('my-aws-creds').AWS_SECRET_ACCESS_KEY
         SSH_CREDENTIALS = credentials("SSH_CREDENTIALS")
         DOMAIN_NAME = "rehgien.crunchgarage.com"
     }
@@ -52,11 +49,14 @@ pipeline {
     
         stage('Push to ECR') {
             steps {
-                // Authenticate Docker client to Amazon ECR registry
-                sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-                // Push your Docker image to Amazon ECR repository
-                // We've already tagged the images in our docker-compose-prod.yml so just push
-                sh "docker compose -f docker-compose-prod.yml push"
+                withCredentials([<object of type com.cloudbees.jenkins.plugins.awscredentials.AmazonWebServicesCredentialsBinding>]) {
+                    // Authenticate Docker client to Amazon ECR registry
+                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                    // Push your Docker image to Amazon ECR repository
+                    // We've already tagged the images in our docker-compose-prod.yml so just push
+                    sh "docker compose -f docker-compose-prod.yml push"
+                }
+
             }
         }
 
