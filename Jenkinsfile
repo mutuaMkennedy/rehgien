@@ -1,21 +1,76 @@
 pipeline {
-    agent any
+    agent {
+        docker { 
+            // Use the Docker image that has all the necessary tools installed for building and deploying the Django app
+            image 'docker/compose:3.9'
+            // Mount the Docker socket from the host to the container to allow Docker-in-Docker (DinD)
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+     environment {
+        AWS_DEFAULT_REGION = 'us-east-1'
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
+        ECR_REPOSITORY = 'rehgien'
+        AWS_ACCESS_KEY_ID = credentials('aws-account-credentials').AWS_ACCESS_KEY_ID
+        AWS_SECRET_ACCESS_KEY = credentials('my-aws-creds').AWS_SECRET_ACCESS_KEY
+        SSH_CREDENTIALS = credentials("SSH_CREDENTIALS")
+        DOMAIN_NAME = "rehgien.crunchgarage.com"
+    }
 
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                // Checkout the source code from the Git repository
+                git 'https://github.com/mutuaMkennedy/rehgien.git'
+                // Build the Docker images for the Django app and its dependencies using Docker Compose
+                sh 'docker compose -f docker-compose-prod.yml build'
             }
         }
+
         stage('Test') {
             steps {
-                echo 'Testing..'
+                // Start the Docker containers for the Django app and its dependencies using Docker Compose
+                sh 'docker compose -f docker-compose-prod.yml up -d'
+                // Run the tests for the Django app
+                sh 'docker compose -f docker-compose-prod.yml run --rm django python manage.py test'
+                // Stop the Docker containers
+                sh 'docker compose -f docker-compose-prod.yml down'
             }
         }
-        stage('Deploy') {
+
+        stage('Install AWS CLI') {
             steps {
-                echo 'Deploying....'
+                // Install AWS CLI so we can run aws command in the next steps in the pipline
+                sh '''
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                    unzip awscliv2.zip
+                    sudo ./aws/install
+                '''
             }
         }
+    
+        stage('Push to ECR') {
+            steps {
+                // Authenticate Docker client to Amazon ECR registry
+                sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                // Push your Docker image to Amazon ECR repository
+                // We've already tagged the images in our docker-compose-prod.yml so just push
+                sh "docker compose -f docker-compose-prod.yml push"
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                // Deploy the Docker image to Amazon EC2 instance
+                 sshagent(credentials: ['${SSH_CREDENTIALS}']) {
+                    // We have tagged the images on our docker compose prod file so just call the pull command
+                    sh 'ssh ${SSH_CREDENTIALS_USR}@${DOMAIN_NAME} "docker compose -f docker-compose-prod.yml pull"'
+                    // Restart the Docker containers
+                    sh 'ssh ${SSH_CREDENTIALS_USR}@${DOMAIN_NAME} "docker compose -f docker-compose-prod.yml up -d --no-deps --remove-orphans"'
+                }
+            }
+        }
+        
     }
 }
