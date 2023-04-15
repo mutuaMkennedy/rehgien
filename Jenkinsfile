@@ -49,7 +49,8 @@ pipeline {
     
         stage('Push to ECR') {
             steps {
-                withCredentials([<object of type com.cloudbees.jenkins.plugins.awscredentials.AmazonWebServicesCredentialsBinding>]) {
+
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                     // Authenticate Docker client to Amazon ECR registry
                     sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
                     // Push your Docker image to Amazon ECR repository
