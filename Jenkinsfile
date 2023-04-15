@@ -21,18 +21,18 @@ pipeline {
                 // Checkout the source code from the Git repository
                 git 'https://github.com/mutuaMkennedy/rehgien.git'
                 // Build the Docker images for the Django app and its dependencies using Docker Compose
-                sh 'docker compose -f docker-compose-prod.yml build'
+                sh 'docker-compose -f docker-compose-prod.yml build'
             }
         }
 
         stage('Test') {
             steps {
                 // Start the Docker containers for the Django app and its dependencies using Docker Compose
-                sh 'docker compose -f docker-compose-prod.yml up -d'
+                sh 'docker-compose -f docker-compose-prod.yml up -d'
                 // Run the tests for the Django app
-                sh 'docker compose -f docker-compose-prod.yml run --rm django python manage.py test'
+                sh 'docker-compose -f docker-compose-prod.yml run --rm django python manage.py test'
                 // Stop the Docker containers
-                sh 'docker compose -f docker-compose-prod.yml down'
+                sh 'docker-compose -f docker-compose-prod.yml down'
             }
         }
 
@@ -55,7 +55,7 @@ pipeline {
                     sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
                     // Push your Docker image to Amazon ECR repository
                     // We've already tagged the images in our docker-compose-prod.yml so just push
-                    sh "docker compose -f docker-compose-prod.yml push"
+                    sh "docker-compose -f docker-compose-prod.yml push"
                 }
 
             }
