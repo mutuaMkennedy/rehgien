@@ -26,7 +26,7 @@ pipeline {
                     ls -l /var/jenkins_home/workspace/rehgien-web-app@2/aws/dist/
                     echo $PATH
                     export PATH=$PATH:/var/jenkins_home/workspace/rehgien-web-app@2/aws/dist/
-                    ./aws/install
+                    /var/jenkins_home/workspace/rehgien-web-app@2/aws/dist/aws ./aws/install
                 '''
             }
         }
