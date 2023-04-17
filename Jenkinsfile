@@ -24,6 +24,8 @@ pipeline {
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
                     unzip -o -q awscliv2.zip -d ./aws
                     ls -l /var/jenkins_home/workspace/rehgien-web-app@2/aws/dist/
+                    echo $PATH
+                    export PATH=$PATH:/var/jenkins_home/workspace/rehgien-web-app@2/aws/dist/
                     ./aws/install
                 '''
             }
