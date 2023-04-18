@@ -27,8 +27,8 @@ pipeline {
                     echo $PATH
                     export PATH=$PATH:/var/jenkins_home/workspace/rehgien-web-app@2/aws/dist/
                     which aws
-                    cd /var/jenkins_home/workspace/rehgien-web-app@2/aws/dist/aws
-                    ./install
+                    /var/jenkins_home/workspace/rehgien-web-app@2/aws/dist/aws --version  
+                    /var/jenkins_home/workspace/rehgien-web-app@2/aws/dist/aws ./install
                 '''
             }
         }
