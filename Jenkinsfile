@@ -20,6 +20,10 @@ pipeline {
             steps {
                 // Install AWS CLI so we can run aws command in the next steps in the pipline
                 sh '''
+                    echo Checking aws installation
+                    aws -version
+                    which aws
+                    echo Done checking installation
                     apk add --no-cache curl
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
                     unzip -o -q awscliv2.zip -d ./aws
