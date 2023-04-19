@@ -21,6 +21,7 @@ pipeline {
                 // Install AWS CLI so we can run aws command in the next steps in the pipline
                 sh '''
                     echo Checking aws installation
+                    echo $PATH
                     aws -version
                     which aws
                     echo Done checking installation
