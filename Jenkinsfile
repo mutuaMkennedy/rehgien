@@ -13,7 +13,6 @@ pipeline {
         AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
         SSH_CREDENTIALS = credentials("SSH_CREDENTIALS")
         DOMAIN_NAME = "rehgien.crunchgarage.com"
-        PATH = "/usr/local/aws-cli/v2/current/bin:${PATH}"
     }
 
     stages {
@@ -24,10 +23,10 @@ pipeline {
                     echo Checking aws installation
                     echo $PATH
                     ls -l /usr/local/bin/
-                    echo Check version
-                    /usr/local/aws-cli/v2/current/bin/aws --version
                     echo Aws installation path
                     which aws
+                    echo Check version
+                    /usr/local/aws-cli/v2/current/bin/aws --version                 
                     aws -version
                     echo Done checking installation
                 '''
