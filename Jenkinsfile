@@ -27,9 +27,9 @@ pipeline {
                     ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
                     echo "export PATH=$PATH:/usr/local/bin" >> ~/.bashrc
                     source ~/.bashrc
-                    ls /usr/local/bin
+                    ls -l /usr/local/bin
                     echo Aws installation path
-                    which aws
+                    which -aaws
                     echo Check version
                     /usr/local/bin/aws --version   
                     aws --version
