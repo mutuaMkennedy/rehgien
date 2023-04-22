@@ -28,6 +28,7 @@ pipeline {
                     echo "export PATH=$PATH:/usr/local/bin" >> ~/.bashrc
                     source ~/.bashrc
                     ls -l /usr/local/bin
+                    ls -l /usr/local/aws-cli/v2/current/bin/aws
                     echo Aws installation path
                     which -a aws
                     echo Check version
