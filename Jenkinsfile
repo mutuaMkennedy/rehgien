@@ -24,6 +24,8 @@ pipeline {
                     echo Checking aws installation
                     echo $PATH
                     ls -l /usr/local/bin/
+                    echo Check version
+                    /usr/local/aws-cli/v2/current/bin/aws --version
                     echo Aws installation path
                     which aws
                     aws -version
