@@ -22,6 +22,7 @@ pipeline {
                 sh '''
                     echo Installing AWS CLI
                     apk add --no-cache curl
+                    apk add sudo
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
                     unzip -o awscliv2.zip
                     ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
