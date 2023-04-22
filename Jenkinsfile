@@ -23,8 +23,9 @@ pipeline {
                     echo Checking aws installation
                     echo $PATH
                     ls -l /usr/local/bin/
-                    aws -version
+                    echo Aws installation path
                     which aws
+                    aws -version
                     echo Done checking installation
                 '''
             }
