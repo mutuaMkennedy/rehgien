@@ -20,6 +20,7 @@ pipeline {
             steps {
                 // Install AWS CLI so we can run aws command in the next steps in the pipline
                 sh '''
+                    #!/bin/bash -e
                     echo Checking aws installation
                     echo $PATH
                     ls -l /usr/local/bin/
