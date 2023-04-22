@@ -20,6 +20,10 @@ pipeline {
             steps {
                 // Install AWS CLI so we can run aws command in the next steps in the pipline
                 sh '''
+                    echo Installing AWS CLI
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+                    unzip awscliv2.zip -d /usr/local/aws-cli/v2 && \
+                    /usr/local/aws-cli/v2/aws/install
                     echo Checking aws installation
                     ls -l /usr/local/aws-cli/v2/current/bin
                     echo Aws installation path
