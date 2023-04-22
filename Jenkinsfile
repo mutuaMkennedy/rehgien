@@ -23,7 +23,7 @@ pipeline {
                     echo Installing AWS CLI
                     apk add --no-cache curl
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-                    unzip awscliv2.zip && ./aws/install
+                    unzip -o awscliv2.zip && ./aws/install
                     echo Aws installation path
                     which aws
                     echo Check version
