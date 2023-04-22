@@ -33,6 +33,7 @@ pipeline {
                     hash
                     which -a aws
                     echo Check version
+                    /usr/local/aws-cli/v2/current/bin/aws --version
                     /usr/local/bin/aws --version   
                     aws --version
                     echo Done checking installation
