@@ -29,7 +29,7 @@ pipeline {
                     source ~/.bashrc
                     ls -l /usr/local/bin
                     echo Aws installation path
-                    which -aaws
+                    which -a aws
                     echo Check version
                     /usr/local/bin/aws --version   
                     aws --version
