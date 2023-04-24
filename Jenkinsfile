@@ -22,22 +22,14 @@ pipeline {
                 sh '''
                     #!/bin/bash -l
                     echo Installing AWS CLI
-                    apk add --no-cache curl
+                    apk add --no-cache curl unzip bash
                     apk add sudo
-                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-                    unzip -o awscliv2.zip
-                    ./aws/install
-                    hash aws
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                    unzip awscliv2.zip
+                    sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+                    which aws
                     ls -l /usr/local/bin
-                    ls -l /usr/local/aws-cli/v2/current/bin
-                    ls -l /usr/local/aws-cli/v2/current/dist
-                    echo Aws installation path
-                    which -a aws
-                    echo Check version
-                    whoami
-                    echo $PATH
-                    sudo /usr/local/aws-cli/v2/current/bin/aws --version
-                    sudo /usr/local/bin/aws --version
+                    /usr/local/bin/aws --version
                     aws --version
                     echo Done checking installation
                 '''
