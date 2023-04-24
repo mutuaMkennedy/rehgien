@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Copying environment file to working directory
+      - sh "aws s3 cp s3://rehgien/.env ." 
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      # Env variables are defined in codebuild for this project
+      - $(aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com")
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building Docker images...
+      - docker compose -f docker-compose-prod.yml build
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing Docker images to registry...
+      # Images are tagged in our docker compose yml file so just push
+      - docker compose -f docker-compose-prod.yml push
