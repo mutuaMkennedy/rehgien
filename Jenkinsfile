@@ -78,18 +78,21 @@ pipeline {
         stage('Build') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-account-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                    // Checkout the source code from the Git repository
-                    git 'https://github.com/mutuaMkennedy/rehgien.git'
-                    // Copy our .env file to the repository
-                    sh "aws s3 cp s3://rehgien/.env ."  
-                    // Build the Docker images for the Django app and its dependencies using Docker Compose
-                    sh 'docker compose -f docker-compose-prod.yml build'
+                    // Using AWS codebuild to avoid maxing out memory for our AWS EC2 instance during docker builds
+                    // We use a buildspec.yml file to define the commands to run during the build process
+                    // The project with the associated repository has been created on codebuild. We just need to initiate a build process.
+                    // AWS codebuild will build our images and push them to ECR
+                    sh "echo Starting codebuild process"
+                    awsCodeBuild projectName: 'rehgien-web-app',
+                         buildspec: 'buildspec.yml'
                 }
             }
         }
 
         stage('Test') {
             steps {
+                // Pull our built images
+                sh "docker compose -f docker-compose-prod.yml pull"
                 // Start the Docker containers for the Django app and its dependencies using Docker Compose
                 sh 'docker compose -f docker-compose-prod.yml up -d'
                 // Run the tests for the Django app
@@ -98,20 +101,22 @@ pipeline {
                 sh 'docker compose -f docker-compose-prod.yml down'
             }
         }
-    
-        stage('Push to ECR') {
-            steps {
+        
+        // AWS CODEBUILD handles this stage
 
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-account-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                    // Authenticate Docker client to Amazon ECR registry
-                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-                    // Push your Docker image to Amazon ECR repository
-                    // We've already tagged the images in our docker-compose-prod.yml so just push
-                    sh "docker compose -f docker-compose-prod.yml push"
-                }
+        // stage('Push to ECR') {
+        //     steps {
 
-            }
-        }
+        //         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-account-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        //             // Authenticate Docker client to Amazon ECR registry
+        //             sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+        //             // Push your Docker image to Amazon ECR repository
+        //             // We've already tagged the images in our docker-compose-prod.yml so just push
+        //             sh "docker compose -f docker-compose-prod.yml push"
+        //         }
+
+        //     }
+        // }
 
         stage('Deploy to EC2') {
             steps {
