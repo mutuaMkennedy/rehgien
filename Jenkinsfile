@@ -17,9 +17,10 @@ pipeline {
         stage('Install Docker and Docker Compose'){
             steps{
                 // Update packages
-
-                sh "apt-get install sudo" 
                 sh "apt-get update"
+                
+                // Install sudo
+                sh "apt install sudo"
                 
                 // Install Docker ref:- https://docs.docker.com/engine/install/ubuntu/
 
