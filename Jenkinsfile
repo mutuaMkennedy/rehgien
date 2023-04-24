@@ -20,6 +20,7 @@ pipeline {
             steps {
                 // Install AWS CLI so we can run aws command in the next steps in the pipline
                 sh '''
+                    #!/bin/bash -l
                     echo Installing AWS CLI
                     apk add --no-cache curl
                     apk add sudo
@@ -35,7 +36,7 @@ pipeline {
                     echo Check version
                     whoami
                     echo $PATH
-                    sudo /usr/local/aws-cli/v2/current/dist/aws --version
+                    sudo /usr/local/aws-cli/v2/current/bin/aws --version
                     sudo /usr/local/bin/aws --version
                     aws --version
                     echo Done checking installation
