@@ -1,10 +1,8 @@
 pipeline {
     agent {
         docker { 
-            // Use the Docker image that has all the necessary tools installed for building and deploying the Django app
+            // NOTE: Using ubuntu as it has support for AWS CLI. Other images like Alpine based images will not work with AWS CLI
             image 'ubuntu:latest'
-            // Mount the Docker socket from the host to the container to allow Docker-in-Docker (DinD)
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
@@ -16,6 +14,47 @@ pipeline {
     }
 
     stages {
+        stage('Install Docker and Docker Compose'){
+            steps{
+                // Update packages
+
+                sh "sudo apt-get update"
+                
+                // Install Docker ref:- https://docs.docker.com/engine/install/ubuntu/
+
+                sh "sudo apt-get install ca-certificates curl gnupg"
+
+                sh '''
+                    sudo install -m 0755 -d /etc/apt/keyrings
+                    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+                    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+                '''
+
+                sh '''
+                    echo \
+                    "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+                    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+                    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+                '''
+
+                sh '''
+                    sudo apt-get update
+                    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                '''
+
+                // Verify docker has been installed successfully
+                sh '''
+                    echo Checking Docker installation
+                    sudo docker run hello-world
+                '''
+
+                // Verify docker compose has been installed successfully
+                sh '''
+                    echo Checking Docker compose installation
+                    docker compose version
+                '''
+            }
+        }
         stage('Install AWS CLI') {
             steps {
                 // Install AWS CLI so we can run aws command in the next steps in the pipline
