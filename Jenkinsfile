@@ -33,7 +33,6 @@ pipeline {
                     which -a aws
                     echo Check version
                     whoami
-                    sudo /usr/local/bin/aws --version   
                     aws --version
                     echo Done checking installation
                 '''
