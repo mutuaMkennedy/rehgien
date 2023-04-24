@@ -20,12 +20,12 @@ pipeline {
             steps {
                 // Install AWS CLI so we can run aws command in the next steps in the pipline
                 sh '''
-                    #!/bin/bash -l
+                     #!/bin/bash -l
                     echo Installing AWS CLI
                     apk add --no-cache curl unzip bash
                     apk add sudo
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                    unzip awscliv2.zip
+                    unzip -o awscliv2.zip
                     sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
                     which aws
                     ls -l /usr/local/bin
