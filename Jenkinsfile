@@ -40,7 +40,7 @@ pipeline {
                     // Checkout the source code from the Git repository
                     git 'https://github.com/mutuaMkennedy/rehgien.git'
                     // Copy our .env file to the repository
-                    sh "aws s3 cp s3://rehgien/.env" 
+                    sh "aws s3 cp s3://rehgien/.env ."  
                     // Build the Docker images for the Django app and its dependencies using Docker Compose
                     sh 'docker-compose -f docker-compose-prod.yml build'
                 }
