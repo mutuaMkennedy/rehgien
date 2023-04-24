@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker { 
             // Use the Docker image that has all the necessary tools installed for building and deploying the Django app
-            image 'docker/compose:1.29.2'
+            image 'ubuntu:latest'
             // Mount the Docker socket from the host to the container to allow Docker-in-Docker (DinD)
             args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
