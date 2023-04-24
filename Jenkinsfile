@@ -34,7 +34,7 @@ pipeline {
                     echo Check version
                     whoami
                     echo $PATH
-                    sudo /usr/local/aws-cli/v2/current/bin/aws --version
+                    sudo /usr/local/bin/aws --version
                     aws --version
                     echo Done checking installation
                 '''
