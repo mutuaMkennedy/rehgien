@@ -18,6 +18,7 @@ pipeline {
     stages {
         stage('Remove old AWS CLI') {
             steps {
+                sh 'apk add sudo'
                 sh 'sudo rm -rf /usr/local/aws-cli'
                 sh 'sudo rm -rf /usr/local/bin/aws'
             }
@@ -29,7 +30,6 @@ pipeline {
                     #!/bin/bash -l
                     echo Installing AWS CLI
                     apk add --no-cache curl
-                    apk add sudo
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
                     unzip -o awscliv2.zip
                     ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
