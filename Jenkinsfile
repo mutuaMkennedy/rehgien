@@ -16,20 +16,32 @@ pipeline {
     }
 
     stages {
+        stage('Remove old AWS CLI') {
+            steps {
+                sh 'sudo rm -rf /usr/local/aws-cli'
+                sh 'sudo rm -rf /usr/local/bin/aws'
+            }
+        }
         stage('Install AWS CLI') {
             steps {
                 // Install AWS CLI so we can run aws command in the next steps in the pipline
                 sh '''
-                     #!/bin/bash -l
+                    #!/bin/bash -l
                     echo Installing AWS CLI
-                    apk add --no-cache curl unzip bash
+                    apk add --no-cache curl
                     apk add sudo
-                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
                     unzip -o awscliv2.zip
-                    sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
-                    which aws
+                    ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
                     ls -l /usr/local/bin
-                    /usr/local/bin/aws --version
+                    ls -l /usr/local/aws-cli/v2/current/bin
+                    ls -l /usr/local/aws-cli/v2/current/dist
+                    echo Aws installation path
+                    which -a aws
+                    echo Check version
+                    whoami
+                    echo $PATH
+                    sudo /usr/local/bin/aws --version
                     aws --version
                     echo Done checking installation
                 '''
