@@ -27,15 +27,7 @@ pipeline {
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
                     unzip -o awscliv2.zip
                     ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
-                    ls -l /usr/local/bin
-                    ls -l /usr/local/aws-cli/v2/current/bin
-                    ls -l /usr/local/aws-cli/v2/current/dist
-                    echo Aws installation path
-                    which -a aws
-                    echo Check version
-                    whoami
-                    echo $PATH
-                    /usr/local/bin/aws --version
+                    echo Check aws cli is installed correctly
                     aws --version
                     echo Done checking installation
                 '''
@@ -44,7 +36,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-account-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                     // Checkout the source code from the Git repository
                     git 'https://github.com/mutuaMkennedy/rehgien.git'
                     // Copy our .env file to the repository
@@ -69,7 +61,7 @@ pipeline {
         stage('Push to ECR') {
             steps {
 
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-account-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                     // Authenticate Docker client to Amazon ECR registry
                     sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
                     // Push your Docker image to Amazon ECR repository
