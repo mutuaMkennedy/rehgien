@@ -23,7 +23,7 @@ pipeline {
                     #!/bin/bash -l
                     echo Installing AWS CLI
                     apt-get update
-                    apt-get install -y curl
+                    apt-get install -y curl unzip
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
                     unzip -o awscliv2.zip
                     ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
@@ -35,7 +35,7 @@ pipeline {
                     echo Check version
                     whoami
                     echo $PATH
-                    sudo /usr/local/bin/aws --version
+                    /usr/local/bin/aws --version
                     aws --version
                     echo Done checking installation
                 '''
