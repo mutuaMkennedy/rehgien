@@ -28,11 +28,12 @@ pipeline {
                     ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
                     hash aws
                     ls -l /usr/local/bin
-                    ls -l /usr/local/aws-cli/v2/current/bin/aws
+                    ls -l /usr/local/aws-cli/v2/current/bin
                     echo Aws installation path
                     which -a aws
                     echo Check version
                     whoami
+                    echo $PATH
                     sudo /usr/local/aws-cli/v2/current/bin/aws --version
                     aws --version
                     echo Done checking installation
