@@ -18,16 +18,16 @@ pipeline {
             steps{
                 // Update packages
                 sh "apt-get update"
-                
+
                 // Install sudo
                 sh "apt install sudo"
                 
                 // Install Docker ref:- https://docs.docker.com/engine/install/ubuntu/
 
-                sh "sudo apt-get install ca-certificates curl gnupg"
+                sh "sudo apt-get install -y ca-certificates curl gnupg"
 
                 sh '''
-                    sudo install -m 0755 -d /etc/apt/keyrings
+                    sudo install -y -m 0755 -d /etc/apt/keyrings
                     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
                     sudo chmod a+r /etc/apt/keyrings/docker.gpg
                 '''
@@ -41,7 +41,7 @@ pipeline {
 
                 sh '''
                     sudo apt-get update
-                    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
                 '''
 
                 // Verify docker has been installed successfully
