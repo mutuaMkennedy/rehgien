@@ -18,7 +18,8 @@ pipeline {
             steps{
                 // Update packages
 
-                sh "sudo apt-get update"
+                sh "apt-get install sudo" 
+                sh "apt-get update"
                 
                 // Install Docker ref:- https://docs.docker.com/engine/install/ubuntu/
 
