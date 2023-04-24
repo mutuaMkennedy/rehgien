@@ -26,8 +26,7 @@ pipeline {
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
                     unzip -o awscliv2.zip
                     ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
-                    echo "export PATH=$PATH:/usr/local/bin" >> ~/.bashrc
-                    source ~/.bashrc
+                    hash aws
                     ls -l /usr/local/bin
                     ls -l /usr/local/aws-cli/v2/current/bin/aws
                     echo Aws installation path
