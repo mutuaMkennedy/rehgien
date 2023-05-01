@@ -16,7 +16,7 @@ services:
     image: 759451633485.dkr.ecr.us-east-1.amazonaws.com/rehgien:app
     # Any name that can further help ID this container
     container_name: django_container
-    build: .
+    build: ./backend
     expose:
       - 9000
     links:
